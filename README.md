@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚨 Disaster Response Intelligence Platform
 
-## Getting Started
+**AI-powered flood prediction, emergency planning, and resource allocation — built for the Bharat Shakti Hackathon (Track: AI for Society — Problem Statement 3).**
 
-First, run the development server:
+When the waters rise, every minute counts. This platform fuses real-time flood forecasts, geospatial intelligence (PostGIS), and RAG-driven emergency knowledge (pgvector) into a single Emergency Operations Center (EOC) dashboard — helping responders decide *where* to evacuate, *what* to deploy, and *whom* to alert before disaster strikes.
+
+Our demo targets **Patna, Bihar** — one of India's most flood-prone districts on the Ganga — for high-fidelity data simulation.
+
+---
+
+## ✨ What It Does
+
+- **🌊 Flood Prediction** — ingests hydrology forecasts and renders risk levels (`safe / watch / warning / critical`) on an interactive map.
+- **🏕️ Shelter & Resource Management** — tracks shelter capacity and stockpile locations, with PostGIS-powered "nearest available" queries.
+- **📡 Alert Orchestration** — severity-graded alert log for SMS/email/push/siren dissemination.
+- **🧠 RAG Knowledge Base** — retrieves the most relevant emergency plans and procedures via vector similarity search over `emergency_documents`.
+- **🏗️ Emergency Operations Center UI** — a dark, high-density command-center aesthetic built on custom Tailwind design tokens.
+
+---
+
+## 🧰 Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | [Next.js 14](https://nextjs.org/) (App Router) · React · TypeScript · Tailwind CSS |
+| **Backend / Data** | [Supabase](https://supabase.com/) (PostgreSQL 15) · [Prisma ORM](https://www.prisma.io/) |
+| **Geospatial** | [PostGIS](https://postgis.net/) (GiST spatial indexes) |
+| **AI / RAG** | [pgvector](https://github.com/pgvector/pgvector) (HNSW embeddings) · OpenAI embeddings (1536-d) |
+| **Mapping** | [MapLibre GL](https://maplibre.org/) |
+| **Hydrology** | Google Flood Forecasting Framework / GEE hydrology layers |
+| **CI/CD** | GitHub Actions (lint + type-check) |
+
+---
+
+## 📦 Prerequisites
+
+- **Node.js 20+** (LTS) and npm
+- A **Supabase** project (free tier is fine) with the SQL Editor enabled
+- Optionally: an **OpenAI API key** for generating document embeddings
+
+---
+
+## 🚀 Local Setup (Step by Step)
 
 ```bash
+# 1. Clone & install
+git clone <your-repo-url>
+cd disaster-response-platform
+npm install
+
+# 2. Configure environment
+#    Add your credentials to .env (see the commented sections for what each key is for).
+
+# 3. Apply the database schema (in the Supabase SQL Editor)
+#    Run, in order: supabase/migrations/0001_initial_schema.sql
+#                    supabase/migrations/0002_enable_postgis.sql
+#                    supabase/migrations/0003_enable_pgvector.sql
+
+# 4. Sync the Prisma schema to your database & generate the client
+npx prisma db push
+npx prisma generate
+
+# 5. Run the dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open **http://localhost:3000** — you should see the EOC dashboard.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> **Demo data:** Phase 2 adds a Patna-specific seed script to populate realistic shelters, resources, and emergency plans.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🗂️ Folder Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+disaster-response-platform/
+├── app/                 # Next.js App Router pages, layouts, route handlers
+├── components/          # Reusable React UI components (EOC panels, charts, map)
+├── lib/                 # Frontend-safe utilities & clients (e.g. lib/supabase.ts)
+├── server/              # Server-only logic: Prisma client, API/action helpers
+├── types/               # Shared TypeScript types (Domain models, severity enums)
+├── ml_models/           # ML assets: flood-risk model weights, pre-processing, inference
+├── data_ingestion/      # Data pipelines: hydrology fetchers, District DB, seeders
+├── prisma/              # Prisma schema (mirrors the SQL schema exactly)
+├── supabase/migrations/ # Raw SQL migrations (PostGIS + pgvector)
+└── .github/workflows/   # CI pipeline (lint + type-check)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **`/server`** — everything that must *never* run in the browser (Prisma client, DB queries, secrets).
+- **`/lib`** — safe, shared utilities both client and server can import (Supabase client, formatters).
+- **`/data_ingestion`** — the pipelines that pull hydrology/weather data and shape it into `flood_predictions`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📍 Demo Geography: Patna, Bihar
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+For a compelling, verifiable demo we deliberately focus on **Patna, Bihar** — a district with high flood exposure on the Ganga's south bank.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- All flood forecasts, shelters, and resource deployments are simulated **within Patna's district boundary**.
+- Hydrology inputs come from the **Google flood forecasting framework** calibrated to the Ganga river gauge stations near Patna.
+- This gives judges a single, relatable geography with high-fidelity, consistent data.
+
+---
+
+## 🛡️ Repository Hygiene
+
+- **CI**: every PR and push to `main` runs `npm run lint` + `npx tsc --noEmit` via `.github/workflows/ci.yml`.
+- **Secrets**: `.env`, `.env.local` are gitignored — never commit real keys.
+
+---
+
+## 🏅 Team
+
+Built for **Bharat Shakti Hackathon · Track: AI for Society · PS3** — a data-driven answer to India's most recurring natural disaster.

@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+build
+dist
+ml_service/venv
+ml_service/__pycache__
+public
+.next
+.turbo
+coverage
+package-lock.json

@@ -1,3 +1,4 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
+  "ignorePatterns": ["ml_service/venv/**", "ml_service/__pycache__/**", "scripts/**"]
 }
