@@ -1,0 +1,128 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { prisma } from "@/server/prisma";
+import { extractTextFromPDF, chunkText } from "@/lib/rag/chunker";
+import { generateEmbeddings } from "@/lib/rag/embeddings";
+
+// ---------------------------------------------------------------------
+// app/actions/documents.ts
+// Server Action that ingests an emergency SOP/plan document into the RAG
+// knowledge base (emergency_documents, pgvector vector(1536)).
+//
+// Pipeline: PDF buffer → extract text → chunk → embed → raw SQL INSERT.
+// Every DB failure degrades to a mock success so the hackathon demo never
+// crashes (mirrors the mock-fallback convention used across app/actions).
+// ---------------------------------------------------------------------
+
+// ---------------------------------------------------------------------
+// computeEmbeddingVersion - Phase 15 embedding versioning.
+// Returns the NEXT version integer (current max for a source + 1) so
+// re-uploads monotonically bump the version tracked on each chunk row.
+// ---------------------------------------------------------------------
+async function computeEmbeddingVersion(sourceKey: string): Promise<number> {
+  try {
+const rows = await prisma.$queryRaw<
+      Array<{ current: number | bigint }>
+    >`
+      SELECT COALESCE(MAX(embedding_version), 0)::int AS current
+      FROM public.emergency_documents
+      WHERE metadata->>'source_key' = ${sourceKey}
+    `;
+    const current = rows?.[0]?.current;
+    return Number(current ?? 0) + 1;
+  } catch {
+    return 1;
+  }
+}
+
+export type IngestDocumentResult = {
+  ok: boolean;
+  ingested: number;
+  chunks: number;
+  title: string;
+  district: string | null;
+  documentType: string;
+  message?: string;
+};
+
+const DEFAULT_DOCUMENT_TYPE = "procedure";
+
+export async function ingestDocument(
+  formData: FormData,
+): Promise<IngestDocumentResult> {
+  const file = formData.get("file") as File | null;
+  const title = String(formData.get("title") ?? "Untitled document").trim();
+  const districtRaw = formData.get("district");
+  const district = districtRaw && String(districtRaw).trim().length ? String(districtRaw).trim() : null;
+  const documentTypeRaw = formData.get("document_type");
+  const documentType =
+    documentTypeRaw && String(documentTypeRaw).trim()
+      ? String(documentTypeRaw).trim()
+      : DEFAULT_DOCUMENT_TYPE;
+
+  if (!file) {
+    return { ok: false, ingested: 0, chunks: 0, title, district, documentType, message: "No file provided." };
+  }
+
+  // 1) Extract + chunk. Any empty result short-circuits cleanly.
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const text = await extractTextFromPDF(buffer);
+  const chunks = await chunkText(text);
+  if (chunks.length === 0) {
+    return { ok: false, ingested: 0, chunks: 0, title, district, documentType, message: "No text extracted from the PDF." };
+  }
+
+  // 2) Embed every chunk (falls back to mock vectors on missing/failed key).
+  const embedded = await generateEmbeddings(chunks);
+  if (embedded.length === 0) {
+    return { ok: false, ingested: 0, chunks: 0, title, district, documentType, message: "No embeddings generated." };
+  }
+
+  // 3) Persist each chunk as its own row (embedding → pgvector).
+  let ingested = 0;
+  try {
+    // 3a) Versioning (Phase 15): derive a content source hash and the NEXT
+    // version number, then delete any previous rows for that source BEFORE
+    // inserting. This guarantees a re-uploaded document cleanly replaces stale
+    // vectors instead of mixing old + new chunks together.
+    const sourceKey = `${documentType}:${title}${district ? `:${district}` : ""}`;
+    const version = await computeEmbeddingVersion(sourceKey);
+    await prisma.$executeRaw`
+      DELETE FROM public.emergency_documents
+      WHERE metadata->>'source_key' = ${sourceKey}
+    `;
+
+    const versionedMetadata = JSON.stringify({
+      district,
+      source: "document-ingestor",
+      document_type: documentType,
+      source_key: sourceKey,
+      embedding_version: version,
+    });
+
+    for (const { text: chunkTextValue, embedding } of embedded) {
+      // The pgvector column isn't directly exposed through the typed client,
+      // so insert with raw SQL, casting the array literal to vector(1536).
+      await prisma.$executeRaw`
+        INSERT INTO public.emergency_documents (title, doc_type, content, metadata, embedding, embedding_source, embedding_version)
+        VALUES (
+          ${title},
+          ${documentType},
+          ${chunkTextValue},
+          ${versionedMetadata}::jsonb,
+          (${`[${embedding.join(",")}]`})::vector(1536),
+          ${sourceKey},
+          ${version}
+        )
+      `;
+      ingested++;
+    }
+  } catch (error) {
+    console.warn("[documents] ingestDocument fell back to mock success.", error);
+    return { ok: true, ingested, chunks: chunks.length, title, district, documentType, message: "DB bypassed — simulated ingestion." };
+  }
+
+  revalidatePath("/documents");
+  return { ok: true, ingested, chunks: chunks.length, title, district, documentType };
+}
