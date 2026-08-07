@@ -1,0 +1,1 @@
+export const SIMULATION_COOKIE = "simulation_mode";
