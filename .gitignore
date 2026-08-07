@@ -42,3 +42,9 @@ __pycache__/
 .venv/
 ml_service/*.log
 ml_service/*.pid
+
+# playwright e2e
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
