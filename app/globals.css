@@ -2,26 +2,220 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* EOC dark palette — deep navy/slate, not pure black */
+    --background: #0a1428;
+    --foreground: #e2e8f0;
+
+    --surface: #0f1d38;
+    --surface-elevated: #17294d;
+    --surface-muted: #0c1830;
+
+    --border: #1e3056;
+    --border-strong: #2c3f6d;
+
+    --accent: #38bdf8;
+    --accent-soft: rgba(56, 189, 248, 0.16);
+
+    /* Severity scale — safe/low risk */
+    --severity-green-300: #6ee7b7;
+    --severity-green-400: #34d399;
+    --severity-green-500: #10b981;
+    --severity-green-600: #059669;
+
+    /* Severity scale — watch/medium risk */
+    --severity-amber-300: #fcd34d;
+    --severity-amber-400: #fbbf24;
+    --severity-amber-500: #f59e0b;
+    --severity-amber-600: #d97706;
+
+    /* Severity scale — warning/high risk */
+    --severity-red-300: #fca5a5;
+    --severity-red-400: #f87171;
+    --severity-red-500: #ef4444;
+    --severity-red-600: #dc2626;
+
+    /* Severity scale — critical/evacuate */
+    --severity-purple-300: #d8b4fe;
+    --severity-purple-400: #c084fc;
+    --severity-purple-500: #a855f7;
+    --severity-purple-600: #9333ea;
+  }
+
+  /*
+   * Light "day ops" palette — active whenever next-themes removes the `dark`
+   * class from <html> (Phase 22 · Step 2). All components consume these
+   * tokens via tailwind (bg-surface, text-foreground, …), so the whole app
+   * re-themes without touching component classes. Severity colors stay
+   * constant; the accent deepens to sky-600 for contrast on light surfaces.
+   */
+  :root:not(.dark) {
+    --background: #f2f6fc;
+    --foreground: #101b2e;
+
+    --surface: #ffffff;
+    --surface-elevated: #e9eff8;
+    --surface-muted: #dfe8f4;
+
+    --border: #d4deef;
+    --border-strong: #b4c3db;
+
+    --accent: #0284c7;
+    --accent-soft: rgba(2, 132, 199, 0.12);
+
+    color-scheme: light;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% -10%, rgba(56, 189, 248, 0.08), transparent),
+      radial-gradient(ellipse 60% 50% at 100% 0%, rgba(168, 85, 247, 0.06), transparent);
+    background-attachment: fixed;
+    color: var(--foreground);
+    font-family:
+      var(--font-inter),
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--foreground);
+  }
+
+  /* Slim EOC-style scrollbars */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--surface-muted);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 9999px;
+    border: 2px solid var(--surface-muted);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
+@layer components {
+  /* Reusable EOC panel/card */
+  .eoc-panel {
+    @apply rounded-eoc border border-solid bg-surface;
+  }
 
-@layer utilities {
+  /* Monospace "system readout" label */
+  .eoc-label {
+    @apply font-mono text-[11px] uppercase tracking-widest text-slate-400;
+  }
+
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Critical-alert banner: pulsing red glow */
+  @keyframes alert-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55);
+    }
+    50% {
+      box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+    }
+  }
+  .animate-alert-pulse {
+    animation: alert-pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Critical-alert map edge flash — 3s burst, then auto-clears */
+  @keyframes map-alert-flash {
+    0% {
+      opacity: 1;
+      box-shadow: inset 0 0 0 10px rgba(239, 68, 68, 0.9);
+    }
+    50% {
+      opacity: 0.35;
+      box-shadow: inset 0 0 0 22px rgba(239, 68, 68, 0.65);
+    }
+    100% {
+      opacity: 1;
+      box-shadow: inset 0 0 0 10px rgba(239, 68, 68, 0.9);
+    }
+  }
+  .animate-map-alert-flash {
+    animation: map-alert-flash 0.3s cubic-bezier(0.4, 0, 0.6, 1) 10;
+  }
+  .map-alert-flash-ring {
+    box-shadow: inset 0 0 0 10px rgba(239, 68, 68, 0.9);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   MapLibre popup — dark Emergency-Ops theme override
+   --------------------------------------------------------------------- */
+.maplibregl-popup-content {
+  background: var(--surface) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.625rem !important;
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.3),
+    0 0 18px rgba(56, 189, 248, 0.2) !important;
+  padding: 0 !important;
+}
+
+.maplibregl-popup-close-button {
+  color: var(--foreground) !important;
+  font-size: 18px;
+  padding: 4px 8px;
+}
+
+.maplibregl-popup-tip {
+  border-top-color: var(--surface) !important;
+  border-bottom-color: var(--surface) !important;
+}
+
+/* ---------------------------------------------------------------------
+   Phase 22 · Step 6 — smooth custom HTML markers. Every MapLibre HTML
+   marker (shelters, depots, closures, ground reports, fleet pin) gets a
+   gentle 0.3s ease on all property changes so markers glide instead of
+   snapping when data or selection state updates.
+   --------------------------------------------------------------------- */
+.maplibregl-marker {
+  transition: all 0.3s ease;
+}
+
+/* rAF-animated markers (e.g. the fleet boat) opt out so per-frame
+   setLngLat updates stay frame-accurate. */
+.maplibregl-marker.no-anim {
+  transition: none;
 }
