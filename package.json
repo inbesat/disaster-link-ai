@@ -12,6 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ingestion": "tsx scripts/test-ingestion.ts",
+    "demo:reset": "tsx scripts/demo-reset.ts",
     "eval:retrieval": "tsx scripts/eval-retrieval.ts",
     "audit:env": "tsx scripts/audit-env.ts",
     "smoke:agents": "tsx scripts/smoke-agents.ts",
