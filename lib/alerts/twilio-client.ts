@@ -8,6 +8,7 @@
 // ---------------------------------------------------------------------
 
 import twilio from "twilio";
+import { isDemoMode } from "@/lib/demo-mode";
 
 const ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
 const AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
@@ -32,6 +33,14 @@ export async function sendSMSAlert(
   toNumber: string,
   messageBody: string,
 ): Promise<SendSmsResult> {
+  // Phase 24 · Demo mode: never touch the Twilio API (saves trial credits).
+  // Returns a fake success so the alert pipeline (delivery tracking, audit
+  // logs) keeps flowing end-to-end during the demo.
+  if (isDemoMode()) {
+    console.log(`DEMO MODE: SMS bypassed (to ${toNumber})`);
+    return { ok: true, sid: "demo-bypass" };
+  }
+
   const client = getClient();
 
   if (!client) {
