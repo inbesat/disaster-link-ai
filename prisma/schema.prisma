@@ -28,6 +28,7 @@ model User {
   district         String?
   assignedDistrict String?  @map("assigned_district")
   avatarUrl        String?  @map("avatar_url")
+  preferredLanguage String   @default("en") @map("preferred_language") // Phase 25 · multilingual UI
   createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
