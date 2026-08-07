@@ -1,0 +1,435 @@
+// Prisma schema for the Disaster Response Intelligence Platform
+// Mirrors supabase/migrations/0001_initial_schema.sql exactly.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
+  // Enable PostGIS + pgvector so the Unsupported() types below are recognised.
+  extensions   = [postgis, vector]
+}
+
+// ---------------------------------------------------------------------
+// users
+// ---------------------------------------------------------------------
+model User {
+  id               String   @id @default(uuid()) @db.Uuid
+  email            String   @unique
+  name             String?
+  role             String   @default("field_responder")
+  organization     String?
+  phone            String?
+  emergencyContact Json?    @map("emergency_contact")
+  district         String?
+  assignedDistrict String?  @map("assigned_district")
+  avatarUrl        String?  @map("avatar_url")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([district]) // responder directory + district role scoping
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------
+// disaster_events
+// ---------------------------------------------------------------------
+model DisasterEvent {
+  id         String                 @id @default(uuid()) @db.Uuid
+  name       String
+  type       String                 @default("flood")
+  status     String                 @default("monitoring")
+  district   String?
+  epicenter  Unsupported("geometry(Point, 4326)")?
+  startedAt  DateTime?              @map("started_at") @db.Timestamptz
+  createdAt  DateTime               @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime               @updatedAt @map("updated_at") @db.Timestamptz
+
+  resourceAllocations ResourceAllocation[]
+  alertLogs           AlertLog[]
+  emergencyDocuments  EmergencyDocument[]
+  emergencyPlans      EmergencyPlan[]
+
+  @@index([district]) // RLS scoping + district dashboards
+  @@map("disaster_events")
+}
+
+// ---------------------------------------------------------------------
+// emergency_plans  (structured AI-generated emergency plan per disaster)
+// ---------------------------------------------------------------------
+model EmergencyPlan {
+  id              String   @id @default(uuid()) @db.Uuid
+  disasterEventId String?  @map("disaster_event_id") @db.Uuid
+  disasterEvent   DisasterEvent? @relation(fields: [disasterEventId], references: [id], onDelete: Cascade)
+  district        String?
+  title           String
+  content         String
+  planJson        Json?    @map("plan_json")
+  status          String   @default("draft") // draft | active | approved | completed
+  createdBy       String?  @map("created_by") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([disasterEventId])
+  @@index([status])
+  @@map("emergency_plans")
+}
+
+// ---------------------------------------------------------------------
+// flood_predictions  (ML output store — written by the FastAPI service)
+// ---------------------------------------------------------------------
+model FloodPrediction {
+  id                  String   @id @default(uuid()) @db.Uuid
+  lat                 Float
+  lng                 Float
+  predictionTimestamp DateTime @map("prediction_timestamp") @db.Timestamptz
+  riskLevel           String   @map("risk_level")
+  confidenceScore     Float    @map("confidence_score")
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([riskLevel, predictionTimestamp])
+  @@index([predictionTimestamp]) // prediction history / time-series charts
+  @@index([riskLevel])           // filter risk-level views + alert triggers
+  @@map("flood_predictions")
+}
+
+// ---------------------------------------------------------------------
+// shelters  (PostGIS geometry(Point, 4326) + denormalised lat/lng)
+// ---------------------------------------------------------------------
+model Shelter {
+  id               String                    @id @default(uuid()) @db.Uuid
+  name             String
+  district         String?
+  lat              Float
+  lng              Float
+  capacity         Int
+  currentOccupancy Int                       @default(0) @map("current_occupancy")
+  facilities       Json?                     // { water, food, medical }
+  status           String                    @default("open")
+  contactPerson    String?                   @map("contact_person")
+  phone            String?
+  imageUrl         String?                   @map("image_url")
+  location         Unsupported("geometry(Point, 4326)")?
+  createdAt        DateTime                  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime                  @updatedAt @map("updated_at") @db.Timestamptz
+  evacuationPlans     EvacuationPlan[]
+
+  @@index([district]) // nearest-shelter + district-scoped queries
+  @@map("shelters")
+}
+
+// ---------------------------------------------------------------------
+// resources  (Phase 12 · Resource Inventory)
+// ---------------------------------------------------------------------
+model Resource {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  category  String   @default("other") // boat | food | medical | personnel | water | vehicle | communication | power | other
+  quantity  Int      @default(0)
+  unit      String?  // pieces | kits | teams | boats | pallets ...
+  lat       Float
+  lng       Float
+  status    String   @default("available") // available | deployed | maintenance
+  depotName String?  @map("depot_name")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  resourceAllocations ResourceAllocation[]
+
+  @@index([category, status]) // inventory filtering + dispatch matching
+  @@map("resources")
+}
+
+// ---------------------------------------------------------------------
+// resource_requests  (Phase 12 · field requests for supplies/teams)
+// ---------------------------------------------------------------------
+model ResourceRequest {
+  id             String   @id @default(uuid()) @db.Uuid
+  requestedBy    String   @map("requested_by")
+  category       String
+  quantityNeeded Int      @map("quantity_needed")
+  urgency        String   @default("low") // low | high | critical
+  lat            Float
+  lng            Float
+  status         String   @default("pending") // pending | approved | fulfilled
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([status]) // pending-request queue on the dispatch console
+  @@map("resource_requests")
+}
+
+// ---------------------------------------------------------------------
+// resource_movements (Phase 12) — immutable trail of where resources went:
+// depot → disaster site, with timestamps. Appended on dispatch and by the
+// Record Movement form; denormalised `resource_name` keeps the trail readable
+// even if the resource row is later deleted.
+// ---------------------------------------------------------------------
+model ResourceMovement {
+  id           String   @id @default(uuid()) @db.Uuid
+  resourceId   String?  @map("resource_id") @db.Uuid
+  resourceName String   @map("resource_name")
+  action       String   // dispatched | delivered | returned | adjusted
+  fromLabel    String?  @map("from_label")
+  toLabel      String   @map("to_label")
+  toLat        Float    @map("to_lat")
+  toLng        Float    @map("to_lng")
+  quantity     Int      @default(0)
+  note         String?
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([resourceId])
+  @@index([action, createdAt])
+  @@map("resource_movements")
+}
+
+// ---------------------------------------------------------------------
+// resource_allocations
+// ---------------------------------------------------------------------
+model ResourceAllocation {
+  id                String    @id @default(uuid()) @db.Uuid
+  destinationLat    Float     @map("destination_lat")
+  destinationLng    Float     @map("destination_lng")
+  quantityAllocated Int       @default(0) @map("quantity_allocated")
+  status            String    @default("pending") // pending | en_route | delivered
+  priorityScore     Float     @default(0) @map("priority_score")
+  estimatedArrival  DateTime? @map("estimated_arrival") @db.Timestamptz
+  isLocked          Boolean   @default(false) @map("is_locked")
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  resourceId      String        @map("resource_id") @db.Uuid
+  resource        Resource      @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  disasterEventId String        @map("disaster_event_id") @db.Uuid
+  disasterEvent   DisasterEvent @relation(fields: [disasterEventId], references: [id], onDelete: Cascade)
+
+  @@index([resourceId])
+  @@index([disasterEventId])
+  @@map("resource_allocations")
+}
+
+// ---------------------------------------------------------------------
+// alert_logs
+// ---------------------------------------------------------------------
+model AlertLog {
+  id             String    @id @default(uuid()) @db.Uuid
+  severity       String    @default("watch")
+  channel        String    @default("sms")
+  message        String
+  district       String?
+  triggerCondition String? @map("trigger_condition")
+  isAcknowledged Boolean   @default(false) @map("is_acknowledged")
+  acknowledgedBy String?   @map("acknowledged_by")
+  acknowledgedAt DateTime? @map("acknowledged_at") @db.Timestamptz
+  sentAt         DateTime  @default(now()) @map("sent_at") @db.Timestamptz
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  disasterEventId String?        @map("disaster_event_id") @db.Uuid
+  disasterEvent   DisasterEvent? @relation(fields: [disasterEventId], references: [id], onDelete: SetNull)
+
+  @@index([severity, sentAt])
+  @@index([district, createdAt])
+  @@map("alert_logs")
+}
+
+// ---------------------------------------------------------------------
+// alert_rules — declarative routing for the alert orchestration engine.
+// trigger_condition e.g. 'critical_flood'; target_roles is a comma-separated
+// role list; channels is a JSON array e.g. '["sms", "in_app"]'.
+// ---------------------------------------------------------------------
+model AlertRule {
+  id               String   @id @default(uuid()) @db.Uuid
+  triggerCondition String   @map("trigger_condition")
+  targetRoles      String   @map("target_roles")
+  channels         String
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("alert_rules")
+}
+
+// ---------------------------------------------------------------------
+// alert_templates — message bodies with {variable} placeholders rendered
+// by lib/alerts/template-parser.ts, e.g.
+// "⚠️ {risk_level} warning for {district} at {predicted_time}."
+// ---------------------------------------------------------------------
+model AlertTemplate {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @unique
+  messageBody String   @map("message_body")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("alert_templates")
+}
+
+// ---------------------------------------------------------------------
+// emergency_documents  (pgvector vector(1536) for RAG)
+// ---------------------------------------------------------------------
+model EmergencyDocument {
+  id             String    @id @default(uuid()) @db.Uuid
+  title          String
+  docType        String    @default("plan") @map("doc_type")
+  content        String
+  metadata           Json?
+  embedding          Unsupported("vector(1536)")?
+  embeddingVersion   Int      @default(0) @map("embedding_version")
+  embeddingSource    String?  @map("embedding_source")
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  disasterEventId String?        @map("disaster_event_id") @db.Uuid
+  disasterEvent   DisasterEvent? @relation(fields: [disasterEventId], references: [id], onDelete: SetNull)
+
+  @@map("emergency_documents")
+}
+
+// ---------------------------------------------------------------------
+// weather_data  (raw hydrology/rainfall observations)
+// ---------------------------------------------------------------------
+model WeatherData {
+  id          String   @id @default(uuid()) @db.Uuid
+  stationId   String?  @map("station_id")
+  timestamp   DateTime @db.Timestamptz
+  rainfallMm  Float    @map("rainfall_mm")
+  riverLevelM Float?   @map("river_level_m")
+  riverName   String?  @map("river_name")
+  district    String?
+  lat         Float
+  lng         Float
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([timestamp])
+  @@index([district])
+  @@map("weather_data")
+}
+
+// ---------------------------------------------------------------------
+// data_source  (registry of upstream ingestion endpoints)
+// ---------------------------------------------------------------------
+model DataSource {
+  id            String    @id @default(uuid()) @db.Uuid
+  name          String
+  endpoint      String
+  isActive      Boolean   @default(true) @map("is_active")
+  lastFetchTime DateTime? @map("last_fetch_time") @db.Timestamptz
+  status        String    @default("green")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("data_source")
+}
+
+// ---------------------------------------------------------------------
+// evacuation_plans — one plan per village being routed to a shelter.
+// route_geojson holds the GeoJSON LineString (OSRM or straight-line fallback).
+// ---------------------------------------------------------------------
+model EvacuationPlan {
+  id                String   @id @default(uuid()) @db.Uuid
+  villageName       String   @map("village_name")
+  assignedShelterId String   @map("assigned_shelter_id")
+  estimatedEvacuees Int      @map("estimated_evacuees")
+  status            String   @default("pending") // pending | in_transit | completed
+  routeGeoJson      String   @map("route_geojson")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  shelterId String?  @map("shelter_id") @db.Uuid
+  shelter   Shelter? @relation(fields: [shelterId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@map("evacuation_plans")
+}
+
+// ---------------------------------------------------------------------
+// road_closures — points blocking evacuation routes.
+// ---------------------------------------------------------------------
+model RoadClosure {
+  id        String   @id @default(uuid()) @db.Uuid
+  lat       Float
+  lng       Float
+  reason    String
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("road_closures")
+}
+
+// ---------------------------------------------------------------------
+// push_subscriptions — Web Push (VAPID) receivers keyed to a user.
+// endpoint is unique so re-subscribing upserts instead of duplicating.
+// ---------------------------------------------------------------------
+model PushSubscription {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @map("user_id")
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([userId])
+  @@map("push_subscriptions")
+}
+
+// ---------------------------------------------------------------------
+// plan_feedback (Phase 11) — thumbs up/down RLHF signals on AI-generated
+// emergency plans, so quality can be tracked per landmark query.
+// ---------------------------------------------------------------------
+model PlanFeedback {
+  id        String   @id @default(uuid()) @db.Uuid
+  messageId String   @map("message_id")
+  rating    String                      // 'up' | 'down'
+  userId    String?  @map("user_id")
+  district  String?
+  prompt    String?                     // snapshot of the user's query
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([messageId])
+  @@index([rating, createdAt])
+  @@map("plan_feedback")
+}
+
+// ---------------------------------------------------------------------
+// crowdsourced_reports (Phase 17) — citizen-submitted ground truth,
+// the human signal that feeds verification, prediction correction and
+// situational awareness. Reports arrive via social, app, or SMS, start
+// `unverified`, and are promoted as responders verify true signals.
+// ---------------------------------------------------------------------
+model CrowdsourcedReport {
+  id                 String   @id @default(uuid()) @db.Uuid
+  lat                Float
+  lng                Float
+  reportType         String   @map("report_type") // flooding | road_blocked | shelter_needed | rescue
+  source             String   @default("app")     // social | app | sms
+  rawText            String   @map("raw_text")
+  confidenceScore    Float    @default(0.5) @map("confidence_score")
+  verificationStatus String   @default("unverified") @map("verification_status") // unverified | verified | rejected
+  imageUrl           String?  @map("image_url")
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([reportType])
+  @@index([verificationStatus, createdAt])
+  @@map("crowdsourced_reports")
+}
+
+// ---------------------------------------------------------------------
+// audit_logs (Phase 18) — immutable trail of who did what. Written on
+// every privileged admin action (role change, deactivate, config save).
+// Writes are best-effort: failures are logged, never thrown.
+// ---------------------------------------------------------------------
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @map("user_id") // null for guest/demo-authored actions
+  action    String
+  resource  String
+  details   String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([userId])
+  @@index([resource])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
