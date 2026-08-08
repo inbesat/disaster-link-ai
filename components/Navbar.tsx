@@ -1,7 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
 import { cookies } from "next/headers";
-import { Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { clearGuestMode, signOutAction } from "@/app/actions/auth";
 import NotificationCenter from "@/components/dashboard/NotificationCenter";
@@ -10,8 +8,8 @@ import PresenceIndicators from "@/components/dashboard/PresenceIndicators";
 import SyncStatus from "@/components/dashboard/SyncStatus";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSelector from "@/components/ui/LanguageSelector";
-import OnboardingTooltip from "@/components/ui/OnboardingTooltip";
 import NavbarMobileMenu from "@/components/NavbarMobileMenu";
+import NavbarNav from "@/components/NavbarNav";
 
 export default async function Navbar() {
   const guest = cookies().get("guest_mode")?.value === "true";
@@ -47,38 +45,8 @@ export default async function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-6">
-        <div className="flex items-center gap-6">
-          <Link href="/command-center" className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-accent" />
-            <span className="eoc-label text-accent">DRIP / COMMAND CENTER</span>
-          </Link>
-          <nav className="hidden items-center gap-4 sm:flex">
-            <Link
-              href="/alerts"
-              className="text-xs font-medium uppercase tracking-wider text-slate-300 transition hover:text-accent"
-            >
-              Alert Log
-            </Link>
-
-            {/* Phase 22 · Step 8 — one-time onboarding tooltip on the AI
-                Commander entry point. Dismissed once per browser via
-                localStorage. */}
-            <OnboardingTooltip
-              title="New: AI Commander"
-              description="Ask the AI Commander for an evacuation plan!"
-              storageKey="drip_onboarding_ai_chat_v1"
-              placement="bottom-left"
-            >
-              <Link
-                href="/ai-planner"
-                className="inline-flex items-center gap-1.5 rounded-md border border-accent/50 bg-accent/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-accent transition hover:bg-accent hover:text-slate-950"
-              >
-                <Sparkles className="h-3.5 w-3.5" aria-hidden />
-                AI Commander
-              </Link>
-            </OnboardingTooltip>
-          </nav>
-        </div>
+        {/* Phase 25 · Step 5 — translated brand + links (client component) */}
+        <NavbarNav />
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2.5">
