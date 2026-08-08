@@ -16,6 +16,7 @@
 import { prisma } from "@/server/prisma";
 import { parseAlertTemplate } from "@/lib/alerts/template-parser";
 import { sendSMSAlert, type SendSmsResult } from "@/lib/alerts/twilio-client";
+import { translateAlertForSMS } from "@/lib/i18n/ai-translator";
 import { notifyAllSubscribers } from "@/server/services/push-notifier";
 import type { AlertLog } from "@prisma/client";
 
@@ -189,10 +190,28 @@ export async function processPredictionAlerts(
         select: { id: true, name: true, phone: true },
       });
 
+      // Phase 25 · Step 7 — dual-language SMS dispatch.
+      // MOCK CONTEXT: we don't query users.preferred_language yet (the
+      // migration may not be pushed), so every recipient is treated as
+      // preferring Hindi. TODO: select `preferredLanguage` once the column
+      // is live and group recipients by language to batch translations.
+      const MOCK_PREFERRED_LANGUAGE = "hi";
+
       for (const recipient of recipients) {
         if (!recipient.phone) continue;
+
+        // Translate the English alert (falls back to English on any failure
+        // — a critical alert is never dropped).
+        const localText = await translateAlertForSMS(
+          message,
+          MOCK_PREFERRED_LANGUAGE,
+        );
+
+        // Hybrid body: English + local-language mirror in one SMS.
+        const combined = `[ENGLISH]: ${message}\n\n[LOCAL]: ${localText}`;
+
         // sendSMSAlert never throws — trial limits just return { ok: false }.
-        const result = await sendSMSAlert(recipient.phone, message);
+        const result = await sendSMSAlert(recipient.phone, combined);
         smsResults.push(result);
       }
     }
