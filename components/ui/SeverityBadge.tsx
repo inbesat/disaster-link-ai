@@ -1,36 +1,36 @@
 import {
-  AlertOctagon,
-  AlertTriangle,
   CheckCircle2,
   Eye,
   Info,
+  OctagonAlert,
+  TriangleAlert,
   type LucideIcon,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------
 // components/ui/SeverityBadge.tsx
-// Phase 22 · Step 5 — Accessibility & color-contrast severity status.
+// UI/UX Phase 1 · Step 3 — roadmap design-system severity indicator.
+//
+// Each variant maps to the roadmap tokens:
+//   • background tint  → var(--severity-*)   (bg-severity-safe / watch / …)
+//   • border + text    → var(--accent-*)     (accent-success / warning / …)
 //
 // Disaster platforms must be usable by colorblind responders (red/green
-// deficiency is common). This badge therefore conveys severity through
-// THREE redundant channels:
-//   1. Color            — green / amber / red / purple / slate
+// deficiency is common), so severity is conveyed through THREE redundant
+// channels:
+//   1. Color            — tinted chip + accent border/text
 //   2. Icon             — ✔ / 👁 / ⚠ / 🛑-style octagon / ℹ
 //   3. Text label       — "Safe" / "Watch" / "Warning" / "Evacuate"
-// plus a pulsing background on the highest severities, and an aria-label
-// for screen readers. Use it everywhere statuses are rendered.
+// plus a pulsing animation + red glow on the most severe tiers and an
+// aria-label for screen readers.
 // ---------------------------------------------------------------------
 
-export type SeverityLevel =
-  | "safe"
-  | "watch"
-  | "warning"
-  | "critical"
-  | "info";
+export type SeverityLevel = "safe" | "watch" | "warning" | "critical" | "info";
 
 type SeverityMeta = {
   label: string;
   icon: LucideIcon;
+  /** Roadmap tokens: severity-* background tint + accent-* border/text. */
   chip: string;
   dot: string;
   /** Pulsing background draws attention to the dangerous tiers. */
@@ -43,39 +43,40 @@ export const SEVERITY_META: Record<SeverityLevel, SeverityMeta> = {
   safe: {
     label: "Safe",
     icon: CheckCircle2,
-    chip: "bg-severity-green-600 text-white border-severity-green-500/60",
-    dot: "bg-severity-green-500",
+    chip: "bg-severity-safe text-accent-success border-accent-success/40",
+    dot: "bg-accent-success",
     pulse: false,
     a11y: "safe",
   },
   watch: {
     label: "Watch",
     icon: Eye,
-    chip: "bg-severity-amber-600 text-slate-950 border-severity-amber-500/60",
-    dot: "bg-severity-amber-500",
+    chip: "bg-severity-watch text-accent-warning border-accent-warning/40",
+    dot: "bg-accent-warning",
     pulse: false,
     a11y: "watch",
   },
   warning: {
     label: "Warning",
-    icon: AlertTriangle,
-    chip: "bg-severity-red-600 text-white border-severity-red-500/60",
-    dot: "bg-severity-red-500",
+    icon: TriangleAlert,
+    chip: "bg-severity-warning text-accent-danger border-accent-danger/40",
+    dot: "bg-accent-danger",
     pulse: true,
     a11y: "warning",
   },
   critical: {
     label: "Evacuate",
-    icon: AlertOctagon,
-    chip: "bg-severity-purple-600 text-white border-severity-purple-500/60",
-    dot: "bg-severity-purple-500",
+    icon: OctagonAlert,
+    // glow-red-soft = the roadmap --glow-red; pulses attention via animate-pulse.
+    chip: "bg-severity-critical text-accent-danger border-accent-danger/60 glow-red-soft",
+    dot: "bg-accent-danger",
     pulse: true,
     a11y: "critical / evacuate",
   },
   info: {
     label: "Info",
     icon: Info,
-    chip: "bg-surface-elevated text-slate-300 border-border",
+    chip: "bg-surface-elevated text-secondary border-border",
     dot: "bg-slate-400",
     pulse: false,
     a11y: "informational",
@@ -98,8 +99,14 @@ export function normalizeSeverity(level: string): SeverityLevel {
 }
 
 type SeverityBadgeProps = {
-  /** Severity level — loose strings are normalized ("high" → warning). */
-  level: string | SeverityLevel;
+  /**
+   * Severity variant — loose strings are normalized ("high" → warning).
+   * `variant` is the canonical name (UI roadmap); `level` is kept as a
+   * backward-compatible alias.
+   */
+  variant?: string | SeverityLevel;
+  /** @deprecated use `variant` — kept for existing callers. */
+  level?: string | SeverityLevel;
   /** Override the text label shown next to the icon. */
   label?: string;
   /** Show the leading icon (default true). */
@@ -118,6 +125,7 @@ type SeverityBadgeProps = {
  * color alone. Screen readers hear e.g. "Severity: critical / evacuate".
  */
 export function SeverityBadge({
+  variant,
   level,
   label,
   showIcon = true,
@@ -126,7 +134,7 @@ export function SeverityBadge({
   size = "md",
   className = "",
 }: SeverityBadgeProps) {
-  const meta = SEVERITY_META[normalizeSeverity(level)] ?? SEVERITY_META.info;
+  const meta = SEVERITY_META[normalizeSeverity(variant ?? level ?? "info")] ?? SEVERITY_META.info;
   const Icon = meta.icon;
   const doPulse = pulse ?? meta.pulse;
 

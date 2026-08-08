@@ -7,10 +7,12 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
+import Translated from "@/components/ui/Translated";
+import type { TranslationKey } from "@/lib/i18n/LanguageContext";
 
 type Kpi = {
   id: string;
-  label: string;
+  labelKey: TranslationKey;
   value: number;
   icon: LucideIcon;
   trend: string;
@@ -23,7 +25,7 @@ type Kpi = {
 const KPIS: Kpi[] = [
   {
     id: "at-risk",
-    label: "People at Risk",
+    labelKey: "people_at_risk",
     value: 48210,
     icon: Users,
     trend: "+12%",
@@ -34,7 +36,7 @@ const KPIS: Kpi[] = [
   },
   {
     id: "shelters",
-    label: "Shelters Open",
+    labelKey: "shelters_open",
     value: 132,
     icon: Building2,
     trend: "+4%",
@@ -45,7 +47,7 @@ const KPIS: Kpi[] = [
   },
   {
     id: "deployed",
-    label: "Resources Deployed",
+    labelKey: "resources_deployed",
     value: 1847,
     icon: Package,
     trend: "-3%",
@@ -56,7 +58,7 @@ const KPIS: Kpi[] = [
   },
   {
     id: "responders",
-    label: "Active Responders",
+    labelKey: "active_responders",
     value: 863,
     icon: ShieldAlert,
     trend: "+8%",
@@ -85,7 +87,7 @@ export default function KPICards() {
             </div>
             <div className="min-w-0">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                {kpi.label}
+                <Translated k={kpi.labelKey} />
               </p>
               <p className="mt-0.5 text-3xl font-black tabular-nums leading-none text-foreground">
                 {kpi.value.toLocaleString()}

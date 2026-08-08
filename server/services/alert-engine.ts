@@ -17,6 +17,7 @@ import { prisma } from "@/server/prisma";
 import { parseAlertTemplate } from "@/lib/alerts/template-parser";
 import { sendSMSAlert, type SendSmsResult } from "@/lib/alerts/twilio-client";
 import { translateAlertForSMS } from "@/lib/i18n/ai-translator";
+import { toLocale } from "@/lib/i18n/locales";
 import { notifyAllSubscribers } from "@/server/services/push-notifier";
 import type { AlertLog } from "@prisma/client";
 
@@ -187,32 +188,56 @@ export async function processPredictionAlerts(
     if (effectiveChannels.includes("sms")) {
       const recipients = await prisma.user.findMany({
         where: { role: { in: effectiveRoles }, phone: { not: null } },
-        select: { id: true, name: true, phone: true },
+        select: { id: true, name: true, phone: true, preferredLanguage: true },
       });
 
-      // Phase 25 · Step 7 — dual-language SMS dispatch.
-      // MOCK CONTEXT: we don't query users.preferred_language yet (the
-      // migration may not be pushed), so every recipient is treated as
-      // preferring Hindi. TODO: select `preferredLanguage` once the column
-      // is live and group recipients by language to batch translations.
-      const MOCK_PREFERRED_LANGUAGE = "hi";
-
+      // Phase 25 · Step 7 — dual-language SMS dispatch, per recipient.
+      // Group recipients by preferred_language so the alert is translated
+      // ONCE per language (cost-efficient), then each recipient gets their
+      // own hybrid [ENGLISH] + [LOCAL] body in their chosen language.
+      const byLanguage = new Map<string, { id: string; name: string | null; phone: string }[]>();
       for (const recipient of recipients) {
         if (!recipient.phone) continue;
+        // toLocale() normalises the stored preference (e.g. "Hindi", "hi ")
+        // to a valid locale code, falling back to English for bad values.
+        const lang = toLocale(recipient.preferredLanguage);
+        const bucket = byLanguage.get(lang) ?? [];
+        bucket.push({
+          id: recipient.id,
+          name: recipient.name,
+          phone: recipient.phone,
+        });
+        byLanguage.set(lang, bucket);
+      }
 
-        // Translate the English alert (falls back to English on any failure
-        // — a critical alert is never dropped).
-        const localText = await translateAlertForSMS(
-          message,
-          MOCK_PREFERRED_LANGUAGE,
-        );
+      // Translate each language once; cache so groups share a single call.
+      // (Array.from avoids `--downlevelIteration` requirement for Map loops.)
+      const translatedCache = new Map<string, string>();
+      for (const [lang, group] of Array.from(byLanguage.entries())) {
+        // English recipients get the plain alert — no [LOCAL] mirror, so the
+        // SMS stays short and costs nothing extra.
+        if (lang === "en") {
+          for (const recipient of group) {
+            const result = await sendSMSAlert(recipient.phone, message);
+            smsResults.push(result);
+          }
+          continue;
+        }
+
+        let localText = translatedCache.get(lang);
+        if (!localText) {
+          localText = await translateAlertForSMS(message, lang);
+          translatedCache.set(lang, localText);
+        }
 
         // Hybrid body: English + local-language mirror in one SMS.
         const combined = `[ENGLISH]: ${message}\n\n[LOCAL]: ${localText}`;
 
         // sendSMSAlert never throws — trial limits just return { ok: false }.
-        const result = await sendSMSAlert(recipient.phone, combined);
-        smsResults.push(result);
+        for (const recipient of group) {
+          const result = await sendSMSAlert(recipient.phone, combined);
+          smsResults.push(result);
+        }
       }
     }
 

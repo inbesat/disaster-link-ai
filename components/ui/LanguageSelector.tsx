@@ -12,42 +12,22 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, Globe } from "lucide-react";
 import { useTranslation, type Locale } from "@/lib/i18n/LanguageContext";
-
-const LANGUAGE_OPTIONS: { code: Locale; nativeLabel: string }[] = [
-  { code: "en", nativeLabel: "English" },
-  { code: "hi", nativeLabel: "हिन्दी" },
-  { code: "ml", nativeLabel: "മലയാളം" },
-  { code: "as", nativeLabel: "অসমীয়া" },
-  { code: "bn", nativeLabel: "বাংলা" },
-  { code: "brx", nativeLabel: "बड़ो" },
-  { code: "doi", nativeLabel: "डोगरी" },
-  { code: "gu", nativeLabel: "ગુજરાતી" },
-  { code: "kn", nativeLabel: "ಕನ್ನಡ" },
-  { code: "ks", nativeLabel: "कॉशुर" },
-  { code: "kok", nativeLabel: "कोंकणी" },
-  { code: "mai", nativeLabel: "मैथिली" },
-  { code: "mni", nativeLabel: "মৈতৈলোন্" },
-  { code: "mr", nativeLabel: "मराठी" },
-  { code: "ne", nativeLabel: "नेपाली" },
-  { code: "or", nativeLabel: "ଓଡ଼ିଆ" },
-  { code: "pa", nativeLabel: "ਪੰਜਾਬੀ" },
-  { code: "sa", nativeLabel: "संस्कृतम्" },
-  { code: "sat", nativeLabel: "ᱥᱟᱱᱛᱟᱲᱤ" },
-  { code: "sd", nativeLabel: "سنڌي" },
-  { code: "ta", nativeLabel: "தமிழ்" },
-  { code: "te", nativeLabel: "తెలుగు" },
-  { code: "ur", nativeLabel: "اردو" },
-];
+import { LOCALE_OPTIONS } from "@/lib/i18n/locales";
+import { updatePreferredLanguage } from "@/app/actions/preferences";
 
 /**
- * Mock server sync for users.preferred_language.
- * TODO(Phase 25): replace with a real server action, e.g.
- *   import { updatePreferredLanguage } from "@/app/actions/preferences";
- *   await updatePreferredLanguage(lang);
+ * Persist the user's choice to their profile (server action).
+ * No-op failure is fine — the UI preference is already saved locally.
  */
 async function syncPreferredLanguage(lang: Locale): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, 150)); // simulated latency
-  console.log(`[preferences] preferred_language → ${lang} (mock persisted)`);
+  try {
+    const result = await updatePreferredLanguage(lang);
+    if (result && result.ok === false) {
+      console.warn(`[preferences] server sync skipped: ${result.error ?? "unknown"}`);
+    }
+  } catch (error) {
+    console.warn("[preferences] server sync failed (guest/demo mode ok):", error);
+  }
 }
 
 export default function LanguageSelector() {
@@ -88,7 +68,7 @@ export default function LanguageSelector() {
   }
 
   const activeLabel =
-    LANGUAGE_OPTIONS.find((option) => option.code === language)?.nativeLabel ??
+    LOCALE_OPTIONS.find((option) => option.code === language)?.nativeLabel ??
     "English";
 
   return (
@@ -118,7 +98,7 @@ export default function LanguageSelector() {
           className="lang-dropdown absolute right-0 top-full z-50 mt-2 w-48 rounded-eoc border border-border bg-surface-elevated p-1.5 shadow-2xl backdrop-blur"
         >
           <div className="max-h-80 overflow-y-auto">
-            {LANGUAGE_OPTIONS.map((option) => {
+            {LOCALE_OPTIONS.map((option) => {
               const active = option.code === language;
               return (
                 <button

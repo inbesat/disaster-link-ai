@@ -12,6 +12,7 @@ const PROTECTED_PATHS = [
   "/shelters",
   "/evacuations",
   "/ai-planner",
+  "/settings",
 ];
 
 // ---------------------------------------------------------------------------
@@ -29,6 +30,10 @@ const ADMIN_BASES = [
   "/analytics",
   "/audit-logs",
   "/health",
+  // Settings · admin-only sections (Organization, Integrations). Non-admin
+  // roles and guests are bounced to /403 here, like every other admin route.
+  "/settings/organization",
+  "/settings/integrations",
 ] as const;
 
 const ADMIN_ROLES = ["super_admin", "district_admin"] as const;
@@ -182,5 +187,8 @@ export const config = {
     "/shelters",
     "/evacuations",
     "/ai-planner",
+    "/settings/:path*",
+    "/settings/organization/:path*",
+    "/settings/integrations/:path*",
   ],
 };

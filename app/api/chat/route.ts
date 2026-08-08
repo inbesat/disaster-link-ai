@@ -1,7 +1,10 @@
-import { streamText, type Tool } from "ai";
+import { isStepCount, streamText, type LanguageModel, type Tool } from "ai";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { openRouterModel } from "@/lib/ai/openrouter";
+import {
+  hasAnyAiProviderConfigured,
+  resolveEmergencyPlannerModel,
+} from "@/lib/ai/openrouter";
 import { emergencyPlanTools } from "@/lib/ai/tools/shelter-tools";
 import { floodTools } from "@/lib/ai/tools/flood-tools";
 import { resourceInventoryTools } from "@/lib/ai/tools/resources-tools";
@@ -228,10 +231,45 @@ export async function POST(req: Request) {
     ...resourceInventoryTools,
   } satisfies Record<string, Tool>;
 
+  // Phase 11 · resilient provider chain: probe OpenRouter (primary + backup
+  // keys) → Groq → Bluesminds and use the first provider that answers. A
+  // dead vendor key or a deprecated model id can no longer take the chat
+  // down (see lib/ai/openrouter.ts). If no provider is configured at all,
+  // fail fast with a clear 503 instead of a hanging stream.
+  if (!hasAnyAiProviderConfigured()) {
+    return NextResponse.json(
+      {
+        error:
+          "AI provider is not configured. Set OPENROUTER_API_KEY, GROQ_API_KEY, or BLUESMINDS_API_KEY in the server environment.",
+      },
+      { status: 503 },
+    );
+  }
+
+  let model: LanguageModel;
+  try {
+    model = await resolveEmergencyPlannerModel();
+  } catch (error) {
+    console.error("[chat] failed to resolve an AI provider:", error);
+    return NextResponse.json(
+      { error: "No AI provider is currently reachable. Please retry in a minute." },
+      { status: 502 },
+    );
+  }
+
   const result = streamText({
-    model: openRouterModel,
+    model,
     system,
     messages,
+    // AI SDK v7 defaults to stopWhen: isStepCount(1) — ONE model invocation
+    // — so tool roundtrips never happen and the chat returns empty after the
+    // first tool call. Allow up to 6 steps (tool calls + final summary); the
+    // loop still ends early when the model stops calling tools.
+    stopWhen: isStepCount(6),
+    // Cap the response budget so providers with limited credits (e.g. an
+    // OpenRouter account with a few thousand tokens left) don't 402 — the
+    // resolver's probe uses the same 2048-token budget.
+    maxOutputTokens: 2048,
     // Phase 21 · every tool call is scoped to the user's district — the LLM
     // cannot query data outside its jurisdiction (mock RLS at the tool layer).
     tools: withDistrictScope(isCommander ? commanderTools : responderTools, district, role),

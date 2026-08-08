@@ -8,6 +8,7 @@ import AllocationMap, {
   type MapAllocation,
 } from "@/components/allocations/AllocationMap";
 import ScenarioSimulator from "@/components/allocations/ScenarioSimulator";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 type UnmetDemand = {
   demandId: string;
@@ -38,6 +39,7 @@ function totalUnmet(res: OptimizeResponse): number {
 }
 
 export default function AllocationsPage() {
+  const { t } = useTranslation();
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<OptimizeResponse | null>(null);
   const [lockedKeys, setLockedKeys] = useState<string[]>([]);
@@ -105,8 +107,10 @@ export default function AllocationsPage() {
       {/* Top section */}
       <section className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <p className="eoc-label text-accent">COMMAND CENTER · PHASE 13</p>
-          <h1 className="text-2xl font-bold">Smart Allocation Engine</h1>
+          <p className="eoc-label text-accent">
+            {t("command_center").toUpperCase()} · PHASE 13
+          </p>
+          <h1 className="text-2xl font-bold">{t("allocations")}</h1>
           <p className="mt-1 text-sm text-slate-400">
             Auto-prioritizes demand and assigns the nearest available resources.
           </p>
@@ -192,7 +196,8 @@ export default function AllocationsPage() {
         ) : (
           <div className="flex min-h-48 items-center justify-center rounded-eoc border border-dashed border-border bg-surface-muted/30">
             <p className="text-sm text-slate-500">
-              Allocation List Table — pending, en-route & delivered (coming soon)
+              Allocation List Table — pending, en-route &amp; delivered. Run
+              the optimizer to populate the dispatch plan.
             </p>
           </div>
         )}

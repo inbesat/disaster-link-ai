@@ -1,4 +1,5 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Settings } from "lucide-react";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { clearGuestMode, signOutAction } from "@/app/actions/auth";
@@ -10,6 +11,9 @@ import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSelector from "@/components/ui/LanguageSelector";
 import NavbarMobileMenu from "@/components/NavbarMobileMenu";
 import NavbarNav from "@/components/NavbarNav";
+import NavbarAvatar from "@/components/NavbarAvatar";
+import BackButton from "@/components/ui/BackButton";
+import Translated from "@/components/ui/Translated";
 
 export default async function Navbar() {
   const guest = cookies().get("guest_mode")?.value === "true";
@@ -33,20 +37,15 @@ export default async function Navbar() {
   }
 
   const displayName = guest ? "Guest Commander" : (name ?? email ?? "Responder");
-  const initials =
-    displayName
-      .trim()
-      .split(/\s+/)
-      .map((w) => w[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase() || "U";
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-6">
-        {/* Phase 25 · Step 5 — translated brand + links (client component) */}
-        <NavbarNav />
+        <div className="flex items-center gap-2">
+          <BackButton />
+          {/* Phase 25 · Step 5 — translated brand + links (client component) */}
+          <NavbarNav />
+        </div>
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2.5">
@@ -57,19 +56,11 @@ export default async function Navbar() {
               >
                 <GuestAvatarIcon />
               </span>
-            ) : avatarUrl ? (
-              <Image
-                src={avatarUrl}
-                alt={displayName}
-                width={36}
-                height={36}
-                unoptimized
-                className="h-9 w-9 rounded-full border border-border object-cover"
-              />
             ) : (
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface-muted text-xs font-semibold text-foreground">
-                {initials}
-              </span>
+              /* Phase 3 · avatar reads the local snapshot first for instant
+                 updates after an offline save, then the server URL, then
+                 initials. */
+              <NavbarAvatar serverAvatarUrl={avatarUrl} displayName={displayName} />
             )}
 
             <span className="text-left leading-tight">
@@ -95,7 +86,17 @@ export default async function Navbar() {
             <PushNotificationToggle />
           </div>
 
-          {/* Phase 25 · Step 4 — multilingual selector (en / हिन्दी / മലയാളം) */}
+          {/* Settings module entry point (Phase 1 · Settings shell) */}
+          <Link
+            href="/settings/profile"
+            aria-label="Open settings"
+            title="Settings"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface-elevated text-slate-300 transition hover:border-cyan-400 hover:text-cyan-300"
+          >
+            <Settings className="h-4 w-4" aria-hidden />
+          </Link>
+
+          {/* Phase 25 · Step 4 — multilingual selector (23 languages) */}
           <LanguageSelector />
 
           <ThemeToggle />
@@ -111,7 +112,7 @@ export default async function Navbar() {
               type="submit"
               className="rounded-md border border-border bg-surface-elevated px-3 py-1.5 text-xs font-medium text-foreground transition hover:border-accent hover:text-accent"
             >
-              {guest ? "Exit Demo" : "Sign Out"}
+              <Translated k={guest ? "exit_demo" : "sign_out"} />
             </button>
           </form>
         </div>

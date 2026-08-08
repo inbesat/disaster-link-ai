@@ -1,25 +1,28 @@
 import type { Metadata } from "next";
-import { Inter, Roboto_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { cookies } from "next/headers";
-import { Toaster } from "react-hot-toast";
+import ToastViewport from "@/components/ui/Toast";
 import EmergencyContactCard from "@/components/EmergencyContactCard";
 import SimulationToggle from "@/components/admin/SimulationToggle";
-import ThemeProvider from "@/components/ThemeProvider";
+import ThemeProvider from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { MapSettingsProvider } from "@/lib/settings/MapSettingsContext";
 import { SIMULATION_COOKIE } from "@/lib/admin/simulation";
 import "./globals.css";
 
-// Phase 22 · Step 9 — next/font/google (Inter for the UI, Roboto Mono for
-// the technical readouts). Fonts are self-hosted at build time (no runtime
+// Phase 22 · Step 9 + UI Phase 1 · Step 9 — next/font/google (Inter for the
+// UI, JetBrains Mono for technical data readouts — coordinates, timestamps,
+// quotas). Exposed as --font-sans / --font-mono so tailwind.config.ts and
+// globals.css pick them up. Fonts are self-hosted at build time (no runtime
 // Google requests) and next/font applies fallback metric overrides, so text
 // never shifts while fonts load (zero CLS). `display: swap` is implied.
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-sans",
 });
-const robotoMono = Roboto_Mono({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-roboto-mono",
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -33,12 +36,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const simulationActive =
-    cookies().get(SIMULATION_COOKIE)?.value === "true";
+  const simulationActive = cookies().get(SIMULATION_COOKIE)?.value === "true";
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${robotoMono.variable} antialiased`}>
+      {/* bg-primary / text-primary = the roadmap tokens (globals.css also
+          sets them on body — these classes make it explicit). */}
+      <body
+        className={`${inter.variable} ${jetbrainsMono.variable} bg-primary text-primary antialiased`}
+      >
         {simulationActive && (
           <div
             role="alert"
@@ -56,20 +62,13 @@ export default function RootLayout({
 
         <ThemeProvider>
           <LanguageProvider>
-            {children}
-            <EmergencyContactCard />
+            <MapSettingsProvider>
+              {children}
+              <EmergencyContactCard />
+            </MapSettingsProvider>
           </LanguageProvider>
         </ThemeProvider>
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            style: {
-              background: "var(--surface-elevated)",
-              color: "var(--foreground)",
-              border: "1px solid var(--border)",
-            },
-          }}
-        />
+        <ToastViewport />
       </body>
     </html>
   );

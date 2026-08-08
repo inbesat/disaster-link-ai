@@ -313,7 +313,7 @@ export default function AlertHistoryTable({ alerts }: { alerts: AlertHistoryRow[
                   <td className="whitespace-nowrap px-5 py-3">
                     {/* Phase 22 · Step 5 — color + icon + text so severity
                         never relies on color alone (colorblind-safe). */}
-                    <SeverityBadge level={alert.severity} size="sm" />
+                    <SeverityBadge variant={alert.severity} size="sm" />
                   </td>
                   <td className="max-w-md px-5 py-3 text-slate-300">{alert.message}</td>
                   <td className="whitespace-nowrap px-5 py-3 uppercase text-[11px] tracking-wider text-slate-400">

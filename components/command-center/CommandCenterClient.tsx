@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import LayerToggle, {
-  DEFAULT_LAYER_VISIBILITY,
   type LayerVisibility,
 } from "@/components/map/LayerToggle";
 import PredictionChart from "@/components/dashboard/PredictionChart";
@@ -21,7 +20,7 @@ import EvacuationPlanner, {
 } from "@/components/dashboard/EvacuationPlanner";
 import type { Feature, LineString } from "geojson";
 import type { FloodRiskLevel } from "@/lib/map/flood-geojson";
-import { DEFAULT_CENTER } from "@/lib/map/default-view";
+import { useMapSettings } from "@/lib/settings/MapSettingsContext";
 import type { DisasterType } from "@/lib/disasters/disaster-types";
 import { DISASTER_META } from "@/lib/disasters/disaster-types";
 import HazardSelector from "@/components/map/HazardSelector";
@@ -60,7 +59,18 @@ type CommandCenterClientProps = {
 
 export default function CommandCenterClient({ sidebar, top }: CommandCenterClientProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [layers, setLayers] = useState<LayerVisibility>(DEFAULT_LAYER_VISIBILITY);
+
+  // The map display config is owned by /settings/map via the shared
+  // MapSettingsContext — the command-center map honours Default View,
+  // layer visibility and refresh cadence set there, and updates the
+  // instant the responder tweaks them.
+  const { settings } = useMapSettings();
+
+  const [layers, setLayers] = useState<LayerVisibility>(() => ({
+    floodZones: settings.layers.floodZones,
+    shelters: settings.layers.shelters,
+    resources: settings.layers.resources,
+  }));
   const [hoursAhead, setHoursAhead] = useState(24);
   const [scenario, setScenario] = useState<ScenarioId>("normal");
   const [severity, setSeverity] = useState<FloodRiskLevel>("high");
@@ -68,7 +78,12 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
   const [mapState, setMapState] = useState<{
     center: { lat: number; lng: number };
     district: string | null;
-  }>({ center: DEFAULT_CENTER, district: null });
+  }>(() => ({
+    center: settings.defaultView.focusDistrict
+      ? settings.defaultView.center
+      : { lat: settings.defaultView.center.lat, lng: settings.defaultView.center.lng },
+    district: settings.defaultView.focusDistrict,
+  }));
   const [evacRoute, setEvacRoute] = useState<{
     geometry: Feature<LineString>;
     isSafe: boolean;

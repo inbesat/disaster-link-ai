@@ -29,7 +29,7 @@ interface ExportAction {
   timestamp: string;
 }
 
-interface PersonalDataExport {
+export interface PersonalDataExport {
   schemaVersion: string;
   exportTimestamp: string;
   legalBasis: string;
@@ -47,6 +47,10 @@ interface PersonalDataExport {
     phone: string;
   };
   loginHistory: { timestamp: string; ip: string }[];
+  /** AI planner conversations (redacted excerpts). */
+  chatLogs: { timestamp: string; topic: string; excerpt: string }[];
+  /** GPS check-ins (rounded to neighbourhood precision). */
+  gpsHistory: { timestamp: string; lat: number; lng: number; label: string }[];
   recentActions: ExportAction[];
   retentionPolicy: string;
 }
@@ -55,7 +59,7 @@ function isoHoursAgo(hoursAgo: number): string {
   return new Date(Date.now() - hoursAgo * 3_600_000).toISOString();
 }
 
-function buildExportPayload(email: string | null, displayName: string | null): PersonalDataExport {
+export function buildExportPayload(email: string | null, displayName: string | null): PersonalDataExport {
   return {
     schemaVersion: "1.0.0",
     exportTimestamp: new Date().toISOString(),
@@ -76,6 +80,23 @@ function buildExportPayload(email: string | null, displayName: string | null): P
       { timestamp: isoHoursAgo(50), ip: "203.0.113.9" },
       { timestamp: isoHoursAgo(74), ip: "198.51.100.41" },
       { timestamp: isoHoursAgo(98), ip: "198.51.100.41" },
+    ],
+    chatLogs: [
+      {
+        timestamp: isoHoursAgo(6),
+        topic: "Evacuation plan — Patna north",
+        excerpt: "[redacted] … recommended 3 shelters with 1,250 open beds …",
+      },
+      {
+        timestamp: isoHoursAgo(30),
+        topic: "Resource allocation — boats",
+        excerpt: "[redacted] … 12 boats assigned to Sampatchak …",
+      },
+    ],
+    gpsHistory: [
+      { timestamp: isoHoursAgo(4), lat: 25.6111, lng: 85.1442, label: "Gandhi Maidan Shelter (rounded)" },
+      { timestamp: isoHoursAgo(28), lat: 25.5951, lng: 85.1625, label: "Kankarbagh Checkpoint (rounded)" },
+      { timestamp: isoHoursAgo(52), lat: 25.6222, lng: 85.1353, label: "Danapur Depot (rounded)" },
     ],
     recentActions: [
       {

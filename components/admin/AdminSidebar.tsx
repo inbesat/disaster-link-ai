@@ -15,6 +15,7 @@ import {
   X,
   ShieldCheck,
 } from "lucide-react";
+import BackButton from "@/components/ui/BackButton";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -31,9 +32,12 @@ function SidebarContent() {
 
   return (
     <>
-      <div className="flex h-14 items-center gap-2.5 border-b border-[#1c2740] px-5">
-        <ShieldCheck className="h-4 w-4 text-amber-400" />
-        <span className="eoc-label text-amber-400/90">DRIP / ADMIN</span>
+      <div className="flex h-14 items-center justify-between gap-2.5 border-b border-[#1c2740] px-5">
+        <div className="flex items-center gap-2.5">
+          <ShieldCheck className="h-4 w-4 text-amber-400" />
+          <span className="eoc-label text-amber-400/90">DRIP / ADMIN</span>
+        </div>
+        <BackButton />
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
@@ -89,7 +93,10 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
           <Menu className="h-4 w-4" />
           Admin Menu
         </button>
-        <span className="eoc-label text-amber-400/90">DRIP / ADMIN</span>
+        <div className="flex items-center gap-2">
+          <BackButton />
+          <span className="eoc-label text-amber-400/90">DRIP / ADMIN</span>
+        </div>
       </header>
 
       {/* Mobile drawer */}

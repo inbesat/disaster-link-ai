@@ -563,7 +563,8 @@ export default function AiPlannerPage() {
 
           {error && (
             <p className="mt-2 text-[11px] text-red-400">
-              Planner error — check the OpenRouter key or model availability.
+              Planner error — the AI provider is unreachable right now (all
+              providers probed: OpenRouter → Groq → Bluesminds). Retry in a minute.
             </p>
           )}
         </footer>

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { calculateFleetRequirements } from "@/lib/map/fleet-allocation";
 import { fetchEvacuationPlans } from "@/lib/map/evacuation-plans-client";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 type PlanStatus = "pending" | "in_transit" | "completed";
 
@@ -92,6 +93,7 @@ const PREV_STATUS: Record<PlanStatus, PlanStatus | null> = {
 };
 
 export default function EvacuationsPage() {
+  const { t } = useTranslation();
   const [plans, setPlans] = useState<PlanCard[]>(MOCK_PLANS);
   const [dragId, setDragId] = useState<string | null>(null);
 
@@ -141,8 +143,10 @@ export default function EvacuationsPage() {
     <main className="mx-auto max-w-7xl px-6 py-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eoc-label text-accent">COMMAND CENTER · PHASE 9</p>
-          <h1 className="text-2xl font-bold">Evacuation Tracker Board</h1>
+          <p className="eoc-label text-accent">
+            {t("command_center").toUpperCase()} · PHASE 9
+          </p>
+          <h1 className="text-2xl font-bold">{t("evacuations")}</h1>
           <p className="mt-1 text-sm text-slate-400">
             Active convoy operations across all affected districts.
           </p>

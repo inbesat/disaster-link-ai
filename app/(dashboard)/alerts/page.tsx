@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { prisma } from "@/server/prisma";
 import AlertHistoryTable from "@/components/dashboard/AlertHistoryTable";
+import Translated from "@/components/ui/Translated";
 
 export const metadata: Metadata = {
   title: "Alert History | Disaster Response",
@@ -102,8 +103,12 @@ export default async function AlertsPage() {
     <main className="mx-auto max-w-7xl px-6 py-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eoc-label text-accent">COMMAND CENTER</p>
-          <h1 className="text-2xl font-bold">Alert History &amp; Dispatch Log</h1>
+          <p className="eoc-label text-accent">
+            <Translated k="command_center" />
+          </p>
+          <h1 className="text-2xl font-bold">
+            <Translated k="alert_history" /> &amp; Dispatch Log
+          </h1>
           <p className="mt-1 text-sm text-slate-400">
             Emergency communications issued to the response network.
           </p>

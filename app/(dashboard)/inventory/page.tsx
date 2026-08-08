@@ -9,6 +9,7 @@ import InventoryCharts from "@/components/dashboard/InventoryCharts";
 import ResourceCSVUploader from "@/components/dashboard/ResourceCSVUploader";
 import ResourceFormModal from "@/components/dashboard/ResourceFormModal";
 import ResourceMovementsPanel from "@/components/dashboard/ResourceMovementsPanel";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 const CATEGORIES = [
   "boat",
@@ -48,6 +49,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function InventoryPage() {
+  const { t } = useTranslation();
   const [category, setCategory] = useState("all");
   const [status, setStatus] = useState("all");
   const [addOpen, setAddOpen] = useState(false);
@@ -92,8 +94,10 @@ export default function InventoryPage() {
     <main className="mx-auto max-w-7xl px-6 py-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eoc-label text-accent">COMMAND CENTER · PHASE 12</p>
-          <h1 className="text-2xl font-bold">Resource Inventory</h1>
+          <p className="eoc-label text-accent">
+            {t("command_center").toUpperCase()} · PHASE 12
+          </p>
+          <h1 className="text-2xl font-bold">{t("resource_inventory")}</h1>
           <p className="mt-1 text-sm text-slate-400">
             {totals.total.toLocaleString()} units in inventory ·{" "}
             {totals.deployed.toLocaleString()} deployed

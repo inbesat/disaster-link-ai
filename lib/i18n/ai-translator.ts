@@ -13,37 +13,18 @@
 
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateText } from "ai";
+import { LOCALE_ENGLISH_NAMES } from "@/lib/i18n/locales";
 
 const GROQ_BASE = "https://api.groq.com/openai/v1";
 const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
-/** Language-code → human name for the prompt — all 22 supported languages
- * (English + the 21 scheduled languages of India). */
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: "English",
-  as: "Assamese",
-  bn: "Bengali",
-  brx: "Bodo",
-  doi: "Dogri",
-  gu: "Gujarati",
-  hi: "Hindi",
-  kn: "Kannada",
-  ks: "Kashmiri",
-  kok: "Konkani",
-  mai: "Maithili",
-  ml: "Malayalam",
-  mni: "Manipuri",
-  mr: "Marathi",
-  ne: "Nepali",
-  or: "Odia",
-  pa: "Punjabi",
-  sa: "Sanskrit",
-  sat: "Santali",
-  sd: "Sindhi",
-  ta: "Tamil",
-  te: "Telugu",
-  ur: "Urdu",
-};
+/**
+ * Language-code → human name for the prompt — English + the 22 scheduled
+ * languages of India (Eighth Schedule). Shared with the rest of the i18n
+ * system via lib/i18n/locales.ts.
+ */
+const LANGUAGE_NAMES: Record<string, string> =
+  LOCALE_ENGLISH_NAMES as Record<string, string>;
 
 const SYSTEM_PROMPT =
   "You are a crisis translation engine. Translate the following emergency alert into {targetLanguage}. " +

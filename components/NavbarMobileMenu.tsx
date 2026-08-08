@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, Sparkles, X } from "lucide-react";
 import OnboardingTooltip from "@/components/ui/OnboardingTooltip";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 /**
  * Phase 22 · Step 10 — mobile hamburger menu.
@@ -14,6 +15,7 @@ import OnboardingTooltip from "@/components/ui/OnboardingTooltip";
  * full-width 48px (py-4 / min-h-12) touch target per mobile ergonomics.
  */
 export default function NavbarMobileMenu() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
 
@@ -67,13 +69,13 @@ export default function NavbarMobileMenu() {
                 onClick={close}
                 className="flex min-h-12 items-center rounded-md px-4 py-4 text-sm font-semibold text-foreground transition hover:bg-surface-muted"
               >
-                Alert Log
+                {t("alert_log")}
               </Link>
 
               {/* Same one-time onboarding callout as the desktop nav (shared
                   localStorage key → dismissed once across the whole app). */}
               <OnboardingTooltip
-                title="New: AI Commander"
+                title={`New: ${t("ai_commander")}`}
                 description="Ask the AI Commander for an evacuation plan!"
                 storageKey="drip_onboarding_ai_chat_v1"
                 placement="bottom-left"
@@ -84,7 +86,7 @@ export default function NavbarMobileMenu() {
                   className="flex min-h-12 w-full items-center gap-1.5 rounded-md px-4 py-4 text-sm font-bold uppercase tracking-wider text-accent transition hover:bg-surface-muted"
                 >
                   <Sparkles className="h-4 w-4" aria-hidden />
-                  AI Commander
+                  {t("ai_commander")}
                 </Link>
               </OnboardingTooltip>
             </nav>

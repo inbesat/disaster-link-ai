@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getShelters } from "@/app/actions/shelters";
 import SheltersTable, { type ShelterRow } from "@/components/dashboard/SheltersTable";
 import ConflictResolver from "@/components/dashboard/ConflictResolver";
+import Translated from "@/components/ui/Translated";
 
 export const metadata: Metadata = {
   title: "Shelter Management | Disaster Response",
@@ -99,8 +100,12 @@ export default async function SheltersPage() {
     <main className="mx-auto max-w-7xl px-6 py-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eoc-label text-accent">COMMAND CENTER · PHASE 8</p>
-          <h1 className="text-2xl font-bold">Shelter &amp; Infrastructure</h1>
+          <p className="eoc-label text-accent">
+            <Translated k="command_center" /> · PHASE 8
+          </p>
+          <h1 className="text-2xl font-bold">
+            <Translated k="shelter_management" />
+          </h1>
           <p className="mt-1 text-sm text-slate-400">
             Live capacity, occupancy and relief facilities across all districts.
           </p>

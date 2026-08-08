@@ -5,6 +5,7 @@ import { Battery, BatteryFull, BatteryLow, Wifi, WifiOff } from "lucide-react";
 import QuickActionsNav from "@/components/field/QuickActionsNav";
 import SosPanicModal from "@/components/field/SosPanicModal";
 import SyncStatusBadge from "@/components/field/SyncStatusBadge";
+import BackButton from "@/components/ui/BackButton";
 
 interface FieldProfile {
   name: string;
@@ -71,6 +72,7 @@ export default function FieldShell({
       <header className="sticky top-0 z-40 border-b-2 border-cyan-400/40 bg-[#0A0F1D]">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
+            <BackButton />
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-amber-400 bg-amber-500/15 text-lg font-bold text-amber-300">
               {profile.name
                 .split(" ")

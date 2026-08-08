@@ -4,9 +4,70 @@
 
 @layer base {
   :root {
-    /* EOC dark palette — deep navy/slate, not pure black */
-    --background: #0a1428;
-    --foreground: #e2e8f0;
+    /* =====================================================================
+       ROADMAP DESIGN SYSTEM (UI/UX Phase 1 · Step 1) — "Discord-meets-FEMA"
+       dark-first emergency palette. These tokens are exposed to Tailwind as
+       bg-primary / text-secondary / bg-severity-critical / … utilities and
+       are meant for the new design-system components (sidebar, bottom nav,
+       dashboard widgets, StatCards, …).
+
+       NOTE (Hybrid decision): the legacy EOC palette below is kept intact so
+       the ~150 existing components keep working unchanged. New UI should
+       prefer the roadmap tokens; legacy tokens stay for the old surfaces.
+       ===================================================================== */
+
+    /* Backgrounds — deep navy scale */
+    --bg-primary: #0a0f1a;
+    --bg-secondary: #111827;
+    --bg-tertiary: #1e293b;
+
+    /* Accents — emergency blue + status colors */
+    --accent-primary: #3b82f6;
+    --accent-danger: #ef4444;
+    --accent-warning: #f59e0b;
+    --accent-success: #10b981;
+    --accent-purple: #8b5cf6;
+
+    /* Text — slate scale */
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    /* Borders */
+    --border-subtle: #1e293b;
+    --border-active: #3b82f6;
+
+    /* Severity background tints (for alert banners / badges) */
+    --severity-critical: #7f1d1d;
+    --severity-warning: #78350f;
+    --severity-watch: #854d0e;
+    --severity-safe: #064e3b;
+
+    /* Radii — buttons 6 / cards 10 / modals 14 / floating 18 */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
+
+    /* Shadows & glows */
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+    --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    --glow-blue: 0 0 20px rgba(59, 130, 246, 0.3);
+    --glow-red: 0 0 20px rgba(239, 68, 68, 0.3);
+    --glow-amber: 0 0 20px rgba(245, 158, 11, 0.3);
+
+    /* Skeleton shimmer — dark slate scale (slate-800 base / slate-700
+       shine). Feeds .skeleton-shimmer in @layer components. */
+    --skeleton-base: #1e293b;
+    --skeleton-shine: #334155;
+
+    /* =====================================================================
+       LEGACY EOC PALETTE — deep navy/slate, not pure black.
+       Kept for backward compatibility; --background/--foreground are aliased
+       to the roadmap tokens so the page shell and new components agree.
+       ===================================================================== */
+    --background: var(--bg-primary);
+    --foreground: var(--text-primary);
 
     --surface: #0f1d38;
     --surface-elevated: #17294d;
@@ -41,18 +102,99 @@
     --severity-purple-400: #c084fc;
     --severity-purple-500: #a855f7;
     --severity-purple-600: #9333ea;
+
+    /* =====================================================================
+       RGB CHANNEL VARIABLES — Tailwind opacity modifiers.
+
+       Tailwind v3 only generates `bg-accent/10`-style opacity utilities
+       when the theme color is expressed as `rgb(var(--x-rgb) / <alpha>)`.
+       These channel vars feed that pattern (see tailwind.config.ts). The
+       hex vars above stay for direct `var(--x)` use in plain CSS.
+       ===================================================================== */
+    --bg-primary-rgb: 10 15 26;
+    --bg-secondary-rgb: 17 24 39;
+    --bg-tertiary-rgb: 30 41 59;
+
+    --accent-primary-rgb: 59 130 246;
+    --accent-danger-rgb: 239 68 68;
+    --accent-warning-rgb: 245 158 11;
+    --accent-success-rgb: 16 185 129;
+    --accent-purple-rgb: 139 92 246;
+
+    --text-primary-rgb: 241 245 249;
+    --text-secondary-rgb: 148 163 184;
+    --text-muted-rgb: 100 116 139;
+
+    --border-subtle-rgb: 30 41 59;
+    --border-active-rgb: 59 130 246;
+
+    --severity-critical-rgb: 127 29 29;
+    --severity-warning-rgb: 120 53 15;
+    --severity-watch-rgb: 133 77 14;
+    --severity-safe-rgb: 6 78 59;
+
+    --severity-green-300-rgb: 110 231 183;
+    --severity-green-400-rgb: 52 211 153;
+    --severity-green-500-rgb: 16 185 129;
+    --severity-green-600-rgb: 5 150 105;
+
+    --severity-amber-300-rgb: 252 211 77;
+    --severity-amber-400-rgb: 251 191 36;
+    --severity-amber-500-rgb: 245 158 11;
+    --severity-amber-600-rgb: 217 119 6;
+
+    --severity-red-300-rgb: 252 165 165;
+    --severity-red-400-rgb: 248 113 113;
+    --severity-red-500-rgb: 239 68 68;
+    --severity-red-600-rgb: 220 38 38;
+
+    --severity-purple-300-rgb: 216 180 254;
+    --severity-purple-400-rgb: 192 132 252;
+    --severity-purple-500-rgb: 168 85 247;
+    --severity-purple-600-rgb: 147 51 234;
+
+    --accent-rgb: 56 189 248;
+    --surface-rgb: 15 29 56;
+    --surface-elevated-rgb: 23 41 77;
+    --surface-muted-rgb: 12 24 48;
+    --border-rgb: 30 48 86;
+    --border-strong-rgb: 44 63 109;
+    --background-rgb: 10 15 26;
+    --foreground-rgb: 241 245 249;
   }
 
   /*
    * Light "day ops" palette — active whenever next-themes removes the `dark`
-   * class from <html> (Phase 22 · Step 2). All components consume these
-   * tokens via tailwind (bg-surface, text-foreground, …), so the whole app
-   * re-themes without touching component classes. Severity colors stay
-   * constant; the accent deepens to sky-600 for contrast on light surfaces.
+   * class from <html>. The roadmap tokens get light values too so new
+   * components built on bg-primary / text-primary also re-theme correctly.
    */
   :root:not(.dark) {
-    --background: #f2f6fc;
-    --foreground: #101b2e;
+    --bg-primary: #f2f6fc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #e9eff8;
+
+    --accent-primary: #2563eb;
+    --accent-danger: #dc2626;
+    --accent-warning: #d97706;
+    --accent-success: #059669;
+    --accent-purple: #7c3aed;
+
+    --text-primary: #101b2e;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+
+    --border-subtle: #d4deef;
+    --border-active: #2563eb;
+
+    /* Light-mode severity tints: soft pastels that read well with the dark
+       slate text tokens above (dark mode keeps the deep tints). */
+    --severity-critical: #fecaca;
+    --severity-warning: #fed7aa;
+    --severity-watch: #fef3c7;
+    --severity-safe: #d1fae5;
+
+    --background: var(--bg-primary);
+    --foreground: var(--text-primary);
 
     --surface: #ffffff;
     --surface-elevated: #e9eff8;
@@ -63,6 +205,43 @@
 
     --accent: #0284c7;
     --accent-soft: rgba(2, 132, 199, 0.12);
+
+    /* Skeleton shimmer — light slate scale (slate-200 base / slate-100
+       shine) so loading blocks read correctly on the white day-ops cards. */
+    --skeleton-base: #e2e8f0;
+    --skeleton-shine: #f1f5f9;
+
+    /* Light "day ops" RGB channels (severity scales keep the dark values). */
+    --bg-primary-rgb: 242 246 252;
+    --bg-secondary-rgb: 255 255 255;
+    --bg-tertiary-rgb: 233 239 248;
+
+    --accent-primary-rgb: 37 99 235;
+    --accent-danger-rgb: 220 38 38;
+    --accent-warning-rgb: 217 119 6;
+    --accent-success-rgb: 5 150 105;
+    --accent-purple-rgb: 124 58 237;
+
+    --text-primary-rgb: 16 27 46;
+    --text-secondary-rgb: 71 85 105;
+    --text-muted-rgb: 148 163 184;
+
+    --border-subtle-rgb: 212 222 239;
+    --border-active-rgb: 37 99 235;
+
+    --severity-critical-rgb: 254 202 202;
+    --severity-warning-rgb: 254 215 170;
+    --severity-watch-rgb: 254 243 199;
+    --severity-safe-rgb: 209 250 229;
+
+    --accent-rgb: 2 132 199;
+    --surface-rgb: 255 255 255;
+    --surface-elevated-rgb: 233 239 248;
+    --surface-muted-rgb: 223 232 244;
+    --border-rgb: 212 222 239;
+    --border-strong-rgb: 180 195 219;
+    --background-rgb: 242 246 252;
+    --foreground-rgb: 16 27 46;
 
     color-scheme: light;
   }
@@ -76,14 +255,14 @@
   }
 
   body {
-    background-color: var(--background);
+    background-color: var(--bg-primary);
     background-image:
       radial-gradient(ellipse 80% 60% at 20% -10%, rgba(56, 189, 248, 0.08), transparent),
       radial-gradient(ellipse 60% 50% at 100% 0%, rgba(168, 85, 247, 0.06), transparent);
     background-attachment: fixed;
-    color: var(--foreground);
+    color: var(--text-primary);
     font-family:
-      var(--font-inter),
+      var(--font-sans),
       Inter,
       ui-sans-serif,
       system-ui,
@@ -101,12 +280,12 @@
   h6 {
     font-weight: 700;
     letter-spacing: -0.02em;
-    color: var(--foreground);
+    color: var(--text-primary);
   }
 
   ::selection {
     background: var(--accent-soft);
-    color: var(--foreground);
+    color: var(--text-primary);
   }
 
   /* Slim EOC-style scrollbars */
@@ -133,7 +312,7 @@
     @apply rounded-eoc border border-solid bg-surface;
   }
 
-  /* Monospace "system readout" label */
+  /* Monospace "system readout" label — JetBrains Mono for data */
   .eoc-label {
     @apply font-mono text-[11px] uppercase tracking-widest text-slate-400;
   }
@@ -177,6 +356,124 @@
   .map-alert-flash-ring {
     box-shadow: inset 0 0 0 10px rgba(239, 68, 68, 0.9);
   }
+
+  /* SkeletonLoader shimmer (UI Phase 1 · Step 6) — a continuous horizontal
+     sweep of a slate gradient: base → shine → base. Colors come from
+     --skeleton-base/--skeleton-shine (slate-800/slate-700 dark, slate-200/
+     slate-100 light "day ops"), so the block re-themes automatically. */
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  .skeleton-shimmer {
+    background-image: linear-gradient(
+      to right,
+      var(--skeleton-base, #1e293b) 40%,
+      var(--skeleton-shine, #334155) 50%,
+      var(--skeleton-base, #1e293b) 60%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-shimmer {
+      animation: none;
+      background-image: none;
+      background-color: var(--skeleton-base, #1e293b);
+    }
+  }
+
+  /* Toast progress bar (UI Phase 1 · Step 7) — shrinks across the toast's
+     auto-dismiss duration; pauses on hover/focus so long messages stay
+     readable. Note: the pause is visual only — the react-hot-toast
+     auto-dismiss timer keeps running. Duration is set inline per toast
+     (animation-duration). */
+  @keyframes toast-progress {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+  .toast-progress {
+    animation-name: toast-progress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    animation-duration: 5s;
+  }
+  .toast:hover .toast-progress,
+  .toast:focus-within .toast-progress {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .toast-progress {
+      animation: none;
+    }
+  }
+
+  /* ToastViewport positioning is handled in JS — the position prop flips
+     to top-center on mobile via matchMedia in components/ui/Toast.tsx
+     (per-toast wrappers are absolutely positioned with inline styles, so
+     CSS overrides can't relocate them reliably). No container CSS needed. */
+}
+
+/* ---------------------------------------------------------------------
+   ROADMAP UTILITIES (UI/UX Phase 1 · Step 2)
+   Hand-written because a Tailwind color named `bg`/`text`/`border` would
+   generate `bg-bg-primary` instead of `bg-primary`. These mirror the
+   roadmap tokens 1:1 and re-theme automatically with the light "day ops"
+   palette since they read the CSS variables.
+
+   NOTE: deliberately written as plain top-level CSS (NOT inside
+   `@layer utilities`) — Tailwind v3.4 drops the contents of a native
+   `@layer utilities` block placed after the `@tailwind` directives, while
+   plain rules are always passed through verbatim (see the MapLibre
+   overrides below). Placed last in the file so they win source-order ties
+   against generated utilities.
+   --------------------------------------------------------------------- */
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-muted {
+  color: var(--text-muted);
+}
+
+.border-subtle {
+  border-color: var(--border-subtle);
+}
+.border-active {
+  border-color: var(--border-active);
+}
+
+/* Roadmap soft outer glows. Suffixed with `-soft` so they can't be
+   confused with the legacy shadow-glow-red/amber utilities (ring+glow
+   combos with different values). */
+.glow-blue-soft {
+  box-shadow: var(--glow-blue);
+}
+.glow-red-soft {
+  box-shadow: var(--glow-red);
+}
+.glow-amber-soft {
+  box-shadow: var(--glow-amber);
 }
 
 /* ---------------------------------------------------------------------
@@ -205,10 +502,9 @@
 }
 
 /* ---------------------------------------------------------------------
-   Phase 22 · Step 6 — smooth custom HTML markers. Every MapLibre HTML
-   marker (shelters, depots, closures, ground reports, fleet pin) gets a
-   gentle 0.3s ease on all property changes so markers glide instead of
-   snapping when data or selection state updates.
+   Smooth custom HTML markers — every MapLibre HTML marker (shelters,
+   depots, closures, ground reports, fleet pin) gets a gentle 0.3s ease on
+   all property changes so markers glide instead of snapping.
    --------------------------------------------------------------------- */
 .maplibregl-marker {
   transition: all 0.3s ease;

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { ingestDocument } from "@/app/actions/documents";
 import RAGDebugger from "@/components/rag/RAGDebugger";
 import CostTracker from "@/components/rag/CostTracker";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 const DISTRICTS = ["Patna", "Ernakulam", "Kamrup", "Kochi", "Guwahati"];
 
@@ -22,6 +23,7 @@ const DOCUMENT_TYPES = [
 const DEFAULT_DOCUMENT_TYPE = DOCUMENT_TYPES[1];
 
 export default function KnowledgeBasePage() {
+  const { t } = useTranslation();
   const [file, setFile] = useState<File | null>(null);
   const [district, setDistrict] = useState<string>(DISTRICTS[0]);
   const [documentType, setDocumentType] = useState<string>(DEFAULT_DOCUMENT_TYPE);
@@ -73,9 +75,11 @@ export default function KnowledgeBasePage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <div className="mb-6">
-        <p className="eoc-label text-accent">RAG KNOWLEDGE BASE · PHASE 15</p>
+        <p className="eoc-label text-accent">
+          RAG {t("knowledge_base").toUpperCase()} · PHASE 15
+        </p>
         <h1 className="mt-1 text-2xl font-black tracking-tight">
-          Emergency SOP Knowledge Base
+          {t("knowledge_base")}
         </h1>
         <p className="mt-1 text-sm text-slate-400">
           Upload District Disaster Management Plans (DDMPs) and SOPs. They are

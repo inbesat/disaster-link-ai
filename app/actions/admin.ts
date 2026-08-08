@@ -2,6 +2,7 @@
 
 import type { Role } from "@/lib/validations/user";
 import { logAdminAction } from "@/lib/admin/audit-logger";
+import { DEMO_AUDIT_EVENTS, type AuditEvent } from "@/lib/settings/privacy-settings";
 
 export interface DistrictConfig {
   district: string;
@@ -128,4 +129,15 @@ export async function saveDistrictConfig(
     `rainThreshold=${config.criticalRainThresholdMm}mm · riverDanger=${config.riverDangerMarkM}m · autoSms=${config.autoAlertSms}`,
   );
   return { success: true, saved: config };
+}
+
+/**
+ * List security-relevant audit events for the admin Audit Logs console.
+ *
+ * Phase 18 · Step 5 — returns the seeded demo trail so the console is
+ * always populated. A production build would read rows from the
+ * audit_logs table (written by logAdminAction) via Prisma.
+ */
+export async function listAuditLogs(): Promise<AuditEvent[]> {
+  return DEMO_AUDIT_EVENTS.map((event) => ({ ...event }));
 }

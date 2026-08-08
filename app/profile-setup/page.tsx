@@ -12,6 +12,7 @@ import {
   ORGANIZATIONS,
   type ProfileSetupInput,
 } from "@/lib/validations/user";
+import { LOCALE_OPTIONS } from "@/lib/i18n/locales";
 import DataExportButton from "@/components/security/DataExportButton";
 
 let supabase: ReturnType<typeof createClient> | null = null;
@@ -33,7 +34,11 @@ export default function ProfileSetupPage() {
     formState: { errors },
   } = useForm<ProfileSetupInput>({
     resolver: zodResolver(profileSetupSchema),
-    defaultValues: { role: "field_responder", organization: "NGO" },
+    defaultValues: {
+      role: "field_responder",
+      organization: "NGO",
+      preferredLanguage: "en",
+    },
   });
 
   useEffect(() => {
@@ -82,6 +87,7 @@ export default function ProfileSetupPage() {
         phone: data.phone,
         emergency_contact: data.emergencyContact,
         assigned_district: data.assignedDistrict,
+        preferred_language: data.preferredLanguage,
         ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
       })
       .eq("id", user.id);
@@ -238,6 +244,27 @@ export default function ProfileSetupPage() {
             {errors.assignedDistrict && (
               <p className={errorClass}>{errors.assignedDistrict.message}</p>
             )}
+          </div>
+
+          <div>
+            <label htmlFor="preferredLanguage" className={labelClass}>
+              Preferred Language
+            </label>
+            <select
+              id="preferredLanguage"
+              {...register("preferredLanguage")}
+              className={inputClass}
+            >
+              {LOCALE_OPTIONS.map(({ code, nativeLabel }) => (
+                <option key={code} value={code}>
+                  {nativeLabel}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-xs text-slate-500">
+              Your interface language — emergency SMS alerts will be sent in
+              this language.
+            </p>
           </div>
 
           {error && (
