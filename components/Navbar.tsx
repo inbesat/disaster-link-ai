@@ -9,6 +9,7 @@ import PushNotificationToggle from "@/components/dashboard/PushNotificationToggl
 import PresenceIndicators from "@/components/dashboard/PresenceIndicators";
 import SyncStatus from "@/components/dashboard/SyncStatus";
 import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSelector from "@/components/ui/LanguageSelector";
 import OnboardingTooltip from "@/components/ui/OnboardingTooltip";
 import NavbarMobileMenu from "@/components/NavbarMobileMenu";
 
@@ -125,6 +126,9 @@ export default async function Navbar() {
           <div className="hidden md:block">
             <PushNotificationToggle />
           </div>
+
+          {/* Phase 25 · Step 4 — multilingual selector (en / हिन्दी / മലയാളം) */}
+          <LanguageSelector />
 
           <ThemeToggle />
 

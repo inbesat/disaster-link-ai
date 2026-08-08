@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import EmergencyContactCard from "@/components/EmergencyContactCard";
 import SimulationToggle from "@/components/admin/SimulationToggle";
 import ThemeProvider from "@/components/ThemeProvider";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { SIMULATION_COOKIE } from "@/lib/admin/simulation";
 import "./globals.css";
 
@@ -54,8 +55,10 @@ export default function RootLayout({
         </div>
 
         <ThemeProvider>
-          {children}
-          <EmergencyContactCard />
+          <LanguageProvider>
+            {children}
+            <EmergencyContactCard />
+          </LanguageProvider>
         </ThemeProvider>
         <Toaster
           position="top-center"

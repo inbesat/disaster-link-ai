@@ -13,6 +13,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -36,13 +37,6 @@ function isLocale(value: string | null): value is Locale {
   return value !== null && (LOCALES as string[]).includes(value);
 }
 
-/** SSR-safe initial language: localStorage on the client, "en" on the server. */
-function readInitialLanguage(): Locale {
-  if (typeof window === "undefined") return FALLBACK_LOCALE;
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-  return isLocale(stored) ? stored : FALLBACK_LOCALE;
-}
-
 type LanguageContextValue = {
   language: Locale;
   setLanguage: (lang: Locale) => void;
@@ -53,7 +47,14 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Locale>(readInitialLanguage);
+  // Server renders "en" (matches SSR HTML → no hydration mismatch). The
+  // stored preference is applied right after mount.
+  const [language, setLanguageState] = useState<Locale>(FALLBACK_LOCALE);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (isLocale(stored)) setLanguageState(stored);
+  }, []);
 
   const setLanguage = useCallback((lang: Locale) => {
     setLanguageState(lang);
