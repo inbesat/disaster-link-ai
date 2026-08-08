@@ -1,12 +1,12 @@
 "use client";
 
 // ---------------------------------------------------------------------
-// lib/i18n/LanguageContext.tsx — lightweight i18n (Phase 25 · Step 3).
+// lib/i18n/LanguageContext.tsx — lightweight i18n (Phase 25).
 //
-// Manages the active UI language (en / hi / ml), persists the choice to
-// localStorage ("preferred_lang"), and exposes a typed t(key) translator
-// that reads from the dictionaries in /locales. Missing keys fall back to
-// the English string (and finally to the key itself).
+// Manages the active UI language and persists the choice to localStorage
+// ("preferred_lang"). Covers English + the 21 scheduled languages of
+// India (Eighth Schedule). Missing keys fall back to the English string
+// (and finally to the key itself).
 // ---------------------------------------------------------------------
 
 import {
@@ -21,17 +21,110 @@ import {
 import en from "@/locales/en.json";
 import hi from "@/locales/hi.json";
 import ml from "@/locales/ml.json";
+import as from "@/locales/as.json";
+import bn from "@/locales/bn.json";
+import brx from "@/locales/brx.json";
+import doi from "@/locales/doi.json";
+import gu from "@/locales/gu.json";
+import kn from "@/locales/kn.json";
+import ks from "@/locales/ks.json";
+import kok from "@/locales/kok.json";
+import mai from "@/locales/mai.json";
+import mni from "@/locales/mni.json";
+import mr from "@/locales/mr.json";
+import ne from "@/locales/ne.json";
+import or from "@/locales/or.json";
+import pa from "@/locales/pa.json";
+import sa from "@/locales/sa.json";
+import sat from "@/locales/sat.json";
+import sd from "@/locales/sd.json";
+import ta from "@/locales/ta.json";
+import te from "@/locales/te.json";
+import ur from "@/locales/ur.json";
 
-export type Locale = "en" | "hi" | "ml";
+/** Every supported UI language (English + 21 Indian scheduled languages). */
+export type Locale =
+  | "en"
+  | "hi"
+  | "ml"
+  | "as"
+  | "bn"
+  | "brx"
+  | "doi"
+  | "gu"
+  | "kn"
+  | "ks"
+  | "kok"
+  | "mai"
+  | "mni"
+  | "mr"
+  | "ne"
+  | "or"
+  | "pa"
+  | "sa"
+  | "sat"
+  | "sd"
+  | "ta"
+  | "te"
+  | "ur";
 
 /** The known translation keys — derived from the English dictionary. */
 export type TranslationKey = keyof typeof en;
 
-const LOCALES: Locale[] = ["en", "hi", "ml"];
+export const LOCALES: Locale[] = [
+  "en",
+  "as",
+  "bn",
+  "brx",
+  "doi",
+  "gu",
+  "hi",
+  "kn",
+  "ks",
+  "kok",
+  "mai",
+  "ml",
+  "mni",
+  "mr",
+  "ne",
+  "or",
+  "pa",
+  "sa",
+  "sat",
+  "sd",
+  "ta",
+  "te",
+  "ur",
+];
+
 const STORAGE_KEY = "preferred_lang";
 const FALLBACK_LOCALE: Locale = "en";
 
-const dictionaries = { en, hi, ml } as Record<Locale, Record<string, string>>;
+const dictionaries = {
+  en,
+  as,
+  bn,
+  brx,
+  doi,
+  gu,
+  hi,
+  kn,
+  ks,
+  kok,
+  mai,
+  ml,
+  mni,
+  mr,
+  ne,
+  or,
+  pa,
+  sa,
+  sat,
+  sd,
+  ta,
+  te,
+  ur,
+} as Record<Locale, Record<string, string>>;
 
 function isLocale(value: string | null): value is Locale {
   return value !== null && (LOCALES as string[]).includes(value);

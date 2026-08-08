@@ -17,20 +17,32 @@ import { generateText } from "ai";
 const GROQ_BASE = "https://api.groq.com/openai/v1";
 const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
-/** Language-code → human name for the prompt (focus: Indian languages). */
+/** Language-code → human name for the prompt — all 22 supported languages
+ * (English + the 21 scheduled languages of India). */
 const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",
-  hi: "Hindi",
-  ml: "Malayalam",
+  as: "Assamese",
   bn: "Bengali",
+  brx: "Bodo",
+  doi: "Dogri",
+  gu: "Gujarati",
+  hi: "Hindi",
+  kn: "Kannada",
+  ks: "Kashmiri",
+  kok: "Konkani",
+  mai: "Maithili",
+  ml: "Malayalam",
+  mni: "Manipuri",
+  mr: "Marathi",
+  ne: "Nepali",
+  or: "Odia",
+  pa: "Punjabi",
+  sa: "Sanskrit",
+  sat: "Santali",
+  sd: "Sindhi",
   ta: "Tamil",
   te: "Telugu",
-  kn: "Kannada",
-  mr: "Marathi",
-  gu: "Gujarati",
-  pa: "Punjabi",
-  or: "Odia",
-  as: "Assamese",
+  ur: "Urdu",
 };
 
 const SYSTEM_PROMPT =

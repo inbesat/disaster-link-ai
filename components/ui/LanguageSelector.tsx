@@ -1,12 +1,12 @@
 "use client";
 
 // ---------------------------------------------------------------------
-// components/ui/LanguageSelector.tsx — Phase 25 · Step 4.
+// components/ui/LanguageSelector.tsx — Phase 25.
 //
-// Globe-triggered dropdown that switches the UI language (en / hi / ml).
-// Persistence is handled by LanguageContext (localStorage "preferred_lang").
-// Selecting a language also fires a mock server sync for
-// users.preferred_language — swap in a real server action later.
+// Globe-triggered dropdown that switches the UI language. Covers English
+// + the 21 scheduled languages of India. Persistence is handled by
+// LanguageContext (localStorage "preferred_lang"). Selecting a language
+// also fires a mock server sync for users.preferred_language.
 // ---------------------------------------------------------------------
 
 import { useEffect, useRef, useState } from "react";
@@ -17,6 +17,26 @@ const LANGUAGE_OPTIONS: { code: Locale; nativeLabel: string }[] = [
   { code: "en", nativeLabel: "English" },
   { code: "hi", nativeLabel: "हिन्दी" },
   { code: "ml", nativeLabel: "മലയാളം" },
+  { code: "as", nativeLabel: "অসমীয়া" },
+  { code: "bn", nativeLabel: "বাংলা" },
+  { code: "brx", nativeLabel: "बड़ो" },
+  { code: "doi", nativeLabel: "डोगरी" },
+  { code: "gu", nativeLabel: "ગુજરાતી" },
+  { code: "kn", nativeLabel: "ಕನ್ನಡ" },
+  { code: "ks", nativeLabel: "कॉशुर" },
+  { code: "kok", nativeLabel: "कोंकणी" },
+  { code: "mai", nativeLabel: "मैथिली" },
+  { code: "mni", nativeLabel: "মৈতৈলোন্" },
+  { code: "mr", nativeLabel: "मराठी" },
+  { code: "ne", nativeLabel: "नेपाली" },
+  { code: "or", nativeLabel: "ଓଡ଼ିଆ" },
+  { code: "pa", nativeLabel: "ਪੰਜਾਬੀ" },
+  { code: "sa", nativeLabel: "संस्कृतम्" },
+  { code: "sat", nativeLabel: "ᱥᱟᱱᱛᱟᱲᱤ" },
+  { code: "sd", nativeLabel: "سنڌي" },
+  { code: "ta", nativeLabel: "தமிழ்" },
+  { code: "te", nativeLabel: "తెలుగు" },
+  { code: "ur", nativeLabel: "اردو" },
 ];
 
 /**
@@ -95,28 +115,30 @@ export default function LanguageSelector() {
         <div
           role="listbox"
           aria-label="Language"
-          className="lang-dropdown absolute right-0 top-full z-50 mt-2 w-44 rounded-eoc border border-border bg-surface-elevated p-1.5 shadow-2xl backdrop-blur"
+          className="lang-dropdown absolute right-0 top-full z-50 mt-2 w-48 rounded-eoc border border-border bg-surface-elevated p-1.5 shadow-2xl backdrop-blur"
         >
-          {LANGUAGE_OPTIONS.map((option) => {
-            const active = option.code === language;
-            return (
-              <button
-                key={option.code}
-                type="button"
-                role="option"
-                aria-selected={active}
-                onClick={() => void handleSelect(option.code)}
-                className={`flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm transition ${
-                  active
-                    ? "bg-accent/10 font-semibold text-accent"
-                    : "text-slate-300 hover:bg-accent/5 hover:text-foreground"
-                }`}
-              >
-                <span>{option.nativeLabel}</span>
-                {active && <Check className="h-4 w-4" aria-hidden />}
-              </button>
-            );
-          })}
+          <div className="max-h-80 overflow-y-auto">
+            {LANGUAGE_OPTIONS.map((option) => {
+              const active = option.code === language;
+              return (
+                <button
+                  key={option.code}
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  onClick={() => void handleSelect(option.code)}
+                  className={`flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm transition ${
+                    active
+                      ? "bg-accent/10 font-semibold text-accent"
+                      : "text-slate-300 hover:bg-accent/5 hover:text-foreground"
+                  }`}
+                >
+                  <span>{option.nativeLabel}</span>
+                  {active && <Check className="h-4 w-4" aria-hidden />}
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
