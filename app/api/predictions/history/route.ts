@@ -13,6 +13,21 @@ const RISK_INDEX: Record<string, number> = {
 
 const DAY_ORDER = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+// Plausible mock risk-index curve for the fallback: ramps from Safe/Watch
+// toward Warning over the window — mirrors a real rising river. Works for
+// any `days` window and stays within the chart's [0, 3] domain.
+function buildMockPoints(days: number) {
+  return Array.from({ length: days }, (_, i) => {
+    const date = new Date(Date.now() - (days - 1 - i) * 24 * 60 * 60 * 1000);
+    const progress = days <= 1 ? 0 : i / (days - 1);
+    return {
+      day: DAY_ORDER[date.getDay()],
+      riskIndex: Number((0.4 + progress * 2.0).toFixed(2)),
+      predictions: 4,
+    };
+  });
+}
+
 export async function GET(request: NextRequest) {
   const daysParam = Number(request.nextUrl.searchParams.get("days"));
   const days = Math.min(14, Math.max(1, Number.isFinite(daysParam) ? daysParam : 7));
@@ -25,9 +40,10 @@ export async function GET(request: NextRequest) {
       select: { riskLevel: true, predictionTimestamp: true },
     });
 
-    // No real predictions yet — tell the chart to fall back to demo data.
+    // No real predictions yet — serve realistic mock points so the chart
+    // still renders.
     if (rows.length === 0) {
-      return NextResponse.json({ source: "mock", points: [] });
+      return NextResponse.json({ source: "mock", points: buildMockPoints(days) });
     }
 
     // Bucket predictions by weekday and average the risk index per day.
@@ -51,7 +67,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ source: "real", points, total: rows.length });
   } catch (error) {
-    console.error("Failed to load prediction history:", error);
-    return NextResponse.json({ source: "mock", points: [] });
+    // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
+    // serve realistic mock points so the Recharts graph still renders.
+    console.error("Failed to load prediction history (serving mock points):", error);
+    return NextResponse.json({ source: "mock", points: buildMockPoints(days) });
   }
 }

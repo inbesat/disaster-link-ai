@@ -40,26 +40,42 @@ export async function GET(request: NextRequest) {
 
     const rainfallMm = data.rain?.["1h"] ?? data.rain?.["3h"] ?? 0;
 
-    const record = await prisma.weatherData.create({
-      data: {
-        stationId: data.id ? String(data.id) : null,
-        timestamp: new Date(),
-        rainfallMm,
-        district: null,
-        lat,
-        lng,
-      },
-    });
-
-    return NextResponse.json({
-      ok: true,
-      recorded: {
+    // Persist to weather_data — best effort. A DB outage (e.g. a Vercel
+    // cold start) must never fail this route: log and continue serving the
+    // freshly fetched weather so the live-conditions chain keeps working.
+    let recorded: {
+      id: string;
+      rainfallMm: number;
+      district: string | null;
+      lat: number;
+      lng: number;
+    } | null = null;
+    try {
+      const record = await prisma.weatherData.create({
+        data: {
+          stationId: data.id ? String(data.id) : null,
+          timestamp: new Date(),
+          rainfallMm,
+          district: null,
+          lat,
+          lng,
+        },
+      });
+      recorded = {
         id: record.id,
-        rainfall_mm: record.rainfallMm,
+        rainfallMm: record.rainfallMm,
         district: record.district,
         lat: record.lat,
         lng: record.lng,
-      },
+      };
+    } catch (persistError) {
+      console.error("Failed to persist weather data (continuing):", persistError);
+    }
+
+    return NextResponse.json({
+      ok: true,
+      recorded,
+      persisted: recorded !== null,
       weather: {
         temperature_c: data.main?.temp ?? null,
         rainfall_mm: rainfallMm,
@@ -68,9 +84,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Weather fetch failed:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch or persist weather data." },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Failed to fetch weather data." }, { status: 500 });
   }
 }

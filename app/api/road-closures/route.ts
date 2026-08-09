@@ -12,11 +12,10 @@ export async function GET() {
     });
     return NextResponse.json({ ok: true, closures });
   } catch (error) {
-    console.error("Failed to load road closures:", error);
-    return NextResponse.json(
-      { ok: false, closures: [], error: "Failed to load." },
-      { status: 500 },
-    );
+    // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
+    // serve an empty list so the map layer still renders.
+    console.error("Failed to load road closures (serving empty list):", error);
+    return NextResponse.json({ ok: true, closures: [], source: "mock" });
   }
 }
 

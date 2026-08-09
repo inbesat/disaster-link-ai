@@ -19,11 +19,10 @@ export async function GET() {
 
     return NextResponse.json({ ok: true, plans: enriched });
   } catch (error) {
-    console.error("Failed to load evacuation plans:", error);
-    return NextResponse.json(
-      { ok: false, plans: [], error: "Failed to load." },
-      { status: 500 },
-    );
+    // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
+    // serve an empty list (source: "mock") so the tracker still renders.
+    console.error("Failed to load evacuation plans (serving empty list):", error);
+    return NextResponse.json({ ok: true, plans: [], source: "mock" });
   }
 }
 

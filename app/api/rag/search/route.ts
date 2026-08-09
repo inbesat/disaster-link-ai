@@ -19,17 +19,22 @@ export async function POST(request: NextRequest) {
 
   const query = (body.query ?? "").toString().trim();
   if (!query) {
-    return NextResponse.json(
-      { ok: false, error: "Query is required." },
-      { status: 400 },
-    );
+    return NextResponse.json({ ok: false, error: "Query is required." }, { status: 400 });
   }
 
   const district =
     typeof body.district === "string" && body.district.length ? body.district : null;
   const topK = Math.min(Math.max(Number(body.topK) || 3, 1), 10);
 
-  const results = await searchSimilarDocuments(query, district, topK);
+  // Vector search can fail when pgvector/DB is unreachable (e.g. a Vercel
+  // cold start). Never 500 — degrade to empty results so the debug UI stays
+  // alive.
+  let results: Awaited<ReturnType<typeof searchSimilarDocuments>> = [];
+  try {
+    results = await searchSimilarDocuments(query, district, topK);
+  } catch (error) {
+    console.error("RAG search failed (returning empty results):", error);
+  }
 
   return NextResponse.json({
     ok: true,
