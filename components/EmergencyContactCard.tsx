@@ -1,11 +1,14 @@
-import Link from "next/link";
-
 export default function EmergencyContactCard() {
+  // Hidden below md: on phones this 228px-wide card used to cover the right
+  // side of the fixed BottomNav (incl. the Alerts/More tabs — the handoff's
+  // long-documented "overlay over the nav gutter" issue). Phones reach the
+  // emergency line via the BottomNav's SOS EmergencyFAB instead; tablet+ has
+  // no bottom nav, so the card is safe there (audit-pass fix Aug 9).
   return (
-    <Link
+    <a
       href="tel:1070"
       aria-label="Call District Control Room 1070"
-      className="fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-lg bg-severity-red-600 px-4 py-3 font-semibold text-white shadow-glow-red transition hover:bg-severity-red-500"
+      className="fixed bottom-4 right-4 z-50 hidden items-center gap-3 rounded-lg bg-severity-red-600 px-4 py-3 font-semibold text-white shadow-glow-red transition hover:bg-severity-red-500 md:flex"
     >
       <SosIcon />
       <span>
@@ -14,7 +17,7 @@ export default function EmergencyContactCard() {
         </span>
         <span className="block text-lg leading-none">1070</span>
       </span>
-    </Link>
+    </a>
   );
 }
 

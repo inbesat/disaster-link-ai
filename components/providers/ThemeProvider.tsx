@@ -1,19 +1,28 @@
 // ---------------------------------------------------------------------
 // components/providers/ThemeProvider.tsx
-// UI/UX Phase 1 · Step 10 — Dark Mode Theme Provider.
+// UI/UX Phase 1 · Step 10 — Dark Mode Theme Provider
+//                 · Demo-day hardening · Step 6 — dark mode LOCKED.
 //
-// Wraps next-themes for the whole app. Dark-first by construction:
+// Wraps next-themes for the whole app. Dark-only by construction:
 //   • attribute="class"          → toggles the `dark` class on <html> —
 //     what tailwind darkMode:"class" and globals.css :root:not(.dark) read
-//   • defaultTheme="dark"        → the Emergency Ops palette is the default
+//   • forcedTheme="dark"         → dark is THE only theme: next-themes
+//     ignores storage/OS and always writes `dark`; useTheme().setTheme()
+//     becomes a no-op. Projector-safe — zero risk of a white flash.
+//   • defaultTheme="dark"        → fallback before the forced value applies
 //   • enableSystem={false}       → never follows the OS theme (deterministic
 //     demos — no surprise light flip mid-presentation on a projector)
 //   • disableTransitionOnChange  → next-themes strips color transitions while
-//     swapping, so the theme flip is instant (no washed-out flash)
+//     swapping, so the theme is instant (no washed-out flash)
 //
-// Toggle policy (decision recorded — light stays reachable): the app always
-// STARTS dark; the ThemeToggle in the navbar/landing can still switch to the
-// light "day ops" palette under :root:not(.dark) in globals.css.
+// Demo-day decision (recorded): dark mode is LOCKED for the hackathon — a
+// projector demo cannot risk a white flash. The ThemeToggle was removed
+// from the landing page, the Navbar, and the DashboardTopBar, and the
+// component file (components/ThemeToggle.tsx) was deleted (it's in git
+// history). The light "day ops" palette still exists under
+// :root:not(.dark) in globals.css (hybrid approach — legacy tokens kept)
+// but is unreachable while forcedTheme is set. To re-enable light mode
+// post-hackathon: drop `forcedTheme="dark"` and restore the toggle.
 //
 // INSTALL (only if starting fresh): npm install next-themes
 // Already installed here — package.json: "next-themes": "^0.4.6"
@@ -25,15 +34,16 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import type { ReactNode } from "react";
 
 /**
- * Dark-first theme provider. Must wrap any component that calls
- * `useTheme()` — in this app that's everything inside the root layout's
- * children tree (and the ThemeToggle islands).
+ * Dark-locked theme provider. Must wrap any component that calls
+ * `useTheme()` — with `forcedTheme="dark"` every `setTheme()` call is a
+ * no-op, so the light palette cannot be reached during the demo.
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
     <NextThemesProvider
       attribute="class"
       defaultTheme="dark"
+      forcedTheme="dark"
       enableSystem={false}
       disableTransitionOnChange
     >

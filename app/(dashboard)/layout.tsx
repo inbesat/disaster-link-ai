@@ -6,6 +6,7 @@ import { ROLES, type Role } from "@/lib/validations/user";
 import { prisma } from "@/server/prisma";
 import DashboardShell from "@/components/navigation/DashboardShell";
 import AlertTicker from "@/components/dashboard/AlertTicker";
+import OfflineBanner from "@/components/ui/OfflineBanner";
 
 const OPERATIONAL_ROLES: Role[] = ROLES.filter((role) => role !== "viewer");
 
@@ -19,6 +20,8 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   let displayName = "Guest Commander";
   let email: string | null = null;
   let avatarUrl: string | null = null;
+  // Sidebar nav role — guests get the demo default; real users their own.
+  let userRole: Role = "district_admin";
 
   if (!guest) {
     const supabase = createClient();
@@ -44,6 +47,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     if (!OPERATIONAL_ROLES.includes(profile.role as (typeof ROLES)[number])) {
       redirect("/403");
     }
+    userRole = profile.role as Role;
 
     const meta = user.user_metadata ?? {};
     displayName =
@@ -69,15 +73,24 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   }
 
   return (
-    <DashboardShell
-      guest={guest}
-      displayName={displayName}
-      email={email}
-      avatarUrl={avatarUrl}
-      alertsBadgeCount={alertsBadgeCount}
-    >
-      <AlertTicker />
-      {children}
-    </DashboardShell>
+    <>
+      <DashboardShell
+        guest={guest}
+        userRole={userRole}
+        displayName={displayName}
+        email={email}
+        avatarUrl={avatarUrl}
+        alertsBadgeCount={alertsBadgeCount}
+      >
+        <AlertTicker />
+        {children}
+      </DashboardShell>
+
+      {/* Phase 9 · Step 9 — amber offline strip, drops from the viewport
+          top while the network is down (dashboard scope — the field app
+          mounts its own field-specific banner). Fixed, so placement is
+          free. */}
+      <OfflineBanner />
+    </>
   );
 }

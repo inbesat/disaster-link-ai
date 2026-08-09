@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { setGuestMode } from "@/app/actions/auth";
+import BiometricPrompt, { readBiometricPref } from "@/components/auth/BiometricPrompt";
 
 let supabase: ReturnType<typeof createClient> | null = null;
 
@@ -21,6 +22,24 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [authed, setAuthed] = useState(false);
+
+  // Finish the login once the biometric prompt (if shown) is dismissed.
+  // useCallback keeps its identity stable per router/next so the effect
+  // below has no stale closure (react-hooks/exhaustive-deps clean).
+  const finishLogin = useCallback(() => {
+    router.push(next);
+    router.refresh();
+  }, [router, next]);
+
+  // Phase 9 · Step 8 — first-login biometric enrollment. If the user already
+  // enabled it (or declined — both persist), skip the prompt and continue
+  // straight to the dashboard; otherwise the prompt's onClose navigates.
+  useEffect(() => {
+    if (!authed) return;
+    if (!readBiometricPref()) return;
+    finishLogin();
+  }, [authed, finishLogin]);
 
   async function handleEmailLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,8 +54,7 @@ export default function LoginForm() {
       return;
     }
 
-    router.push(next);
-    router.refresh();
+    setAuthed(true);
   }
 
   async function handleGoogleLogin() {
@@ -139,6 +157,12 @@ export default function LoginForm() {
           </Link>
         </p>
       </div>
+
+      {/* Phase 9 · Step 8 — mock Face ID / Fingerprint enrollment after the
+          first real sign-in (skipped when the preference is stored). */}
+      {authed && !readBiometricPref() && (
+        <BiometricPrompt open onClose={finishLogin} onResult={() => {}} />
+      )}
     </main>
   );
 }

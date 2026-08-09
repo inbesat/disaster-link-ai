@@ -2,9 +2,12 @@
 // components/ui/DataRow.tsx
 // UI/UX Phase 1 · Step 4 — horizontal list item for feeds & tables
 // (shelter lists, resource lists, alert logs, responder directories).
+// Demo-day hardening · Step 8 — data density & whitespace polish.
 //
 // Layout:  [icon tile]  title / subtitle  ...  trailingElement
-// Hover highlights the row with the roadmap --bg-tertiary tint.
+// Typography: title = text-sm font-medium text-primary; subtitle =
+// STRICTLY text-xs text-muted (mono readout). Hover tints the row with
+// the roadmap --bg-tertiary; padding is tight-but-readable py-3 px-4.
 // ---------------------------------------------------------------------
 
 import type { ReactNode } from "react";
@@ -55,7 +58,7 @@ export function DataRow({
             }
           : undefined
       }
-      className={`flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors duration-150 hover:bg-[var(--bg-tertiary)] ${
+      className={`flex items-center gap-3 rounded-md py-3 px-4 transition-colors duration-150 hover:bg-[var(--bg-tertiary)] ${
         interactive
           ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary"
           : ""
@@ -66,13 +69,9 @@ export function DataRow({
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-medium text-primary">
-          {title}
-        </span>
+        <span className="block truncate text-sm font-medium text-primary">{title}</span>
         {subtitle && (
-          <span className="block truncate font-mono text-[11px] text-muted">
-            {subtitle}
-          </span>
+          <span className="block truncate font-mono text-xs text-muted">{subtitle}</span>
         )}
       </span>
 

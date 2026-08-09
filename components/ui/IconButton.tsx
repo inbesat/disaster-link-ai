@@ -16,6 +16,15 @@ import { motion } from "framer-motion";
 //
 // Phase 8: the button is a <motion.button> — taps compress it to 95%
 // on a stiff spring so presses have physical weight.
+//
+// Demo-day hardening · Step 9 (a11y fast pass): the accessible name is
+// compile-enforced (required `label` prop), and the keyboard focus ring
+// uses focus-visible: (ring shows on Tab, not on mouse clicks) with
+// ring-accent-primary + a ring-offset matching --bg-primary. The offset
+// is an arbitrary value because bg-primary is a hand-written class, not
+// a Tailwind color (gotcha #2). role="button" / tabIndex={0} are
+// intentionally NOT set — this is a native <button>, which already
+// exposes both natively.
 // ---------------------------------------------------------------------
 
 const VARIANTS = {
@@ -63,7 +72,7 @@ export function IconButton({
       title={rest.title ?? label}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 500, damping: 30 }}
-      className={`inline-flex shrink-0 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)] ${
+      className={`inline-flex shrink-0 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)] ${
         SIZES[size]
       } ${VARIANTS[variant]} ${className}`}
       {...rest}

@@ -4,6 +4,8 @@ import { cookies } from "next/headers";
 import ToastViewport from "@/components/ui/Toast";
 import EmergencyContactCard from "@/components/EmergencyContactCard";
 import SimulationToggle from "@/components/admin/SimulationToggle";
+import DemoController from "@/components/demo/DemoController";
+import ShortcutModal from "@/components/ui/ShortcutModal";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { MapSettingsProvider } from "@/lib/settings/MapSettingsContext";
@@ -56,7 +58,15 @@ export default function RootLayout({
           </div>
         )}
 
-        <div className="fixed bottom-4 right-4 z-50">
+        {/* SimulationToggle — bottom-LEFT so it never collides with the
+            fixed elements that own the bottom-right corner: the emergency
+            contact card (bottom-4 right-4 z-50, taller) used to fully cover
+            this toggle on desktop, and on phones the one-handed Restore
+            chip lives at bottom-[84px] right-3. Below md it clears the
+            fixed mobile BottomNav (72px + safe area); at md+ it sits in the
+            corner (no bottom nav there). Fixes the documented Phase-9/10
+            overlay issue (the nav is z-30, this stays z-50). */}
+        <div className="fixed bottom-[calc(72px+env(safe-area-inset-bottom)+12px)] left-4 z-50 md:bottom-4 md:left-4">
           <SimulationToggle active={simulationActive} />
         </div>
 
@@ -68,6 +78,15 @@ export default function RootLayout({
             </MapSettingsProvider>
           </LanguageProvider>
         </ThemeProvider>
+
+        {/* Phase 10 · Step 4 — secret pitch-day controller: renders nothing
+            unless the URL carries ?demo=1. */}
+        <DemoController />
+
+        {/* Phase 11 · Step 5 — power-user shortcuts reference: renders
+            nothing until "?" (Shift+/) is pressed. */}
+        <ShortcutModal />
+
         <ToastViewport />
       </body>
     </html>

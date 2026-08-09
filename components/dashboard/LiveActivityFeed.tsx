@@ -16,6 +16,7 @@ import {
   type RealtimeEventType,
 } from "@/hooks/useMockRealtime";
 import type { RealtimeStatus } from "@/lib/realtime";
+import { DEMO_ACTIVITY_EVENT, type DemoActivityEvent } from "@/hooks/useDemoSimulation";
 
 const STATUS_BADGE: Record<
   RealtimeStatus,
@@ -91,6 +92,7 @@ export default function LiveActivityFeed({
   const { liveEvents, status } = useMockRealtime(channelName);
   const badge = STATUS_BADGE[status];
   const [now, setNow] = useState(Date.now());
+  const [simEvents, setSimEvents] = useState<RealtimeEvent[]>([]);
   const listRef = useRef<HTMLUListElement>(null);
 
   // Tick the relative timestamps every 30s.
@@ -98,6 +100,20 @@ export default function LiveActivityFeed({
     const t = window.setInterval(() => setNow(Date.now()), 30_000);
     return () => window.clearInterval(t);
   }, []);
+
+  // Phase 10 · Step 3 — demo simulation injects fake "Resource Deployed"
+  // logs (drip:demo-sim:activity). They're prepended above the realtime
+  // feed so the pitch demo visibly moves the feed on its own.
+  useEffect(() => {
+    const onDemoActivity = (e: Event) => {
+      const { event } = (e as DemoActivityEvent).detail;
+      setSimEvents((prev) => [event, ...prev].slice(0, 40));
+    };
+    window.addEventListener(DEMO_ACTIVITY_EVENT, onDemoActivity);
+    return () => window.removeEventListener(DEMO_ACTIVITY_EVENT, onDemoActivity);
+  }, []);
+
+  const allEvents = [...simEvents, ...liveEvents];
 
   function timeAgo(iso: string): string {
     const s = Math.max(0, Math.floor((now - new Date(iso).getTime()) / 1000));
@@ -131,13 +147,13 @@ export default function LiveActivityFeed({
         aria-live="polite"
         className="feed-scroll flex max-h-[420px] flex-col gap-2 overflow-y-auto p-3"
       >
-        {liveEvents.map((event) => {
+        {allEvents.map((event) => {
           const style = EVENT_STYLE[event.type];
           return (
             <EventRow key={event.id} event={event} style={style} timeAgo={timeAgo} />
           );
         })}
-        {liveEvents.length === 0 && (
+        {allEvents.length === 0 && (
           <li className="px-3 py-8 text-center text-sm text-slate-400">
             Waiting for the first broadcast…
           </li>
@@ -171,9 +187,7 @@ function EventRow({
   timeAgo: (iso: string) => string;
 }) {
   return (
-    <li
-      className="feed-enter relative flex items-start gap-3 overflow-hidden rounded-lg border border-border bg-surface-elevated p-3"
-    >
+    <li className="feed-enter relative flex items-start gap-3 overflow-hidden rounded-lg border border-border bg-surface-elevated p-3">
       <span className={`absolute inset-y-0 left-0 w-1 ${style.bar}`} />
       <span
         className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border ${style.badge}`}

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import DataHealthWidget from "@/components/dashboard/DataHealthWidget";
-import ThemeToggle from "@/components/ThemeToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +27,8 @@ export default function LandingPage() {
             >
               Trust &amp; Security
             </Link>
-            <ThemeToggle />
+            {/* ThemeToggle removed for demo day — dark mode is LOCKED via
+                ThemeProvider forcedTheme="dark". */}
             <Link
               href="/login"
               className="rounded-md border border-border bg-surface-elevated px-4 py-2 text-sm font-medium text-foreground transition hover:border-accent hover:text-accent"

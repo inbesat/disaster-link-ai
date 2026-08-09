@@ -139,7 +139,9 @@ export function useMockRealtime(channelName: string): {
       setLiveEvents((prev) => [event, ...prev].slice(0, 40));
     });
     const offStatus = client.onStatus(setStatus);
-    void client.connect();
+    client.connect().catch((err) => {
+      console.error("[useMockRealtime] connection failed:", err);
+    });
 
     return () => {
       offMessage();

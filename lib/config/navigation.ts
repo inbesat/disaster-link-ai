@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { Role } from "@/lib/validations/user";
+import type { SidebarSubRoute } from "@/components/navigation/SidebarNavItem";
 
 /** Sidebar section groups, rendered in this order. */
 export const NAV_SECTIONS = [
@@ -66,6 +67,10 @@ export type NavRoute = {
   section: NavSection;
   /** Roles permitted to see this route. */
   allowedRoles: Role[];
+  /** Optional accordion sub-routes (e.g. Settings → profile/notifications/…).
+   * Named `subRoutes` (not `children`) so the react/no-children-prop lint
+   * rule doesn't fire — these are data, not React children. */
+  subRoutes?: SidebarSubRoute[];
 };
 
 /**
@@ -149,6 +154,12 @@ export const NAVIGATION_ROUTES: NavRoute[] = [
     icon: Settings,
     section: "settings",
     allowedRoles: ["super_admin"],
+    subRoutes: [
+      { label: "Profile", href: "/settings/profile" },
+      { label: "Notifications", href: "/settings/notifications" },
+      { label: "Map", href: "/settings/map" },
+      { label: "AI", href: "/settings/ai" },
+    ],
   },
 ];
 

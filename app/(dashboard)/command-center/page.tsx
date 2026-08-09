@@ -6,7 +6,10 @@ import AlertSimulator from "@/components/dashboard/AlertSimulator";
 import ShelterCapacityWidget from "@/components/dashboard/ShelterCapacityWidget";
 import LowStockWidget from "@/components/dashboard/LowStockWidget";
 import KPICards from "@/components/dashboard/KPICards";
-import CommandCenterCharts from "@/components/dashboard/CommandCenterCharts";
+// Step 10 — Recharts-heavy widget is lazy-loaded client-side (ssr: false)
+// with a SkeletonLoader fallback; the next/dynamic lives in a client
+// wrapper because App Router forbids ssr:false inside Server Components.
+import CommandCenterCharts from "@/components/dashboard/dynamic/CommandCenterChartsLazy";
 import GapAnalysisTable from "@/components/dashboard/GapAnalysisTable";
 import DisasterTimeline from "@/components/dashboard/DisasterTimeline";
 import SitRepGenerator from "@/components/dashboard/SitRepGenerator";

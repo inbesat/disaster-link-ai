@@ -5,7 +5,8 @@
 // UI/UX Phase 3 · Steps 1–6 — mobile-first bottom navigation shell.
 //
 // Two contextual modes, both sharing the fixed 72px bar shell
-// (bg-[#0f172a]/95, blur, top border, safe-area padding, lg:hidden):
+// (bg-[#0f172a]/95, blur, top border, safe-area padding, md:hidden —
+// phones only; tablet+ uses the pinned sidebar, see audit pass Aug 9):
 //
 //   NAV MODE (default) — seven items: Dashboard, Predictions, Map, AI
 //   Planner, Alerts, Team, More. Active tab fills the icon with
@@ -25,15 +26,31 @@
 //   SWIPES (Step 7) — react-swipeable on the bar: swipe left cycles the
 //   active tab to the next item, swipe right to the previous (wraps at the
 //   edges). Map-mode swipes are ignored.
+//
+//   ONE-HANDED MODE (Step 10) — a rapid double-tap on the bar's background
+//   (gutter area, not the tabs) toggles iOS-style Reachability: the shell
+//   slides the whole content column down 25vh so top-of-page controls land
+//   in thumb range. The bar itself stays put — its top edge tints accent
+//   while the mode is on, enabling fires a hint toast, and a "Restore"
+//   chip appears above the bar for keyboard/AT users (the mode is not
+//   gesture-only). Completed swipes cancel the pending tap (a swipe is
+//   not a double-tap); plain taps never do.
 // ---------------------------------------------------------------------
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
 import toast from "react-hot-toast";
 import { triggerLightHaptic } from "@/hooks/useHaptics";
+import useToast from "@/hooks/useToast";
 import {
   Bot,
+  ChevronDown,
   ChevronLeft,
   Layers,
   LayoutDashboard,
@@ -53,6 +70,9 @@ import MoreBottomSheet from "./MoreBottomSheet";
 
 /** Routes that render the map-tools mode instead of global navigation. */
 const MAP_ROUTES = ["/command-center", "/field/map"];
+
+/** Two taps closer than this (ms) count as a double-tap. */
+const DOUBLE_TAP_MS = 300;
 
 type BottomNavEntry = {
   /** Stable React key (unique per item — hrefs can repeat). */
@@ -154,13 +174,57 @@ function isPathActive(pathname: string, href: string): boolean {
 type BottomNavProps = {
   /** Unacknowledged AlertLog count — rendered on the Alerts tab. */
   alertsBadgeCount?: number;
+  /** One-handed (Reachability) mode active — tints the bar's top edge. */
+  oneHanded?: boolean;
+  /** Rapid double-tap on the bar's background toggles this (Step 10). */
+  onToggleOneHanded?: () => void;
 };
 
-export function BottomNav({ alertsBadgeCount }: BottomNavProps) {
+export function BottomNav({
+  alertsBadgeCount,
+  oneHanded = false,
+  onToggleOneHanded,
+}: BottomNavProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
   const [mapModeOff, setMapModeOff] = useState(false);
+  const toast = useToast();
+
+  // Step 10 — one-handed mode. Two rapid taps on the bar's background (the
+  // gutter — never the tabs or the SOS FAB) toggle Reachability. The shell
+  // owns the state and translates the content column; we just detect the
+  // gesture here and ask it to flip.
+  const lastTapRef = useRef(0);
+  const handleBarPointerDown = (e: ReactPointerEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.closest("button, a, [role='button']")) return;
+    const now = Date.now();
+    if (now - lastTapRef.current <= DOUBLE_TAP_MS) {
+      lastTapRef.current = 0; // consume the pair
+      triggerLightHaptic();
+      const turningOn = !oneHanded;
+      onToggleOneHanded?.();
+      if (turningOn) {
+        toast.info({
+          title: "One-handed mode on",
+          description:
+            "Screen slid down for thumb reach — double-tap the nav bar to restore.",
+          duration: 2600,
+        });
+      }
+    } else {
+      lastTapRef.current = now;
+    }
+  };
+
+  // Visible escape hatch for the mode (Step 10) — keyboard/SR users can't
+  // double-tap, so while the mode is on a small Restore chip sits above the
+  // bar; tapping it (or double-tapping the gutter) turns it back off.
+  const restoreOneHanded = () => {
+    triggerLightHaptic();
+    onToggleOneHanded?.();
+  };
 
   // Re-arm map mode once the user navigates (back → on → back…).
   useEffect(() => {
@@ -186,8 +250,19 @@ export function BottomNav({ alertsBadgeCount }: BottomNavProps) {
   };
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => cycleTab(1),
-    onSwipedRight: () => cycleTab(-1),
+    // A completed swipe is not a double-tap — cancel any pending tap so two
+    // quick swipes can't accidentally toggle one-handed mode. NOTE: this
+    // must NOT live in onTouchStartOrOnMouseDown — react-swipeable fires
+    // that on every touchstart, which would wipe the pending tap before the
+    // second tap of a double-tap ever arrives.
+    onSwipedLeft: () => {
+      lastTapRef.current = 0;
+      cycleTab(1);
+    },
+    onSwipedRight: () => {
+      lastTapRef.current = 0;
+      cycleTab(-1);
+    },
     delta: 24,
     swipeDuration: 400,
     trackMouse: false,
@@ -197,8 +272,12 @@ export function BottomNav({ alertsBadgeCount }: BottomNavProps) {
     <>
       <nav
         {...swipeHandlers}
+        onPointerDown={handleBarPointerDown}
         aria-label={mapMode ? "Map tools" : "Main navigation"}
-        className="fixed inset-x-0 bottom-0 z-30 h-[72px] w-full border-t border-white/10 bg-[#0f172a]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg lg:hidden"
+        data-one-handed={oneHanded || undefined}
+        className={`fixed inset-x-0 bottom-0 z-30 h-[72px] w-full border-t bg-[#0f172a]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg transition-colors duration-150 motion-reduce:transition-none md:hidden ${
+          oneHanded ? "border-t-accent-primary" : "border-t-white/10"
+        }`}
       >
         {/* Map tools mode — replaces global navigation on the Live Map. */}
         {mapMode ? (
@@ -247,6 +326,25 @@ export function BottomNav({ alertsBadgeCount }: BottomNavProps) {
         {/* Emergency SOS FAB — stays reachable in both modes. */}
         <EmergencyFAB />
       </nav>
+
+      {/* One-handed Restore chip (Step 10) — visible while the mode is on so
+          it can be turned off without the gesture (keyboard / screen-reader
+          users can focus it). Uses bg-tertiary/var() per gotcha #2 — the
+          hand-written class can't take a hover: variant. */}
+      {oneHanded && (
+        <button
+          type="button"
+          onClick={restoreOneHanded}
+          aria-pressed="true"
+          className="fixed bottom-[84px] right-3 z-30 flex items-center gap-1.5 rounded-full border border-accent-primary/40 bg-secondary px-3 py-1.5 text-xs font-semibold text-primary shadow-card transition hover:bg-[var(--bg-tertiary)] motion-reduce:transition-none"
+        >
+          <ChevronDown
+            className="h-3.5 w-3.5 rotate-180 text-accent-primary"
+            aria-hidden
+          />
+          Restore
+        </button>
+      )}
 
       {/* More spillover menu (Step 5) — map mode has no More tab, so this
           only mounts when opened from NAV mode. */}

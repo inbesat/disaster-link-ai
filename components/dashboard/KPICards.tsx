@@ -1,3 +1,17 @@
+"use client";
+
+// ---------------------------------------------------------------------
+// components/dashboard/KPICards.tsx — legacy command-center KPI row.
+//
+// Phase 10 · Step 1 — values count up on load via CountUpNumber.
+// Phase 10 · Step 3 (Aug 9, 2026 follow-up) — the People-at-Risk card now
+// ALSO subscribes to the demo simulation's drip:demo-sim:people-at-risk
+// event (same pattern as HeroKPIs), so the drifting numbers are visible on
+// the guest /command-center surface judges actually see during the pitch
+// (HeroKPIs alone lives on the admin-only /dashboard route).
+// ---------------------------------------------------------------------
+
+import { useEffect, useState } from "react";
 import {
   Building2,
   Package,
@@ -9,6 +23,11 @@ import {
 } from "lucide-react";
 import Translated from "@/components/ui/Translated";
 import type { TranslationKey } from "@/lib/i18n/LanguageContext";
+import CountUpNumber from "@/components/ui/CountUpNumber";
+import {
+  DEMO_PEOPLE_AT_RISK_EVENT,
+  type PeopleAtRiskBumpEvent,
+} from "@/hooks/useDemoSimulation";
 
 type Kpi = {
   id: string;
@@ -70,11 +89,30 @@ const KPIS: Kpi[] = [
 ];
 
 export default function KPICards() {
+  // Live People-at-Risk total — { from, value } lets the count-up animate
+  // the small demo bumps instead of re-counting from zero (Phase 10 · 3).
+  // from starts at 0 so the load still counts up 0 → 48,210 (same as
+  // HeroKPIs); the demo bumps then animate from the previous value.
+  const [peopleAtRisk, setPeopleAtRisk] = useState(() => {
+    const atRisk = KPIS.find((kpi) => kpi.id === "at-risk");
+    return { from: 0, value: atRisk?.value ?? 0 };
+  });
+
+  useEffect(() => {
+    const onBump = (e: Event) => {
+      const { delta } = (e as PeopleAtRiskBumpEvent).detail;
+      setPeopleAtRisk((k) => ({ from: k.value, value: k.value + delta }));
+    };
+    window.addEventListener(DEMO_PEOPLE_AT_RISK_EVENT, onBump);
+    return () => window.removeEventListener(DEMO_PEOPLE_AT_RISK_EVENT, onBump);
+  }, []);
+
   return (
     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {KPIS.map((kpi) => {
         const Icon = kpi.icon;
         const TrendIcon = kpi.trendUp ? TrendingUp : TrendingDown;
+        const isAtRisk = kpi.id === "at-risk";
         return (
           <div
             key={kpi.id}
@@ -90,7 +128,10 @@ export default function KPICards() {
                 <Translated k={kpi.labelKey} />
               </p>
               <p className="mt-0.5 text-3xl font-black tabular-nums leading-none text-foreground">
-                {kpi.value.toLocaleString()}
+                <CountUpNumber
+                  value={isAtRisk ? peopleAtRisk.value : kpi.value}
+                  from={isAtRisk ? peopleAtRisk.from : 0}
+                />
               </p>
               <p
                 className={`mt-1 inline-flex items-center gap-1 text-[11px] font-semibold ${kpi.trendColor}`}

@@ -3,13 +3,18 @@
 // UI/UX Phase 2 · Step 10 (finalized) — the sidebar shell.
 //
 // Fixed left container, full viewport height, roadmap --bg-secondary
-// surface. Width animates 260px (expanded) ⇄ 64px (collapsed) on desktop
-// (lg+) via transition-all duration-300. Below lg it becomes a mobile
-// drawer: hidden off-screen by default (-translate-x-full), sliding in
-// (translate-x-0) as a fixed overlay with a darkened backdrop when
-// `isOpenMobile` is set. The collapse toggle (chevron) sits in a footer
-// strip near the bottom (desktop only); nav items render in the
+// surface. Width animates 260px (expanded) ⇄ 64px (collapsed) on tablet+
+// (md+, 768px) via transition-all duration-300. Below md it becomes a
+// mobile drawer: hidden off-screen by default (-translate-x-full),
+// sliding in (translate-x-0) as a fixed overlay with a darkened backdrop
+// when `isOpenMobile` is set. The collapse toggle (chevron) sits in a
+// footer strip near the bottom (tablet+ only); nav items render in the
 // scrollable middle region.
+//
+// Breakpoint: the mobile drawer / pinned sidebar switch is md (768px) per
+// the architecture doc — tablets get the pinned rail, phones get the
+// drawer + bottom nav. (Was lg until the Aug 9, 2026 alignment — see
+// docs/CONTEXT_HANDOFF.md audit pass.)
 //
 // State: uncontrolled by default (internal useState) — or controlled by
 // passing `collapsed` + `onToggle` so parents can sync (e.g. content
@@ -53,7 +58,7 @@ type SidebarProps = {
 const SIDEBAR_COLLAPSED_KEY = "drip:sidebar-collapsed";
 
 const EXPANDED_WIDTH = "w-[260px]";
-const COLLAPSED_WIDTH = "w-[260px] lg:w-16"; // drawer keeps 260px on mobile
+const COLLAPSED_WIDTH = "w-[260px] md:w-16"; // drawer keeps 260px on phones
 
 /** Read the persisted desktop collapse state (call on mount, client-side). */
 export function readSidebarCollapsed(): boolean | null {
@@ -76,18 +81,19 @@ export function writeSidebarCollapsed(value: boolean): void {
   }
 }
 
-/** True once the viewport reaches the desktop breakpoint (lg = 1024px). */
-function useIsDesktop(): boolean {
-  const [isDesktop, setIsDesktop] = useState(true);
+/** True once the viewport reaches the tablet breakpoint (md = 768px) —
+ * above it the sidebar pins/collapses; below it the drawer + bottom nav. */
+function useIsTabletUp(): boolean {
+  const [isTabletUp, setIsTabletUp] = useState(true);
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const update = () => setIsDesktop(mq.matches);
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsTabletUp(mq.matches);
     update();
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
-  return isDesktop;
+  return isTabletUp;
 }
 
 export function Sidebar({
@@ -101,7 +107,7 @@ export function Sidebar({
   className = "",
 }: SidebarProps) {
   const isControlled = collapsed !== undefined;
-  const isDesktop = useIsDesktop();
+  const isTabletUp = useIsTabletUp();
 
   // Uncontrolled mode: lazy-init from localStorage so a refresh keeps the
   // user's collapsed/expanded choice (client render → no flash after mount).
@@ -111,8 +117,8 @@ export function Sidebar({
   const isCollapsed = isControlled ? collapsed : internalCollapsed;
 
   // The mobile drawer is always full (labels visible); collapse only bites
-  // on desktop. Expose the effective value via the context.
-  const effectiveCollapsed = isDesktop ? isCollapsed : false;
+  // on tablet+. Expose the effective value via the context.
+  const effectiveCollapsed = isTabletUp ? isCollapsed : false;
 
   const toggle = () => {
     if (isControlled) onToggle?.();
@@ -122,8 +128,8 @@ export function Sidebar({
   // Persist on every desktop state change (works for both controlled and
   // uncontrolled — the parent shells seed their initial read the same way).
   useEffect(() => {
-    if (variant === "fixed" && isDesktop) writeSidebarCollapsed(isCollapsed);
-  }, [variant, isDesktop, isCollapsed]);
+    if (variant === "fixed" && isTabletUp) writeSidebarCollapsed(isCollapsed);
+  }, [variant, isTabletUp, isCollapsed]);
 
   // Phase 2 · Step 4 — accordion parents call this when opened from the
   // collapsed rail so their children become visible. Only expands (never
@@ -136,7 +142,7 @@ export function Sidebar({
     }
   };
 
-  const drawerOpen = variant === "fixed" && isOpenMobile && !isDesktop;
+  const drawerOpen = variant === "fixed" && isOpenMobile && !isTabletUp;
 
   // Close the drawer on Escape + lock body scroll while it's open.
   const onCloseRef = useRef(onCloseMobile);
@@ -163,7 +169,7 @@ export function Sidebar({
           aria-label="Close navigation"
           tabIndex={-1}
           onClick={onCloseMobile}
-          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-30 bg-black/50 md:hidden"
         />
       )}
       <aside
@@ -172,7 +178,7 @@ export function Sidebar({
         className={`flex h-screen flex-col border-r border-subtle bg-secondary transition-all duration-300 motion-reduce:transition-none ${
           variant === "fixed"
             ? `fixed inset-y-0 left-0 z-40 ${
-                drawerOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+                drawerOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
               }`
             : "relative h-full"
         } ${effectiveCollapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH} ${className}`}
@@ -188,10 +194,10 @@ export function Sidebar({
             64px rail via the shared sidebar context (Phase 2 · Step 8). */}
         <QuickActions />
 
-        {/* Footer — collapse toggle (desktop only; the drawer is always
-            expanded, so the chevron is hidden below lg). */}
+        {/* Footer — collapse toggle (tablet+ only; the drawer is always
+            expanded, so the chevron is hidden below md). */}
         <div
-          className={`hidden lg:flex shrink-0 items-center border-t border-subtle p-2 ${
+          className={`hidden md:flex shrink-0 items-center border-t border-subtle p-2 ${
             isCollapsed ? "justify-center" : "justify-between"
           }`}
         >

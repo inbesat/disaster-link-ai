@@ -44,7 +44,7 @@ import ur from "@/locales/ur.json";
 import { isLocale, type Locale } from "@/lib/i18n/locales";
 
 // Re-export the canonical types from the shared registry so existing
-// imports (LanguageSelector, NavbarNav, …) keep working unchanged.
+// imports (LanguageSelector, …) keep working unchanged.
 export { isLocale, LOCALE_CODES as LOCALES, type Locale } from "@/lib/i18n/locales";
 
 /** The known translation keys — derived from the English dictionary. */

@@ -9,13 +9,15 @@
 //                  focus-visible tooltip so the destination stays
 //                  discoverable
 //   • Badge      — optional count pill (99+ overflow, hidden at 0)
-//   • Children   — optional sub-route array. When present the row becomes
-//                  an accordion parent: a ChevronDown appears on the right
-//                  (rotates 180° when open), clicking toggles the nested
-//                  sub-menu, and the parent counts as active when either
-//                  its own href or any child href matches the route.
-//                  Opening a parent from the collapsed 64px rail calls
-//                  `expand()` so the children can actually be seen.
+//   • subRoutes  — optional sub-route array (named `subRoutes`, NOT React
+//                  children — satisfies the react/no-children-prop lint
+//                  rule). When present the row becomes an accordion
+//                  parent: a ChevronDown appears on the right (rotates
+//                  180° when open), clicking toggles the nested sub-menu,
+//                  and the parent counts as active when either its own
+//                  href or any child href matches the route. Opening a
+//                  parent from the collapsed 64px rail calls `expand()`
+//                  so the children can actually be seen.
 //
 // Active state auto-derives from the current route (usePathname) unless
 // an explicit `active` prop is passed. When the sidebar collapses, open
@@ -62,8 +64,10 @@ type SidebarNavItemProps = {
   active?: boolean;
   /** Optional sub-routes. When present, the row becomes an accordion
    * parent: clicking toggles the nested menu instead of navigating.
+   * Named `subRoutes` (not `children`) so the react/no-children-prop
+   * lint rule doesn't fire — these are data, not React children.
    */
-  children?: SidebarSubRoute[];
+  subRoutes?: SidebarSubRoute[];
   /** Optional keyboard short-circuit hint, e.g. "⌘1". Rendered as a
    * muted <kbd> on the right side of the label (expanded only). */
   shortcut?: string;
@@ -88,13 +92,13 @@ export function SidebarNavItem({
   href,
   badgeCount,
   active,
-  children,
+  subRoutes,
   shortcut,
   className = "",
 }: SidebarNavItemProps) {
   const { collapsed, expand } = useSidebar();
   const pathname = usePathname();
-  const hasChildren = children !== undefined && children.length > 0;
+  const hasChildren = subRoutes !== undefined && subRoutes.length > 0;
 
   // Step 4 — accordion state. Auto-open on first paint when a child route
   // is the current page (e.g. landing on /settings/profile opens Settings).
@@ -102,7 +106,7 @@ export function SidebarNavItem({
   const [open, setOpen] = useState(
     () =>
       hasChildren &&
-      (children?.some((child) => isPathActive(pathname, child.href)) ?? false),
+      (subRoutes?.some((child) => isPathActive(pathname, child.href)) ?? false),
   );
 
   // A parent counts as active when its own href OR any child matches.
@@ -110,7 +114,7 @@ export function SidebarNavItem({
     active ??
     (hasChildren
       ? isPathActive(pathname, href) ||
-        (children?.some((child) => isPathActive(pathname, child.href)) ?? false)
+        (subRoutes?.some((child) => isPathActive(pathname, child.href)) ?? false)
       : isPathActive(pathname, href));
 
   // Position persists across show/hide so the fade-out happens in place;
@@ -136,10 +140,10 @@ export function SidebarNavItem({
   // routes, expand the accordion so the active link is visible (doesn't
   // force-close after the user manually collapses it).
   useEffect(() => {
-    if (hasChildren && children?.some((child) => isPathActive(pathname, child.href))) {
+    if (hasChildren && subRoutes?.some((child) => isPathActive(pathname, child.href))) {
       setOpen(true);
     }
-  }, [pathname, children, hasChildren]);
+  }, [pathname, subRoutes, hasChildren]);
 
   const showTip = () => {
     if (!collapsed) return;
@@ -233,7 +237,7 @@ export function SidebarNavItem({
         {/* Nested sub-menu — only rendered while the sidebar is expanded */}
         {open && !collapsed && (
           <ul id={subMenuId} className="space-y-0.5 pb-1 pt-0.5">
-            {children!.map((sub) => {
+            {subRoutes!.map((sub) => {
               const subActive = isPathActive(pathname, sub.href);
               return (
                 <li key={sub.href}>

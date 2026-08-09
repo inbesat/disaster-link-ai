@@ -4,7 +4,19 @@ import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import LayerToggle, { type LayerVisibility } from "@/components/map/LayerToggle";
-import PredictionChart from "@/components/dashboard/PredictionChart";
+import { SkeletonLoader } from "@/components/ui/SkeletonLoader";
+// Step 10 — Recharts-heavy prediction widget is lazy-loaded client-side
+// (ssr: false) with a skeleton matching its eoc-panel + h-64 chart area.
+const PredictionChart = dynamic(() => import("@/components/dashboard/PredictionChart"), {
+  ssr: false,
+  loading: () => (
+    <div className="eoc-panel p-5">
+      <SkeletonLoader height={12} width="40%" />
+      <SkeletonLoader height={256} width="100%" className="mt-3" borderRadius={10} />
+      <SkeletonLoader height={10} width="55%" className="mt-2" />
+    </div>
+  ),
+});
 import WhatIfSimulator from "@/components/dashboard/WhatIfSimulator";
 import ImpactSummary from "@/components/dashboard/ImpactSummary";
 import AlertBanner from "@/components/dashboard/AlertBanner";
@@ -30,15 +42,17 @@ import LiveCursors from "@/components/map/LiveCursors";
 const DisasterMap = dynamic(() => import("@/components/map/DisasterMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-background">
-      <div className="flex h-14 w-14 animate-pulse items-center justify-center rounded-lg border border-border bg-surface-muted">
-        <span className="text-2xl" aria-hidden>
-          🗺️
-        </span>
+    <div className="flex h-full w-full items-center justify-center bg-background">
+      {/* Roadmap SkeletonLoader block (Step 10) — fills the map viewport
+          so the canvas area never collapses/reflows while maplibre loads. */}
+      <div className="w-full max-w-md space-y-3 p-6">
+        <SkeletonLoader height={16} width="45%" />
+        <SkeletonLoader height={340} width="100%" borderRadius={14} />
+        <div className="flex gap-3">
+          <SkeletonLoader height={12} width="30%" />
+          <SkeletonLoader height={12} width="30%" />
+        </div>
       </div>
-      <div className="h-3 w-40 animate-pulse rounded-full bg-surface-muted" />
-      <div className="h-3 w-24 animate-pulse rounded-full bg-surface-muted" />
-      <p className="eoc-label text-accent">LOADING MAP…</p>
     </div>
   ),
 });

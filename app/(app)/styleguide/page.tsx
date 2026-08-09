@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import BackButton from "@/components/ui/BackButton";
 import DataRow from "@/components/ui/DataRow";
+import Icon from "@/components/ui/Icon";
 import IconButton from "@/components/ui/IconButton";
 import Panel from "@/components/ui/Panel";
 import SeverityBadge from "@/components/ui/SeverityBadge";
@@ -238,10 +239,10 @@ function DemoWell({ children }: { children: ReactNode }) {
 }
 
 /**
- * Accordion demo (Phase 2 · Step 4) — parents with `children` sub-routes
- * render a chevron, toggle their nested menu on click, highlight when a
- * child route is active, and force the sidebar to expand when opened from
- * the collapsed 64px rail.
+ * Accordion demo (Phase 2 · Step 4) — parents with `subRoutes` render a
+ * chevron, toggle their nested menu on click, highlight when a child
+ * route is active, and force the sidebar to expand when opened from the
+ * collapsed 64px rail.
  */
 function SidebarAccordionDemo() {
   return (
@@ -253,7 +254,7 @@ function SidebarAccordionDemo() {
               icon={Settings}
               label="Settings"
               href="/settings/profile"
-              children={[
+              subRoutes={[
                 { label: "Profile", href: "/settings/profile" },
                 { label: "Notifications", href: "/settings/notifications" },
                 { label: "Map", href: "/settings/map" },
@@ -265,7 +266,7 @@ function SidebarAccordionDemo() {
               label="Admin"
               href="/admin"
               badgeCount={3}
-              children={[
+              subRoutes={[
                 { label: "Users", href: "/users", badgeCount: 3 },
                 { label: "Districts", href: "/districts" },
                 { label: "Audit Logs", href: "/audit-logs" },
@@ -275,11 +276,11 @@ function SidebarAccordionDemo() {
         </Sidebar>
       </div>
       <p className="mt-2 text-xs text-muted">
-        Parents with <code className="font-mono">children</code> render a ChevronDown
-        (rotates when open) and toggle their sub-menu on click — "Settings" and "Admin"
-        show the pattern. Click a parent while the sidebar is collapsed to the 64px rail
-        and it automatically expands so the children fit. Active state derives from the
-        parent href or any child.
+        Parents with <code className="font-mono">subRoutes</code> render a ChevronDown
+        (rotates when open) and toggle their sub-menu on click —&nbsp;&quot;Settings&quot;
+        and &quot;Admin&quot; show the pattern. Click a parent while the sidebar is
+        collapsed to the 64px rail and it automatically expands so the children fit.
+        Active state derives from the parent href or any child.
       </p>
     </>
   );
@@ -325,12 +326,12 @@ function SidebarRoleDemo() {
       <p className="mt-2 text-xs text-muted">
         The composed DashboardSidebar maps over{" "}
         <code className="font-mono">lib/config/navigation.ts</code> and renders only the
-        routes the selected role may see — "Settings" is super_admin-only, "Shelters /
-        Resources / Satellite" appear for district_admin and up, and a field responder
-        keeps the read-only operational set. Inline is used here for preview; the fixed
-        variant pins to the viewport. Click the chevron — width animates 260px ⇄ 64px,
-        section labels hide, and icons reveal hover tooltips. The Active Alerts pill shows
-        the live unacknowledged count.
+        routes the selected role may see —&nbsp;&quot;Settings&quot; is super_admin-only,
+        &quot;Shelters / Resources / Satellite&quot; appear for district_admin and up, and
+        a field responder keeps the read-only operational set. Inline is used here for
+        preview; the fixed variant pins to the viewport. Click the chevron — width
+        animates 260px ⇄ 64px, section labels hide, and icons reveal hover tooltips. The
+        Active Alerts pill shows the live unacknowledged count.
       </p>
     </>
   );
@@ -352,8 +353,10 @@ export default function StyleguidePage() {
           </h1>
           <p className="mt-1 text-sm text-muted">
             Internal reference (hidden from nav) ·{" "}
-            <code className="font-mono">/styleguide</code> · swatches resolve live — flip
-            the theme toggle to preview day-ops.
+            <code className="font-mono">/styleguide</code> · swatches resolve live. Dark
+            mode is locked for demo day (ThemeProvider{" "}
+            <code className="font-mono">{'forcedTheme="dark"'}</code>) — the day-ops
+            palette is unreachable until re-enabled.
           </p>
         </div>
       </div>
@@ -549,6 +552,40 @@ export default function StyleguidePage() {
               <SkeletonRow trailing={false} />
             </div>
           </div>{" "}
+          {/* Icon wrapper (Demo-day hardening · Step 7) */}
+          <div>
+            <SubHeading>Icon — standardized wrapper (Step 7)</SubHeading>
+            <DemoWell>
+              <span className="flex flex-col items-center gap-1 text-[11px] text-muted">
+                <Icon name="Bell" size="nav" />
+                nav · 20px
+              </span>
+              <span className="flex flex-col items-center gap-1 text-[11px] text-muted">
+                <Icon name="Bell" size="action" />
+                action · 24px
+              </span>
+              <span className="flex flex-col items-center gap-1 text-[11px] text-muted">
+                <Icon name="Bell" size="inline" />
+                inline · 16px
+              </span>
+              <span className="flex flex-col items-center gap-1 text-[11px] text-muted">
+                <Icon name="Siren" className="text-accent-danger" />
+                Siren · default
+              </span>
+              <span className="flex flex-col items-center gap-1 text-[11px] text-muted">
+                <Icon name="MapPin" className="text-accent-primary" />
+                MapPin
+              </span>
+            </DemoWell>
+            <p className="mt-2 text-xs text-muted">
+              <code className="font-mono">Icon</code> renders any registry name at{" "}
+              <code className="font-mono">strokeWidth 1.5</code> (lucide&apos;s default is
+              2) — every icon in the app shares one stroke weight and the{" "}
+              <code className="font-mono">nav / action / inline</code> size scale. The
+              name is type-checked against the registry in{" "}
+              <code className="font-mono">components/ui/Icon.tsx</code>.
+            </p>
+          </div>
           {/* Sidebar shell + nav (Phase 2 · Steps 1–3) */}
           <div>
             <SubHeading>
@@ -565,7 +602,7 @@ export default function StyleguidePage() {
       </Panel>
 
       <p className="pb-4 text-center text-xs text-muted">
-        DRIP Design System · UI/UX Phase 1 · dark-first, day-ops ready
+        DRIP Design System · UI/UX Phase 1 · dark-first — locked for demo day (Step 6)
       </p>
     </div>
   );

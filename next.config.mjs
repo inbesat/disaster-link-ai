@@ -18,9 +18,11 @@ const allowedOrigin =
 const isWildcard = allowedOrigin === "*";
 
 const nextConfig = {
+  // FIXME: re-enable after hackathon
   typescript: {
     ignoreBuildErrors: true,
   },
+  // FIXME: re-enable after hackathon
   eslint: {
     ignoreDuringBuilds: true,
   },

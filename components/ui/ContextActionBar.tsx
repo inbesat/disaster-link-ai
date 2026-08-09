@@ -16,8 +16,9 @@
 //     rendered here as a slim top rail (below the app header) only when
 //     `secondaryActions` is provided. Pages with their own sticky header
 //     may omit them and rely on their existing header instead.
-//   • The whole bar is mobile-focused (matches BottomNav's lg:hidden); on
-//     desktop it docks at the very bottom since the nav bar is hidden there.
+//   • The whole bar is mobile-focused (matches BottomNav's md:hidden —
+//     phones only); on tablet+ it docks at the very bottom since the nav
+//     bar is hidden there.
 //   • Route-gated by the consumer via `visible` — the page decides whether
 //     it's showing (e.g. only while viewing an alert / plan detail).
 //
@@ -154,7 +155,7 @@ export function ContextActionBar({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -12, opacity: 0 }}
               transition={transition}
-              className="pointer-events-none fixed inset-x-0 top-[56px] z-40 px-3 lg:hidden"
+              className="pointer-events-none fixed inset-x-0 top-[56px] z-40 px-3 md:hidden"
             >
               <div className="pointer-events-auto mx-auto flex max-w-md items-center justify-end gap-2">
                 {secondaryActions.map((action) => (
@@ -169,7 +170,7 @@ export function ContextActionBar({
           )}
 
           {/* Primary thumb-zone bar — pinned above the 72px BottomNav. */}
-          <div className="pointer-events-none fixed inset-x-0 bottom-[calc(72px+env(safe-area-inset-bottom))] z-40 px-3 pb-2 lg:bottom-0 lg:px-px">
+          <div className="pointer-events-none fixed inset-x-0 bottom-[calc(72px+env(safe-area-inset-bottom))] z-40 px-3 pb-2 md:bottom-0 md:px-px">
             <motion.div
               key="cab-bottom"
               initial={{ y: 18, opacity: 0 }}

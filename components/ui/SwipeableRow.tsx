@@ -42,7 +42,7 @@
 //   </AnimatePresence>
 // -------------------------------------------------------------------------
 
-import { useCallback, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import {
   animate,
   motion,
@@ -100,6 +100,13 @@ export function SwipeableRow({
 }: SwipeableRowProps) {
   const reduceMotion = useReducedMotion();
   const committed = useRef(false);
+  const animationRef = useRef<{ stop: () => void } | null>(null);
+
+  useEffect(() => {
+    return () => {
+      animationRef.current?.stop();
+    };
+  }, []);
   // The foreground's live translate-x — bound to the drag.
   const x = useMotionValue(0);
 
@@ -137,7 +144,7 @@ export function SwipeableRow({
       committed.current = true;
       const target =
         verdict === "approve" ? SWIPE_LIMIT + SWIPE_FLING : -(SWIPE_LIMIT + SWIPE_FLING);
-      void animate(x, target, reduceMotion ? none : flingSpring);
+      animationRef.current = animate(x, target, reduceMotion ? none : flingSpring);
     },
     [x, reduceMotion],
   );

@@ -95,7 +95,7 @@ export function ContextFAB() {
           exit={{ scale: 0.6, opacity: 0 }}
           transition={{ type: "spring", stiffness: 420, damping: 24 }}
           whileTap={{ scale: 0.95 }}
-          className="fixed right-4 bottom-[calc(72px+env(safe-area-inset-bottom)+1rem)] z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--accent-primary)] text-white shadow-[0_0_20px_rgba(59,130,246,0.5)] transition hover:bg-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a] lg:bottom-6"
+          className="fixed right-4 bottom-[calc(72px+env(safe-area-inset-bottom)+1rem)] z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--accent-primary)] text-white shadow-[0_0_20px_rgba(59,130,246,0.5)] transition hover:bg-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a] md:bottom-6"
         >
           {/* Morphing icon — AnimatePresence swaps the glyph on route change. */}
           <AnimatePresence mode="wait" initial={false}>

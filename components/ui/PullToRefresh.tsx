@@ -109,7 +109,11 @@ export function PullToRefresh({
         duration: 3000,
       });
     } catch {
-      // Errors surface in the page — the gesture still completes.
+      showToast("error", {
+        title: "Refresh failed",
+        description: "Could not update live data. Try again.",
+        duration: 4000,
+      });
     } finally {
       const elapsed = Date.now() - startedAt;
       const remaining = Math.max(0, MIN_REFRESH_MS - elapsed);

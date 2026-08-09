@@ -40,7 +40,11 @@ const OPENROUTER_MODEL = "~anthropic/claude-sonnet-latest";
 const GROQ_MODEL = "openai/gpt-oss-120b";
 const BLUESMINDS_MODEL = "meta/llama-3.1-8b-instruct";
 
-const PROBE_TIMEOUT_MS = 8_000;
+// 15s — generous enough for a slow hall/airport wifi cold-start probe (an
+// 8s budget dropped healthy providers on marginal networks, which cascaded
+// into the "all providers unreachable" fallback). The chat stream itself
+// has its own timeout; this only gates the probe.
+const PROBE_TIMEOUT_MS = 15_000;
 /** How long a probed provider is trusted before re-probing. */
 const RESOLVER_TTL_MS = 60_000;
 /**

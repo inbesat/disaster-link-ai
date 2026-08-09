@@ -124,6 +124,7 @@ export function DashboardSidebar({
                   href={route.href}
                   badgeCount={route.href === "/alerts" ? alertsBadgeCount : undefined}
                   shortcut={shortcut}
+                  subRoutes={route.subRoutes}
                 />
               );
             })}

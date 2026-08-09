@@ -6,10 +6,18 @@
 // can't hold state) and composes:
 //
 //   • fixed DashboardSidebar (260px ⇄ 64px icon rail) — off-screen drawer
-//     below lg via translate; slides in as an overlay when mobileOpen
+//     below md via translate; slides in as an overlay when mobileOpen
 //   • sticky DashboardTopBar (utilities: theme/language/avatar/hamburger)
 //   • content column whose left margin animates with the collapse state
-//     at lg+ (ml-[260px] ⇄ ml-16); full-width on mobile under the drawer
+//     at md+ (ml-[260px] ⇄ ml-16); full-width on phones under the drawer
+//   • one-handed mode (Step 10) — when the BottomNav's double-tap fires,
+//     the whole content column translates down 25vh (iOS Reachability) so
+//     top-of-page controls land in thumb range; double-tap restores. The
+//     state lives here because the transform targets this column, while
+//     the BottomNav (fixed, outside the column) only reports the gesture.
+//
+// Breakpoints moved lg → md (768px) Aug 9, 2026 to match the architecture
+// doc (drawer + bottom nav on phones; pinned rail on tablet+).
 //
 // Children (AlertTicker + page) are passed through from the server layout
 // and render inside the animated content column.
@@ -17,15 +25,20 @@
 
 "use client";
 
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardTopBar from "./DashboardTopBar";
 import BottomNav from "./BottomNav";
 import { readSidebarCollapsed } from "./Sidebar";
+import { useDemoSimulation } from "@/hooks/useDemoSimulation";
+import type { Role } from "@/lib/validations/user";
 
 type DashboardShellProps = {
   /** Guest (demo) mode — passed down to the top bar identity block. */
   guest: boolean;
+  /** Active user role — filters the sidebar nav routes (guests get the
+   * demo default district_admin via the layout). */
+  userRole?: Role;
   /** Resolved display name ("Guest Commander" in demo mode). */
   displayName: string;
   /** User email (null in demo mode). */
@@ -40,14 +53,37 @@ type DashboardShellProps = {
 
 export function DashboardShell({
   guest,
+  userRole,
   displayName,
   email,
   avatarUrl,
   alertsBadgeCount,
   children,
 }: DashboardShellProps) {
+  // Phase 10 · Step 3 — while demo_sim_active is set, inject simulated live
+  // data (People-at-Risk bumps + activity logs) into the command center.
+  // HeroKPIs and LiveActivityFeed subscribe to its window events.
+  useDemoSimulation();
+
   const [collapsed, setCollapsed] = useState(() => readSidebarCollapsed() ?? false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Step 10 — one-handed (Reachability) mode. Toggled by a double-tap on
+  // the mobile BottomNav; slides the content column down 25vh. Auto-exits
+  // if the viewport grows to md+ (the BottomNav hides there, so the user
+  // would have no way to toggle it back).
+  const [oneHanded, setOneHanded] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(min-width: 768px)");
+    const resetOnDesktop = () => {
+      if (mq.matches) setOneHanded(false);
+    };
+    resetOnDesktop();
+    mq.addEventListener("change", resetOnDesktop);
+    return () => mq.removeEventListener("change", resetOnDesktop);
+  }, []);
+
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
   return (
@@ -59,17 +95,19 @@ export function DashboardShell({
         collapsed={collapsed}
         onToggle={() => setCollapsed((c) => !c)}
         alertsBadgeCount={alertsBadgeCount}
+        userRole={userRole}
         isOpenMobile={mobileOpen}
         onCloseMobile={closeMobile}
       />
 
-      {/* Content column — margin animates 260px ⇄ 64px at lg+; full-width
-          on mobile where the sidebar is a drawer overlay. Bottom padding
-          clears the fixed mobile BottomNav (72px + safe area) below lg. */}
+      {/* Content column — margin animates 260px ⇄ 64px at md+; full-width
+          on phones where the sidebar is a drawer overlay. Bottom padding
+          clears the fixed mobile BottomNav (72px + safe area) below md.
+          One-handed mode translates the whole column down 25vh (Step 10). */}
       <div
-        className={`pb-[calc(72px+env(safe-area-inset-bottom))] transition-all duration-300 motion-reduce:transition-none lg:pb-0 ${
-          collapsed ? "lg:ml-16" : "lg:ml-[260px]"
-        }`}
+        className={`pb-[calc(72px+env(safe-area-inset-bottom))] transition-all duration-300 motion-reduce:transition-none md:pb-0 ${
+          collapsed ? "md:ml-16" : "md:ml-[260px]"
+        } ${oneHanded ? "translate-y-[25vh]" : ""}`}
       >
         <DashboardTopBar
           guest={guest}
@@ -81,8 +119,13 @@ export function DashboardShell({
         {children}
       </div>
 
-      {/* Mobile bottom navigation — hidden at lg+ (desktop uses the sidebar). */}
-      <BottomNav alertsBadgeCount={alertsBadgeCount} />
+      {/* Mobile bottom navigation — hidden at md+ (tablet/desktop uses the
+          sidebar). Double-tapping its background toggles one-handed mode (Step 10). */}
+      <BottomNav
+        alertsBadgeCount={alertsBadgeCount}
+        oneHanded={oneHanded}
+        onToggleOneHanded={() => setOneHanded((v) => !v)}
+      />
     </div>
   );
 }

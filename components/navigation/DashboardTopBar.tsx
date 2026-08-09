@@ -6,12 +6,13 @@
 // links moved into the fixed Sidebar, so this bar only hosts the utility
 // cluster that used to live in the Navbar's right side — avatar + name,
 // sync status, presence, notifications, push toggle, settings, language
-// selector, theme toggle, mobile hamburger and the sign-out / exit-demo
-// form.
+// selector, mobile hamburger and the sign-out / exit-demo form. (The
+// theme toggle was removed — dark mode is LOCKED for demo day, see
+// Demo-day hardening · Step 6 in docs/CONTEXT_HANDOFF.md.)
 //
-// Client component because of ThemeToggle/LanguageSelector/etc. The server
-// layout resolves identity (guest flag + name/email/avatar) and passes it
-// in as props — mirroring the Navbar's old server-side auth reads.
+// Client component because of LanguageSelector/etc. The server layout
+// resolves identity (guest flag + name/email/avatar) and passes it in as
+// props — mirroring the Navbar's old server-side auth reads.
 // ---------------------------------------------------------------------
 
 "use client";
@@ -23,11 +24,11 @@ import NotificationCenter from "@/components/dashboard/NotificationCenter";
 import PushNotificationToggle from "@/components/dashboard/PushNotificationToggle";
 import PresenceIndicators from "@/components/dashboard/PresenceIndicators";
 import SyncStatus from "@/components/dashboard/SyncStatus";
-import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSelector from "@/components/ui/LanguageSelector";
 import NavbarAvatar from "@/components/NavbarAvatar";
 import BackButton from "@/components/ui/BackButton";
 import Translated from "@/components/ui/Translated";
+import LiveClock from "@/components/dashboard/LiveClock";
 
 type DashboardTopBarProps = {
   /** Guest (demo) mode — swaps the avatar for the guest icon + labels. */
@@ -53,6 +54,19 @@ export function DashboardTopBar({
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b border-subtle bg-secondary px-4">
       <div className="flex min-w-0 items-center gap-2">
         <BackButton />
+      </div>
+
+      {/* Phase 10 · Step 2 — live IST clock, centered on every dashboard
+          page (incl. the guest command center judges see; the hero-header
+          clock alone lives on the admin-only /dashboard route). timeClassName
+          keeps it readable when the top bar re-themes in day-ops. Hidden
+          below md where the right utility cluster crowds it. */}
+      <div className="hidden items-center gap-2 md:flex" aria-live="off">
+        <span
+          className="h-2 w-2 animate-pulse rounded-full bg-accent-success"
+          aria-hidden
+        />
+        <LiveClock timeClassName="text-primary" />
       </div>
 
       <div className="flex shrink-0 items-center gap-4">
@@ -83,7 +97,7 @@ export function DashboardTopBar({
           </span>
         </div>
 
-        <div className="hidden lg:block">
+        <div className="hidden md:block">
           <SyncStatus />
         </div>
         <PresenceIndicators />
@@ -105,16 +119,17 @@ export function DashboardTopBar({
         {/* Phase 25 · Step 4 — multilingual selector (23 languages) */}
         <LanguageSelector />
 
-        <ThemeToggle />
+        {/* ThemeToggle removed for demo day — dark mode is LOCKED via
+            ThemeProvider forcedTheme="dark". */}
 
-        {/* Mobile drawer hamburger — opens the fixed Sidebar overlay (<lg).
-            Desktop hides it; the sidebar is visible on its own there. */}
+        {/* Mobile drawer hamburger — opens the fixed Sidebar overlay (<md).
+            Tablet+ hides it; the sidebar is visible on its own there. */}
         <button
           type="button"
           onClick={onOpenMobile}
           aria-label="Open navigation drawer"
           aria-haspopup="dialog"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface-elevated text-foreground transition hover:border-accent hover:text-accent lg:hidden"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface-elevated text-foreground transition hover:border-accent hover:text-accent md:hidden"
         >
           <Menu className="h-5 w-5" aria-hidden />
         </button>

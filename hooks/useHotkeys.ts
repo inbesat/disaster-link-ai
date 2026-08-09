@@ -28,7 +28,7 @@ export type HotkeyAction = string | (() => void);
 const MODIFIER_KEYS = new Set(["mod", "cmd", "ctrl", "meta", "alt", "shift"]);
 
 /** True when the event target is a form field — shortcuts must not fire. */
-function isEditableTarget(target: EventTarget | null): boolean {
+export function isEditableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
   const tag = target.tagName;
   return (

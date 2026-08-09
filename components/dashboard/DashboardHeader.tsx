@@ -6,7 +6,8 @@
 //
 // Sticky top bar that frames every dashboard screen:
 //   • Left   — District selector (Patna / Ernakulam / Purba Champaran)
-//   • Center — Live IST clock (ticking every second, Asia/Kolkata)
+//   • Center — Live IST clock (ticking every second via LiveClock,
+//              Phase 10 · Step 2)
 //   • Right  — Global flood status badge, notification bell, avatar + role
 //              chip.
 //
@@ -19,6 +20,7 @@ import { ChevronDown, MapPin } from "lucide-react";
 import SeverityBadge from "@/components/ui/SeverityBadge";
 import NavbarAvatar from "@/components/NavbarAvatar";
 import NotificationCenter from "@/components/dashboard/NotificationCenter";
+import LiveClock from "@/components/dashboard/LiveClock";
 
 /** Districts the Command Center can switch between (mirrors DEFAULT_DISTRICTS). */
 export const DASHBOARD_DISTRICTS = ["Patna", "Ernakulam", "Purba Champaran"] as const;
@@ -37,35 +39,6 @@ type DashboardHeaderProps = {
   /** Server-provided avatar URL (client falls back to local snapshot). */
   avatarUrl?: string | null;
 };
-
-function useIstClock(): Date | null {
-  const [now, setNow] = useState<Date | null>(null);
-
-  useEffect(() => {
-    setNow(new Date());
-    const id = window.setInterval(() => setNow(new Date()), 1000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  return now;
-}
-
-/** Format a Date as "09:40:32 AM IST" using Indian Standard Time. */
-function formatIstTime(date: Date): string {
-  const parts = new Intl.DateTimeFormat("en-IN", {
-    timeZone: "Asia/Kolkata",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hourCycle: "h12",
-  }).formatToParts(date);
-
-  const part = (type: Intl.DateTimeFormatPartTypes) =>
-    parts.find((p) => p.type === type)?.value ?? "00";
-
-  const period = part("dayPeriod").toUpperCase();
-  return `${part("hour")}:${part("minute")}:${part("second")} ${period} IST`;
-}
 
 /**
  * Accessible district dropdown — button + floating listbox with outside-click
@@ -162,8 +135,6 @@ export function DashboardHeader({
   displayName = "Command Center",
   avatarUrl = null,
 }: DashboardHeaderProps) {
-  const now = useIstClock();
-
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-white/10 bg-[#0a0f1a]/95 px-4 backdrop-blur-md">
       {/* Left — district selector */}
@@ -172,24 +143,16 @@ export function DashboardHeader({
         onDistrictChange={onDistrictChange}
       />
 
-      {/* Middle — live IST clock (true center on md+) */}
+      {/* Middle — live IST clock (true center on md+), Phase 10 · Step 2 */}
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-2 md:flex"
         aria-live="off"
       >
-        {now ? (
-          <>
-            <span
-              className="h-2 w-2 animate-pulse rounded-full bg-accent-success"
-              aria-hidden
-            />
-            <span className="text-sm font-semibold tabular-nums tracking-wider text-slate-100">
-              {formatIstTime(now)}
-            </span>
-          </>
-        ) : (
-          <span className="h-5 w-32 animate-pulse rounded bg-white/10" aria-hidden />
-        )}
+        <span
+          className="h-2 w-2 animate-pulse rounded-full bg-accent-success"
+          aria-hidden
+        />
+        <LiveClock />
       </div>
 
       {/* Right — flood badge, notification bell, avatar + role chip */}
