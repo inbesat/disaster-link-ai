@@ -186,6 +186,7 @@ export type NewResourceRequest = {
   urgency: string;
   lat: number;
   lng: number;
+  notes?: string;
 };
 
 /**
@@ -205,6 +206,7 @@ export async function submitResourceRequest(
         lat: input.lat,
         lng: input.lng,
         status: "pending",
+        notes: input.notes ?? "",
       },
     });
     revalidatePath("/dispatch");
@@ -264,9 +266,7 @@ export async function approveRequest(
 ): Promise<boolean> {
   try {
     const [req, source] = await Promise.all([
-      prisma.resourceRequest
-        .findUnique({ where: { id: requestId } })
-        .catch(() => null),
+      prisma.resourceRequest.findUnique({ where: { id: requestId } }).catch(() => null),
       prisma.resource.findUnique({ where: { id: resourceId } }).catch(() => null),
     ]);
 
@@ -544,9 +544,7 @@ export async function logResourceMovement(
         resourceId: null,
         resourceName: input.resourceName,
         // Sanitize: clamp unknown action strings to the known vocabulary.
-        action: MOVEMENT_ACTIONS.includes(input.action)
-          ? input.action
-          : "adjusted",
+        action: MOVEMENT_ACTIONS.includes(input.action) ? input.action : "adjusted",
         fromLabel: input.fromLabel || null,
         toLabel: input.toLabel,
         toLat: input.toLat,

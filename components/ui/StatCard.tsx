@@ -11,12 +11,8 @@
 // Hover: a gentle lift (-translate-y) with an increased shadow.
 // ---------------------------------------------------------------------
 
-import {
-  TrendingDown,
-  TrendingUp,
-  Minus,
-  type LucideIcon,
-} from "lucide-react";
+import type { ReactNode } from "react";
+import { TrendingDown, TrendingUp, Minus, type LucideIcon } from "lucide-react";
 
 export type StatTrendDirection = "up" | "down" | "flat";
 
@@ -24,7 +20,7 @@ type StatCardProps = {
   /** Short KPI label, e.g. "People at Risk". */
   label: string;
   /** The big headline number. Numbers render with Indian grouping (47,230). */
-  value: string | number;
+  value?: string | number;
   /** Trend text, e.g. "+12%". */
   trend?: string;
   /** Which way the trend reads — colors the arrow + percentage. */
@@ -36,13 +32,26 @@ type StatCardProps = {
   trendClassName?: string;
   /** Optional leading icon shown in a tinted square. */
   icon?: LucideIcon;
+  /**
+   * Override the headline value entirely (e.g. a colored "CRITICAL" with a
+   * pulsing dot). When set, `value`/`valueClassName` are ignored.
+   */
+  valueNode?: ReactNode;
+  /** Override the value text color — e.g. "text-accent-danger" for risk. */
+  valueClassName?: string;
+  /** Small muted line rendered under the trend row. */
+  subtitle?: ReactNode;
+  /** Thin occupancy bar under the value (fraction → percentage width). */
+  progress?: {
+    value: number;
+    max: number;
+    /** Width/height color classes — defaults to the secondary fg. */
+    colorClass?: string;
+  };
   className?: string;
 };
 
-const TREND_META: Record<
-  StatTrendDirection,
-  { icon: LucideIcon; color: string }
-> = {
+const TREND_META: Record<StatTrendDirection, { icon: LucideIcon; color: string }> = {
   up: { icon: TrendingUp, color: "text-accent-success" },
   down: { icon: TrendingDown, color: "text-accent-danger" },
   flat: { icon: Minus, color: "text-muted" },
@@ -59,12 +68,16 @@ export function StatCard({
   trendDirection = "up",
   trendClassName,
   icon: Icon,
+  valueNode,
+  valueClassName,
+  subtitle,
+  progress,
   className = "",
 }: StatCardProps) {
   const trendMeta = TREND_META[trendDirection] ?? TREND_META.flat;
   const TrendIcon = trendMeta.icon;
   const displayedValue =
-    typeof value === "number" ? value.toLocaleString("en-IN") : value;
+    typeof value === "number" ? value.toLocaleString("en-IN") : (value ?? "");
 
   return (
     <div
@@ -79,9 +92,35 @@ export function StatCard({
         )}
       </div>
 
-      <p className="mt-2 text-3xl font-bold tabular-nums leading-none text-primary">
-        {displayedValue}
-      </p>
+      {valueNode ?? (
+        <p
+          className={`mt-2 text-3xl font-bold tabular-nums leading-none ${
+            valueClassName ?? "text-primary"
+          }`}
+        >
+          {displayedValue}
+        </p>
+      )}
+
+      {progress && (
+        <div
+          className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-tertiary"
+          role="progressbar"
+          aria-valuenow={progress.value}
+          aria-valuemin={0}
+          aria-valuemax={progress.max}
+          aria-label={`${progress.value} of ${progress.max}`}
+        >
+          <div
+            className={`h-full rounded-full ${
+              progress.colorClass ?? "bg-accent-primary"
+            }`}
+            style={{
+              width: `${Math.min(100, Math.max(0, (progress.value / progress.max) * 100))}%`,
+            }}
+          />
+        </div>
+      )}
 
       {trend && (
         <p
@@ -93,6 +132,8 @@ export function StatCard({
           {trend}
         </p>
       )}
+
+      {subtitle && <p className="mt-1.5 text-xs text-muted">{subtitle}</p>}
     </div>
   );
 }

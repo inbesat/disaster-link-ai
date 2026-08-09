@@ -30,9 +30,30 @@ import {
   NAVIGATION_ROUTES,
   filterRoutesByRole,
 } from "@/lib/config/navigation";
+import useHotkeys from "@/hooks/useHotkeys";
 import Sidebar, { type SidebarVariant } from "./Sidebar";
 import SidebarSection from "./SidebarSection";
 import SidebarNavItem from "./SidebarNavItem";
+
+// Top-level navigation hotkeys (Phase 2 · Step 9) — `mod` = Cmd on macOS,
+// Ctrl on Windows/Linux. Display strings use the ⌘ glyph for brevity.
+const NAV_SHORTCUTS: Record<string, string> = {
+  "mod+1": "/command-center",
+  "mod+2": "/alerts",
+  "mod+3": "/evacuations",
+  "mod+4": "/inventory",
+  "mod+5": "/ai-planner",
+  "mod+6": "/directory",
+};
+
+const NAV_SHORTCUT_LABELS: Record<string, string> = {
+  "/command-center": "⌘1",
+  "/alerts": "⌘2",
+  "/evacuations": "⌘3",
+  "/inventory": "⌘4",
+  "/ai-planner": "⌘5",
+  "/directory": "⌘6",
+};
 
 type DashboardSidebarProps = {
   /** Unacknowledged AlertLog count — renders the Active Alerts pill. */
@@ -43,6 +64,10 @@ type DashboardSidebarProps = {
   collapsed?: boolean;
   /** Callback when the toggle is pressed (controlled mode). */
   onToggle?: () => void;
+  /** Mobile drawer open state — slides the fixed sidebar in over content. */
+  isOpenMobile?: boolean;
+  /** Close the mobile drawer (backdrop click / Escape). */
+  onCloseMobile?: () => void;
   /** fixed: pins to the viewport (dashboard) · inline: in-flow (styleguide). */
   variant?: SidebarVariant;
   className?: string;
@@ -56,15 +81,26 @@ export function DashboardSidebar({
   userRole = MOCK_ROLE,
   collapsed,
   onToggle,
+  isOpenMobile,
+  onCloseMobile,
   variant = "fixed",
   className = "",
 }: DashboardSidebarProps) {
   const visibleRoutes = filterRoutesByRole(NAVIGATION_ROUTES, userRole);
 
+  // Global keyboard shortcuts — navigate regardless of collapse state.
+  useHotkeys(NAV_SHORTCUTS);
+
+  // Dedupe shortcut hints — two routes point at /command-center, so only
+  // the first item per href gets the ⌘ badge.
+  const shortcutAssigned = new Set<string>();
+
   return (
     <Sidebar
       collapsed={collapsed}
       onToggle={onToggle}
+      isOpenMobile={isOpenMobile}
+      onCloseMobile={onCloseMobile}
       variant={variant}
       className={className}
     >
@@ -75,15 +111,22 @@ export function DashboardSidebar({
 
         return (
           <SidebarSection key={section} label={NAV_SECTION_LABELS[section]}>
-            {sectionRoutes.map((route) => (
-              <SidebarNavItem
-                key={route.label}
-                icon={route.icon}
-                label={route.label}
-                href={route.href}
-                badgeCount={route.href === "/alerts" ? alertsBadgeCount : undefined}
-              />
-            ))}
+            {sectionRoutes.map((route) => {
+              const shortcut = shortcutAssigned.has(route.href)
+                ? undefined
+                : NAV_SHORTCUT_LABELS[route.href];
+              if (shortcut) shortcutAssigned.add(route.href);
+              return (
+                <SidebarNavItem
+                  key={route.label}
+                  icon={route.icon}
+                  label={route.label}
+                  href={route.href}
+                  badgeCount={route.href === "/alerts" ? alertsBadgeCount : undefined}
+                  shortcut={shortcut}
+                />
+              );
+            })}
           </SidebarSection>
         );
       })}

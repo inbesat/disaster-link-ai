@@ -1,11 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import LayerToggle, {
-  type LayerVisibility,
-} from "@/components/map/LayerToggle";
+import LayerToggle, { type LayerVisibility } from "@/components/map/LayerToggle";
 import PredictionChart from "@/components/dashboard/PredictionChart";
 import WhatIfSimulator from "@/components/dashboard/WhatIfSimulator";
 import ImpactSummary from "@/components/dashboard/ImpactSummary";
@@ -71,6 +69,19 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
     shelters: settings.layers.shelters,
     resources: settings.layers.resources,
   }));
+
+  // Live map-settings sync: /settings/map layer toggles apply to the
+  // command-center map the instant the operator hits them, not just on a
+  // refresh. Local toggles from the in-map LayerToggle still win until the
+  // next settings write (one-way: settings → map, matching the Phase 3
+  // "settings are the single source of truth" contract).
+  useEffect(() => {
+    setLayers({
+      floodZones: settings.layers.floodZones,
+      shelters: settings.layers.shelters,
+      resources: settings.layers.resources,
+    });
+  }, [settings.layers]);
   const [hoursAhead, setHoursAhead] = useState(24);
   const [scenario, setScenario] = useState<ScenarioId>("normal");
   const [severity, setSeverity] = useState<FloodRiskLevel>("high");
@@ -170,16 +181,12 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
       </div>
 
       <div className="mt-4">
-        <AccuracyMetrics
-          reports={groundReports.length > 0 ? groundReports : undefined}
-        />
+        <AccuracyMetrics reports={groundReports.length > 0 ? groundReports : undefined} />
       </div>
 
       <div className="mt-4">
         <WebhookSimulator
-          onNewReport={(report) =>
-            setGroundReports((prev) => [...prev, report])
-          }
+          onNewReport={(report) => setGroundReports((prev) => [...prev, report])}
         />
       </div>
 

@@ -92,14 +92,12 @@ describe("resolveEmergencyPlannerModel", () => {
   it("steps down to the backup key when the primary key is dead", async () => {
     vi.stubEnv("GROQ_API_KEY", "gk-dead-1234567890");
     vi.stubEnv("GROQ_API_KEY_BACKUP", "gk-alive-1234567890");
-    const fetchMock = vi.fn(
-      async (url: string | URL | Request, init?: RequestInit) => {
-        const headers = (init?.headers ?? {}) as Record<string, string>;
-        const auth = headers.Authorization ?? "";
-        // The dead primary key fails; the alive backup key succeeds.
-        return auth.includes("gk-dead") ? FAIL_RESPONSE : OK_RESPONSE;
-      },
-    );
+    const fetchMock = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+      const headers = (init?.headers ?? {}) as Record<string, string>;
+      const auth = headers.Authorization ?? "";
+      // The dead primary key fails; the alive backup key succeeds.
+      return auth.includes("gk-dead") ? FAIL_RESPONSE : OK_RESPONSE;
+    });
     vi.stubGlobal("fetch", fetchMock);
 
     const mod = await freshModule();
@@ -110,7 +108,10 @@ describe("resolveEmergencyPlannerModel", () => {
 
   it("never probes a provider whose key is missing", async () => {
     vi.stubEnv("GROQ_API_KEY", "gk-1234567890");
-    const fetchMock = vi.fn(async (_url: string | URL | Request) => OK_RESPONSE);
+    const fetchMock = vi.fn(async (url: string | URL | Request) => {
+      void url;
+      return OK_RESPONSE;
+    });
     vi.stubGlobal("fetch", fetchMock);
 
     const mod = await freshModule();
@@ -147,6 +148,34 @@ describe("resolveEmergencyPlannerModel", () => {
     vi.setSystemTime(Date.now() + 61_000); // force TTL expiry
 
     const model = await mod.resolveEmergencyPlannerModel();
+    expect((model as { provider?: string }).provider).toBe("groq.chat");
+  });
+
+  it("probes the preferred provider family first (Settings · AI wiring)", async () => {
+    vi.stubEnv("GROQ_API_KEY", "gk-1234567890");
+    vi.stubEnv("OPENROUTER_API_KEY", "sk-or-1234567890");
+    const fetchMock = vi.fn(async (url: string | URL | Request) => {
+      void url;
+      return OK_RESPONSE;
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const mod = await freshModule();
+    await mod.resolveEmergencyPlannerModel("openrouter");
+
+    // OpenRouter jumps ahead of Groq even though Groq is configured first.
+    expect(String(fetchMock.mock.calls[0][0])).toContain("openrouter.ai");
+  });
+
+  it("fails open to the first candidate on a cold-start probe outage", async () => {
+    vi.stubEnv("GROQ_API_KEY", "gk-1234567890");
+    const fetchMock = vi.fn(async () => FAIL_RESPONSE);
+    vi.stubGlobal("fetch", fetchMock);
+
+    const mod = await freshModule();
+    const model = await mod.resolveEmergencyPlannerModel();
+
+    // No cached provider and every probe 402'd — best-effort instead of throw.
     expect((model as { provider?: string }).provider).toBe("groq.chat");
   });
 });

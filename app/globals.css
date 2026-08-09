@@ -55,6 +55,7 @@
     --glow-blue: 0 0 20px rgba(59, 130, 246, 0.3);
     --glow-red: 0 0 20px rgba(239, 68, 68, 0.3);
     --glow-amber: 0 0 20px rgba(245, 158, 11, 0.3);
+    --glow-purple: 0 0 20px rgba(168, 85, 247, 0.28);
 
     /* Skeleton shimmer — dark slate scale (slate-800 base / slate-700
        shine). Feeds .skeleton-shimmer in @layer components. */
@@ -306,6 +307,31 @@
   }
 }
 
+/* ---------------------------------------------------------------------
+   UI/UX Phase 9 · Step 1 — global touch-target sizing.
+   Every tappable control gets a minimum 48px hit area on coarse pointer
+   devices (mobile field responders). `min-height` only enlarges — compact
+   buttons are lifted up to the safe target, dense table rows stay dense
+   (they are scroll/selection targets, not taps). Fine pointers (mouse) are
+   unaffected.
+   --------------------------------------------------------------------- */
+@media (pointer: coarse) {
+  button,
+  a[href],
+  [role="button"],
+  [role="menuitem"],
+  [role="option"],
+  select {
+    min-height: 48px;
+  }
+
+  input,
+  [role="checkbox"],
+  [role="switch"] {
+    min-height: 44px;
+  }
+}
+
 @layer components {
   /* Reusable EOC panel/card */
   .eoc-panel {
@@ -474,6 +500,9 @@
 }
 .glow-amber-soft {
   box-shadow: var(--glow-amber);
+}
+.glow-purple-soft {
+  box-shadow: var(--glow-purple);
 }
 
 /* ---------------------------------------------------------------------

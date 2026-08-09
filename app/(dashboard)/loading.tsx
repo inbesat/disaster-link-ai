@@ -1,72 +1,119 @@
-import { Skeleton } from "@/components/ui/Skeleton";
+import {
+  SkeletonLoader,
+  SkeletonCard,
+  SkeletonRow,
+} from "@/components/ui/SkeletonLoader";
 
 /**
- * Phase 22 · Step 1 — Command-Center page skeleton.
+ * UI/UX Phase 8 · Step 4 — Command-Center loading skeleton.
  *
  * Next.js streams this in place of the page while dashboard routes load.
- * It mirrors the real Command Center chrome (see CommandCenterClient):
- * a KPI header row, a full-bleed map area, a w-80 left sidebar panel of
- * widget blocks, and a bottom time-slider bar.
+ * It mirrors the exact 12-column widget grid of `app/(dashboard)/dashboard/
+ * page.tsx` (see DashboardGrid): a full-width KPI row, a large 2×2 map
+ * square, a 2-row alerts column, then the planner/responders/flood/donut
+ * cells. Framer-driven shimmer keeps it smooth; prefers-reduced-motion
+ * falls back to static slabs.
  */
 export default function DashboardLoading() {
   return (
-    <main className="relative flex h-screen w-full flex-col overflow-hidden bg-background">
-      {/* KPI header row */}
-      <div className="flex items-center gap-4 overflow-hidden px-4 pb-4 pt-4">
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="eoc-panel w-full max-w-[220px] shrink-0 space-y-2.5 p-4">
-            <Skeleton className="h-3 w-16" />
-            <Skeleton className="h-6 w-24" />
-            <Skeleton className="h-3 w-20" />
+    <section className="p-4 sm:p-6" aria-busy="true">
+      {/* Page title + subtitle */}
+      <SkeletonLoader height={24} width={260} />
+      <SkeletonLoader height={14} width={340} className="mt-2" />
+
+      <div
+        className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-12"
+        role="status"
+        aria-label="Loading command center"
+      >
+        {/* KPI row — 4 small StatCard placeholders, full width */}
+        <div className="xl:col-span-12">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {[0, 1, 2, 3].map((i) => (
+              <SkeletonCard key={i} />
+            ))}
           </div>
-        ))}
-      </div>
-
-      {/* Alert banner strip */}
-      <div className="mx-4 mb-3">
-        <Skeleton className="h-10 w-full rounded-eoc" />
-      </div>
-
-      {/* Map area + left sidebar */}
-      <div className="relative flex-1 overflow-hidden">
-        {/* Map surface */}
-        <Skeleton className="absolute inset-0 h-full w-full rounded-none" />
-
-        {/* Map top-right controls */}
-        <div className="absolute right-4 top-4 space-y-2">
-          <Skeleton className="h-9 w-32" />
-          <Skeleton className="h-9 w-32" />
         </div>
 
-        {/* Left sidebar widget panel */}
-        <aside className="absolute left-4 top-4 hidden w-80 flex-col gap-4 rounded-eoc border border-border bg-surface/90 p-5 md:flex">
+        {/* Hero map — large 8-col square */}
+        <div className="md:col-span-2 xl:col-span-8 xl:row-span-2">
+          <div className="flex h-full flex-col overflow-hidden rounded-lg border border-subtle bg-secondary">
+            <div className="flex items-center justify-between border-b border-subtle px-5 py-4">
+              <SkeletonLoader height={14} width={140} />
+              <SkeletonLoader width={64} height={22} borderRadius={9999} />
+            </div>
+            <SkeletonLoader className="flex-1 rounded-none" />
+          </div>
+        </div>
+
+        {/* Alerts feed — 5 skeleton rows */}
+        <div className="md:col-span-2 xl:col-span-4 xl:row-span-2">
+          <div className="flex h-full flex-col overflow-hidden rounded-lg border border-subtle bg-secondary">
+            <div className="flex items-center justify-between border-b border-subtle px-5 py-4">
+              <SkeletonLoader height={14} width={110} />
+              <SkeletonLoader width={32} height={22} borderRadius={9999} />
+            </div>
+            <div className="flex-1 divide-y divide-transparent px-3 py-2">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <SkeletonRow key={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* AI planner cell */}
+        <div className="flex flex-col gap-3 rounded-lg border border-subtle bg-secondary p-5 md:col-span-2 xl:col-span-4">
+          <SkeletonLoader height={14} width={150} />
+          <SkeletonLoader height={56} width="100%" />
+          <SkeletonLoader height={40} width="100%" className="mt-auto" />
+        </div>
+
+        {/* Responder status board */}
+        <div className="flex flex-col gap-3 rounded-lg border border-subtle bg-secondary p-5 md:col-span-2 xl:col-span-4">
+          <SkeletonLoader height={14} width={130} />
+          <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+              <SkeletonLoader key={i} width={40} height={40} borderRadius={12} />
+            ))}
+          </div>
+        </div>
+
+        {/* 72h forecast — wide 8-col chart */}
+        <div className="md:col-span-2 xl:col-span-8">
+          <div className="rounded-lg border border-subtle bg-secondary p-5">
+            <SkeletonLoader height={14} width={170} className="mb-4" />
+            <div className="flex h-40 items-end gap-2">
+              {Array.from({ length: 24 }, (_, i) => (
+                <div
+                  key={i}
+                  className="flex-1"
+                  style={{ height: `${30 + ((i * 37) % 60)}%` }}
+                >
+                  <SkeletonLoader height="100%" width="100%" borderRadius={4} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Resource readiness donut */}
+        <div className="flex flex-col gap-3 rounded-lg border border-subtle bg-secondary p-5 md:col-span-2 xl:col-span-4">
+          <SkeletonLoader height={14} width={150} />
+          <SkeletonLoader
+            width={120}
+            height={120}
+            borderRadius={9999}
+            className="mx-auto"
+          />
           <div className="space-y-2">
-            <Skeleton className="h-2.5 w-24" />
-            <Skeleton className="h-5 w-40" />
+            {[0, 1, 2, 3].map((i) => (
+              <SkeletonLoader key={i} height={12} width="70%" />
+            ))}
           </div>
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-16 w-full" />
-          <Skeleton className="h-20 w-full" />
-          <Skeleton className="h-12 w-full" />
-          <Skeleton className="h-16 w-full" />
-          <Skeleton className="h-8 w-2/3" />
-        </aside>
-
-        {/* Bottom time-slider bar */}
-        <div className="absolute bottom-4 left-1/2 w-72 -translate-x-1/2">
-          <Skeleton className="h-10 w-full rounded-eoc" />
         </div>
       </div>
 
-      {/* Mobile bottom-sheet handle */}
-      <div className="mx-4 mb-3 md:hidden">
-        <Skeleton className="h-12 w-full rounded-eoc" />
-      </div>
-
-      <p className="sr-only" role="status">
-        Loading command center…
-      </p>
-    </main>
+      <p className="sr-only">Loading command center…</p>
+    </section>
   );
 }

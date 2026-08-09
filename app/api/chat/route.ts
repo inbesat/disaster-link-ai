@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import {
   hasAnyAiProviderConfigured,
   resolveEmergencyPlannerModel,
+  type ProviderGroup,
 } from "@/lib/ai/openrouter";
 import { emergencyPlanTools } from "@/lib/ai/tools/shelter-tools";
 import { floodTools } from "@/lib/ai/tools/flood-tools";
@@ -154,8 +155,24 @@ export async function POST(req: Request) {
     );
   }
 
-  const { messages, currentDistrict } = await req.json();
+  const { messages, currentDistrict, provider } = await req.json();
   const { role, district } = await resolveAccessContext();
+
+  // Settings · AI provider preference (non-secret selection only — operator
+  // API keys stay in localStorage and are never transmitted). Maps the
+  // settings value to the resolver's provider family; the chain still
+  // falls back to every healthy configured provider.
+  const providerPreference: ProviderGroup | undefined =
+    typeof provider === "string"
+      ? (
+          {
+            "groq-llama3": "groq",
+            "openai-gpt4o": "openrouter",
+            "anthropic-claude35": "openrouter",
+            "local-airgapped": "auto",
+          } as Record<string, ProviderGroup>
+        )[provider]
+      : undefined;
 
   // Pull the latest user utterance to ground a RAG knowledge-base search.
   const lastUserMessage = [...(messages as Array<{ role?: string; content?: string }>)]
@@ -248,11 +265,12 @@ export async function POST(req: Request) {
 
   let model: LanguageModel;
   try {
-    model = await resolveEmergencyPlannerModel();
+    model = await resolveEmergencyPlannerModel(providerPreference);
   } catch (error) {
     console.error("[chat] failed to resolve an AI provider:", error);
+    const detail = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "No AI provider is currently reachable. Please retry in a minute." },
+      { error: detail || "No AI provider is currently reachable." },
       { status: 502 },
     );
   }
@@ -272,7 +290,11 @@ export async function POST(req: Request) {
     maxOutputTokens: 2048,
     // Phase 21 · every tool call is scoped to the user's district — the LLM
     // cannot query data outside its jurisdiction (mock RLS at the tool layer).
-    tools: withDistrictScope(isCommander ? commanderTools : responderTools, district, role),
+    tools: withDistrictScope(
+      isCommander ? commanderTools : responderTools,
+      district,
+      role,
+    ),
     temperature: 0.4,
   });
 

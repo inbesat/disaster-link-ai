@@ -3,6 +3,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { submitResourceRequest } from "@/app/actions/resources";
+import VoiceInputButton from "@/components/ui/VoiceInputButton";
 
 const CATEGORIES = [
   "boat",
@@ -28,6 +29,7 @@ export default function RequestResourcesPage() {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);
   const [sending, setSending] = useState(false);
+  const [notes, setNotes] = useState("");
 
   function useGps() {
     if (!("geolocation" in navigator)) {
@@ -67,6 +69,7 @@ export default function RequestResourcesPage() {
       urgency,
       lat: coords.lat,
       lng: coords.lng,
+      notes,
     });
     setSending(false);
     if (result.ok) {
@@ -74,6 +77,7 @@ export default function RequestResourcesPage() {
       setQuantity("");
       setUrgency("high");
       setCoords(null);
+      setNotes("");
     } else {
       toast.error("Request failed. Please retry.");
     }
@@ -159,6 +163,24 @@ export default function RequestResourcesPage() {
             {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
           </p>
         )}
+
+        {/* Notes — dictation-friendly for field responders in the rain */}
+        <div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="notes-input" className="eoc-label block flex-1">
+              NOTES FOR COMMAND CENTER
+            </label>
+            <VoiceInputButton onTranscription={setNotes} disabled={sending} />
+          </div>
+          <textarea
+            id="notes-input"
+            rows={3}
+            placeholder="Describe what you need — speak into the mic, or type…"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className="mt-2 w-full resize-y rounded-xl border-2 border-border bg-surface px-4 py-3 text-base text-foreground placeholder:text-slate-500 focus:border-accent focus:outline-none"
+          />
+        </div>
 
         {/* Submit */}
         <button

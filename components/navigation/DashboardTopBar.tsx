@@ -17,7 +17,7 @@
 "use client";
 
 import Link from "next/link";
-import { Settings } from "lucide-react";
+import { Menu, Settings } from "lucide-react";
 import { clearGuestMode, signOutAction } from "@/app/actions/auth";
 import NotificationCenter from "@/components/dashboard/NotificationCenter";
 import PushNotificationToggle from "@/components/dashboard/PushNotificationToggle";
@@ -25,7 +25,6 @@ import PresenceIndicators from "@/components/dashboard/PresenceIndicators";
 import SyncStatus from "@/components/dashboard/SyncStatus";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSelector from "@/components/ui/LanguageSelector";
-import NavbarMobileMenu from "@/components/NavbarMobileMenu";
 import NavbarAvatar from "@/components/NavbarAvatar";
 import BackButton from "@/components/ui/BackButton";
 import Translated from "@/components/ui/Translated";
@@ -39,6 +38,8 @@ type DashboardTopBarProps = {
   email: string | null;
   /** Server-provided avatar URL (client falls back to local snapshot). */
   avatarUrl: string | null;
+  /** Opens the mobile sidebar drawer (<lg). */
+  onOpenMobile?: () => void;
 };
 
 export function DashboardTopBar({
@@ -46,6 +47,7 @@ export function DashboardTopBar({
   displayName,
   email,
   avatarUrl,
+  onOpenMobile,
 }: DashboardTopBarProps) {
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b border-subtle bg-secondary px-4">
@@ -105,8 +107,17 @@ export function DashboardTopBar({
 
         <ThemeToggle />
 
-        {/* Phase 22 · Step 10 — mobile hamburger + blurred menu */}
-        <NavbarMobileMenu />
+        {/* Mobile drawer hamburger — opens the fixed Sidebar overlay (<lg).
+            Desktop hides it; the sidebar is visible on its own there. */}
+        <button
+          type="button"
+          onClick={onOpenMobile}
+          aria-label="Open navigation drawer"
+          aria-haspopup="dialog"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface-elevated text-foreground transition hover:border-accent hover:text-accent lg:hidden"
+        >
+          <Menu className="h-5 w-5" aria-hidden />
+        </button>
 
         <form
           action={guest ? clearGuestMode : signOutAction}

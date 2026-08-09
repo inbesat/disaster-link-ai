@@ -60,11 +60,13 @@ type SidebarNavItemProps = {
   badgeCount?: number;
   /** Explicit active state — auto-derived from `href` when omitted. */
   active?: boolean;
-  /**
-   * Optional sub-routes. When present, the row becomes an accordion
+  /** Optional sub-routes. When present, the row becomes an accordion
    * parent: clicking toggles the nested menu instead of navigating.
    */
   children?: SidebarSubRoute[];
+  /** Optional keyboard short-circuit hint, e.g. "⌘1". Rendered as a
+   * muted <kbd> on the right side of the label (expanded only). */
+  shortcut?: string;
   className?: string;
 };
 
@@ -87,6 +89,7 @@ export function SidebarNavItem({
   badgeCount,
   active,
   children,
+  shortcut,
   className = "",
 }: SidebarNavItemProps) {
   const { collapsed, expand } = useSidebar();
@@ -176,6 +179,14 @@ export function SidebarNavItem({
         <span className="shrink-0 rounded-full bg-accent-primary/15 px-1.5 py-px text-[10px] font-bold leading-4 text-accent-primary tabular-nums">
           {formatCount(badgeCount)}
         </span>
+      )}
+      {!collapsed && shortcut && (
+        <kbd
+          aria-hidden
+          className="shrink-0 rounded border border-subtle bg-tertiary px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted"
+        >
+          {shortcut}
+        </kbd>
       )}
       {!collapsed && hasChildren && (
         <ChevronDown

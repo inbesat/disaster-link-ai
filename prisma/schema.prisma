@@ -157,6 +157,7 @@ model ResourceRequest {
   lat            Float
   lng            Float
   status         String   @default("pending") // pending | approved | fulfilled
+  notes          String   @default("") // voice-dictated / typed field notes
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz
 

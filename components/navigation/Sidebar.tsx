@@ -1,26 +1,34 @@
 // ---------------------------------------------------------------------
 // components/navigation/Sidebar.tsx
-// UI/UX Phase 2 · Step 1 — the sidebar shell.
+// UI/UX Phase 2 · Step 10 (finalized) — the sidebar shell.
 //
 // Fixed left container, full viewport height, roadmap --bg-secondary
-// surface. Width animates 260px (expanded) ⇄ 64px (collapsed) via
-// transition-all duration-300. The collapse toggle (chevron) sits in a
-// footer strip near the bottom; nav items render in the scrollable
-// middle region (added by the Phase 2 · Step 2 nav-links step).
+// surface. Width animates 260px (expanded) ⇄ 64px (collapsed) on desktop
+// (lg+) via transition-all duration-300. Below lg it becomes a mobile
+// drawer: hidden off-screen by default (-translate-x-full), sliding in
+// (translate-x-0) as a fixed overlay with a darkened backdrop when
+// `isOpenMobile` is set. The collapse toggle (chevron) sits in a footer
+// strip near the bottom (desktop only); nav items render in the
+// scrollable middle region.
 //
 // State: uncontrolled by default (internal useState) — or controlled by
 // passing `collapsed` + `onToggle` so parents can sync (e.g. content
-// margin). `variant="inline"` renders in-flow for demos/embeds instead of
-// pinning to the viewport.
+// margin). Desktop collapse state persists to localStorage (reads on
+// mount so it doesn't jump on refresh, writes on every change) — reuse
+// readSidebarCollapsed() in a controlled parent to seed its initial
+// value from the same store. `variant="inline"` renders in-flow for
+// demos/embeds instead of pinning to the viewport (no persistence, no
+// drawer).
 // ---------------------------------------------------------------------
 
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import IconButton from "@/components/ui/IconButton";
 import SidebarContext from "@/components/navigation/sidebar-context";
 import SidebarHeader from "@/components/navigation/SidebarHeader";
+import QuickActions from "@/components/navigation/QuickActions";
 
 export type SidebarVariant = "fixed" | "inline";
 
@@ -35,11 +43,52 @@ type SidebarProps = {
   defaultCollapsed?: boolean;
   /** fixed: pins to the viewport · inline: in-flow (styleguide demo). */
   variant?: SidebarVariant;
+  /** Mobile drawer open — slides the (fixed) sidebar in over content. */
+  isOpenMobile?: boolean;
+  /** Close the mobile drawer (backdrop click / Escape). */
+  onCloseMobile?: () => void;
   className?: string;
 };
 
+const SIDEBAR_COLLAPSED_KEY = "drip:sidebar-collapsed";
+
 const EXPANDED_WIDTH = "w-[260px]";
-const COLLAPSED_WIDTH = "w-16"; // 64px
+const COLLAPSED_WIDTH = "w-[260px] lg:w-16"; // drawer keeps 260px on mobile
+
+/** Read the persisted desktop collapse state (call on mount, client-side). */
+export function readSidebarCollapsed(): boolean | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
+    return raw === null ? null : raw === "1";
+  } catch {
+    return null;
+  }
+}
+
+/** Persist the desktop collapse state (fire-and-forget; storage may be off). */
+export function writeSidebarCollapsed(value: boolean): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, value ? "1" : "0");
+  } catch {
+    // private mode / quota — non-critical, skip
+  }
+}
+
+/** True once the viewport reaches the desktop breakpoint (lg = 1024px). */
+function useIsDesktop(): boolean {
+  const [isDesktop, setIsDesktop] = useState(true);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return isDesktop;
+}
 
 export function Sidebar({
   children,
@@ -47,16 +96,34 @@ export function Sidebar({
   onToggle,
   defaultCollapsed = false,
   variant = "fixed",
+  isOpenMobile = false,
+  onCloseMobile,
   className = "",
 }: SidebarProps) {
   const isControlled = collapsed !== undefined;
-  const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
+  const isDesktop = useIsDesktop();
+
+  // Uncontrolled mode: lazy-init from localStorage so a refresh keeps the
+  // user's collapsed/expanded choice (client render → no flash after mount).
+  const [internalCollapsed, setInternalCollapsed] = useState(() =>
+    variant === "fixed" ? (readSidebarCollapsed() ?? defaultCollapsed) : defaultCollapsed,
+  );
   const isCollapsed = isControlled ? collapsed : internalCollapsed;
+
+  // The mobile drawer is always full (labels visible); collapse only bites
+  // on desktop. Expose the effective value via the context.
+  const effectiveCollapsed = isDesktop ? isCollapsed : false;
 
   const toggle = () => {
     if (isControlled) onToggle?.();
     else setInternalCollapsed((c) => !c);
   };
+
+  // Persist on every desktop state change (works for both controlled and
+  // uncontrolled — the parent shells seed their initial read the same way).
+  useEffect(() => {
+    if (variant === "fixed" && isDesktop) writeSidebarCollapsed(isCollapsed);
+  }, [variant, isDesktop, isCollapsed]);
 
   // Phase 2 · Step 4 — accordion parents call this when opened from the
   // collapsed rail so their children become visible. Only expands (never
@@ -69,25 +136,62 @@ export function Sidebar({
     }
   };
 
+  const drawerOpen = variant === "fixed" && isOpenMobile && !isDesktop;
+
+  // Close the drawer on Escape + lock body scroll while it's open.
+  const onCloseRef = useRef(onCloseMobile);
+  onCloseRef.current = onCloseMobile;
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCloseRef.current?.();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [drawerOpen]);
+
   return (
-    <SidebarContext.Provider value={{ collapsed: isCollapsed, expand }}>
+    <SidebarContext.Provider value={{ collapsed: effectiveCollapsed, expand }}>
+      {drawerOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation"
+          tabIndex={-1}
+          onClick={onCloseMobile}
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+        />
+      )}
       <aside
         id="app-sidebar"
         aria-label="Command center navigation"
         className={`flex h-screen flex-col border-r border-subtle bg-secondary transition-all duration-300 motion-reduce:transition-none ${
-          variant === "fixed" ? "fixed inset-y-0 left-0 z-40" : "relative h-full"
-        } ${isCollapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH} ${className}`}
+          variant === "fixed"
+            ? `fixed inset-y-0 left-0 z-40 ${
+                drawerOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+              }`
+            : "relative h-full"
+        } ${effectiveCollapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH} ${className}`}
       >
-        <SidebarHeader expanded={!isCollapsed} />
+        <SidebarHeader expanded={!effectiveCollapsed} />
 
         {/* Scrollable middle region — nav links mount here (Phase 2 · Step 2). */}
         <nav className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 py-3">
           {children}
         </nav>
 
-        {/* Footer — collapse toggle near the bottom */}
+        {/* Quick actions — emergency one-click shortcuts; self-hides at the
+            64px rail via the shared sidebar context (Phase 2 · Step 8). */}
+        <QuickActions />
+
+        {/* Footer — collapse toggle (desktop only; the drawer is always
+            expanded, so the chevron is hidden below lg). */}
         <div
-          className={`flex shrink-0 items-center border-t border-subtle p-2 ${
+          className={`hidden lg:flex shrink-0 items-center border-t border-subtle p-2 ${
             isCollapsed ? "justify-center" : "justify-between"
           }`}
         >

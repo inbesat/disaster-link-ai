@@ -82,35 +82,48 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
         <SidebarContent />
       </aside>
 
-      {/* Mobile top bar */}
-      <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-[#1c2740] bg-[#0b1120] px-4 lg:hidden">
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="flex items-center gap-2 rounded-md bg-[#1a2740] px-3 py-2 text-sm font-medium text-amber-300 transition hover:bg-[#24334f]"
-          aria-label="Open admin navigation"
-        >
-          <Menu className="h-4 w-4" />
-          Admin Menu
-        </button>
-        <div className="flex items-center gap-2">
+      {/* Distinguant elevated top header — darker/stricter than the main app */}
+      <header className="sticky top-0 z-40 flex h-12 items-center justify-between gap-3 border-b border-[#1c2740] bg-[#020617] px-4">
+        <div className="flex min-w-0 items-center gap-2.5">
+          {!open && (
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="flex items-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-2.5 py-1.5 text-sm font-medium text-amber-300 transition hover:bg-[#1a2338] lg:hidden"
+              aria-label="Open admin navigation"
+            >
+              <Menu className="h-4 w-4" />
+              Admin menu
+            </button>
+          )}
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-300">
+            <ShieldCheck className="h-4 w-4 text-amber-400" aria-hidden />
+            <span className="hidden sm:inline">DRIP / Admin Console</span>
+            <span className="sm:hidden">Admin</span>
+          </div>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2">
+          <span className="hidden items-center gap-1 rounded border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-400 sm:inline-flex">
+            Elevated Access
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0b1120] px-2.5 py-1 font-mono text-[10px] text-slate-400">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+            LIVE
+          </span>
           <BackButton />
-          <span className="eoc-label text-amber-400/90">DRIP / ADMIN</span>
         </div>
       </header>
 
       {/* Mobile drawer */}
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div
-            className="absolute inset-0 bg-black/60"
-            onClick={() => setOpen(false)}
-          />
+          <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
           <aside className="absolute inset-y-0 left-0 flex w-72 flex-col border-r border-[#1c2740] bg-[#0b1120]">
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="absolute right-3 top-3 rounded-md p-1.5 text-slate-400 transition hover:bg-[#1a2748] hover:text-slate-200"
+              className="absolute right-3 top-3 z-10 rounded-md p-1.5 text-slate-400 transition hover:bg-[#1a2338] hover:text-slate-200"
               aria-label="Close admin navigation"
             >
               <X className="h-5 w-5" />

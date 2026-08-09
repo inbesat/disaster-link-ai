@@ -1,6 +1,11 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+import type { ComponentPropsWithoutRef, CSSProperties } from "react";
+
 // ---------------------------------------------------------------------
 // components/ui/SkeletonLoader.tsx
-// UI/UX Phase 1 · Step 6 — loading states (shimmer skeleton).
+// UI/UX Phase 1 · Step 6 (+ Phase 8 · Step 4) — loading states.
 //
 // Flexible shimmer block plus drop-in presets that mirror the exact
 // silhouettes of StatCard and DataRow, so layouts don't shift when the
@@ -10,18 +15,17 @@
 //   <SkeletonCard />      → replaces <StatCard label value trend …>
 //   <SkeletonRow />       → replaces <DataRow icon title subtitle …>
 //
-// Shimmer: `.skeleton-shimmer` (app/globals.css) sweeps a slate gradient
-// (slate-800 → slate-700 → slate-800 in dark; re-themed via variables in
-// light "day ops") and falls back to a static block under
-// prefers-reduced-motion. Legacy `Skeleton` (animate-pulse) stays for old
-// surfaces — the hybrid approach keeps both.
+// Phase 8: the pulse is driven by Framer Motion (opacity 0.55 → 1 → 0.55,
+// 1.8s, easeInOut) instead of a CSS keyframe animation, so it animates on
+// the JS main thread and stays live even when CSS animations are paused.
+// The gradient itself still reads the --skeleton-base/--skeleton-shine
+// theme variables. `prefers-reduced-motion` renders a static slab. Legacy
+// `Skeleton` (animate-pulse) stays for old surfaces.
 // ---------------------------------------------------------------------
-
-import type { HTMLAttributes } from "react";
 
 type Size = number | string;
 
-export type SkeletonLoaderProps = HTMLAttributes<HTMLDivElement> & {
+export type SkeletonLoaderProps = ComponentPropsWithoutRef<typeof motion.div> & {
   /** Width as a px number or CSS string ("100%"). Default: unset — size
    *  with Tailwind classes instead (`h-4 w-full`). When a prop is given
    *  it wins over classes (inline style). */
@@ -54,16 +58,40 @@ export function SkeletonLoader({
   style,
   ...rest
 }: SkeletonLoaderProps) {
+  const reduceMotion = useReducedMotion();
+
+  const shimmerStyle = {
+    backgroundImage:
+      "linear-gradient(to right, var(--skeleton-base, #1e293b) 40%, var(--skeleton-shine, #334155) 50%, var(--skeleton-base, #1e293b) 60%)",
+    backgroundSize: "200% 100%",
+    width: toCssSize(width),
+    height: toCssSize(height),
+    borderRadius: toCssSize(borderRadius),
+    ...style,
+  } as CSSProperties;
+
   return (
-    <div
+    <motion.div
       aria-hidden="true"
-      className={`skeleton-shimmer rounded-md ${className}`}
-      style={{
-        width: toCssSize(width),
-        height: toCssSize(height),
-        borderRadius: toCssSize(borderRadius),
-        ...style,
-      }}
+      className={`rounded-md ${className}`}
+      style={shimmerStyle}
+      animate={
+        reduceMotion
+          ? undefined
+          : {
+              opacity: [0.55, 1, 0.55],
+            }
+      }
+      transition={
+        reduceMotion
+          ? undefined
+          : {
+              duration: 1.8,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "mirror",
+            }
+      }
       {...rest}
     />
   );

@@ -5,11 +5,11 @@
 // Client wrapper that owns the sidebar collapsed state (the server layout
 // can't hold state) and composes:
 //
-//   • fixed DashboardSidebar (260px ⇄ 64px icon rail) — hidden below md
-//     (the top bar keeps the mobile hamburger menu, same as before)
-//   • sticky DashboardTopBar (utilities: theme/language/avatar/…)
+//   • fixed DashboardSidebar (260px ⇄ 64px icon rail) — off-screen drawer
+//     below lg via translate; slides in as an overlay when mobileOpen
+//   • sticky DashboardTopBar (utilities: theme/language/avatar/hamburger)
 //   • content column whose left margin animates with the collapse state
-//     (ml-[260px] ⇄ ml-16 at md+), so the map/dashboards reflow smoothly
+//     at lg+ (ml-[260px] ⇄ ml-16); full-width on mobile under the drawer
 //
 // Children (AlertTicker + page) are passed through from the server layout
 // and render inside the animated content column.
@@ -17,9 +17,11 @@
 
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardTopBar from "./DashboardTopBar";
+import BottomNav from "./BottomNav";
+import { readSidebarCollapsed } from "./Sidebar";
 
 type DashboardShellProps = {
   /** Guest (demo) mode — passed down to the top bar identity block. */
@@ -44,25 +46,29 @@ export function DashboardShell({
   alertsBadgeCount,
   children,
 }: DashboardShellProps) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => readSidebarCollapsed() ?? false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
 
   return (
     <div className="min-h-screen">
-      {/* Fixed sidebar — hidden below md via a plain wrapper (avoids the
-          flex-vs-hidden stylesheet-order trap); the top bar's hamburger
-          menu covers mobile navigation. */}
-      <div className="hidden md:block">
-        <DashboardSidebar
-          collapsed={collapsed}
-          onToggle={() => setCollapsed((c) => !c)}
-          alertsBadgeCount={alertsBadgeCount}
-        />
-      </div>
+      {/* Fixed sidebar — hidden off-screen via translate below lg; slides
+          in as an overlay drawer when mobileOpen (the top bar's hamburger
+          opens it and the backdrop / top bar route clicks close it). */}
+      <DashboardSidebar
+        collapsed={collapsed}
+        onToggle={() => setCollapsed((c) => !c)}
+        alertsBadgeCount={alertsBadgeCount}
+        isOpenMobile={mobileOpen}
+        onCloseMobile={closeMobile}
+      />
 
-      {/* Content column — margin animates 260px ⇄ 64px with the collapse */}
+      {/* Content column — margin animates 260px ⇄ 64px at lg+; full-width
+          on mobile where the sidebar is a drawer overlay. Bottom padding
+          clears the fixed mobile BottomNav (72px + safe area) below lg. */}
       <div
-        className={`transition-all duration-300 motion-reduce:transition-none ${
-          collapsed ? "md:ml-16" : "md:ml-[260px]"
+        className={`pb-[calc(72px+env(safe-area-inset-bottom))] transition-all duration-300 motion-reduce:transition-none lg:pb-0 ${
+          collapsed ? "lg:ml-16" : "lg:ml-[260px]"
         }`}
       >
         <DashboardTopBar
@@ -70,9 +76,13 @@ export function DashboardShell({
           displayName={displayName}
           email={email}
           avatarUrl={avatarUrl}
+          onOpenMobile={() => setMobileOpen(true)}
         />
         {children}
       </div>
+
+      {/* Mobile bottom navigation — hidden at lg+ (desktop uses the sidebar). */}
+      <BottomNav alertsBadgeCount={alertsBadgeCount} />
     </div>
   );
 }

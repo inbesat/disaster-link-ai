@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -41,6 +41,7 @@ import {
 } from "@/lib/map/hazard-geojson";
 import { DEFAULT_INITIAL_VIEW } from "@/lib/map/default-view";
 import type { LayerVisibility } from "@/components/map/LayerToggle";
+import MapBottomSheet from "@/components/map/MapBottomSheet";
 import LocationSelector from "@/components/map/LocationSelector";
 import RoadClosureTool from "@/components/map/RoadClosureTool";
 import { getShelters } from "@/app/actions/shelters";
@@ -53,10 +54,7 @@ import {
 import { findNearestShelters } from "@/lib/map/nearby-shelters";
 import { getEvacuationRoute } from "@/lib/map/routing";
 import { getInventory, type InventoryResource } from "@/app/actions/resources";
-import {
-  groundReportColor,
-  type GroundReport,
-} from "@/lib/crowdsourced/report";
+import { groundReportColor, type GroundReport } from "@/lib/crowdsourced/report";
 import { redactReportText } from "@/lib/security/sanitize";
 
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
@@ -334,7 +332,40 @@ export default function DisasterMap({
   const [selectedDepot, setSelectedDepot] = useState<DepotMarker | null>(null);
 
   // Phase 17: selected citizen ground-truth report (opens a detail popup).
-  const [selectedGroundReport, setSelectedGroundReport] = useState<GroundReport | null>(null);
+  const [selectedGroundReport, setSelectedGroundReport] = useState<GroundReport | null>(
+    null,
+  );
+
+  // Phase 9 · Step 2 — the mobile bottom sheet derives its `feature` (an id
+  // that merely drives open/close) and its content from whichever selection
+  // is currently active, waterfall style so the most specific wins.
+  const sheetFeature = useMemo<{ id: string } | null>(() => {
+    if (selectedShelter) return { id: `shelter-${selectedShelter.id}` };
+    if (selectedDepot) return { id: `depot-${selectedDepot.id}` };
+    if (selectedGroundReport) return { id: `report-${selectedGroundReport.id}` };
+    if (selectedZone)
+      return { id: `zone-${selectedZone.coordinates[0]}-${selectedZone.coordinates[1]}` };
+    if (selected) return { id: `feature-${selected.geometry.coordinates.join(",")}` };
+    return null;
+  }, [selected, selectedShelter, selectedDepot, selectedGroundReport, selectedZone]);
+
+  const sheetContent = useMemo<ReactNode>(() => {
+    if (selectedShelter) return <ShelterPopupContent shelter={selectedShelter} />;
+    if (selectedDepot) return <DepotPopupContent depot={selectedDepot} />;
+    if (selectedGroundReport)
+      return <GroundReportPopupContent report={selectedGroundReport} />;
+    if (selectedZone) return <ZonePopupContent zone={selectedZone} />;
+    if (selected) return <PopupContent feature={selected} />;
+    return null;
+  }, [selected, selectedShelter, selectedDepot, selectedGroundReport, selectedZone]);
+
+  const clearMapSelection = useCallback(() => {
+    setSelected(null);
+    setSelectedShelter(null);
+    setSelectedDepot(null);
+    setSelectedGroundReport(null);
+    setSelectedZone(null);
+  }, []);
 
   // Road closures placed via the RoadClosureTool — loaded from and persisted
   // to the road_closures table.
@@ -764,10 +795,7 @@ export default function DisasterMap({
 
   function handleMapClick(e: MapLayerMouseEvent) {
     if (drawingRisk) {
-      setDrawPoints((prev) => [
-        ...prev,
-        [e.lngLat.lng, e.lngLat.lat],
-      ]);
+      setDrawPoints((prev) => [...prev, [e.lngLat.lng, e.lngLat.lat]]);
       return;
     }
 
@@ -1303,6 +1331,7 @@ export default function DisasterMap({
             latitude={selected.geometry.coordinates[1]}
             anchor="top"
             closeButton={false}
+            className="hidden md:block"
             onClose={() => setSelected(null)}
           >
             <PopupContent feature={selected} />
@@ -1315,6 +1344,7 @@ export default function DisasterMap({
             latitude={selectedShelter.lat}
             anchor="top"
             closeButton={false}
+            className="hidden md:block"
             onClose={() => setSelectedShelter(null)}
           >
             <ShelterPopupContent shelter={selectedShelter} />
@@ -1327,6 +1357,7 @@ export default function DisasterMap({
             latitude={selectedDepot.lat}
             anchor="top"
             closeButton={false}
+            className="hidden md:block"
             onClose={() => setSelectedDepot(null)}
           >
             <DepotPopupContent depot={selectedDepot} />
@@ -1339,6 +1370,7 @@ export default function DisasterMap({
             latitude={selectedGroundReport.lat}
             anchor="top"
             closeButton={false}
+            className="hidden md:block"
             onClose={() => setSelectedGroundReport(null)}
           >
             <GroundReportPopupContent report={selectedGroundReport} />
@@ -1351,6 +1383,7 @@ export default function DisasterMap({
             latitude={selectedZone.coordinates[1]}
             anchor="bottom"
             closeButton={false}
+            className="hidden md:block"
             onClose={() => setSelectedZone(null)}
           >
             <ZonePopupContent zone={selectedZone} />
@@ -1492,6 +1525,17 @@ export default function DisasterMap({
       {criticalFlash && (
         <div className="map-alert-flash-ring animate-map-alert-flash pointer-events-none absolute inset-0 z-50" />
       )}
+
+      {/* Phase 9 · Step 2 — mobile bottom sheet for the tapped detail. The
+          popups above are hidden below md (`hidden md:block`), so on phones
+          the same content surfaces in a draggable sheet instead. */}
+      <MapBottomSheet
+        feature={sheetFeature}
+        defaultSnap="CONTENT"
+        onDismiss={clearMapSelection}
+      >
+        {sheetContent}
+      </MapBottomSheet>
     </MapProvider>
   );
 }
@@ -1840,7 +1884,7 @@ function GroundReportMarker({ report }: { report: GroundReport }) {
 function GroundReportPopupContent({ report }: { report: GroundReport }) {
   const color = groundReportColor(report.report_type);
   return (
-    <div className="w-64 p-3">
+    <div className="w-full p-3 sm:w-64">
       <div className="flex items-center justify-between gap-2">
         <p className="eoc-label" style={{ color }}>
           {report.source.toUpperCase()} REPORT
@@ -1886,7 +1930,7 @@ function ZonePopupContent({ zone }: { zone: NonNullable<SelectedZone> }) {
   const meta = DISASTER_META[zone.hazardType];
 
   return (
-    <div className="w-52 p-3">
+    <div className="w-full p-3 sm:w-52">
       <p className="eoc-label text-accent">
         {meta.icon} {meta.label.toUpperCase()} ZONE
       </p>
@@ -1921,7 +1965,7 @@ function PopupContent({ feature }: { feature: NonNullable<SelectedFeature> }) {
     const pct = capacity > 0 ? Math.round((occupancy / capacity) * 100) : 0;
 
     return (
-      <div className="w-56 p-3">
+      <div className="w-full p-3 sm:w-56">
         <p className="eoc-label text-accent">SHELTER</p>
         <h3 className="mt-1 font-semibold">{feature.properties.name}</h3>
         <p className="mt-2 text-sm text-slate-300">
@@ -1939,7 +1983,7 @@ function PopupContent({ feature }: { feature: NonNullable<SelectedFeature> }) {
   }
 
   return (
-    <div className="w-48 p-3">
+    <div className="w-full p-3 sm:w-48">
       <p className="eoc-label text-accent">RESOURCE</p>
       <h3 className="mt-1 font-semibold capitalize">{feature.properties.type}</h3>
       <p className="mt-2 text-sm text-slate-300">
@@ -1963,7 +2007,7 @@ function ShelterPopupContent({ shelter }: { shelter: MapShelter }) {
         : "bg-severity-green-600 text-white";
 
   return (
-    <div className="w-60 p-3">
+    <div className="w-full p-3 sm:w-60">
       {shelter.imageUrl && (
         <Image
           src={shelter.imageUrl}
@@ -2025,7 +2069,7 @@ function ShelterPopupContent({ shelter }: { shelter: MapShelter }) {
 function DepotPopupContent({ depot }: { depot: DepotMarker }) {
   const available = depot.items.filter((i) => i.status === "available");
   return (
-    <div className="w-56 p-3">
+    <div className="w-full p-3 sm:w-56">
       <p className="eoc-label text-accent">RESOURCE DEPOT</p>
       <h3 className="mt-1 font-semibold">{depot.name}</h3>
       {available.length === 0 ? (

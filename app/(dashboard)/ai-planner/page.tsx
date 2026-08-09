@@ -20,6 +20,7 @@ import SourcesAccordion, {
 import TypingIndicator from "@/components/ai/TypingIndicator";
 import MessageActions from "@/components/ai/MessageActions";
 import QuickActions from "@/components/ai/QuickActions";
+import { readStoredAiSettings } from "@/lib/settings/ai-settings";
 
 // ---------------------------------------------------------------------
 // Chat persistence — the evacuation plan must survive a page refresh.
@@ -30,6 +31,34 @@ import QuickActions from "@/components/ai/QuickActions";
 // ---------------------------------------------------------------------
 const CURRENT_DISTRICT = "Patna"; // Step 8 — map context (mock for now)
 const STORAGE_KEY = `ai-emergency-chat:${CURRENT_DISTRICT}`;
+
+// The canned message is only a last resort — prefer the real error text the
+// API returns so the operator sees exactly why a request failed.
+function describePlannerError(error: unknown): string {
+  const e = error as { message?: string; body?: string; cause?: unknown } | null;
+  let raw = e?.message ?? String(error ?? "");
+  try {
+    const parsed = JSON.parse(raw) as { error?: unknown };
+    if (typeof parsed?.error === "string" && parsed.error) return parsed.error;
+  } catch {
+    // not JSON — fall through
+  }
+  raw =
+    typeof e?.body === "string"
+      ? e.body
+      : e?.cause instanceof Error
+        ? e.cause.message
+        : "";
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw) as { error?: unknown };
+      if (typeof parsed?.error === "string" && parsed.error) return parsed.error;
+    } catch {
+      if (raw.trim().length > 4) return raw.trim();
+    }
+  }
+  return "Planner error — the AI provider is unreachable right now (all providers probed: OpenRouter → Groq → Bluesminds). Retry in a minute.";
+}
 
 function loadStoredMessages(): UIMessage[] {
   if (typeof window === "undefined") return [];
@@ -362,8 +391,19 @@ export default function AiPlannerPage() {
     if (!value || isLoading || rateLimited) return;
     setQueriesRemaining((q) => Math.max(0, q - 1));
     // Step 8 — pass the currently-viewed district as hidden context so the
-    // AI knows where the commander is looking.
-    sendMessage({ text: value }, { body: { currentDistrict: CURRENT_DISTRICT } });
+    // AI knows where the commander is looking. Settings · AI → provider
+    // preference (non-secret) rides along so the planner honors the
+    // operator-chosen provider on the server.
+    const stored = readStoredAiSettings();
+    sendMessage(
+      { text: value },
+      {
+        body: {
+          currentDistrict: CURRENT_DISTRICT,
+          provider: stored?.provider,
+        },
+      },
+    );
     setInput("");
     setTimeout(scrollToBottom, 50);
   };
@@ -562,10 +602,7 @@ export default function AiPlannerPage() {
           </form>
 
           {error && (
-            <p className="mt-2 text-[11px] text-red-400">
-              Planner error — the AI provider is unreachable right now (all
-              providers probed: OpenRouter → Groq → Bluesminds). Retry in a minute.
-            </p>
+            <p className="mt-2 text-[11px] text-red-400">{describePlannerError(error)}</p>
           )}
         </footer>
       </main>
