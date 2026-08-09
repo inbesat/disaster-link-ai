@@ -544,3 +544,64 @@
 .maplibregl-marker.no-anim {
   transition: none;
 }
+
+/* =====================================================================
+   DISASTERLINK AI LANDING PAGE TOKENS
+   ===================================================================== */
+.landing-page {
+  --dl-navy: #0B1F3A;
+  --dl-navy-2: #0F2A4F;
+  --dl-navy-3: #132f57;
+  --dl-blue: #2563EB;
+  --dl-blue-light: #5B8DF6;
+  --dl-orange: #F97316;
+  --dl-orange-light: #FDBA74;
+  --dl-white: #FFFFFF;
+  --dl-gray: #F8FAFC;
+  --dl-gray-2: #E7ECF3;
+  --dl-text-dark: #0F1B2D;
+  --dl-text-muted: #5B6B84;
+  --dl-text-on-navy: #C9D6EC;
+  --dl-radius: 18px;
+  --dl-radius-sm: 12px;
+  --dl-shadow-soft: 0 10px 40px -12px rgba(11,31,58,0.18);
+  --dl-shadow-glow-blue: 0 0 0 1px rgba(37,99,235,0.25), 0 20px 60px -20px rgba(37,99,235,0.45);
+  --dl-shadow-glow-orange: 0 0 0 1px rgba(249,115,22,0.25), 0 20px 60px -20px rgba(249,115,22,0.45);
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes dotpulse {
+  0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+  100% { box-shadow: 0 0 0 12px rgba(16,185,129,0); }
+}
+@keyframes mpulse {
+  0% { transform: scale(0.4); opacity: 1; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+@keyframes orbpulse {
+  0%, 100% { box-shadow: var(--dl-shadow-glow-blue); }
+  50% { box-shadow: var(--dl-shadow-glow-orange); }
+}
+@keyframes flowdown {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(400%); }
+}
+
+.animate-floaty {
+  animation: floaty 5s ease-in-out infinite;
+}
+.animate-dotpulse {
+  animation: dotpulse 1.6s infinite;
+}
+.animate-mpulse {
+  animation: mpulse 2.2s ease-out infinite;
+}
+.animate-orbpulse {
+  animation: orbpulse 2.4s ease-in-out infinite;
+}
+.animate-flowdown {
+  animation: flowdown 1.8s linear infinite;
+}
