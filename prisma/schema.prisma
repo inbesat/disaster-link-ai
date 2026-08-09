@@ -7,48 +7,83 @@ generator client {
 }
 
 datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL")
-  directUrl    = env("DIRECT_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
   // Enable PostGIS + pgvector so the Unsupported() types below are recognised.
-  extensions   = [postgis, vector]
+  extensions = [postgis, vector]
 }
 
 // ---------------------------------------------------------------------
 // users
+// Phase 1 · Dual-Mode: one User model serves Public (citizens) and Gov
+// (responders/admins). `role` is a typed enum; new signups default to
+// `public` and are promoted to responder/admin roles on approval.
 // ---------------------------------------------------------------------
+enum UserRole {
+  public
+  field_responder
+  district_admin
+  super_admin
+}
+
 model User {
-  id               String   @id @default(uuid()) @db.Uuid
-  email            String   @unique
-  name             String?
-  role             String   @default("field_responder")
-  organization     String?
-  phone            String?
-  emergencyContact Json?    @map("emergency_contact")
-  district         String?
-  assignedDistrict String?  @map("assigned_district")
-  avatarUrl        String?  @map("avatar_url")
-  preferredLanguage String   @default("en") @map("preferred_language") // Phase 25 · multilingual UI
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  id                String   @id @default(uuid()) @db.Uuid
+  email             String   @unique
+  name              String?
+  role              UserRole @default(public)
+  organization      String?
+  phone             String?
+  emergencyContact  Json?    @map("emergency_contact")
+  district          String?
+  assignedDistrict  String?  @map("assigned_district")
+  homeDistrict      String?  @map("home_district") // citizen's home district (Phase 1)
+  avatarUrl         String?  @map("avatar_url")
+  preferredLanguage String   @default("en") @map("preferred_language") // Phase 25 · multilingual UI (aka language_preference)
+  verificationIdUrl String?  @map("verification_id_url") // gov ID/verification document (Phase 1)
+  isGuest           Boolean  @default(false) @map("is_guest") // guest/demo session flag (Phase 1)
+  isApproved        Boolean  @default(true) @map("is_approved") // gov account approval gate (Phase 1)
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  familyContacts FamilyContact[]
 
   @@index([district]) // responder directory + district role scoping
+  @@index([homeDistrict]) // citizen directory / district-scoped alerts
   @@map("users")
+}
+
+// ---------------------------------------------------------------------
+// family_contacts (Phase 1 · Dual-Mode) — citizen-designated emergency
+// contacts. A citizen registers next-of-kin here so alerts can reach their
+// family even when the citizen cannot be reached directly.
+// ---------------------------------------------------------------------
+model FamilyContact {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  phoneNumber String   @map("phone_number")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([userId])
+  @@map("family_contacts")
 }
 
 // ---------------------------------------------------------------------
 // disaster_events
 // ---------------------------------------------------------------------
 model DisasterEvent {
-  id         String                 @id @default(uuid()) @db.Uuid
-  name       String
-  type       String                 @default("flood")
-  status     String                 @default("monitoring")
-  district   String?
-  epicenter  Unsupported("geometry(Point, 4326)")?
-  startedAt  DateTime?              @map("started_at") @db.Timestamptz
-  createdAt  DateTime               @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt  DateTime               @updatedAt @map("updated_at") @db.Timestamptz
+  id        String                                @id @default(uuid()) @db.Uuid
+  name      String
+  type      String                                @default("flood")
+  status    String                                @default("monitoring")
+  district  String?
+  epicenter Unsupported("geometry(Point, 4326)")?
+  startedAt DateTime?                             @map("started_at") @db.Timestamptz
+  createdAt DateTime                              @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime                              @updatedAt @map("updated_at") @db.Timestamptz
 
   resourceAllocations ResourceAllocation[]
   alertLogs           AlertLog[]
@@ -63,17 +98,17 @@ model DisasterEvent {
 // emergency_plans  (structured AI-generated emergency plan per disaster)
 // ---------------------------------------------------------------------
 model EmergencyPlan {
-  id              String   @id @default(uuid()) @db.Uuid
-  disasterEventId String?  @map("disaster_event_id") @db.Uuid
+  id              String         @id @default(uuid()) @db.Uuid
+  disasterEventId String?        @map("disaster_event_id") @db.Uuid
   disasterEvent   DisasterEvent? @relation(fields: [disasterEventId], references: [id], onDelete: Cascade)
   district        String?
   title           String
   content         String
-  planJson        Json?    @map("plan_json")
-  status          String   @default("draft") // draft | active | approved | completed
-  createdBy       String?  @map("created_by") @db.Uuid
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  planJson        Json?          @map("plan_json")
+  status          String         @default("draft") // draft | active | approved | completed
+  createdBy       String?        @map("created_by") @db.Uuid
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime       @updatedAt @map("updated_at") @db.Timestamptz
 
   @@index([disasterEventId])
   @@index([status])
@@ -94,7 +129,7 @@ model FloodPrediction {
 
   @@index([riskLevel, predictionTimestamp])
   @@index([predictionTimestamp]) // prediction history / time-series charts
-  @@index([riskLevel])           // filter risk-level views + alert triggers
+  @@index([riskLevel]) // filter risk-level views + alert triggers
   @@map("flood_predictions")
 }
 
@@ -102,22 +137,22 @@ model FloodPrediction {
 // shelters  (PostGIS geometry(Point, 4326) + denormalised lat/lng)
 // ---------------------------------------------------------------------
 model Shelter {
-  id               String                    @id @default(uuid()) @db.Uuid
+  id               String                                @id @default(uuid()) @db.Uuid
   name             String
   district         String?
   lat              Float
   lng              Float
   capacity         Int
-  currentOccupancy Int                       @default(0) @map("current_occupancy")
-  facilities       Json?                     // { water, food, medical }
-  status           String                    @default("open")
-  contactPerson    String?                   @map("contact_person")
+  currentOccupancy Int                                   @default(0) @map("current_occupancy")
+  facilities       Json? // { water, food, medical }
+  status           String                                @default("open")
+  contactPerson    String?                               @map("contact_person")
   phone            String?
-  imageUrl         String?                   @map("image_url")
+  imageUrl         String?                               @map("image_url")
   location         Unsupported("geometry(Point, 4326)")?
-  createdAt        DateTime                  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt        DateTime                  @updatedAt @map("updated_at") @db.Timestamptz
-  evacuationPlans     EvacuationPlan[]
+  createdAt        DateTime                              @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime                              @updatedAt @map("updated_at") @db.Timestamptz
+  evacuationPlans  EvacuationPlan[]
 
   @@index([district]) // nearest-shelter + district-scoped queries
   @@map("shelters")
@@ -131,7 +166,7 @@ model Resource {
   name      String
   category  String   @default("other") // boat | food | medical | personnel | water | vehicle | communication | power | other
   quantity  Int      @default(0)
-  unit      String?  // pieces | kits | teams | boats | pallets ...
+  unit      String? // pieces | kits | teams | boats | pallets ...
   lat       Float
   lng       Float
   status    String   @default("available") // available | deployed | maintenance
@@ -175,7 +210,7 @@ model ResourceMovement {
   id           String   @id @default(uuid()) @db.Uuid
   resourceId   String?  @map("resource_id") @db.Uuid
   resourceName String   @map("resource_name")
-  action       String   // dispatched | delivered | returned | adjusted
+  action       String // dispatched | delivered | returned | adjusted
   fromLabel    String?  @map("from_label")
   toLabel      String   @map("to_label")
   toLat        Float    @map("to_lat")
@@ -218,17 +253,17 @@ model ResourceAllocation {
 // alert_logs
 // ---------------------------------------------------------------------
 model AlertLog {
-  id             String    @id @default(uuid()) @db.Uuid
-  severity       String    @default("watch")
-  channel        String    @default("sms")
-  message        String
-  district       String?
-  triggerCondition String? @map("trigger_condition")
-  isAcknowledged Boolean   @default(false) @map("is_acknowledged")
-  acknowledgedBy String?   @map("acknowledged_by")
-  acknowledgedAt DateTime? @map("acknowledged_at") @db.Timestamptz
-  sentAt         DateTime  @default(now()) @map("sent_at") @db.Timestamptz
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  id               String    @id @default(uuid()) @db.Uuid
+  severity         String    @default("watch")
+  channel          String    @default("sms")
+  message          String
+  district         String?
+  triggerCondition String?   @map("trigger_condition")
+  isAcknowledged   Boolean   @default(false) @map("is_acknowledged")
+  acknowledgedBy   String?   @map("acknowledged_by")
+  acknowledgedAt   DateTime? @map("acknowledged_at") @db.Timestamptz
+  sentAt           DateTime  @default(now()) @map("sent_at") @db.Timestamptz
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
 
   disasterEventId String?        @map("disaster_event_id") @db.Uuid
   disasterEvent   DisasterEvent? @relation(fields: [disasterEventId], references: [id], onDelete: SetNull)
@@ -274,16 +309,16 @@ model AlertTemplate {
 // emergency_documents  (pgvector vector(1536) for RAG)
 // ---------------------------------------------------------------------
 model EmergencyDocument {
-  id             String    @id @default(uuid()) @db.Uuid
-  title          String
-  docType        String    @default("plan") @map("doc_type")
-  content        String
-  metadata           Json?
-  embedding          Unsupported("vector(1536)")?
-  embeddingVersion   Int      @default(0) @map("embedding_version")
-  embeddingSource    String?  @map("embedding_source")
-  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  id               String                       @id @default(uuid()) @db.Uuid
+  title            String
+  docType          String                       @default("plan") @map("doc_type")
+  content          String
+  metadata         Json?
+  embedding        Unsupported("vector(1536)")?
+  embeddingVersion Int                          @default(0) @map("embedding_version")
+  embeddingSource  String?                      @map("embedding_source")
+  createdAt        DateTime                     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime                     @updatedAt @map("updated_at") @db.Timestamptz
 
   disasterEventId String?        @map("disaster_event_id") @db.Uuid
   disasterEvent   DisasterEvent? @relation(fields: [disasterEventId], references: [id], onDelete: SetNull)
@@ -383,10 +418,10 @@ model PushSubscription {
 model PlanFeedback {
   id        String   @id @default(uuid()) @db.Uuid
   messageId String   @map("message_id")
-  rating    String                      // 'up' | 'down'
+  rating    String // 'up' | 'down'
   userId    String?  @map("user_id")
   district  String?
-  prompt    String?                     // snapshot of the user's query
+  prompt    String? // snapshot of the user's query
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
 
   @@index([messageId])
@@ -405,7 +440,7 @@ model CrowdsourcedReport {
   lat                Float
   lng                Float
   reportType         String   @map("report_type") // flooding | road_blocked | shelter_needed | rescue
-  source             String   @default("app")     // social | app | sms
+  source             String   @default("app") // social | app | sms
   rawText            String   @map("raw_text")
   confidenceScore    Float    @default(0.5) @map("confidence_score")
   verificationStatus String   @default("unverified") @map("verification_status") // unverified | verified | rejected

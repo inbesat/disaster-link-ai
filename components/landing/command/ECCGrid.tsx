@@ -1,56 +1,120 @@
-'use client'
+"use client";
 
-import ScrollReveal from '@/components/landing/ui/ScrollReveal';
-import { useCountUp } from '@/components/landing/hooks/useCountUp';
+import React from "react";
+import { motion } from "framer-motion";
 
-const cards = [
-  { emoji: '🚨', title: 'Active Incidents', badge: 'warn', badgeText: '⚠ Warning', desc: 'Multi-state flood and cyclone events', value: '8', isNumber: true },
-  { emoji: '🏥', title: 'Nearby Hospitals', badge: 'live', badgeText: '● Live', desc: 'Connected healthcare facilities', value: '142', isNumber: true },
-  { emoji: '🚑', title: 'Rescue Team Locations', badge: 'live', badgeText: '● Live', desc: 'Teams deployed across affected zones', value: '286', isNumber: true },
-  { emoji: '🏠', title: 'Safe Shelters', badge: 'live', badgeText: '● Live', desc: 'Open and receiving evacuees', value: '974', isNumber: true },
-  { emoji: '🌧', title: 'Weather Radar', badge: 'live', badgeText: '● Live', desc: 'Real-time meteorological data feed', value: 'Active', isNumber: false },
-  { emoji: '📞', title: 'Emergency Hotline Status', badge: 'live', badgeText: '● Live', desc: 'All helpline numbers operational', value: '100%', isNumber: false }
+const CARDS = [
+  {
+    emoji: "🚨",
+    title: "Active Incidents",
+    value: "8",
+    badge: "warn",
+    badgeText: "⚠ Warning",
+    desc: "Multi-state flood and cyclone events requiring coordinated response",
+  },
+  {
+    emoji: "🏥",
+    title: "Nearby Hospitals",
+    value: "142",
+    badge: "live",
+    badgeText: "● Online",
+    desc: "Hospitals reporting real-time bed capacity and emergency readiness",
+  },
+  {
+    emoji: "🚑",
+    title: "Rescue Team Locations",
+    value: "286",
+    badge: "live",
+    badgeText: "● Deployed",
+    desc: "GPS-tracked rescue teams across affected districts",
+  },
+  {
+    emoji: "🏠",
+    title: "Safe Shelters",
+    value: "974",
+    badge: "live",
+    badgeText: "● Open",
+    desc: "Shelters with real-time occupancy and accessibility data",
+  },
+  {
+    emoji: "🌧",
+    title: "Weather Radar",
+    value: "Live",
+    badge: "live",
+    badgeText: "● Live",
+    desc: "Real-time doppler radar feeds from IMD weather stations",
+  },
+  {
+    emoji: "📞",
+    title: "Emergency Hotline",
+    value: "100%",
+    badge: "live",
+    badgeText: "● Up",
+    desc: "1070 helpline and district control rooms fully operational",
+  },
 ];
-
-function CardValue({ value, isNumber }: { value: string, isNumber: boolean }) {
-  const numericValue = isNumber ? parseInt(value) : 0;
-  const { ref, count } = useCountUp(numericValue, 1500);
-
-  if (!isNumber) {
-    return <div className="text-2xl font-bold text-white mt-2">{value}</div>;
-  }
-
-  return (
-    <div className="text-2xl font-bold text-white mt-2" ref={ref}>
-      {count.toLocaleString('en-IN')}
-    </div>
-  );
-}
 
 export default function ECCGrid() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {cards.map((card, i) => (
-        <ScrollReveal key={i} delay={i * 0.1}>
-          <div className="bg-white/[0.04] border border-white/[0.08] rounded-[16px] p-5 h-full">
+    <div>
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0F2A4F] to-[#132f57] flex items-center justify-center text-lg shadow-md border border-white/10">
+          🖥
+        </div>
+        <div>
+          <h3 className="text-white font-bold text-base">Emergency Command Center</h3>
+          <p className="text-[11px] text-white/40">
+            Unified situational awareness · All systems operational
+          </p>
+        </div>
+      </div>
+
+      {/* Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {CARDS.map((card, i) => (
+          <motion.div
+            key={card.title}
+            className="bg-white/[0.04] border border-white/[0.08] rounded-[16px] p-5 hover:bg-white/[0.07] transition-all duration-200 group"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{
+              duration: 0.4,
+              delay: i * 0.07,
+              ease: [0.2, 0.7, 0.2, 1],
+            }}
+          >
+            {/* Top row: icon + badge */}
             <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{card.emoji}</span>
-                <span className="text-white font-semibold text-sm">{card.title}</span>
-              </div>
-              <div className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                card.badge === 'warn' 
-                  ? 'bg-amber-500/15 text-amber-400' 
-                  : 'bg-emerald-500/15 text-emerald-400'
-              }`}>
+              <span className="text-2xl">{card.emoji}</span>
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                  card.badge === "warn"
+                    ? "bg-amber-500/15 text-amber-400"
+                    : "bg-emerald-500/15 text-emerald-400"
+                }`}
+              >
+                {card.badge === "live" && (
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse align-middle" />
+                )}
                 {card.badgeText}
-              </div>
+              </span>
             </div>
-            <div className="text-[13px] text-white/50">{card.desc}</div>
-            <CardValue value={card.value} isNumber={card.isNumber} />
-          </div>
-        </ScrollReveal>
-      ))}
+
+            {/* Title */}
+            <h4 className="text-white font-semibold text-sm mb-1">{card.title}</h4>
+
+            {/* Value */}
+            <div className="text-2xl font-bold text-white tabular-nums mb-2 group-hover:text-[#5B8DF6] transition-colors">
+              {card.value}
+            </div>
+
+            {/* Description */}
+            <p className="text-[12px] text-white/40 leading-relaxed">{card.desc}</p>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }

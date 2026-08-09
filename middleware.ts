@@ -4,6 +4,12 @@ import { NextResponse, type NextRequest } from "next/server";
 // Roles (mirrors lib/validations/user.ts). Keep in sync.
 const ROLES = ["super_admin", "district_admin", "field_responder", "viewer"] as const;
 
+// Phase 1 · Dual-Mode (mirrors the UserRole enum in prisma/schema.prisma).
+// The mock `role` cookie is written by publicOtpLogin (role=public) and
+// govLogin (role=district_admin) in app/actions/auth.ts.
+const PUBLIC_ROLE = "public";
+const GOV_ROLES = ["field_responder", "district_admin", "super_admin"] as const;
+
 // Path prefixes requiring a user (authenticated or guest).
 const PROTECTED_PATHS = [
   "/command-center",
@@ -14,6 +20,11 @@ const PROTECTED_PATHS = [
   "/ai-planner",
   "/settings",
 ];
+
+// Phase 1 · Dual-mode dashboards. "Unauthenticated" here means no guest_mode
+// cookie, no role cookie, and (when Supabase is configured) no session user —
+// visitors matching none of those are bounced to "/".
+const DASHBOARD_PATHS = ["/public/dashboard", "/gov/dashboard"] as const;
 
 // ---------------------------------------------------------------------------
 // ADMIN ROUTES (Phase 18). These back the Admin Control Panel. Access is
@@ -52,27 +63,61 @@ function isAdminRoute(pathname: string) {
   return ADMIN_BASES.some((base) => matchesBase(pathname, base));
 }
 
+function isDashboard(pathname: string) {
+  return DASHBOARD_PATHS.some((base) => matchesBase(pathname, base));
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isGuest = request.cookies.get("guest_mode")?.value === "true";
+  const role = request.cookies.get("role")?.value ?? "";
+  const viewAsPublic = request.cookies.get("view_as_public")?.value === "true";
   const adminRequested = isAdminRoute(pathname);
+
+  const isPublicRole = role === PUBLIC_ROLE;
+  const isGovRole = (GOV_ROLES as readonly string[]).includes(role);
+  const isOnGov = pathname === "/gov" || pathname.startsWith("/gov/");
+  const isOnPublic = pathname === "/public" || pathname.startsWith("/public/");
+
+  // =========================================================================
+  // PHASE 1 · DUAL-MODE CROSSOVER GUARDS — users cannot slip into the wrong
+  // mode. A public citizen visiting any /gov/* route is sent to the citizen
+  // dashboard; a gov user visiting /public/* is sent back to the gov
+  // dashboard UNLESS they hold the special view_as_public=true cookie.
+  // =========================================================================
+  if (isPublicRole && isOnGov) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/public/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  if (isGovRole && !viewAsPublic && isOnPublic) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/gov/dashboard";
+    return NextResponse.redirect(url);
+  }
 
   // =========================================================================
   // GUEST MODE: bypass auth/session/onboarding for the read-only demo, EXCEPT
   // the admin panel — guests must never reach admin controls.
   // =========================================================================
   if (isGuest) {
-    // Guests on public/auth pages are sent straight to the command center.
+    // Guests on public/auth pages are sent to the appropriate landing spot:
+    // a public guest (role=public, from enableGuestMode) goes to the citizen
+    // dashboard; other guests keep the command-center target.
     if (pathname === "/" || pathname === "/login" || pathname === "/signup") {
       const url = request.nextUrl.clone();
-      url.pathname = "/command-center";
+      url.pathname = role === PUBLIC_ROLE ? "/public/dashboard" : "/command-center";
       return NextResponse.redirect(url);
     }
     if (matchesBase(pathname, "/auth")) {
       const url = request.nextUrl.clone();
-      url.pathname = "/command-center";
+      url.pathname = role === PUBLIC_ROLE ? "/public/dashboard" : "/command-center";
       return NextResponse.redirect(url);
     }
+    // Note: /public/login is deliberately NOT bounced here — the guest banner
+    // invites guests to sign up, and publicOtpLogin upgrades them to a full
+    // citizen session (it deletes guest_mode itself).
 
     // Strict: guests are never admitted to admin routes.
     if (adminRequested) {
@@ -89,6 +134,13 @@ export async function middleware(request: NextRequest) {
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
     !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   ) {
+    // Cookie-only auth mode (no Supabase configured): the role cookie is the
+    // auth signal — dual-mode dashboards still require it.
+    if (isDashboard(pathname) && !role) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
     return NextResponse.next();
   }
 
@@ -118,11 +170,21 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Any protected OR admin route requires an authenticated user.
-  if (!user && (isProtected(pathname) || adminRequested)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
+  if (!user) {
+    // Phase 1 · Dual-mode dashboards accept the mock role cookie as a valid
+    // session (citizen/gov logins don't create Supabase users in the demo).
+    if (isDashboard(pathname) && !role) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
+
+    if (isProtected(pathname) || adminRequested) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("next", pathname);
+      return NextResponse.redirect(url);
+    }
   }
 
   if (user) {
@@ -173,6 +235,9 @@ export const config = {
     "/login",
     "/signup",
     "/auth/:path*",
+    // Phase 1 · Dual-Mode routes (crossover guards + dashboard protection)
+    "/gov/:path*",
+    "/public/:path*",
     "/command-center/:path*",
     "/dashboard/:path*",
     "/users/:path*",

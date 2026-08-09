@@ -11,26 +11,29 @@ interface ShareAlertButtonProps {
   className?: string;
 }
 
-export default function ShareAlertButton({ payload, className = "" }: ShareAlertButtonProps) {
+export default function ShareAlertButton({
+  payload,
+  className = "",
+}: ShareAlertButtonProps) {
   const [isSharing, setIsSharing] = useState(false);
   const toast = useToast();
 
   const handleShare = async () => {
     if (isSharing) return;
     setIsSharing(true);
-    
+
     try {
       const success = await shareAlert(payload);
       if (success) {
-        toast.success({ 
-          title: "Alert Shared", 
-          description: "Alert copied to clipboard or shared successfully." 
+        toast.success({
+          title: "Alert Shared",
+          description: "Alert copied to clipboard or shared successfully.",
         });
       }
-    } catch (err) {
-      toast.error({ 
-        title: "Share Failed", 
-        description: "Could not share the alert." 
+    } catch {
+      toast.error({
+        title: "Share Failed",
+        description: "Could not share the alert.",
       });
     } finally {
       setIsSharing(false);

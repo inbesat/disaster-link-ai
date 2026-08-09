@@ -14,7 +14,8 @@ const REPORT_TYPES = [
 type Gps = { lat: number; lng: number };
 
 export default function ReportPage() {
-  const [reportType, setReportType] = useState<CitizenReportInput["reportType"]>("flooding");
+  const [reportType, setReportType] =
+    useState<CitizenReportInput["reportType"]>("flooding");
   const [rawText, setRawText] = useState("");
   const [gps, setGps] = useState<Gps | null>(null);
   const [gpsError, setGpsError] = useState<string | null>(null);
@@ -32,7 +33,10 @@ export default function ReportPage() {
     setLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setGps({ lat: +pos.coords.latitude.toFixed(6), lng: +pos.coords.longitude.toFixed(6) });
+        setGps({
+          lat: +pos.coords.latitude.toFixed(6),
+          lng: +pos.coords.longitude.toFixed(6),
+        });
         setLoading(false);
       },
       () => {
@@ -59,17 +63,24 @@ export default function ReportPage() {
       return;
     }
     setLoading(true);
-    const result = await submitCitizenReport({
-      lat: gps.lat,
-      lng: gps.lng,
-      reportType,
-      rawText,
-      source: "app",
-      imageUrl: imageDataUrl,
-    });
-    setLoading(false);
-    if (result.ok) setSubmitted(true);
-    else setGpsError(result.message ?? "Something went wrong.");
+    try {
+      const result = await submitCitizenReport({
+        lat: gps.lat,
+        lng: gps.lng,
+        reportType,
+        rawText,
+        source: "app",
+        imageUrl: imageDataUrl,
+      });
+      if (result.ok) setSubmitted(true);
+      else setGpsError(result.message ?? "Something went wrong.");
+    } catch (err) {
+      // Server actions reject on hard failures (e.g. SpamPatrol flagged the
+      // report as spam) — surface the message instead of crashing the page.
+      setGpsError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -77,7 +88,15 @@ export default function ReportPage() {
       <main className="flex min-h-screen items-center justify-center bg-background p-6">
         <div className="eoc-panel flex max-w-md flex-col items-center gap-5 p-10 text-center">
           <div className="flex h-24 w-24 items-center justify-center rounded-full bg-severity-green-500/20">
-            <svg className="h-14 w-14 text-severity-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              className="h-14 w-14 text-severity-green-500"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M20 6 9 17l-5-5" />
             </svg>
           </div>
@@ -145,9 +164,7 @@ export default function ReportPage() {
               <LocateFixed className={loading ? "h-5 w-5 animate-spin" : "h-5 w-5"} />
               {gps ? "Update My GPS Location" : "Use My GPS Location"}
             </button>
-            {gpsError && (
-              <p className="mt-2 text-sm text-severity-red-400">{gpsError}</p>
-            )}
+            {gpsError && <p className="mt-2 text-sm text-severity-red-400">{gpsError}</p>}
           </div>
 
           {/* Report type */}
@@ -175,7 +192,10 @@ export default function ReportPage() {
 
           {/* Description */}
           <div>
-            <label htmlFor="desc" className="mb-1.5 flex items-center gap-1.5 text-sm font-semibold text-foreground">
+            <label
+              htmlFor="desc"
+              className="mb-1.5 flex items-center gap-1.5 text-sm font-semibold text-foreground"
+            >
               <MessageSquareText className="h-4 w-4" /> Describe the Situation
             </label>
             <textarea
@@ -192,7 +212,10 @@ export default function ReportPage() {
 
           {/* Image upload */}
           <div>
-            <label htmlFor="photo" className="mb-1.5 flex items-center gap-1.5 text-sm font-semibold text-foreground">
+            <label
+              htmlFor="photo"
+              className="mb-1.5 flex items-center gap-1.5 text-sm font-semibold text-foreground"
+            >
               <Upload className="h-4 w-4" /> Upload a Photo (optional)
             </label>
             <label className="eoc-panel flex cursor-pointer items-center justify-center gap-2 border-dashed p-5 text-sm text-slate-300 transition hover:border-accent hover:text-accent">
@@ -208,7 +231,11 @@ export default function ReportPage() {
             </label>
             {imageDataUrl && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={imageDataUrl} alt="Report preview" className="mt-3 h-40 w-full rounded-eoc border border-border object-cover" />
+              <img
+                src={imageDataUrl}
+                alt="Report preview"
+                className="mt-3 h-40 w-full rounded-eoc border border-border object-cover"
+              />
             )}
           </div>
 

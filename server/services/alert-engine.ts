@@ -19,7 +19,7 @@ import { sendSMSAlert, type SendSmsResult } from "@/lib/alerts/twilio-client";
 import { translateAlertForSMS } from "@/lib/i18n/ai-translator";
 import { toLocale } from "@/lib/i18n/locales";
 import { notifyAllSubscribers } from "@/server/services/push-notifier";
-import type { AlertLog } from "@prisma/client";
+import type { AlertLog, UserRole } from "@prisma/client";
 
 const DEDUP_WINDOW_MS = 6 * 60 * 60 * 1000; // 6 hours
 
@@ -187,7 +187,10 @@ export async function processPredictionAlerts(
     const smsResults: SendSmsResult[] = [];
     if (effectiveChannels.includes("sms")) {
       const recipients = await prisma.user.findMany({
-        where: { role: { in: effectiveRoles }, phone: { not: null } },
+        // roles come from alert_rule config strings; the typed UserRole cast
+        // keeps the query valid against the Postgres enum (unknown role names
+        // simply match no rows).
+        where: { role: { in: effectiveRoles as UserRole[] }, phone: { not: null } },
         select: { id: true, name: true, phone: true, preferredLanguage: true },
       });
 
@@ -195,7 +198,10 @@ export async function processPredictionAlerts(
       // Group recipients by preferred_language so the alert is translated
       // ONCE per language (cost-efficient), then each recipient gets their
       // own hybrid [ENGLISH] + [LOCAL] body in their chosen language.
-      const byLanguage = new Map<string, { id: string; name: string | null; phone: string }[]>();
+      const byLanguage = new Map<
+        string,
+        { id: string; name: string | null; phone: string }[]
+      >();
       for (const recipient of recipients) {
         if (!recipient.phone) continue;
         // toLocale() normalises the stored preference (e.g. "Hindi", "hi ")

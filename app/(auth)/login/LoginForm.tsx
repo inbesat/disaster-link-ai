@@ -68,8 +68,11 @@ export default function LoginForm() {
     if (error) setError(error.message);
   }
 
+  // The page.tsx wrapper owns full-height centering now (it stacks the
+  // standard login with the Passwordless Field Access section below), so
+  // this <main> only centres its own panel.
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4">
+    <main className="flex w-full items-center justify-center bg-background px-4">
       <div className="eoc-panel w-full max-w-md p-8">
         <p className="eoc-label mb-1 text-accent">EMERGENCY OPERATIONS</p>
         <h1 className="text-2xl font-bold">Sign In</h1>

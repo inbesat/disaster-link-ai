@@ -1,40 +1,59 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Eyebrow from './Eyebrow';
+import React from "react";
+import Eyebrow from "./Eyebrow";
+import DotSep from "./DotSep";
 
 interface SectionHeadProps {
-  eyebrowVariant?: 'blue' | 'orange' | 'light';
+  eyebrowVariant?: "blue" | "orange" | "light";
   eyebrowIcon?: React.ReactNode;
   eyebrow?: string;
   title: string;
   subtitle?: string;
   center?: boolean;
   onNavy?: boolean;
+  /** Show gradient dot separator below subtitle. */
+  showDot?: boolean;
 }
 
 export default function SectionHead({
-  eyebrowVariant = 'blue',
+  eyebrowVariant = "blue",
   eyebrowIcon,
   eyebrow,
   title,
   subtitle,
   center = true,
   onNavy = false,
+  showDot = false,
 }: SectionHeadProps) {
   return (
-    <div className={`flex flex-col ${center ? 'items-center text-center' : 'items-start text-left'} max-w-3xl ${center ? 'mx-auto' : ''}`}>
+    <div
+      className={`flex flex-col ${
+        center ? "items-center text-center" : "items-start text-left"
+      } max-w-3xl ${center ? "mx-auto" : ""}`}
+    >
       {eyebrow && (
         <Eyebrow variant={eyebrowVariant} icon={eyebrowIcon}>
           {eyebrow}
         </Eyebrow>
       )}
-      <h2 className={`mt-6 text-4xl md:text-5xl font-bold leading-tight font-[family-name:var(--font-display)] ${onNavy ? 'text-white' : 'text-[#0F1B2D]'}`}>
+      <h2
+        className={`mt-6 text-4xl md:text-5xl font-bold leading-tight font-[family-name:var(--font-display)] ${
+          onNavy ? "text-white" : "text-[var(--dl-text-dark)]"
+        }`}
+      >
         {title}
       </h2>
-      <p className={`mt-4 text-lg ${onNavy ? 'text-[#C9D6EC]' : 'text-[#5B6B84]'}`}>
-        {subtitle}
-      </p>
+      {subtitle && (
+        <p
+          className={`mt-4 text-lg leading-relaxed ${
+            onNavy ? "text-[var(--dl-text-on-navy)]" : "text-[var(--dl-text-muted)]"
+          }`}
+        >
+          {subtitle}
+        </p>
+      )}
+      {showDot && <DotSep />}
     </div>
   );
 }

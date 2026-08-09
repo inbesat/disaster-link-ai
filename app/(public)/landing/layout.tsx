@@ -1,32 +1,28 @@
-import { Poppins, Inter } from 'next/font/google';
-import type { Metadata } from 'next';
+import { Poppins, Inter } from "next/font/google";
+import type { Metadata } from "next";
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['500', '600', '700', '800'],
-  variable: '--font-display',
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-display",
 });
 
 const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-body',
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
 });
 
 export const metadata: Metadata = {
-  title: 'DisasterLink AI — AI-Powered Disaster Management Platform',
+  title: "DisasterLink AI — AI-Powered Disaster Management Platform",
 };
 
-export default function LandingLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function LandingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`${poppins.variable} ${inter.variable} font-sans bg-[#0B1F3A] min-h-screen scroll-smooth`}>
-      <main>
-        {children}
-      </main>
+    <div
+      className={`${poppins.variable} ${inter.variable} font-sans bg-[#0B1F3A] min-h-screen scroll-smooth`}
+    >
+      <main>{children}</main>
     </div>
   );
 }

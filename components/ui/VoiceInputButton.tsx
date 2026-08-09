@@ -79,7 +79,7 @@ export function VoiceInputButton({
   const [final, setFinal] = useState("");
   const [unsupported, setUnsupported] = useState(false);
   const recRef = useRef<SRInstance | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timeoutRef = useRef<number | null>(null);
   // Refs mirror the transcript so the recognition callbacks (bound once)
   // always read the freshest accumulated text without stale closures.
   const finalRef = useRef("");

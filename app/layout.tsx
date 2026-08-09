@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import ToastViewport from "@/components/ui/Toast";
 import EmergencyContactCard from "@/components/EmergencyContactCard";
@@ -26,6 +26,11 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-display",
+});
 
 export const metadata: Metadata = {
   title: "Disaster Response Intelligence Platform",
@@ -45,7 +50,7 @@ export default function RootLayout({
       {/* bg-primary / text-primary = the roadmap tokens (globals.css also
           sets them on body — these classes make it explicit). */}
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} bg-primary text-primary antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${poppins.variable} bg-primary text-primary antialiased`}
       >
         {simulationActive && (
           <div

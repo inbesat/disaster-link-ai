@@ -1,32 +1,32 @@
-'use client'
+"use client";
 
-import { AlertCircle, LayoutGrid, Clock, AlertTriangle } from 'lucide-react'
-import ScrollReveal from '@/components/landing/ui/ScrollReveal'
-import SectionHead from '@/components/landing/ui/SectionHead'
+import { AlertCircle, LayoutGrid, Clock, AlertTriangle } from "lucide-react";
+import ScrollReveal from "@/components/landing/ui/ScrollReveal";
+import SectionHead from "@/components/landing/ui/SectionHead";
 
 export default function Problem() {
   const problems = [
     {
       icon: AlertCircle,
-      title: 'Last-Mile Blackout',
-      desc: 'Over 40% of rural villages receive disaster warnings too late — or not at all. Traditional broadcast systems fail where connectivity is weakest.'
+      title: "Last-Mile Blackout",
+      desc: "Over 40% of rural villages receive disaster warnings too late — or not at all. Traditional broadcast systems fail where connectivity is weakest.",
     },
     {
       icon: LayoutGrid,
-      title: 'Fragmented Systems',
-      desc: 'State, district, and central agencies operate on disconnected platforms. Critical data sits in silos while response teams wait for coordination.'
+      title: "Fragmented Systems",
+      desc: "State, district, and central agencies operate on disconnected platforms. Critical data sits in silos while response teams wait for coordination.",
     },
     {
       icon: Clock,
-      title: 'Delayed Response',
-      desc: 'Manual coordination between agencies adds hours to response times. In flood scenarios, every 30 minutes of delay puts thousands more at risk.'
+      title: "Delayed Response",
+      desc: "Manual coordination between agencies adds hours to response times. In flood scenarios, every 30 minutes of delay puts thousands more at risk.",
     },
     {
       icon: AlertTriangle,
-      title: 'Misinformation Spread',
-      desc: 'During emergencies, unverified rumors spread faster than official alerts. Citizens make dangerous decisions based on false information.'
-    }
-  ]
+      title: "Misinformation Spread",
+      desc: "During emergencies, unverified rumors spread faster than official alerts. Citizens make dangerous decisions based on false information.",
+    },
+  ];
 
   return (
     <section className="bg-white py-28">
@@ -37,7 +37,7 @@ export default function Problem() {
         subtitle="India's disaster management infrastructure remains fragmented — critical alerts are delayed, duplicated, or never delivered to the citizens who need them."
         center={true}
       />
-      
+
       <div className="max-w-7xl mx-auto px-6 mt-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {problems.map((item, i) => (
@@ -54,5 +54,5 @@ export default function Problem() {
         </div>
       </div>
     </section>
-  )
+  );
 }

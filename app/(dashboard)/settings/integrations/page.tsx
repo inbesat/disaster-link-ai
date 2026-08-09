@@ -1,27 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { CloudRain, MessageSquare, Satellite, Webhook, Activity, Eye, EyeOff } from "lucide-react";
+import {
+  CloudRain,
+  MessageSquare,
+  Satellite,
+  Webhook,
+  Activity,
+  Eye,
+  EyeOff,
+  type LucideIcon,
+} from "lucide-react";
 import SettingsSection from "@/components/settings/SettingsSection";
 import { showToast } from "@/components/ui/Toast";
-import { IntegrationsSettingsProvider, useIntegrationSettings } from "@/lib/integrations-settings-mock";
+import {
+  IntegrationsSettingsProvider,
+  useIntegrationSettings,
+} from "@/lib/integrations-settings-mock";
 
 const inputClass =
   "w-full rounded-md border border-subtle bg-[var(--bg-tertiary)] px-3 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-accent";
 
-function IntegrationCard({ 
-  title, 
-  description, 
-  icon: Icon, 
-  status, 
+function IntegrationCard({
+  title,
+  description,
+  icon: Icon,
+  status,
   lastConnected,
   apiKey,
   onApiKeyChange,
-  onTestConnection
+  onTestConnection,
 }: {
   title: string;
   description: string;
-  icon: any;
+  icon: LucideIcon;
   status: "green" | "amber" | "red";
   lastConnected: string;
   apiKey: string;
@@ -34,12 +46,12 @@ function IntegrationCard({
   const statusColors = {
     green: "bg-green-500",
     amber: "bg-amber-500",
-    red: "bg-red-500"
+    red: "bg-red-500",
   };
 
   const handleTest = async () => {
     setIsTesting(true);
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
     onTestConnection();
     setIsTesting(false);
   };
@@ -58,14 +70,19 @@ function IntegrationCard({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium text-slate-400">{lastConnected}</span>
-          <div className={`h-2.5 w-2.5 rounded-full ${statusColors[status]}`} title={`Status: ${status}`} />
+          <div
+            className={`h-2.5 w-2.5 rounded-full ${statusColors[status]}`}
+            title={`Status: ${status}`}
+          />
         </div>
       </div>
 
       <div className="mt-2 flex items-end gap-3">
         {onApiKeyChange !== undefined && (
           <div className="flex-1 space-y-1">
-            <label className="text-xs font-semibold uppercase tracking-wider text-muted">API Key</label>
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted">
+              API Key
+            </label>
             <div className="relative">
               <input
                 type={showKey ? "text" : "password"}
@@ -89,7 +106,9 @@ function IntegrationCard({
           disabled={isTesting}
           className="flex h-10 items-center justify-center gap-2 rounded-md bg-tertiary px-4 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-slate-100 disabled:opacity-50"
         >
-          {isTesting ? "Testing..." : (
+          {isTesting ? (
+            "Testing..."
+          ) : (
             <>
               <Activity className="h-4 w-4" /> Test
             </>
@@ -106,7 +125,7 @@ function IntegrationsContent() {
   const handleTestSuccess = (service: string) => {
     showToast("success", {
       title: "Connection Successful",
-      description: `Successfully pinged ${service} API.`
+      description: `Successfully pinged ${service} API.`,
     });
   };
 
@@ -125,10 +144,10 @@ function IntegrationsContent() {
             status="green"
             lastConnected="2 mins ago"
             apiKey={settings.weatherApiKeys?.openweather || ""}
-            onApiKeyChange={(val) => setWeatherApiKey("openweather" as any, val)}
+            onApiKeyChange={(val) => setWeatherApiKey("openweather", val)}
             onTestConnection={() => handleTestSuccess("Weather API")}
           />
-          
+
           <IntegrationCard
             title="Twilio SMS/Voice"
             description="Outbound emergency alert delivery."

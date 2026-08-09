@@ -25,22 +25,25 @@ interface Bucket {
 const aiBuckets = new Map<string, Bucket>();
 
 // Periodically clean up expired entries to prevent memory leaks
-if (typeof setInterval !== 'undefined') {
+if (typeof setInterval !== "undefined") {
   const interval = setInterval(() => {
     const now = Date.now();
-    for (const [key, bucket] of aiBuckets.entries()) {
+    aiBuckets.forEach((bucket, key) => {
       if (now > bucket.resetAt) {
         aiBuckets.delete(key);
       }
-    }
+    });
   }, 60_000);
-  
+
   if (interval.unref) {
     interval.unref();
   }
 }
 
-export function checkAiRateLimit(userId: string, options?: RateLimiterOptions): RateLimitResult {
+export function checkAiRateLimit(
+  userId: string,
+  options?: RateLimiterOptions,
+): RateLimitResult {
   const maxRequests = options?.maxRequests ?? 20;
   const windowMs = options?.windowMs ?? 60_000;
   const now = Date.now();

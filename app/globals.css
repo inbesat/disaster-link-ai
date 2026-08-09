@@ -547,6 +547,7 @@
 
 /* =====================================================================
    DISASTERLINK AI LANDING PAGE TOKENS
+   Phase 1 — Design System & Global Setup
    ===================================================================== */
 .landing-page {
   --dl-navy: #0B1F3A;
@@ -567,8 +568,10 @@
   --dl-shadow-soft: 0 10px 40px -12px rgba(11,31,58,0.18);
   --dl-shadow-glow-blue: 0 0 0 1px rgba(37,99,235,0.25), 0 20px 60px -20px rgba(37,99,235,0.45);
   --dl-shadow-glow-orange: 0 0 0 1px rgba(249,115,22,0.25), 0 20px 60px -20px rgba(249,115,22,0.45);
+  scroll-behavior: smooth;
 }
 
+/* Landing page keyframe animations */
 @keyframes floaty {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -589,6 +592,15 @@
   0% { transform: translateY(-100%); }
   100% { transform: translateY(400%); }
 }
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
 
 .animate-floaty {
   animation: floaty 5s ease-in-out infinite;
@@ -604,4 +616,19 @@
 }
 .animate-flowdown {
   animation: flowdown 1.8s linear infinite;
+}
+.animate-gradient-shift {
+  animation: gradient-shift 6s ease infinite;
+  background-size: 200% 200%;
+}
+.animate-shimmer {
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+
+/* Landing page typography — Poppins for display headings */
+.landing-page h1,
+.landing-page h2,
+.landing-page h3,
+.landing-page h4 {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
 }

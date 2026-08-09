@@ -1,7 +1,13 @@
-import React from 'react';
+import React from "react";
 
-export default function DotSep() {
+interface DotSepProps {
+  className?: string;
+}
+
+export default function DotSep({ className = "" }: DotSepProps) {
   return (
-    <div className="w-16 h-1 rounded-full bg-gradient-to-r from-[#2563EB] to-[#F97316] mx-auto my-6" />
+    <div
+      className={`w-16 h-1 rounded-full bg-gradient-to-r from-[var(--dl-blue)] to-[var(--dl-orange)] mx-auto my-6 ${className}`}
+    />
   );
 }

@@ -1,8 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
-export function useCountUp(target: number, duration: number = 2000) {
+export function useCountUp<T extends HTMLElement = HTMLDivElement>(
+  target: number,
+  duration: number = 2000,
+) {
   const [count, setCount] = useState(0);
-  const ref = useRef<any>(null);
+  const ref = useRef<T | null>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
 
   useEffect(() => {
@@ -12,7 +15,7 @@ export function useCountUp(target: number, duration: number = 2000) {
           setIsIntersecting(true);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     if (ref.current) {
@@ -31,7 +34,7 @@ export function useCountUp(target: number, duration: number = 2000) {
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      
+
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
       setCount(Math.floor(easeOutQuart * target));
 

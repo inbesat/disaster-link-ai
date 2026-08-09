@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/server/prisma";
 import { detectSpam } from "@/lib/data-ingestion/spam-filter";
-import { sanitizeInput } from "@/lib/security/sanitize";
+import { anonymizePII, sanitizeInput } from "@/lib/security/sanitize";
+import { checkSpamPatrol } from "@/lib/security/spam-check";
 
 // ---------------------------------------------------------------------
 // app/actions/reports.ts
@@ -61,6 +62,25 @@ export async function submitCitizenReport(
   }
   if (!rawText) {
     return { ok: false, id: "", message: "Please describe the situation." };
+  }
+
+  // Enterprise Security — SpamPatrol external spam check on the report
+  // text. Fail-open: without SPAMPATROL_API_KEY (or on any API error) the
+  // check returns isSpam: false so the demo keeps working. When it flags a
+  // report we THROW (outside the DB try/catch below, so the mock-success
+  // fallback never swallows the rejection) and the client shows the message.
+  //
+  // Privacy: only the PII-redacted text (phones/emails → [REDACTED]) leaves
+  // the server to the third party, keeping the platform's redaction posture.
+  const external = await checkSpamPatrol({
+    text: anonymizePII(rawText),
+    reportType,
+    lat: input.lat,
+    lng: input.lng,
+  });
+  if (external.isSpam) {
+    console.warn(`[reports] SpamPatrol rejected report: "${rawText.slice(0, 80)}"`);
+    throw new Error("Spam detected. Report rejected.");
   }
 
   try {

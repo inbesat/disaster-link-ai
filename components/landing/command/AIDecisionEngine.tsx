@@ -1,52 +1,93 @@
-'use client'
+"use client";
 
-import ScrollReveal from '@/components/landing/ui/ScrollReveal';
-import { CheckCircle } from 'lucide-react';
+import React from "react";
+import { CheckCircle2 } from "lucide-react";
+import { motion } from "framer-motion";
 
-const decisions = [
-  'Send flood warning to district control room',
-  'Notify district administration & SDRF',
-  'Deploy 15 rescue teams to flood zone',
-  'Open 4 relief camps in nearby blocks',
-  'Alert nearby hospitals to prepare capacity',
-  'Send SMS alerts to affected citizens'
+const DECISIONS = [
+  "Send flood warning to district control room",
+  "Notify district administration & SDRF",
+  "Deploy 15 rescue teams to flood zone",
+  "Open 4 relief camps in nearby blocks",
+  "Alert nearby hospitals to prepare capacity",
+  "Send SMS alerts to affected citizens",
 ];
 
 export default function AIDecisionEngine() {
   return (
-    <div className="bg-white/[0.04] border border-white/[0.08] rounded-[20px] p-6 shadow-[0_0_0_1px_rgba(249,115,22,0.25),0_20px_60px_-20px_rgba(249,115,22,0.45)]">
-      <style>{`
-        @keyframes orbpulse {
-          0% { box-shadow: 0 0 0 0 rgba(249,115,22,0.4); }
-          70% { box-shadow: 0 0 0 15px rgba(249,115,22,0); }
-          100% { box-shadow: 0 0 0 0 rgba(249,115,22,0); }
-        }
-      `}</style>
-      
-      <div className="flex items-center gap-4 mb-6">
-        <div 
-          className="w-14 h-14 rounded-[16px] bg-gradient-to-br from-[#2563EB] to-[#F97316] flex items-center justify-center text-2xl relative shrink-0"
-          style={{ animation: 'orbpulse 2.4s ease-in-out infinite' }}
+    <div className="bg-white/[0.04] border border-white/[0.08] rounded-[20px] p-6 shadow-[0_0_0_1px_rgba(249,115,22,0.25),0_20px_60px_-20px_rgba(249,115,22,0.35)]">
+      {/* Header */}
+      <div className="flex items-start gap-4 mb-6">
+        {/* AI Orb */}
+        <motion.div
+          className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F97316] to-[#FDBA74] flex items-center justify-center text-xl flex-shrink-0 shadow-md"
+          animate={{
+            boxShadow: [
+              "0 0 0 0 rgba(249,115,22,0.4)",
+              "0 0 20px 6px rgba(249,115,22,0.2)",
+              "0 0 0 0 rgba(249,115,22,0.4)",
+            ],
+          }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         >
           🤖
-        </div>
+        </motion.div>
         <div>
-          <h3 className="text-xl font-bold text-white">AI Recommendation Engine</h3>
-          <p className="text-[13px] text-white/50">Automated response plan for Flood Alert #FL-2291</p>
+          <h3 className="text-white font-bold text-base">AI Recommendation Engine</h3>
+          <p className="text-[11px] text-white/40 mt-0.5">
+            Flood Alert #FL-2291 · Bihar Region · Level 3
+          </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {decisions.map((decision, i) => (
-          <ScrollReveal key={i} delay={i * 0.1}>
-            <div className="flex items-start gap-3 bg-white/[0.03] rounded-[14px] p-4 h-full">
-              <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                <CheckCircle size={14} className="text-emerald-400" />
-              </div>
-              <div className="text-sm text-white/80">{decision}</div>
-            </div>
-          </ScrollReveal>
+      {/* Decision items — 2-column grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {DECISIONS.map((decision, i) => (
+          <motion.div
+            key={decision}
+            className="flex items-start gap-3 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 hover:bg-white/[0.06] transition-colors duration-200"
+            initial={{ opacity: 0, x: -12 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{
+              duration: 0.4,
+              delay: i * 0.08,
+              ease: [0.2, 0.7, 0.2, 1],
+            }}
+          >
+            <motion.div
+              className="flex-shrink-0 mt-0.5"
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.3,
+                delay: 0.2 + i * 0.08,
+                type: "spring",
+                stiffness: 300,
+              }}
+            >
+              <CheckCircle2 size={18} className="text-emerald-400" strokeWidth={2.5} />
+            </motion.div>
+            <span className="text-sm text-white/80 leading-snug">{decision}</span>
+          </motion.div>
         ))}
+      </div>
+
+      {/* Bottom confidence bar */}
+      <div className="mt-5 flex items-center gap-3 pt-4 border-t border-white/[0.06]">
+        <div className="flex-1 bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
+          <motion.div
+            className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500"
+            initial={{ width: 0 }}
+            whileInView={{ width: "94%" }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5, delay: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
+          />
+        </div>
+        <span className="text-[11px] text-emerald-400 font-semibold tabular-nums">
+          94% confidence
+        </span>
       </div>
     </div>
   );
