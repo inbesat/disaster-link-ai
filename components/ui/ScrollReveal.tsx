@@ -4,19 +4,18 @@ import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 
 // ---------------------------------------------------------------------
-// components/ui/ScrollReveal.tsx — UI/UX Phase 8 · Step 7.
+// components/ui/ScrollReveal.tsx — Phase 1 design-system primitive.
 //
-// Lightweight wrapper that reveals its children as they scroll into the
-// viewport. Used to give long pages (settings, admin, …) a sense of life
-// without janky per-item logic at every call site.
+// Fades content up as it scrolls into the viewport (translateY 28px -> 0).
+// Reveal triggers once 14% of the element is visible (viewport threshold
+// 0.14); pass a delay (0.08s increments reads nicely for staggers).
+// `prefers-reduced-motion` renders the children untouched.
 //
 //   <ScrollReveal>…section…</ScrollReveal>
 //   <ScrollReveal delay={0.1}>…</ScrollReveal>
-//
-// Default viewport margin "-50px" means the reveal starts a little before
-// the element fully enters the frame. `prefers-reduced-motion` renders the
-// children untouched.
 // ---------------------------------------------------------------------
+
+const EASE = [0.2, 0.7, 0.2, 1] as const;
 
 type ScrollRevealProps = {
   children: ReactNode;
@@ -31,7 +30,7 @@ type ScrollRevealProps = {
 export function ScrollReveal({
   children,
   delay = 0,
-  distance = 20,
+  distance = 28,
   className,
 }: ScrollRevealProps) {
   const reduceMotion = useReducedMotion();
@@ -39,10 +38,10 @@ export function ScrollReveal({
   return (
     <motion.div
       className={className}
-      initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: distance }}
-      whileInView={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.3, ease: "easeOut", delay }}
+      initial={reduceMotion ? false : { opacity: 0, y: distance }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.14 }}
+      transition={{ duration: 0.7, ease: EASE, delay }}
     >
       {children}
     </motion.div>

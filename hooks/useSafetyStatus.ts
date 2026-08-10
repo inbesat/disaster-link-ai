@@ -32,21 +32,41 @@ import {
 
 const STORAGE_KEY = "citizen_location";
 
+// Last raw payload seen + its parsed snapshot.
+//
+// useSafetyStatus feeds this into useSyncExternalStore's getSnapshot, which
+// MUST return a stable reference between renders. JSON.parse builds a fresh
+// object on every call, so React sees a "new" store value each render and
+// re-renders forever — "Maximum update depth exceeded" on the public
+// dashboard. The snapshot is only rebuilt when the stored value changes
+// (cross-tab edits arrive via the storage event → subscribe →
+// onStoreChange).
+let cachedRaw: string | null = null;
+let cachedLocation: CitizenLocation | null = null;
+
 /** Read the saved location (mirrors readSidebarCollapsed's guard style). */
 export function readCitizenLocation(): CitizenLocation | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as CitizenLocation;
-    if (
-      !parsed ||
-      (parsed.type !== "gps" && parsed.type !== "manual") ||
-      typeof parsed.savedAt !== "string"
-    ) {
-      return null;
+    if (raw === cachedRaw) return cachedLocation;
+    if (!raw) {
+      cachedRaw = raw;
+      cachedLocation = null;
+      return cachedLocation;
     }
-    return parsed;
+    const parsed = JSON.parse(raw) as CitizenLocation;
+    const location: CitizenLocation | null =
+      (parsed.type === "gps" || parsed.type === "manual") &&
+      typeof parsed.savedAt === "string"
+        ? parsed
+        : null;
+    // Commit the cache only after a successful parse — if JSON.parse
+    // throws below, the stale cache is left untouched and the catch
+    // returns a stable null (a primitive, so Object.is stays true).
+    cachedRaw = raw;
+    cachedLocation = location;
+    return cachedLocation;
   } catch {
     return null;
   }

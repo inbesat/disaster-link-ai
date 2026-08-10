@@ -2,7 +2,6 @@
 
 import React from "react";
 import ScrollReveal from "@/components/landing/ui/ScrollReveal";
-import Eyebrow from "@/components/landing/ui/Eyebrow";
 
 export default function Hero() {
   return (
@@ -28,7 +27,13 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 items-center py-20 w-full">
         <div>
           <ScrollReveal delay={0}>
-            <Eyebrow variant="light">🛰 AI-Powered Disaster Management Platform</Eyebrow>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white/90">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#F97316] opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#F97316]" />
+              </span>
+              🛰 AI-Powered Disaster Management Platform
+            </div>
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
@@ -61,14 +66,17 @@ export default function Hero() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.4}>
-            <div className="flex flex-wrap gap-8 mt-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-8 border-t border-white/10 w-full max-w-xl">
               {[
                 { value: "50M+", label: "Citizens Protected" },
                 { value: "22", label: "States Connected" },
                 { value: "9", label: "Alert Channels" },
                 { value: "98.4%", label: "Delivery Success" },
               ].map((stat, idx) => (
-                <div key={idx} className="flex flex-col">
+                <div
+                  key={idx}
+                  className={`flex flex-col ${idx > 0 ? "border-l border-white/10 pl-6" : ""}`}
+                >
                   <span className="text-2xl font-bold text-white">{stat.value}</span>
                   <span className="text-xs text-[#C9D6EC] uppercase tracking-wider mt-1">
                     {stat.label}

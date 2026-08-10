@@ -31,6 +31,11 @@ import {
   type FamilyContactWithStatus,
 } from "@/lib/mock-data/family-contacts";
 
+// getServerSnapshot must return a cached reference — a fresh [] literal on
+// every call trips React's "getServerSnapshot should be cached to avoid an
+// infinite loop" hydration warning.
+const EMPTY_SNAPSHOT: FamilyContactWithStatus[] = [];
+
 const STATUS_DOT: Record<
   FamilyContactStatus,
   { dot: string; label: string; pulse?: boolean }
@@ -68,7 +73,7 @@ export function FamilyStrip() {
   const members = useSyncExternalStore(
     subscribe,
     () => readFamilyContacts(),
-    () => [],
+    () => EMPTY_SNAPSHOT,
   );
   const [selected, setSelected] = useState<FamilyContactWithStatus | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);

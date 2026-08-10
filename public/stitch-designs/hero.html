@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DisasterLink AI - Command Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#00132e",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface-bright": "#283a56",
+                        "on-surface": "#d6e3ff",
+                        "surface-tint": "#b4c5ff",
+                        "inverse-on-surface": "#1f314d",
+                        "on-error-container": "#ffdad6",
+                        "outline": "#8d90a0",
+                        "on-surface-variant": "#c3c6d7",
+                        "on-primary": "#002a78",
+                        "on-tertiary": "#003824",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-secondary": "#552100",
+                        "secondary-fixed-dim": "#ffb690",
+                        "secondary-container": "#ec6a06",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-container": "#bdffdb",
+                        "on-background": "#d6e3ff",
+                        "on-tertiary-fixed": "#002113",
+                        "inverse-surface": "#d6e3ff",
+                        "tertiary-container": "#007d55",
+                        "error-container": "#93000a",
+                        "primary": "#b4c5ff",
+                        "surface-container-highest": "#233551",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "outline-variant": "#434655",
+                        "surface-container-high": "#182a46",
+                        "surface-container-low": "#071c36",
+                        "on-secondary-fixed": "#341100",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container-lowest": "#000e24",
+                        "on-primary-container": "#eeefff",
+                        "tertiary": "#4edea3",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-secondary-container": "#4a1c00",
+                        "surface-container": "#0c203b",
+                        "surface": "#00132e",
+                        "secondary": "#ffb690",
+                        "surface-variant": "#233551",
+                        "primary-fixed": "#dbe1ff",
+                        "inverse-primary": "#0053db",
+                        "secondary-fixed": "#ffdbca",
+                        "surface-dim": "#00132e",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-secondary-fixed-variant": "#783200",
+                        "on-error": "#690005"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-max": "1920px",
+                        "margin-mobile": "16px",
+                        "unit": "4px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "data-label": ["JetBrains Mono"],
+                        "display-lg": ["Space Grotesk"],
+                        "status-pill": ["JetBrains Mono"],
+                        "headline-lg": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "data-label": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "status-pill": ["12px", { "lineHeight": "16px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .inner-glow-top { box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.2); }
+        .glass-panel {
+            background: rgba(11, 31, 58, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .pulse-alert {
+            animation: pulse-op 1.5s infinite ease-in-out;
+        }
+        @keyframes pulse-op {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(236, 106, 6, 0.8); }
+            50% { opacity: 0.4; box-shadow: 0 0 2px rgba(236, 106, 6, 0.4); }
+        }
+        .bg-grid-pattern {
+            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen relative overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- WebGL Shader Background -->
+<div class="fixed inset-0 z-[-1] pointer-events-none">
+
+<div class="absolute inset-0 bg-grid-pattern mix-blend-overlay pointer-events-none"></div>
+</div>
+<!-- TopNavBar Shared Component -->
+<nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 rounded-full mt-4 mx-auto w-[calc(100%-32px)] max-w-container-max bg-surface-container/70 dark:bg-surface-container/70 backdrop-blur-xl border border-white/10 inner-glow-top shadow-xl">
+<div class="flex items-center gap-3">
+<img alt="DisasterLink AI Logo" class="h-8 w-8 object-contain rounded-md" data-alt="A detailed digital rendering of the DisasterLink AI logo, featuring a glowing futuristic shield icon in pristine white against a dynamic background fading from bright azure blue to intense alert orange. The aesthetic is ultra-modern, high-tech, and reassuring, with subtle lens flares and a polished glassmorphic finish, designed for a mission-critical command center interface." src="https://lh3.googleusercontent.com/aida/AP1WRLuKBYzMZd9tFn55sSRBmrs6akEIUxG3xcxj5u7Oj23VY5wPZLxXuHz0x-dIhs0aIRuylTSsxmAoS6_wX3B7wZAZS0y_7eGNjFRi6YR8xYNq_uQhs7FI7sacftF6mqHx4YabnhROL48V83gSItp2MXZq9ZpLj_5m4KJUCaZe_SVtS2SOp6Q3cmJiD9gT75D-qX3xjgg4rifgILjYHgqXC4Sz4dmvSPVPMcsL8C2no29lKUk146kTZb3yug"/>
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">DisasterLink AI</span>
+</div>
+<div class="hidden md:flex items-center space-x-6 font-body-md text-body-md">
+<!-- Active State Navigation -->
+<a class="text-primary font-bold border-b-2 border-primary pb-1 active:scale-95 duration-150" href="#">Platform</a>
+<!-- Inactive State Navigation -->
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 duration-300 px-3 py-1 rounded-md" href="#">Communication</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 duration-300 px-3 py-1 rounded-md" href="#">Command Center</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 duration-300 px-3 py-1 rounded-md" href="#">How It Works</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 duration-300 px-3 py-1 rounded-md" href="#">Impact</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 duration-300 px-3 py-1 rounded-md" href="#">FAQ</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden lg:block px-5 py-2 font-data-label text-data-label border border-outline-variant rounded-full text-on-surface hover:bg-surface-variant transition-colors">Explore Platform</button>
+<button class="px-6 py-2 font-data-label text-data-label bg-gradient-to-r from-primary-container to-secondary-container rounded-full text-white font-bold hover:opacity-90 transition-opacity shadow-lg">Request Demo</button>
+</div>
+</nav>
+<!-- HERO SECTION -->
+<main class="relative pt-32 pb-20 px-6 lg:px-12 max-w-container-max mx-auto min-h-screen flex items-center">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
+<!-- LEFT COLUMN (55%) -->
+<div class="lg:col-span-7 flex flex-col items-start z-10 space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel inner-glow-top border-primary-container/30">
+<span class="w-2 h-2 rounded-full bg-secondary-container pulse-alert"></span>
+<span class="font-status-pill text-status-pill tracking-widest text-secondary-fixed-dim uppercase">AI-POWERED DISASTER MANAGEMENT PLATFORM</span>
+</div>
+<div class="space-y-4">
+<h1 class="font-display-lg text-display-lg text-white">Every Second Saves Lives.</h1>
+<h2 class="font-display-lg text-display-lg bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-container">No Citizen Left Unwarned.</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                    Instantly deploy localized emergency protocols across 9 multi-channel alerts simultaneously. Our AI-driven infrastructure ensures a 98.4% delivery guarantee within seconds of an identified threat.
+                </p>
+<div class="flex flex-wrap items-center gap-4 pt-4">
+<button class="flex items-center gap-2 px-8 py-4 font-body-md text-body-md font-bold bg-gradient-to-r from-primary-container to-secondary-container rounded-full text-white hover:scale-105 transition-transform duration-300 shadow-xl shadow-primary-container/20">
+                        Explore Platform
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_forward</span>
+</button>
+<button class="px-8 py-4 font-body-md text-body-md font-bold border-2 border-outline-variant rounded-full text-on-surface hover:bg-surface-variant hover:border-outline transition-all duration-300">
+                        Request Demo
+                    </button>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 w-full border-t border-white/10">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-white">50M+</span>
+<span class="font-data-label text-data-label text-outline uppercase mt-1">Citizens Protected</span>
+</div>
+<div class="flex flex-col border-l border-white/10 pl-6">
+<span class="font-headline-md text-headline-md text-white">22</span>
+<span class="font-data-label text-data-label text-outline uppercase mt-1">States Connected</span>
+</div>
+<div class="flex flex-col border-l border-white/10 pl-6">
+<span class="font-headline-md text-headline-md text-white">9</span>
+<span class="font-data-label text-data-label text-outline uppercase mt-1">Alert Channels</span>
+</div>
+<div class="flex flex-col border-l border-white/10 pl-6">
+<span class="font-headline-md text-headline-md text-tertiary">98.4%</span>
+<span class="font-data-label text-data-label text-outline uppercase mt-1">Delivery Success</span>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (45%) -->
+<div class="lg:col-span-5 relative w-full h-[600px] z-10 perspective-1000">
+<div class="absolute inset-0 glass-panel rounded-2xl flex flex-col overflow-hidden shadow-2xl transform rotate-y-[-5deg] rotate-x-[2deg] transition-transform duration-700 hover:rotate-0">
+<!-- Dashboard Header -->
+<div class="px-6 py-4 border-b border-white/10 flex justify-between items-center bg-surface-container-low/50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 1;">satellite_alt</span>
+<span class="font-data-label text-data-label text-on-surface uppercase tracking-wider">Live National Feed</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim pulse-alert shadow-[0_0_8px_rgba(78,222,163,0.8)]"></span>
+<span class="font-status-pill text-status-pill text-tertiary-fixed-dim uppercase">Live</span>
+</div>
+</div>
+<!-- Map/Animation Area -->
+<div class="flex-grow relative bg-surface-lowest/50 overflow-hidden">
+
+<!-- Floating Overlays -->
+<div class="absolute top-4 right-4 glass-panel rounded-full px-4 py-2 border-tertiary/30 inner-glow-top flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-sm">memory</span>
+<span class="font-status-pill text-status-pill text-on-surface">AI Prediction: 96% confidence</span>
+</div>
+<div class="absolute bottom-6 left-6 glass-panel rounded-full px-4 py-2 border-secondary-container/30 inner-glow-top flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container text-sm">cell_tower</span>
+<span class="font-status-pill text-status-pill text-on-surface">Alert delivered to 12,400 citizens</span>
+</div>
+</div>
+<!-- Mini Cards Footer -->
+<div class="grid grid-cols-3 gap-2 p-2 bg-surface-container/60">
+<div class="glass-panel p-3 rounded-xl flex flex-col items-center justify-center text-center">
+<span class="font-headline-md text-headline-md text-secondary-fixed-dim">08</span>
+<span class="font-status-pill text-status-pill text-outline mt-1 uppercase">Active Alerts</span>
+</div>
+<div class="glass-panel p-3 rounded-xl flex flex-col items-center justify-center text-center">
+<span class="font-headline-md text-headline-md text-primary">286</span>
+<span class="font-status-pill text-status-pill text-outline mt-1 uppercase">Rescue Teams</span>
+</div>
+<div class="glass-panel p-3 rounded-xl flex flex-col items-center justify-center text-center">
+<span class="font-headline-md text-headline-md text-tertiary">974</span>
+<span class="font-status-pill text-status-pill text-outline mt-1 uppercase">Shelters</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

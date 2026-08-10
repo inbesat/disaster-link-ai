@@ -69,12 +69,31 @@ export function parseFamilyContacts(raw: string | null): FamilyContactWithStatus
   }
 }
 
+// Last raw payload seen + its parsed snapshot.
+//
+// FamilyStrip feeds this into useSyncExternalStore's getSnapshot, which
+// MUST return a stable reference between renders. Re-parsing localStorage
+// on every call builds a fresh array, so React thinks the store changed on
+// each render and re-renders forever — "Maximum update depth exceeded" on
+// the public dashboard. The snapshot is only rebuilt when the underlying
+// value actually changes (cross-tab edits arrive via the storage event →
+// subscribe → onStoreChange, which makes React re-read getSnapshot).
+let cachedRaw: string | null = null;
+let cachedContacts: FamilyContactWithStatus[] = [];
+
 /** SSR-safe localStorage read (mirrors readCitizenLocation's guards). */
 export function readFamilyContacts(): FamilyContactWithStatus[] {
   if (typeof window === "undefined") return [];
   try {
-    return parseFamilyContacts(window.localStorage.getItem("citizen_family_contacts"));
+    const raw = window.localStorage.getItem("citizen_family_contacts");
+    if (raw === cachedRaw) return cachedContacts;
+    cachedRaw = raw;
+    cachedContacts = parseFamilyContacts(raw);
+    return cachedContacts;
   } catch {
-    return [];
+    // getItem can throw (private browsing / disabled storage). Return the
+    // cached reference — a fresh [] here would be a new snapshot on every
+    // render and re-arm the useSyncExternalStore infinite loop.
+    return cachedContacts;
   }
 }

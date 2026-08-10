@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DisasterLink AI - Command Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#007d55",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface": "#00132e",
+                        "on-secondary": "#552100",
+                        "on-error": "#690005",
+                        "on-surface-variant": "#c3c6d7",
+                        "surface-container": "#0c203b",
+                        "on-secondary-container": "#4a1c00",
+                        "on-primary-fixed": "#00174b",
+                        "secondary-fixed": "#ffdbca",
+                        "on-tertiary-fixed": "#002113",
+                        "on-background": "#d6e3ff",
+                        "secondary-fixed-dim": "#ffb690",
+                        "on-tertiary": "#003824",
+                        "surface-tint": "#b4c5ff",
+                        "background": "#081428", // Overridden for prompt specific background
+                        "surface-container-low": "#071c36",
+                        "surface-bright": "#283a56",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#1f314d",
+                        "surface-container-high": "#182a46",
+                        "on-surface": "#d6e3ff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-primary": "#0053db",
+                        "surface-container-lowest": "#000e24",
+                        "error-container": "#93000a",
+                        "outline-variant": "#434655",
+                        "surface-container-highest": "#233551",
+                        "primary": "#b4c5ff",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-container": "#bdffdb",
+                        "surface-dim": "#00132e",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-fixed": "#341100",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#ec6a06",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary": "#4edea3",
+                        "surface-variant": "#233551",
+                        "outline": "#8d90a0",
+                        "on-primary": "#002a78",
+                        "inverse-surface": "#d6e3ff",
+                        "secondary": "#ffb690",
+                        "primary-fixed": "#dbe1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "1.375rem", // 22px
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px",
+                        "container-max": "1920px",
+                        "gutter": "16px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter", "sans-serif"],
+                        "display-lg": ["Space Grotesk", "sans-serif"],
+                        "status-pill": ["JetBrains Mono", "monospace"],
+                        "headline-md": ["Space Grotesk", "sans-serif"],
+                        "data-label": ["JetBrains Mono", "monospace"],
+                        "headline-lg": ["Space Grotesk", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "status-pill": ["12px", { "lineHeight": "16px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "data-label": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .glass-panel {
+            background-color: rgba(11, 31, 58, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 1px 1px 0px 0px rgba(255, 255, 255, 0.2), 0 4px 20px -2px rgba(37, 99, 235, 0.2);
+        }
+
+        .pulse-ring {
+            position: absolute;
+            border-radius: 50%;
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .pulse-dot {
+            animation: pulse-dot 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.95); }
+        }
+        
+        .gradient-map-bg {
+            background: radial-gradient(circle at center, #0c203b 0%, #071c36 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md h-screen w-screen overflow-hidden flex flex-col">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3 bg-surface-container/70 backdrop-blur-xl border border-white/10 inner-glow-top shadow-xl rounded-full mt-4 mx-auto w-[calc(100%-32px)] max-w-container-max hidden md:flex">
+<div class="flex items-center gap-4">
+<img alt="DisasterLink AI Logo" class="w-10 h-10 rounded-lg" src="https://lh3.googleusercontent.com/aida/AP1WRLuKBYzMZd9tFn55sSRBmrs6akEIUxG3xcxj5u7Oj23VY5wPZLxXuHz0x-dIhs0aIRuylTSsxmAoS6_wX3B7wZAZS0y_7eGNjFRi6YR8xYNq_uQhs7FI7sacftF6mqHx4YabnhROL48V83gSItp2MXZq9ZpLj_5m4KJUCaZe_SVtS2SOp6Q3cmJiD9gT75D-qX3xjgg4rifgILjYHgqXC4Sz4dmvSPVPMcsL8C2no29lKUk146kTZb3yug"/>
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">DisasterLink AI</span>
+</div>
+<ul class="flex gap-8">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 transition-all duration-300 px-3 py-2 rounded" href="#">Platform</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 transition-all duration-300 px-3 py-2 rounded" href="#">Communication</a></li>
+<li><a class="font-body-md text-body-md text-primary font-bold border-b-2 border-primary pb-1 px-3 py-2" href="#">Command Center</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 transition-all duration-300 px-3 py-2 rounded" href="#">How It Works</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 transition-all duration-300 px-3 py-2 rounded" href="#">Impact</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 transition-all duration-300 px-3 py-2 rounded" href="#">FAQ</a></li>
+</ul>
+<div class="flex gap-4">
+<button class="px-4 py-2 rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors">Explore Platform</button>
+<button class="px-4 py-2 rounded-full bg-primary-container text-white hover:bg-primary-container/90 transition-colors font-medium">Request Demo</button>
+</div>
+</nav>
+<!-- Side Navigation Bar -->
+<nav class="fixed left-0 top-0 bottom-0 z-40 flex flex-col py-8 bg-surface-container-low/80 backdrop-blur-2xl border-r border-white/10 shadow-2xl h-screen w-20 hover:w-64 transition-all duration-300 group overflow-hidden md:flex hidden mt-24">
+<div class="px-4 flex items-center gap-4 mb-8 whitespace-nowrap">
+<span class="material-symbols-outlined text-3xl text-primary icon-fill">admin_panel_settings</span>
+<div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="font-headline-md text-headline-md text-primary truncate">HQ Alpha</div>
+<div class="text-xs text-on-surface-variant uppercase tracking-wider">Active Ops</div>
+</div>
+</div>
+<ul class="flex flex-col gap-2 px-2 flex-grow">
+<li>
+<a class="flex items-center gap-4 p-3 rounded-lg bg-primary-container text-on-primary-container whitespace-nowrap" href="#">
+<span class="material-symbols-outlined icon-fill">radar</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium">Operations</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:bg-primary/10 transition-colors whitespace-nowrap" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium">Intelligence</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:bg-primary/10 transition-colors whitespace-nowrap" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium">Logistics</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-4 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant hover:bg-primary/10 transition-colors whitespace-nowrap" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium">Reports</span>
+</a>
+</li>
+</ul>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 rounded-lg bg-error-container text-on-error-container font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap hover:bg-red-900 transition-colors">
+<span class="material-symbols-outlined icon-fill text-xl">warning</span>
+<span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">Declare Emergency</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col md:ml-20 pt-24 pb-6 px-6 lg:px-12 gap-6 h-full">
+<!-- Dashboard Header -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
+<h1 class="font-display-lg text-display-lg text-white tracking-tight flex items-center gap-3">
+<span class="w-3 h-10 bg-primary-container rounded-sm"></span>
+                INDIA - LIVE ALERT MAP
+            </h1>
+<div class="flex flex-wrap gap-4 glass-panel px-6 py-3 rounded-full">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-red-500 pulse-dot shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div>
+<span class="font-data-label text-data-label text-on-surface-variant uppercase">Flood</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-orange-500 pulse-dot shadow-[0_0_8px_rgba(249,115,22,0.8)]"></div>
+<span class="font-data-label text-data-label text-on-surface-variant uppercase">Cyclone</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-yellow-400 pulse-dot shadow-[0_0_8px_rgba(250,204,21,0.8)]"></div>
+<span class="font-data-label text-data-label text-on-surface-variant uppercase">Earthquake</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+<span class="font-data-label text-data-label text-on-surface-variant uppercase">Shelter</span>
+</div>
+</div>
+</header>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-180px)] min-h-[600px]">
+<!-- Left Column: Map Visualization -->
+<div class="lg:col-span-8 xl:col-span-9 glass-panel rounded-lg relative overflow-hidden flex flex-col">
+<!-- Map Tools -->
+<div class="absolute top-4 right-4 z-10 flex flex-col gap-2">
+<button aria-label="Zoom In" class="w-10 h-10 glass-panel rounded-full flex items-center justify-center hover:bg-white/10 transition-colors text-white">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button aria-label="Zoom Out" class="w-10 h-10 glass-panel rounded-full flex items-center justify-center hover:bg-white/10 transition-colors text-white">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button aria-label="Recenter" class="w-10 h-10 glass-panel rounded-full flex items-center justify-center hover:bg-white/10 transition-colors text-primary mt-2">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+<!-- India Map Area (Simulated) -->
+<div class="flex-grow w-full h-full gradient-map-bg relative flex items-center justify-center">
+<!-- Map Outline Placeholder -->
+<div class="relative w-[80%] h-[90%] max-w-[800px] bg-[url('placeholder')] bg-contain bg-center bg-no-repeat opacity-40 mix-blend-screen" data-alt="A highly detailed, futuristic wireframe outline map of India rendered in neon cyan and dark blue lines over a deep navy void. The style is sci-fi holographic, with subtle grid overlays and glowing edges, fitting a high-tech military or disaster command center UI. High contrast, sleek minimalist lines, no text."></div>
+<!-- Map Markers -->
+<!-- 1. Flood Bihar (red dot) -->
+<div class="absolute top-[35%] right-[30%] flex flex-col items-center group cursor-pointer z-20">
+<div class="relative flex items-center justify-center w-4 h-4">
+<div class="pulse-ring bg-red-500/40 w-8 h-8"></div>
+<div class="w-3 h-3 bg-red-500 rounded-full shadow-[0_0_12px_rgba(239,68,68,1)] z-10 pulse-dot"></div>
+</div>
+<div class="mt-2 px-2 py-1 glass-panel rounded text-[10px] font-bold text-red-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">FLOOD: BIHAR</div>
+</div>
+<!-- 2. Cyclone Odisha Coast (orange dot) -->
+<div class="absolute top-[50%] right-[25%] flex flex-col items-center group cursor-pointer z-20">
+<div class="relative flex items-center justify-center w-4 h-4">
+<div class="pulse-ring bg-orange-500/40 w-10 h-10"></div>
+<div class="w-3 h-3 bg-orange-500 rounded-full shadow-[0_0_12px_rgba(249,115,22,1)] z-10 pulse-dot"></div>
+</div>
+<div class="mt-2 px-2 py-1 glass-panel rounded text-[10px] font-bold text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">CYCLONE: ODISHA</div>
+</div>
+<!-- 3. Earthquake Himachal (yellow dot) -->
+<div class="absolute top-[20%] right-[60%] flex flex-col items-center group cursor-pointer z-20">
+<div class="relative flex items-center justify-center w-4 h-4">
+<div class="pulse-ring bg-yellow-400/40 w-12 h-12" style="animation-duration: 1s;"></div>
+<div class="w-3.5 h-3.5 bg-yellow-400 rounded-full shadow-[0_0_15px_rgba(250,204,21,1)] z-10 pulse-dot"></div>
+</div>
+<div class="mt-2 px-2 py-1 glass-panel rounded text-[10px] font-bold text-yellow-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">QUAKE: HIMACHAL</div>
+</div>
+<!-- 4. Safe Shelter Nagpur (green dot) -->
+<div class="absolute top-[55%] right-[50%] flex flex-col items-center group cursor-pointer z-10">
+<div class="w-2.5 h-2.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+<div class="mt-2 px-2 py-1 glass-panel rounded text-[10px] font-bold text-green-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">SHELTER: NAGPUR</div>
+</div>
+<!-- 5. Rescue Team Gujarat (blue dot) -->
+<div class="absolute top-[45%] left-[25%] flex flex-col items-center group cursor-pointer z-10">
+<div class="w-2.5 h-2.5 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.8)]"></div>
+<div class="mt-2 px-2 py-1 glass-panel rounded text-[10px] font-bold text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">RESCUE: GUJARAT</div>
+</div>
+<!-- 6. Relief Camp Kolkata (pink dot) -->
+<div class="absolute top-[48%] right-[20%] flex flex-col items-center group cursor-pointer z-10">
+<div class="w-2.5 h-2.5 bg-pink-500 rounded-full shadow-[0_0_8px_rgba(236,72,153,0.8)]"></div>
+<div class="mt-2 px-2 py-1 glass-panel rounded text-[10px] font-bold text-pink-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">CAMP: KOLKATA</div>
+</div>
+<!-- 7. Cyclone Watch Andhra (orange dot) -->
+<div class="absolute top-[65%] right-[35%] flex flex-col items-center group cursor-pointer z-20">
+<div class="relative flex items-center justify-center w-4 h-4">
+<div class="pulse-ring bg-orange-500/20 w-16 h-16" style="animation-duration: 3s;"></div>
+<div class="w-2.5 h-2.5 bg-orange-400 rounded-full shadow-[0_0_8px_rgba(249,115,22,0.8)] z-10"></div>
+</div>
+<div class="mt-2 px-2 py-1 glass-panel rounded text-[10px] font-bold text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">WATCH: ANDHRA</div>
+</div>
+<!-- 8. Safe Shelter Assam (green dot) -->
+<div class="absolute top-[35%] right-[10%] flex flex-col items-center group cursor-pointer z-10">
+<div class="w-2.5 h-2.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+<div class="mt-2 px-2 py-1 glass-panel rounded text-[10px] font-bold text-green-400 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">SHELTER: ASSAM</div>
+</div>
+</div>
+<!-- Bottom Live Ticker -->
+<div class="h-10 bg-surface-container-highest/80 border-t border-white/5 flex items-center px-4 overflow-hidden">
+<div class="flex items-center gap-2 text-error font-bold text-sm min-w-max mr-4">
+<span class="material-symbols-outlined text-sm">sensors</span> LIVE FEED
+                    </div>
+<div class="text-xs font-data-label text-on-surface-variant whitespace-nowrap flex gap-8 animate-[marquee_20s_linear_infinite] hover:[animation-play-state:paused]">
+<span>[14:02:33] FLASH FLOOD WARNING ISSUED FOR BIHAR REGION.</span>
+<span>[14:00:12] CYCLONE TRACK UPDATED: LANDFALL EXPECTED ODISHA COAST 18:00 IST.</span>
+<span>[13:45:00] 5 NEW SHELTERS OPENED IN ASSAM.</span>
+<span>[13:30:45] MAGNITUDE 4.2 SEISMIC ACTIVITY DETECTED HIMACHAL PRADESH.</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Stat Cards -->
+<div class="lg:col-span-4 xl:col-span-3 flex flex-col gap-4 overflow-y-auto pr-2 pb-2 custom-scrollbar">
+<!-- Active Disasters -->
+<div class="glass-panel rounded-lg p-5 flex items-center justify-between group hover:bg-white/5 transition-colors border-l-4 border-l-red-500">
+<div class="flex flex-col">
+<span class="font-data-label text-data-label text-[#C9D6EC] uppercase tracking-wider mb-1">Active Disasters</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-4xl text-white font-bold">8</span>
+<span class="text-red-400 text-sm font-bold flex items-center"><span class="material-symbols-outlined text-sm">arrow_upward</span> 2</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/30 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-red-500 text-2xl icon-fill pulse-dot">emergency</span>
+</div>
+</div>
+<!-- Citizens Alerted -->
+<div class="glass-panel rounded-lg p-5 flex items-center justify-between group hover:bg-white/5 transition-colors border-l-4 border-l-primary-container">
+<div class="flex flex-col">
+<span class="font-data-label text-data-label text-[#C9D6EC] uppercase tracking-wider mb-1">Citizens Alerted</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-3xl text-white font-bold">124,550</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center border border-primary-container/30 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary-container text-2xl icon-fill">campaign</span>
+</div>
+</div>
+<!-- Rescue Teams Deployed -->
+<div class="glass-panel rounded-lg p-5 flex items-center justify-between group hover:bg-white/5 transition-colors border-l-4 border-l-blue-400">
+<div class="flex flex-col">
+<span class="font-data-label text-data-label text-[#C9D6EC] uppercase tracking-wider mb-1">Rescue Teams</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-3xl text-white font-bold">286</span>
+<span class="text-on-surface-variant text-xs">Active</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-blue-400/10 flex items-center justify-center border border-blue-400/30 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-blue-400 text-2xl icon-fill">groups</span>
+</div>
+</div>
+<!-- Safe Shelters -->
+<div class="glass-panel rounded-lg p-5 flex items-center justify-between group hover:bg-white/5 transition-colors border-l-4 border-l-green-500">
+<div class="flex flex-col">
+<span class="font-data-label text-data-label text-[#C9D6EC] uppercase tracking-wider mb-1">Safe Shelters</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-3xl text-white font-bold">974</span>
+<span class="text-green-400 text-sm font-bold flex items-center"><span class="material-symbols-outlined text-sm">arrow_upward</span> 12</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/30 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-green-500 text-2xl icon-fill">home</span>
+</div>
+</div>
+<!-- AI Alerts Generated -->
+<div class="glass-panel rounded-lg p-5 flex items-center justify-between group hover:bg-white/5 transition-colors border-l-4 border-l-purple-500 flex-grow relative overflow-hidden">
+<!-- Subtle animated background for AI card -->
+<div class="absolute -right-10 -bottom-10 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+<div class="flex flex-col relative z-10">
+<span class="font-data-label text-data-label text-[#C9D6EC] uppercase tracking-wider mb-1">AI Alerts Today</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-3xl text-white font-bold">3,482</span>
+</div>
+<div class="mt-2 text-xs text-purple-300 font-mono flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"></span> Analyzing Data Streams...
+                        </div>
+</div>
+<div class="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform relative z-10">
+<span class="material-symbols-outlined text-purple-400 text-2xl icon-fill">smart_toy</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<style>
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</body></html>

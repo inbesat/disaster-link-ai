@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <!-- Faint blueprint grid for the landing command-center backdrop.
+       Tiling the right + bottom edge of a 40px tile produces a full grid.
+       Rendered at ~3% opacity via the page's bg-[url(...)] opacity-[0.03]. -->
+  <g fill="none" stroke="#5B8DF6" stroke-width="1" stroke-opacity="0.6">
+    <path d="M40 0V40H0" />
+  </g>
+</svg>

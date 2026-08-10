@@ -272,6 +272,29 @@ export default function LiveMapStats() {
               Live · Demo Data
             </span>
           </div>
+
+          {/* Live feed ticker */}
+          <div className="absolute bottom-0 inset-x-0 h-8 bg-[rgba(8,20,40,0.8)] border-t border-white/[0.06] flex items-center px-4 gap-3 overflow-hidden">
+            <span className="flex items-center gap-1.5 text-[10px] text-red-400 font-bold whitespace-nowrap flex-shrink-0">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-red-400" />
+              </span>
+              LIVE FEED
+            </span>
+            <div
+              className="flex gap-10 text-[10px] text-white/40 whitespace-nowrap"
+              style={{
+                animation: "marquee 25s linear infinite",
+              }}
+            >
+              <span>[14:02:33] FLASH FLOOD WARNING ISSUED FOR BIHAR REGION.</span>
+              <span>[14:00:12] CYCLONE TRACK UPDATED: LANDFALL EXPECTED ODISHA COAST 18:00 IST.</span>
+              <span>[13:45:00] 5 NEW SHELTERS OPENED IN ASSAM.</span>
+              <span>[13:30:45] MAGNITUDE 4.2 SEISMIC ACTIVITY DETECTED HIMACHAL PRADESH.</span>
+              <span>[14:02:33] FLASH FLOOD WARNING ISSUED FOR BIHAR REGION.</span>
+            </div>
+          </div>
         </div>
       </div>
 

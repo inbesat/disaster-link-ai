@@ -550,56 +550,130 @@
    Phase 1 — Design System & Global Setup
    ===================================================================== */
 .landing-page {
-  --dl-navy: #0B1F3A;
-  --dl-navy-2: #0F2A4F;
+  --dl-navy: #0b1f3a;
+  --dl-navy-2: #0f2a4f;
   --dl-navy-3: #132f57;
-  --dl-blue: #2563EB;
-  --dl-blue-light: #5B8DF6;
-  --dl-orange: #F97316;
-  --dl-orange-light: #FDBA74;
-  --dl-white: #FFFFFF;
-  --dl-gray: #F8FAFC;
-  --dl-gray-2: #E7ECF3;
-  --dl-text-dark: #0F1B2D;
-  --dl-text-muted: #5B6B84;
-  --dl-text-on-navy: #C9D6EC;
+  --dl-blue: #2563eb;
+  --dl-blue-light: #5b8df6;
+  --dl-orange: #f97316;
+  --dl-orange-light: #fdba74;
+  --dl-white: #ffffff;
+  --dl-gray: #f8fafc;
+  --dl-gray-2: #e7ecf3;
+  --dl-text-dark: #0f1b2d;
+  --dl-text-muted: #5b6b84;
+  --dl-text-on-navy: #c9d6ec;
   --dl-radius: 18px;
   --dl-radius-sm: 12px;
-  --dl-shadow-soft: 0 10px 40px -12px rgba(11,31,58,0.18);
-  --dl-shadow-glow-blue: 0 0 0 1px rgba(37,99,235,0.25), 0 20px 60px -20px rgba(37,99,235,0.45);
-  --dl-shadow-glow-orange: 0 0 0 1px rgba(249,115,22,0.25), 0 20px 60px -20px rgba(249,115,22,0.45);
+  --dl-shadow-soft: 0 10px 40px -12px rgba(11, 31, 58, 0.18);
+  --dl-shadow-glow-blue:
+    0 0 0 1px rgba(37, 99, 235, 0.25), 0 20px 60px -20px rgba(37, 99, 235, 0.45);
+  --dl-shadow-glow-orange:
+    0 0 0 1px rgba(249, 115, 22, 0.25), 0 20px 60px -20px rgba(249, 115, 22, 0.45);
+
+  /* =====================================================================
+     PHASE 1 · CANONICAL TOKENS
+     Same values as the --dl-* set above, under the exact names specified
+     in the Phase 1 design-system spec. Scoped to .landing-page (NOT :root)
+     so they never collide with the global roadmap tokens (e.g. the app's
+     --radius-sm: 6px and --text-muted: #64748b). New landing components
+     should consume these; the --dl-* names stay for legacy surfaces.
+     ===================================================================== */
+  --navy: #0b1f3a;
+  --navy-2: #0f2a4f;
+  --navy-3: #132f57;
+  --blue: #2563eb;
+  --blue-light: #5b8df6;
+  --orange: #f97316;
+  --orange-light: #fdba74;
+  --white: #ffffff;
+  --gray: #f8fafc;
+  --gray-2: #e7ecf3;
+  --text-dark: #0f1b2d;
+  --text-muted: #5b6b84;
+  --text-on-navy: #c9d6ec;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow-soft: 0 10px 40px -12px rgba(11, 31, 58, 0.18);
+  --shadow-glow-blue:
+    0 0 0 1px rgba(37, 99, 235, 0.25), 0 20px 60px -20px rgba(37, 99, 235, 0.45);
+  --shadow-glow-orange:
+    0 0 0 1px rgba(249, 115, 22, 0.25), 0 20px 60px -20px rgba(249, 115, 22, 0.45);
+
   scroll-behavior: smooth;
 }
 
 /* Landing page keyframe animations */
 @keyframes floaty {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 @keyframes dotpulse {
-  0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
-  100% { box-shadow: 0 0 0 12px rgba(16,185,129,0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(16, 185, 129, 0);
+  }
 }
 @keyframes mpulse {
-  0% { transform: scale(0.4); opacity: 1; }
-  100% { transform: scale(2.6); opacity: 0; }
+  0% {
+    transform: scale(0.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
 }
 @keyframes orbpulse {
-  0%, 100% { box-shadow: var(--dl-shadow-glow-blue); }
-  50% { box-shadow: var(--dl-shadow-glow-orange); }
+  0%,
+  100% {
+    box-shadow: var(--dl-shadow-glow-blue);
+  }
+  50% {
+    box-shadow: var(--dl-shadow-glow-orange);
+  }
 }
 @keyframes flowdown {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(400%); }
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(400%);
+  }
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .animate-floaty {

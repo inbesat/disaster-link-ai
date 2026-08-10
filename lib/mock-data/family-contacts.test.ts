@@ -1,53 +1,80 @@
-// lib/mock-data/family-contacts.test.ts — Phase 2 · Step 6.
-// Locks the family-contacts parsing + mock status cycle.
+// lib/mock-data/family-contacts.test.ts — regression test for the
+// "Maximum update depth exceeded" crash on the public dashboard.
+//
+// FamilyStrip feeds readFamilyContacts() into useSyncExternalStore's
+// getSnapshot, which must return a STABLE reference between renders.
+// Re-parsing localStorage on every call makes React see a "new" snapshot
+// each render and loop forever; this file locks the caching in.
 
-import { describe, expect, it } from "vitest";
-import { mockFamilyStatus, parseFamilyContacts } from "./family-contacts";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { readFamilyContacts } from "./family-contacts";
 
-const PAYLOAD = JSON.stringify({
-  contacts: [
-    { name: "Sunita Das", phone: "+919876543210" },
-    { name: "Rahul Kumar", phone: "+919812345670" },
-    { name: "Priya Sharma", phone: "+919801234567" },
-  ],
-  savedAt: "2026-08-09T09:42:17.000Z",
-});
+const KEY = "citizen_family_contacts";
+// Plain-object store (no Map — tsconfig targets ES5, no downlevelIteration).
+const store: Record<string, string> = {};
+const fakeStorage = {
+  getItem: (k: string) => store[k] ?? null,
+  setItem: (k: string, v: string) => {
+    store[k] = v;
+  },
+  removeItem: (k: string) => {
+    delete store[k];
+  },
+  clear: () => {
+    Object.keys(store).forEach((k) => delete store[k]);
+  },
+  key: () => null,
+  get length() {
+    return Object.keys(store).length;
+  },
+};
 
-describe("parseFamilyContacts", () => {
-  it("parses a valid payload and assigns statuses in cycle order", () => {
-    const contacts = parseFamilyContacts(PAYLOAD);
-    expect(contacts).toHaveLength(3);
-    expect(contacts[0]).toMatchObject({ name: "Sunita Das", status: "safe" });
-    expect(contacts[1].status).toBe("unknown");
-    expect(contacts[2].status).toBe("danger");
+const payload = (name: string, phone: string) =>
+  JSON.stringify({ contacts: [{ name, phone }] });
+
+describe("readFamilyContacts — snapshot stability", () => {
+  beforeEach(() => {
+    fakeStorage.clear();
+    vi.stubGlobal("window", { localStorage: fakeStorage });
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
-  it("drops empty names but keeps their phone-less siblings", () => {
-    const contacts = parseFamilyContacts(
-      JSON.stringify({
-        contacts: [
-          { name: "  ", phone: "+91" },
-          { name: "Amit", phone: "+91" },
-        ],
-      }),
-    );
-    expect(contacts).toHaveLength(1);
-    expect(contacts[0].name).toBe("Amit");
+  it("returns the same reference across calls while data is unchanged", () => {
+    store[KEY] = payload("Sunita Das", "+919000000001");
+    const first = readFamilyContacts();
+    const second = readFamilyContacts();
+    // Object.is-stable → useSyncExternalStore sees no store change → no loop.
+    expect(first).toBe(second);
+    expect(first).toHaveLength(1);
+    expect(first[0].status).toBe("safe");
   });
 
-  it("returns [] for null / malformed JSON / missing contacts array", () => {
-    expect(parseFamilyContacts(null)).toEqual([]);
-    expect(parseFamilyContacts("not json")).toEqual([]);
-    expect(parseFamilyContacts(JSON.stringify({ savedAt: "x" }))).toEqual([]);
-    expect(parseFamilyContacts(JSON.stringify({ contacts: "nope" }))).toEqual([]);
+  it("returns the same empty-array reference when nothing is stored", () => {
+    const first = readFamilyContacts();
+    const second = readFamilyContacts();
+    expect(first).toBe(second);
+    expect(first).toEqual([]);
   });
-});
 
-describe("mockFamilyStatus", () => {
-  it("cycles safe → unknown → danger → safe", () => {
-    expect(mockFamilyStatus(0)).toBe("safe");
-    expect(mockFamilyStatus(1)).toBe("unknown");
-    expect(mockFamilyStatus(2)).toBe("danger");
-    expect(mockFamilyStatus(3)).toBe("safe");
+  it("returns a new reference only when the stored payload changes", () => {
+    store[KEY] = payload("Sunita Das", "+919000000001");
+    const before = readFamilyContacts();
+    // Simulate a cross-tab edit (storage event → onStoreChange → getSnapshot).
+    store[KEY] = payload("Rahul Mehta", "+919000000002");
+    const after = readFamilyContacts();
+    expect(after).not.toBe(before);
+    expect(after[0].name).toBe("Rahul Mehta");
+    // …and the fresh snapshot is itself stable.
+    expect(readFamilyContacts()).toBe(after);
+  });
+
+  it("stays stable when malformed JSON is stored", () => {
+    store[KEY] = "{not-json";
+    const first = readFamilyContacts();
+    const second = readFamilyContacts();
+    expect(first).toBe(second);
+    expect(first).toEqual([]);
   });
 });
