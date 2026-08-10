@@ -48,3 +48,4 @@ ml_service/*.pid
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+"opencode.json"
