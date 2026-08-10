@@ -15,6 +15,7 @@ import FamilyStrip from "@/components/public/FamilyStrip";
 import NearbySheltersList from "@/components/public/NearbySheltersList";
 import PullToRefresh from "@/components/public/PullToRefresh";
 import SafetyOverview from "@/components/public/SafetyOverview";
+import NearestHelpCard from "@/components/public/sos/NearestHelpCard";
 
 // ---------------------------------------------------------------------
 // app/public/dashboard/page.tsx — Phase 2 · Step 1 · Mobile-first
@@ -117,6 +118,12 @@ export default function PublicDashboardPage() {
             contextual action → 3-day forecast (Phase 2 · Steps 2–5) */}
         <section className="mt-8">
           <SafetyOverview />
+        </section>
+
+        {/* Phase 5 · Step 6 — "Help Nearby" auto-finder. Client island:
+            renders nothing unless an SOS is active, so it's safe here. */}
+        <section className="mt-8">
+          <NearestHelpCard />
         </section>
 
         {/* Family safety strip — avatars with status dots, tap to nudge

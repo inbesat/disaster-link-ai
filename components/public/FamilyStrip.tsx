@@ -26,6 +26,7 @@ import { Check, PhoneCall, X } from "lucide-react";
 import IconButton from "@/components/ui/IconButton";
 import { showToast } from "@/components/ui/Toast";
 import {
+  familyInitials,
   readFamilyContacts,
   type FamilyContactStatus,
   type FamilyContactWithStatus,
@@ -44,17 +45,6 @@ const STATUS_DOT: Record<
   unknown: { dot: "bg-severity-amber-500", label: "Unknown" },
   danger: { dot: "bg-severity-red-500", label: "In danger", pulse: true },
 };
-
-/** Initials from a name — up to 2 letters, uppercase. */
-function initials(name: string): string {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0] ?? "")
-    .join("")
-    .toUpperCase();
-}
 
 /** Subscribe to cross-tab family-circle changes (storage events). */
 function subscribe(onStoreChange: () => void): () => void {
@@ -145,7 +135,7 @@ export function FamilyStrip() {
                 {/* Avatar + status dot */}
                 <span className="relative">
                   <span className="flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-gradient-to-br from-[var(--dl-navy-3)] to-[var(--dl-navy-2)] text-sm font-bold text-white shadow-[var(--dl-shadow-soft)] transition group-hover:border-[var(--dl-orange)]/50 group-hover:ring-2 group-hover:ring-[var(--dl-orange)]/30">
-                    {initials(member.name)}
+                    {familyInitials(member.name)}
                   </span>
                   <span
                     aria-hidden="true"
@@ -190,7 +180,7 @@ export function FamilyStrip() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <span className="relative flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-gradient-to-br from-[var(--dl-navy-3)] to-[var(--dl-navy)] text-sm font-bold text-white">
-                    {initials(selected.name)}
+                    {familyInitials(selected.name)}
                   </span>
                   <div>
                     <h2 className="text-base font-bold text-white">{selected.name}</h2>

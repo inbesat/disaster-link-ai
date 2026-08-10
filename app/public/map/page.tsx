@@ -1,18 +1,21 @@
 "use client";
 
 // ---------------------------------------------------------------------
-// app/public/map/page.tsx — Phase 4 · Steps 1–2 · "Where do I go?"
+// app/public/map/page.tsx — Phase 4 · Steps 1–2 + 10 · "Where do I go?"
 //
 // Full-screen minimalist citizen map. The map owns the whole viewport
 // (h-[100dvh]); a floating gradient header gives the back affordance and
 // title, and the fixed BottomNav rides on top with safe-area padding.
-// PublicMap is loaded client-only (maplibre-gl touches `window`).
+// PublicMap is loaded client-only (maplibre-gl touches `window`). When
+// the connection drops, the Step 10 offline-cache badge appears at the
+// top-left so citizens know the pre-downloaded tiles still work.
 // ---------------------------------------------------------------------
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ArrowLeft, Map as MapIcon } from "lucide-react";
 import BottomNav from "@/components/public/BottomNav";
+import OfflineMapBadge from "@/components/public/map/OfflineMapBadge";
 
 const PublicMap = dynamic(() => import("@/components/public/map/PublicMap"), {
   ssr: false,
@@ -65,6 +68,10 @@ export default function PublicMapPage() {
           </div>
         </div>
       </header>
+
+      {/* Step 10 — offline-map badge, top-left below the header (renders
+          only while the network is down; hydration-safe). */}
+      <OfflineMapBadge />
 
       {/* Citizen bottom nav — Map tab lights up via route matching */}
       <BottomNav />

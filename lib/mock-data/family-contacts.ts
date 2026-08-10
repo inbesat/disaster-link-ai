@@ -46,6 +46,18 @@ export function mockFamilyStatus(index: number): FamilyContactStatus {
   return MOCK_STATUS_CYCLE[index % MOCK_STATUS_CYCLE.length];
 }
 
+/** Initials from a name — up to 2 letters, uppercase. Shared by the
+ * FamilyStrip and the Find-My-Family map layer (no photos in the demo). */
+export function familyInitials(name: string): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0] ?? "")
+    .join("")
+    .toUpperCase();
+}
+
 /**
  * Parse a raw saved-family payload into status-annotated contacts.
  * Returns [] for anything malformed or missing.

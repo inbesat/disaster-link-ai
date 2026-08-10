@@ -153,6 +153,12 @@ export const CITIZEN_DEMO_ALERT_EVENT = "drip:citizen-demo-alert";
 /** Open the critical takeover overlay (no payload needed). */
 export const CITIZEN_CRITICAL_ALERT_EVENT = "drip:citizen-critical-alert";
 
+/** Ask the citizen the periodic "are you still safe?" check-in (Step 8). */
+export const CITIZEN_SAFETY_NUDGE_EVENT = "drip:citizen-safety-nudge";
+
+/** Open the SOS modal via the simulated shake (Step 9–10). */
+export const CITIZEN_SHAKE_SOS_EVENT = "drip:citizen-shake-sos";
+
 /** localStorage key for the "I am Safe" status (Phase 3 · Step 9). */
 export const SAFE_STATUS_KEY = "drip:i-am-safe";
 
@@ -173,6 +179,45 @@ export function writeSafeStatus(): void {
     window.localStorage.setItem(SAFE_STATUS_KEY, "1");
   } catch {
     // storage unavailable — status just won't persist
+  }
+}
+
+// --- Active SOS state (Phase 5 · Step 4) --------------------------------
+// Once a rescue/medical SOS is confirmed, the app enters Emergency Mode:
+// a persistent red banner on every page until the citizen cancels it. The
+// flag lives in localStorage so a reload mid-emergency keeps the banner
+// ("help is on the way" must survive a refresh). Same guarded helpers as
+// the safe-status above.
+
+export const SOS_ACTIVE_KEY = "drip:sos-active";
+
+/** SSR-safe read — true while an SOS is active (Emergency Mode). */
+export function readSosActive(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(SOS_ACTIVE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+/** Persist the active SOS (guarded, never throws). */
+export function writeSosActive(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(SOS_ACTIVE_KEY, "1");
+  } catch {
+    // storage unavailable — Emergency Mode just won't survive a reload
+  }
+}
+
+/** Clear the active SOS (cancel). Guarded, never throws. */
+export function clearSosActive(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(SOS_ACTIVE_KEY);
+  } catch {
+    // storage unavailable — nothing to clear
   }
 }
 

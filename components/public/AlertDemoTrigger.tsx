@@ -6,12 +6,16 @@
 //
 // A small semi-transparent \"Dev Tools\" button fixed to the bottom-left
 // of every public page (mounted in app/public/layout.tsx). It opens a
-// tiny modal with the two judge triggers:
+// tiny modal with the four judge triggers:
 //
 //   • \"Simulate Official Alert\" — dispatches drip:citizen-demo-alert
 //     with a fresh official alert; the alerts page appends it to the feed.
 //   • \"Simulate CRITICAL Overlay\" — dispatches drip:citizen-critical-alert;
 //     the layout-level PublicAlertHost opens the CriticalAlertOverlay.
+//   • "Trigger Family Safety Nudge" — dispatches drip:citizen-safety-nudge;
+//     SafetyNudge shows the "Are you still safe?" check-in.
+//   • "Trigger Shake-to-SOS Event" — dispatches drip:citizen-shake-sos;
+//     ShakeToSOSHost opens the emergency SOS modal (no shaking required).
 //
 // The window-event architecture (same as useDemoSimulation's
 // drip:demo-sim:* events) means the triggers work from ANY public page,
@@ -20,12 +24,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
-import { FlaskConical, Siren, Sparkles, X } from "lucide-react";
+import { BellRing, FlaskConical, Siren, Sparkles, Vibrate, X } from "lucide-react";
 import IconButton from "@/components/ui/IconButton";
 import { showToast } from "@/components/ui/Toast";
 import {
   CITIZEN_CRITICAL_ALERT_EVENT,
   CITIZEN_DEMO_ALERT_EVENT,
+  CITIZEN_SAFETY_NUDGE_EVENT,
+  CITIZEN_SHAKE_SOS_EVENT,
   createSimulatedOfficialAlert,
 } from "@/lib/mock-data/public-alerts";
 
@@ -75,6 +81,24 @@ export function AlertDemoTrigger() {
     showToast("warning", {
       title: "Critical overlay triggered",
       description: "The full-screen evacuation takeover is now showing.",
+    });
+  };
+
+  const simulateNudge = () => {
+    window.dispatchEvent(new CustomEvent(CITIZEN_SAFETY_NUDGE_EVENT));
+    setOpen(false);
+    showToast("info", {
+      title: "Family safety check-in triggered",
+      description: "The 'Are you still safe?' nudge is now showing.",
+    });
+  };
+
+  const simulateShake = () => {
+    window.dispatchEvent(new CustomEvent(CITIZEN_SHAKE_SOS_EVENT));
+    setOpen(false);
+    showToast("warning", {
+      title: "Shake-to-SOS triggered",
+      description: "The emergency SOS menu just opened.",
     });
   };
 
@@ -149,6 +173,22 @@ export function AlertDemoTrigger() {
                 >
                   <Siren aria-hidden="true" className="h-4 w-4" />
                   Simulate CRITICAL Overlay
+                </button>
+                <button
+                  type="button"
+                  onClick={simulateNudge}
+                  className="flex w-full items-center gap-2.5 rounded-[var(--dl-radius-sm)] border border-severity-amber-500/40 bg-severity-amber-500/15 px-4 py-3 text-sm font-bold text-severity-amber-300 transition hover:bg-severity-amber-500/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-amber-400"
+                >
+                  <BellRing aria-hidden="true" className="h-4 w-4" />
+                  Trigger Family Safety Nudge
+                </button>
+                <button
+                  type="button"
+                  onClick={simulateShake}
+                  className="flex w-full items-center gap-2.5 rounded-[var(--dl-radius-sm)] border border-violet-500/40 bg-violet-500/15 px-4 py-3 text-sm font-bold text-violet-300 transition hover:bg-violet-500/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400"
+                >
+                  <Vibrate aria-hidden="true" className="h-4 w-4" />
+                  Trigger Shake-to-SOS Event
                 </button>
               </div>
             </motion.div>

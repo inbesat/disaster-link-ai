@@ -10,13 +10,17 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   ALERT_FILTERS,
   PUBLIC_ALERTS,
+  SOS_ACTIVE_KEY,
   cacheAlerts,
+  clearSosActive,
   createSimulatedOfficialAlert,
   filterAlertsByScope,
   formatCachedAt,
   isPublicAlert,
   readCachedAlerts,
+  readSosActive,
   relativeTime,
+  writeSosActive,
   type PublicAlertScope,
   type PublicAlertSeverity,
   type PublicAlertType,
@@ -152,6 +156,36 @@ describe("offline cache (Phase 3 · Step 7)", () => {
   it("returns null when nothing was cached yet", () => {
     stubLocalStorage();
     expect(readCachedAlerts().alerts).toBeNull();
+  });
+});
+
+describe("SOS-active state (Phase 5 · Step 4)", () => {
+  it("defaults to inactive", () => {
+    stubLocalStorage();
+    expect(readSosActive()).toBe(false);
+  });
+
+  it("persists activation and reads it back", () => {
+    stubLocalStorage();
+    writeSosActive();
+    expect(readSosActive()).toBe(true);
+    // Written under the documented key with the "1" convention.
+    const win = window as unknown as { localStorage: Storage };
+    expect(win.localStorage.getItem(SOS_ACTIVE_KEY)).toBe("1");
+  });
+
+  it("clears activation (cancel)", () => {
+    stubLocalStorage();
+    writeSosActive();
+    clearSosActive();
+    expect(readSosActive()).toBe(false);
+  });
+
+  it("is SSR-safe without a window", () => {
+    vi.unstubAllGlobals();
+    expect(readSosActive()).toBe(false);
+    writeSosActive(); // no-op, must not throw
+    clearSosActive(); // no-op, must not throw
   });
 });
 

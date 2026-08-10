@@ -7,7 +7,7 @@
 // each render and loop forever; this file locks the caching in.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { readFamilyContacts } from "./family-contacts";
+import { familyInitials, readFamilyContacts } from "./family-contacts";
 
 const KEY = "citizen_family_contacts";
 // Plain-object store (no Map — tsconfig targets ES5, no downlevelIteration).
@@ -76,5 +76,18 @@ describe("readFamilyContacts — snapshot stability", () => {
     const second = readFamilyContacts();
     expect(first).toBe(second);
     expect(first).toEqual([]);
+  });
+});
+
+describe("familyInitials", () => {
+  it("takes up to two uppercase initials from a name", () => {
+    expect(familyInitials("Sunita Das")).toBe("SD");
+    expect(familyInitials("Meera")).toBe("M");
+    expect(familyInitials("  rahul   mehta ")).toBe("RM");
+  });
+
+  it("never throws on empty or whitespace names", () => {
+    expect(familyInitials("")).toBe("");
+    expect(familyInitials("   ")).toBe("");
   });
 });
