@@ -9,11 +9,14 @@
 // guarded against browsers without the Vibration API (desktop) and any
 // platform that throws on unsupported patterns.
 //
-//   • triggerLightHaptic()  → navigator.vibrate(15)  — every nav tap/swipe
-//   • triggerHeavyHaptic()  → navigator.vibrate([50, 50, 50]) — SOS pattern
+//   • triggerLightHaptic()    → navigator.vibrate(15) — every nav tap/swipe
+//   • triggerHeavyHaptic()    → navigator.vibrate([50, 50, 50]) — SOS pattern
+//   • triggerCriticalHaptic() → navigator.vibrate([500, 200, 500]) —
+//     critical-alert takeover (Phase 3 · Step 3): long buzz, pause, long
+//     buzz so a ringing phone in a pocket actually gets picked up.
 //
-// useHaptics() returns both for components that prefer destructuring from
-// a hook; the module-level functions read the same low-level guard.
+// useHaptics() returns all three for components that prefer destructuring
+// from a hook; the module-level functions read the same low-level guard.
 // ---------------------------------------------------------------------
 
 const canVibrate = (): boolean => typeof window !== "undefined" && "vibrate" in navigator;
@@ -38,9 +41,19 @@ export function triggerHeavyHaptic(): void {
   }
 }
 
+/** Critical-alert pattern (500ms on, 200ms off, 500ms on). */
+export function triggerCriticalHaptic(): void {
+  if (!canVibrate()) return;
+  try {
+    navigator.vibrate([500, 200, 500]);
+  } catch {
+    /* unsupported platform */
+  }
+}
+
 /** Hook form — same guarded triggers, returned for spread/destructure use. */
 export function useHaptics() {
-  return { triggerLightHaptic, triggerHeavyHaptic };
+  return { triggerLightHaptic, triggerHeavyHaptic, triggerCriticalHaptic };
 }
 
 export default useHaptics;

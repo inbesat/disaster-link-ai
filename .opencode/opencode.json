@@ -1,0 +1,7 @@
+{
+  "plugin": [
+    "lucide-react",
+    "framer-motion",
+    "@radix-ui/colors"
+  ]
+}

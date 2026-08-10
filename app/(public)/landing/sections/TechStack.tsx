@@ -2,6 +2,7 @@
 
 import ScrollReveal from "@/components/landing/ui/ScrollReveal";
 import SectionHead from "@/components/landing/ui/SectionHead";
+import TiltCard from "@/components/landing/ui/TiltCard";
 import {
   Brain,
   Globe,
@@ -39,12 +40,14 @@ export default function TechStack() {
           const Icon = tech.icon;
           return (
             <ScrollReveal key={i} delay={i * 0.05} animation="fade-up">
-              <div className="bg-white border border-[#E7ECF3] rounded-[16px] p-6 text-center hover:-translate-y-1.5 hover:shadow-[0_0_0_1px_rgba(249,115,22,0.25),0_20px_60px_-20px_rgba(249,115,22,0.45)] transition-all duration-300">
-                <div className="w-14 h-14 rounded-[14px] bg-[rgba(11,31,58,0.06)] flex items-center justify-center mx-auto mb-4">
-                  <Icon className="text-[#0B1F3A]" size={24} />
+              <TiltCard maxTilt={9} perspective={900} glare={false} className="h-full rounded-[16px]">
+                <div className="bg-white border border-[#E7ECF3] rounded-[16px] p-6 text-center hover:-translate-y-1.5 hover:shadow-[0_0_0_1px_rgba(249,115,22,0.25),0_20px_60px_-20px_rgba(249,115,22,0.45)] hover:border-[#F97316]/30 transition-all duration-300 h-full">
+                  <div className="w-14 h-14 rounded-[14px] bg-[rgba(11,31,58,0.06)] flex items-center justify-center mx-auto mb-4">
+                    <Icon className="text-[#0B1F3A]" size={24} />
+                  </div>
+                  <h3 className="text-sm font-semibold text-[#0F1B2D]">{tech.title}</h3>
                 </div>
-                <h3 className="text-sm font-semibold text-[#0F1B2D]">{tech.title}</h3>
-              </div>
+              </TiltCard>
             </ScrollReveal>
           );
         })}

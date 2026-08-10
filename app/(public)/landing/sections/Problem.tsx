@@ -3,6 +3,7 @@
 import { AlertCircle, LayoutGrid, Clock, AlertTriangle } from "lucide-react";
 import ScrollReveal from "@/components/landing/ui/ScrollReveal";
 import SectionHead from "@/components/landing/ui/SectionHead";
+import TiltCard from "@/components/landing/ui/TiltCard";
 
 export default function Problem() {
   const problems = [
@@ -42,13 +43,15 @@ export default function Problem() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {problems.map((item, i) => (
             <ScrollReveal key={i} delay={i * 0.08}>
-              <div className="bg-[#F8FAFC] border border-[#E7ECF3] rounded-[18px] p-7 hover:-translate-y-1.5 hover:shadow-[0_10px_40px_-12px_rgba(11,31,58,0.18)] transition-all duration-300 cursor-default group h-full">
-                <div className="w-[52px] h-[52px] rounded-[14px] bg-[#F97316]/10 flex items-center justify-center mb-5">
-                  <item.icon className="text-[#F97316] w-6 h-6" />
+              <TiltCard maxTilt={7} perspective={1000} className="h-full rounded-[18px]">
+                <div className="bg-[#F8FAFC] border border-[#E7ECF3] rounded-[18px] p-7 hover:-translate-y-1.5 hover:border-[#F97316]/25 hover:shadow-[0_10px_40px_-12px_rgba(11,31,58,0.18)] transition-all duration-300 cursor-default group h-full">
+                  <div className="w-[52px] h-[52px] rounded-[14px] bg-[#F97316]/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <item.icon className="text-[#F97316] w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-bold text-[#0F1B2D] mb-2">{item.title}</h3>
+                  <p className="text-sm text-[#5B6B84] leading-relaxed">{item.desc}</p>
                 </div>
-                <h3 className="text-lg font-bold text-[#0F1B2D] mb-2">{item.title}</h3>
-                <p className="text-sm text-[#5B6B84] leading-relaxed">{item.desc}</p>
-              </div>
+              </TiltCard>
             </ScrollReveal>
           ))}
         </div>

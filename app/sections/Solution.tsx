@@ -1,5 +1,6 @@
 import SectionHead from "@/components/ui/SectionHead";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import TiltCard from "@/components/landing/ui/TiltCard";
 
 const PILLARS = [
   {
@@ -59,24 +60,33 @@ export default function Solution() {
             </div>
           </ScrollReveal>
 
-          <ScrollReveal delay={0.2}>
-            <div className="relative rounded-[22px] overflow-hidden h-[420px] md:h-[500px] bg-[#0B1F3A]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://images.unsplash.com/photo-1584285405429-136bf988bfe0?w=1200&q=80"
-                alt="Emergency Command Center"
-                className="w-full h-full object-cover opacity-60"
-              />
-              <div className="absolute bottom-6 left-6 right-6 bg-[rgba(11,31,58,0.75)] backdrop-blur-[10px] rounded-[14px] p-4 flex items-center gap-3">
-                <div className="relative flex h-2.5 w-2.5 shrink-0">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+          <ScrollReveal delay={0.2} className="relative [perspective:1200px]">
+            <TiltCard
+              maxTilt={6}
+              perspective={1200}
+              glare={false}
+              className="rounded-[22px]"
+            >
+              <div className="relative rounded-[22px] overflow-hidden h-[420px] md:h-[500px] bg-[#0B1F3A]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://images.unsplash.com/photo-1584285405429-136bf988bfe0?w=1200&q=80"
+                  alt="Emergency Command Center"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover opacity-60"
+                />
+                <div className="absolute bottom-6 left-6 right-6 bg-[rgba(11,31,58,0.75)] backdrop-blur-[10px] rounded-[14px] p-4 flex items-center gap-3">
+                  <div className="relative flex h-2.5 w-2.5 shrink-0">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                  </div>
+                  <span className="text-white text-sm font-medium">
+                    Real-time coordination across every response agency
+                  </span>
                 </div>
-                <span className="text-white text-sm font-medium">
-                  Real-time coordination across every response agency
-                </span>
               </div>
-            </div>
+            </TiltCard>
           </ScrollReveal>
         </div>
       </div>

@@ -1,8 +1,10 @@
 "use client";
 
 import SectionHead from "@/components/landing/ui/SectionHead";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function Channels() {
+  const reduce = useReducedMotion();
   const channels = [
     { emoji: "📻", label: "FM Radio" },
     { emoji: "📺", label: "Television" },
@@ -59,9 +61,24 @@ export default function Channels() {
       </div>
 
       {/* Desktop Hub Visualization (Hidden on Mobile) */}
-      <div className="hidden lg:block relative mx-auto mt-20 w-full max-w-2xl aspect-square z-10">
+      <div className="hidden lg:block relative mx-auto mt-20 w-full max-w-2xl aspect-square z-10 [perspective:1400px]">
+        {/* Slow-rotating dashed rings (Apple-style ambient motion) */}
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            transformStyle: "preserve-3d",
+            transform: "rotateX(48deg)",
+          }}
+          animate={reduce ? {} : { rotate: 360 }}
+          transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
+        >
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full border border-dashed border-white/15" />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full border border-dashed border-white/10" />
+        </motion.div>
+
         {/* Center Circle */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] rounded-full bg-gradient-to-br from-[#2563EB] to-[#F97316] flex flex-col items-center justify-center text-center z-10 shadow-xl">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] rounded-full bg-gradient-to-br from-[#2563EB] to-[#F97316] flex flex-col items-center justify-center text-center z-10 shadow-[0_0_60px_rgba(37,99,235,0.45)]">
           <span className="text-white text-sm font-bold leading-tight">
             AI Broadcast
             <br />
@@ -72,11 +89,9 @@ export default function Channels() {
           </span>
         </div>
 
-        {/* Ring 1 */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full border border-dashed border-white/15" />
-
-        {/* Ring 2 */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full border border-dashed border-white/10" />
+        {/* Static physical rings (kept for readability) */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full border border-white/5" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full border border-white/5" />
 
         {/* Nodes */}
         {channels.map((channel, i) => {

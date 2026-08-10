@@ -19,6 +19,26 @@ const FAIL_RESPONSE = new Response(JSON.stringify({ error: "no credits" }), {
 
 type OpenRouterModule = typeof import("./openrouter");
 
+/** Every provider key the resolver reads. Real .env / shell values are blanked
+ * before each test — `vi.unstubAllEnvs()` restores them, so without this the
+ * suite breaks on any machine that actually has keys set (verified Aug 10,
+ * 2026: 4 failures from leaked GROQ/OPENROUTER/BLUESMINDS keys). */
+const PROVIDER_KEY_ENVS = [
+  "GROQ_API_KEY",
+  "GROQ_API_KEY_BACKUP",
+  "OPENROUTER_API_KEY",
+  "OPENROUTER_API_KEY_BACKUP",
+  "BLUESMINDS_API_KEY",
+] as const;
+
+/** Blank every provider key — `hasKey("")` is false, so an unstubbed test
+ * sees a clean environment no matter what the host machine exports. */
+function clearProviderKeys(): void {
+  for (const key of PROVIDER_KEY_ENVS) {
+    vi.stubEnv(key, "");
+  }
+}
+
 /** Fresh module instance so the module-level cache resets between tests. */
 async function freshModule(): Promise<OpenRouterModule> {
   vi.resetModules();
@@ -29,6 +49,7 @@ describe("hasAnyAiProviderConfigured", () => {
   beforeEach(() => {
     vi.unstubAllEnvs();
     vi.unstubAllGlobals();
+    clearProviderKeys();
   });
 
   it("returns false when no provider keys are set", async () => {
@@ -59,6 +80,7 @@ describe("resolveEmergencyPlannerModel", () => {
   beforeEach(() => {
     vi.unstubAllEnvs();
     vi.unstubAllGlobals();
+    clearProviderKeys();
   });
 
   afterEach(() => {

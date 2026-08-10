@@ -162,6 +162,44 @@
     --border-strong-rgb: 44 63 109;
     --background-rgb: 10 15 26;
     --foreground-rgb: 241 245 249;
+
+    /* ---------------------------------------------------------------
+       SHADCN/UI SEMANTIC TOKENS (dark-first) — aliased to the roadmap
+       palette so shadcn components re-theme with the app. RGB channel
+       variants follow the same `rgb(var(--x-rgb) / <alpha-value>)`
+       pattern for working opacity modifiers (bg-primary/90, …).
+       --------------------------------------------------------------- */
+    --card: #0f1d38;
+    --card-foreground: #f1f5f9;
+    --popover: #17294d;
+    --popover-foreground: #f1f5f9;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --secondary: #1e293b;
+    --secondary-foreground: #f1f5f9;
+    --muted: #111827;
+    --muted-foreground: #64748b;
+    --accent-foreground: #f1f5f9;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --input: #1e3056;
+    --ring: #3b82f6;
+
+    --card-rgb: 15 29 56;
+    --card-foreground-rgb: 241 245 249;
+    --popover-rgb: 23 41 77;
+    --popover-foreground-rgb: 241 245 249;
+    --primary-rgb: 59 130 246;
+    --primary-foreground-rgb: 255 255 255;
+    --secondary-rgb: 30 41 59;
+    --secondary-foreground-rgb: 241 245 249;
+    --muted-rgb: 17 24 39;
+    --muted-foreground-rgb: 100 116 139;
+    --accent-foreground-rgb: 241 245 249;
+    --destructive-rgb: 239 68 68;
+    --destructive-foreground-rgb: 255 255 255;
+    --input-rgb: 30 48 86;
+    --ring-rgb: 59 130 246;
   }
 
   /*
@@ -243,6 +281,39 @@
     --border-strong-rgb: 180 195 219;
     --background-rgb: 242 246 252;
     --foreground-rgb: 16 27 46;
+
+    /* SHADCN/UI SEMANTIC TOKENS (light "day ops") */
+    --card: #ffffff;
+    --card-foreground: #101b2e;
+    --popover: #ffffff;
+    --popover-foreground: #101b2e;
+    --primary: #2563eb;
+    --primary-foreground: #ffffff;
+    --secondary: #e9eff8;
+    --secondary-foreground: #101b2e;
+    --muted: #e9eff8;
+    --muted-foreground: #64748b;
+    --accent-foreground: #101b2e;
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --input: #d4deef;
+    --ring: #2563eb;
+
+    --card-rgb: 255 255 255;
+    --card-foreground-rgb: 16 27 46;
+    --popover-rgb: 255 255 255;
+    --popover-foreground-rgb: 16 27 46;
+    --primary-rgb: 37 99 235;
+    --primary-foreground-rgb: 255 255 255;
+    --secondary-rgb: 233 239 248;
+    --secondary-foreground-rgb: 16 27 46;
+    --muted-rgb: 233 239 248;
+    --muted-foreground-rgb: 100 116 139;
+    --accent-foreground-rgb: 16 27 46;
+    --destructive-rgb: 220 38 38;
+    --destructive-foreground-rgb: 255 255 255;
+    --input-rgb: 212 222 239;
+    --ring-rgb: 37 99 235;
 
     color-scheme: light;
   }
@@ -679,6 +750,9 @@
 .animate-floaty {
   animation: floaty 5s ease-in-out infinite;
 }
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
 .animate-dotpulse {
   animation: dotpulse 1.6s infinite;
 }
@@ -705,4 +779,22 @@
 .landing-page h3,
 .landing-page h4 {
   font-family: var(--font-display), var(--font-sans), sans-serif;
+}
+
+/* Landing page keyframe animations — disable under reduced motion. All CSS
+   driven loops (floaty chips, pulse rings, marquee ticker, flowing pipeline
+   dots) use one of these classes; honoring prefers-reduced-motion here makes
+   the transitions instant so no element keeps looping. The Framer Motion
+   components (ScrollReveal, Hero reveals, count-up) already gate on
+   useReducedMotion — this block covers the plain-CSS utilities. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-floaty,
+  .animate-marquee,
+  .animate-dotpulse,
+  .animate-mpulse,
+  .animate-orbpulse,
+  .animate-flowdown,
+  .animate-shimmer {
+    animation: none;
+  }
 }

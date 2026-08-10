@@ -283,10 +283,7 @@ export default function LiveMapStats() {
               LIVE FEED
             </span>
             <div
-              className="flex gap-10 text-[10px] text-white/40 whitespace-nowrap"
-              style={{
-                animation: "marquee 25s linear infinite",
-              }}
+              className="animate-marquee flex gap-10 text-[10px] text-white/40 whitespace-nowrap"
             >
               <span>[14:02:33] FLASH FLOOD WARNING ISSUED FOR BIHAR REGION.</span>
               <span>[14:00:12] CYCLONE TRACK UPDATED: LANDFALL EXPECTED ODISHA COAST 18:00 IST.</span>

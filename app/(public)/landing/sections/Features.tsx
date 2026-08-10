@@ -2,6 +2,7 @@
 
 import ScrollReveal from "@/components/landing/ui/ScrollReveal";
 import SectionHead from "@/components/landing/ui/SectionHead";
+import TiltCard from "@/components/landing/ui/TiltCard";
 
 type GradientType = "blue" | "orange" | "navy";
 
@@ -100,7 +101,7 @@ export default function Features() {
   };
 
   return (
-    <section className="bg-white py-28">
+    <section className="bg-white py-28" id="features">
       <SectionHead
         eyebrow="AI Features"
         eyebrowVariant="blue"
@@ -115,23 +116,30 @@ export default function Features() {
             const delay = Math.min(i * 0.06, 0.36);
             return (
               <ScrollReveal key={i} delay={delay}>
-                <div className="bg-white border border-[#E7ECF3] rounded-[18px] p-7 relative overflow-hidden group hover:-translate-y-2 hover:shadow-[0_0_0_1px_rgba(37,99,235,0.25),0_20px_60px_-20px_rgba(37,99,235,0.45)] transition-all duration-300 h-full">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#2563EB]/5 to-[#F97316]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                <TiltCard
+                  maxTilt={6}
+                  perspective={1000}
+                  className="h-full rounded-[18px]"
+                >
+                  <div className="bg-white border border-[#E7ECF3] rounded-[18px] p-7 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(37,99,235,0.25),0_20px_60px_-20px_rgba(37,99,235,0.45)] hover:border-[#2563EB]/30 transition-all duration-300 h-full">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#2563EB]/5 to-[#F97316]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                  <div
-                    className={`w-[52px] h-[52px] rounded-[14px] flex items-center justify-center text-[24px] mb-5 ${getBadgeGradient(feature.gradient)} relative z-10`}
-                  >
-                    {feature.emoji}
+                    <div
+                      className={`w-[52px] h-[52px] rounded-[14px] flex items-center justify-center text-[24px] mb-5 shadow-sm group-hover:scale-110 transition-transform duration-300 ${getBadgeGradient(feature.gradient)} relative z-10`}
+                      style={{ transformStyle: "preserve-3d" }}
+                    >
+                      {feature.emoji}
+                    </div>
+
+                    <h3 className="text-lg font-bold text-[#0F1B2D] mb-2 relative z-10">
+                      {feature.title}
+                    </h3>
+
+                    <p className="text-sm text-[#5B6B84] leading-relaxed relative z-10">
+                      {feature.desc}
+                    </p>
                   </div>
-
-                  <h3 className="text-lg font-bold text-[#0F1B2D] mb-2 relative z-10">
-                    {feature.title}
-                  </h3>
-
-                  <p className="text-sm text-[#5B6B84] leading-relaxed relative z-10">
-                    {feature.desc}
-                  </p>
-                </div>
+                </TiltCard>
               </ScrollReveal>
             );
           })}

@@ -1,32 +1,35 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Shield, Menu, X, ArrowRight } from "lucide-react";
-import { motion, AnimatePresence, useReducedMotion, type Variants } from "framer-motion";
+import {
+  Shield,
+  Menu,
+  X,
+  ArrowRight,
+  ChevronRight,
+  Satellite,
+  Megaphone,
+  Cpu,
+  Workflow,
+  TrendingUp,
+  HelpCircle,
+} from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 const NAV_LINKS = [
-  { label: "Platform", href: "#platform" },
-  { label: "Communication", href: "#communication" },
-  { label: "Command Center", href: "#command-center" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Impact", href: "#impact" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Platform", href: "#platform", icon: Cpu },
+  { label: "Communication", href: "#communication", icon: Megaphone },
+  { label: "Command Center", href: "#command-center", icon: Satellite },
+  { label: "How It Works", href: "#how-it-works", icon: Workflow },
+  { label: "Impact", href: "#impact", icon: TrendingUp },
+  { label: "FAQ", href: "#faq", icon: HelpCircle },
 ];
-
-const fadeDown: Variants = {
-  hidden: { opacity: 0, y: -14 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: [0.2, 0.7, 0.2, 1] },
-  },
-};
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const reduceMotion = useReducedMotion();
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -63,106 +66,126 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  const entrance = reduceMotion ? undefined : fadeDown;
-
   return (
     <motion.nav
-      initial="hidden"
-      animate="show"
+      initial={reduce ? false : { opacity: 0, y: -24 }}
+      animate={reduce ? {} : { opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1] }}
       className="fixed top-0 left-0 right-0 z-50 px-4 py-3 w-full"
+      aria-label="Primary navigation"
     >
-      <motion.div
-        variants={entrance}
-        className="max-w-7xl mx-auto backdrop-blur-[16px] border border-white/10 rounded-full px-5 py-2.5 flex items-center justify-between transition-all duration-300"
-        style={{
-          backgroundColor: scrolled ? "rgba(11, 31, 58, 0.85)" : "rgba(11, 31, 58, 0.55)",
-          boxShadow: scrolled
-            ? "0 8px 32px -8px rgba(0, 0, 0, 0.5)"
-            : "0 0 0 0 transparent",
-        }}
+      {/* daisyUI semantic navbar — brand theme via data-theme on landing root */}
+      <div
+        className={`navbar max-w-7xl mx-auto rounded-full px-3 sm:px-5 py-2 backdrop-blur-[16px] border transition-all duration-300 ${
+          scrolled
+            ? "bg-[rgba(11,31,58,0.85)] border-white/10 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]"
+            : "bg-[rgba(11,31,58,0.55)] border-white/10"
+        }`}
       >
-        {/* Logo */}
-        <a href="#" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#F97316] flex items-center justify-center shadow-md transition-transform duration-200 group-hover:scale-105">
-            <Shield size={18} className="text-white" />
-          </div>
-          <span className="text-white font-bold text-lg tracking-tight">
-            DisasterLink AI
-          </span>
-        </a>
-
-        {/* Desktop Nav Links */}
-        <div className="hidden lg:flex gap-1 items-center">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={`text-sm px-3 py-2 rounded-lg transition-all duration-200 ${
-                activeSection === link.href.replace("#", "")
-                  ? "text-white bg-white/10"
-                  : "text-[#C9D6EC] hover:text-white hover:bg-white/5"
-              }`}
-            >
-              {link.label}
-            </a>
-          ))}
+        {/* Left: brand */}
+        <div className="navbar-start w-auto">
+          <a href="#hero" className="flex items-center gap-3 group">
+            <span className="relative w-9 h-9 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#F97316] flex items-center justify-center shadow-md transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110">
+              <Shield size={18} className="text-white" aria-hidden="true" />
+            </span>
+            <span className="hidden sm:block text-white font-bold text-lg tracking-tight font-[family-name:var(--font-display)]">
+              DisasterLink{" "}
+              <span className="bg-gradient-to-r from-[#5B8DF6] to-[#F97316] bg-clip-text text-transparent">
+                AI
+              </span>
+            </span>
+          </a>
         </div>
 
-        {/* Desktop CTAs */}
-        <div className="hidden lg:flex gap-3 items-center">
+        {/* Center: desktop links — daisyUI menu bar */}
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal px-1 gap-0.5">
+            {NAV_LINKS.map((link) => {
+              const active = activeSection === link.href.replace("#", "");
+              const Icon = link.icon;
+              return (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className={`rounded-full text-sm font-medium transition-all duration-200 gap-1.5 ${
+                      active
+                        ? "text-white bg-white/10 shadow-inner"
+                        : "text-[#C9D6EC] hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Icon size={14} aria-hidden="true" />
+                    {link.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        {/* Right: CTAs + mobile toggle */}
+        <div className="navbar-end gap-2">
           <a
             href="#platform"
-            className="border border-white/20 text-white rounded-full px-5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+            className="btn btn-ghost hidden md:inline-flex rounded-full border border-white/20 text-white px-5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200 normal-case font-sans"
           >
             Explore Platform
           </a>
           <a
             href="#contact"
-            className="bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white rounded-full px-5 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
+            className="btn hidden md:inline-flex rounded-full bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white border-0 px-5 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:brightness-110 transition-all duration-200 normal-case font-sans items-center gap-2"
           >
-            Request Demo
-            <ArrowRight size={14} />
+            Request Demo <ArrowRight size={14} aria-hidden="true" />
           </a>
+
+          <button
+            className="btn btn-ghost btn-circle lg:hidden text-white"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
+          </button>
         </div>
+      </div>
 
-        {/* Mobile toggle */}
-        <button
-          className="lg:hidden text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
-          onClick={() => setMenuOpen((v) => !v)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={menuOpen}
-        >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </motion.div>
-
-      {/* Mobile Overlay */}
+      {/* Mobile overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -12, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -12, scale: 0.98 }}
+            initial={reduce ? false : { opacity: 0, y: -12, scale: 0.98 }}
+            animate={reduce ? {} : { opacity: 1, y: 0, scale: 1 }}
+            exit={reduce ? {} : { opacity: 0, y: -12, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.2, 0.7, 0.2, 1] }}
             className="lg:hidden max-w-7xl mx-auto bg-[rgba(11,31,58,0.95)] backdrop-blur-[20px] border border-white/10 rounded-2xl mt-2 p-4 flex flex-col gap-1"
           >
-            {NAV_LINKS.map((link, i) => (
-              <motion.a
-                key={link.label}
-                href={link.href}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.04, duration: 0.2 }}
-                className={`text-sm px-4 py-3 rounded-lg transition-all block ${
-                  activeSection === link.href.replace("#", "")
-                    ? "text-white bg-white/10"
-                    : "text-[#C9D6EC] hover:text-white hover:bg-white/5"
-                }`}
-                onClick={closeMobile}
-              >
-                {link.label}
-              </motion.a>
-            ))}
+            <ul className="menu w-full p-0 gap-1">
+              {NAV_LINKS.map((link, i) => {
+                const Icon = link.icon;
+                const active = activeSection === link.href.replace("#", "");
+                return (
+                  <li key={link.label}>
+                    <motion.a
+                      href={link.href}
+                      initial={reduce ? false : { opacity: 0, x: -10 }}
+                      animate={reduce ? {} : { opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.04, duration: 0.2 }}
+                      onClick={closeMobile}
+                      className={`flex items-center justify-between text-sm px-4 py-3 rounded-lg transition-all ${
+                        active
+                          ? "text-white bg-white/10"
+                          : "text-[#C9D6EC] hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      <span className="flex items-center gap-3">
+                        <Icon size={16} aria-hidden="true" />
+                        {link.label}
+                      </span>
+                      <ChevronRight size={14} aria-hidden="true" />
+                    </motion.a>
+                  </li>
+                );
+              })}
+            </ul>
             <div className="flex flex-col gap-3 mt-4 px-2">
               <a
                 href="#platform"
@@ -176,8 +199,7 @@ export default function Navbar() {
                 onClick={closeMobile}
                 className="bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white rounded-full w-full py-2.5 text-sm text-center font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
               >
-                Request Demo
-                <ArrowRight size={14} />
+                Request Demo <ArrowRight size={14} aria-hidden="true" />
               </a>
             </div>
           </motion.div>

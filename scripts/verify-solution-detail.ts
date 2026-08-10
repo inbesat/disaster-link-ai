@@ -14,7 +14,7 @@ async function main() {
   });
   page.on("pageerror", (err) => problems.push(`[pageerror] ${err.message}`));
 
-  await page.goto("http://localhost:3001/landing", { waitUntil: "load", timeout: 90_000 });
+  await page.goto("http://localhost:3001", { waitUntil: "load", timeout: 90_000 });
   await page.waitForTimeout(3_000);
 
   const report: Record<string, unknown> = {};
