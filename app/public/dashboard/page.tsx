@@ -25,18 +25,21 @@ import NearestHelpCard from "@/components/public/sos/NearestHelpCard";
 // app/public/dashboard/page.tsx — Phase 2 · Step 1 · Mobile-first
 // "My Safety Status" dashboard shell (Steps 1–10 landed).
 //
-// Strictly single-column and mobile-first: the whole surface rides in a
-// max-w-md column (the phone frame) on every viewport, with the sticky
-// citizen BottomNav (Home/Alerts/Map/SOS) pinned to its base. The column
-// content is wrapped in PullToRefresh (Step 10) — drag down from the top
-// past 80px to re-run the mock status refresh (1.5s spinner + haptic +
-// "Last updated" stamp). Stack: SafetyOverview (Steps 2–5: geo-fence
-// status hero, contextual action, 3-day forecast) → FamilyStrip (Step 6)
-// → NearbySheltersList (Step 7) → EmergencyDial (Step 8, tel: speed-dial
-// — replaces the old standalone Call-1070 strip) → module grid → AITeaser
-// (Step 9, pills deep-link to /public/ai?q=…). Guest banner (Step 9 of
-// Phase 1) persists while guest_mode=true; bottom padding clears the
-// fixed 72px nav + safe area so no content hides behind it.
+// Fully responsive: fills 100% of a phone screen, then expands to the full
+// monitor on desktop. The content column rides a max-w-7xl container
+// (px-4 / md:py-10) so it stays readable wide; the citizen BottomNav
+// (Home/Alerts/Map/SOS) spans the full width on mobile and is hidden on
+// md+ where navigation happens via the module grid + header links. The
+// column content is wrapped in PullToRefresh (Step 10) — drag down from
+// the top past 80px to re-run the mock status refresh (1.5s spinner +
+// haptic + "Last updated" stamp). Stack: SafetyOverview (Steps 2–5:
+// geo-fence status hero, contextual action, 3-day forecast) → FamilyStrip
+// (Step 6) → NearbySheltersList (Step 7) → EmergencyDial (Step 8, tel:
+// speed-dial — replaces the old standalone Call-1070 strip) → module grid
+// → AITeaser (Step 9, pills deep-link to /public/ai?q=…). Guest banner
+// (Step 9 of Phase 1) persists while guest_mode=true; mobile bottom
+// padding clears the fixed 72px nav + safe area so no content hides
+// behind it.
 // ---------------------------------------------------------------------
 
 const MODULES = [
@@ -79,8 +82,8 @@ export default function PublicDashboardPage() {
   const isGuest = cookies().get("guest_mode")?.value === "true";
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-[#0a0f1a] shadow-2xl border-x border-white/10 sm:mt-10 sm:max-h-[90vh] sm:min-h-0 sm:h-[90vh] sm:rounded-3xl sm:border-y">
-    <main className="relative flex h-full min-h-screen flex-col overflow-y-auto bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)] sm:min-h-0">
+    <div className="relative w-full min-h-screen flex flex-col bg-[#0a0f1a]">
+    <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)]">
       {/* Ambient backdrop */}
       <div
         aria-hidden="true"
@@ -90,8 +93,10 @@ export default function PublicDashboardPage() {
       {/* Guest mode banner (persistent while guest_mode=true) */}
       <GuestModeBanner />
 
-      {/* Phone-frame column — single column at every breakpoint */}
-      <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[calc(88px+env(safe-area-inset-bottom))] pt-5">
+      {/* Responsive content column — max-w-7xl on desktop, full width on
+          phones. Mobile bottom padding clears the fixed 72px BottomNav;
+          md+ drops it (the nav is hidden there) for md:py-10. */}
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-6 pb-[calc(88px+env(safe-area-inset-bottom))] md:py-10">
         {/* Phase 13 · Step 8 — yellow battery-saver banner while the
             device is under 20% (client island; renders nothing otherwise).
             Auto-refresh timers pause while it's visible. */}
@@ -171,9 +176,9 @@ export default function PublicDashboardPage() {
           <EmergencyDial />
         </section>
 
-        {/* Module grid */}
+        {/* Module grid — stacks on phones, two-up on desktop */}
         <section className="mt-8 flex-1">
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {MODULES.map((module) => (
               <Link
                 key={module.title}
@@ -213,11 +218,10 @@ export default function PublicDashboardPage() {
         </PullToRefresh>
       </div>
 
-      {/* Sticky citizen bottom nav — Home (active) · Alerts · Map · SOS.
-          Inside the phone frame on sm+ it switches to sticky (via the
-          sm:!sticky override) so it pins to the bottom of the phone
-          rather than the browser window. */}
-      <BottomNav className="sm:!sticky" />
+      {/* Citizen bottom nav — Home (active) · Alerts · Map · SOS. Full-width on
+          mobile; hidden on md+ where the expanded content + module grid take
+          over navigation (this page no longer rides the phone frame). */}
+      <BottomNav className="md:hidden !max-w-none" />
     </main>
     </div>
   );
