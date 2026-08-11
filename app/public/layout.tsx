@@ -7,6 +7,7 @@ import EmergencyModeBanner from "@/components/public/sos/EmergencyModeBanner";
 import LocationTracker from "@/components/public/sos/LocationTracker";
 import SafetyNudge from "@/components/public/sos/SafetyNudge";
 import ShakeToSOSHost from "@/components/public/sos/ShakeToSOSHost";
+import SahayakChat from "@/components/public/ai/SahayakChat";
 
 // ---------------------------------------------------------------------
 // app/public/layout.tsx — Phase 1 · Step 10. Wraps every citizen page
@@ -52,6 +53,10 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       {/* Phase 5 · Step 9 — Shake-to-SOS (or 3 rapid Spacebar presses on
           desktop). Renders nothing; only opens the SOS modal. */}
       <ShakeToSOSHost />
+
+      {/* Phase 6 · Steps 1–2 — the Sahayak safety companion: FAB + draggable
+          bottom sheet with the WhatsApp-style welcome bubble. */}
+      <SahayakChat />
     </SOSProvider>
   );
 }

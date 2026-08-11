@@ -256,22 +256,25 @@ export async function exitGuestMode() {
 //
 // Strict, role-assigned access. The client collects email + password; the
 // DEMO accepts any credentials and mocks the authenticated session by
-// writing a `role=district_admin` cookie, then redirects to the gov
-// dashboard. (Real auth would verify against Supabase and assign the user's
-// actual role.)
+// writing a `role` cookie, then redirects to the gov dashboard. (Real
+// auth would verify against Supabase and assign the user's actual role.)
+//
+// Phase 7 · Step 10: the demo login page offers a role selector so judges
+// can sign in as district_admin (default) or super_admin — the latter
+// unlocks the Multi-District State-HQ overview at /gov/overview.
 // ---------------------------------------------------------------------
-export async function govLogin() {
+export async function govLogin(role: "district_admin" | "super_admin" = "district_admin") {
   // Clear any stale guest/citizen session so one browser holds one identity.
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
-  cookies().set("role", "district_admin", {
+  cookies().set("role", role, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 7-day gov session
   });
-  redirect("/gov/dashboard");
+  redirect(role === "super_admin" ? "/gov/overview" : "/gov/dashboard");
 }
 
 // ---------------------------------------------------------------------

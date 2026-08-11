@@ -1,21 +1,51 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
-import { Activity, ArrowRight, Map, Radio, ShieldCheck, Users } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import ViewAsPublicToggle from "@/components/gov/ViewAsPublicToggle";
+import SituationHeader from "@/components/gov/dashboard/SituationHeader";
+import LiveMapWidget from "@/components/gov/dashboard/LiveMapWidget";
+import FloodChartWidget from "@/components/gov/dashboard/FloodChartWidget";
+import AlertFeedWidget from "@/components/gov/dashboard/AlertFeedWidget";
+import CrowdReportsWidget from "@/components/gov/dashboard/CrowdReportsWidget";
+import ShelterStatusWidget from "@/components/gov/dashboard/ShelterStatusWidget";
+import ResourceWidget from "@/components/gov/dashboard/ResourceWidget";
+import ResponderTracker from "@/components/gov/dashboard/ResponderTracker";
+import AISuggestionsWidget from "@/components/gov/dashboard/AISuggestionsWidget";
 
 // ---------------------------------------------------------------------
-// app/gov/dashboard/page.tsx — Phase 1 placeholder Gov Command Dashboard.
-// The gov login (role=district_admin cookie) lands here. The full command
-// center experience lives on the legacy /command-center route; this shell
-// gives officials a real landing point and mounts the View-as-Public
-// toggle (Step 10) so they can preview the citizen app with one switch.
+// app/gov/dashboard/page.tsx — Phase 7 · Steps 1–4 · Gov Command Center
+// Dashboard.
+//
+// The government command center: an information-dense, dark-themed
+// (#0a0f1a = --bg-primary) tactical workspace. The SituationHeader
+// (Step 2) pins a persistent top bar with the district selector, the four
+// pulsing mini-stat counters and the blinking sync line; underneath it,
+// everything rides in a MASSIVE responsive CSS grid:
+//
+//     grid-cols-1 → md:grid-cols-2 → lg:grid-cols-4 · gap-4 · p-4
+//
+// Primary widgets (Steps 3–6), laid out at lg:grid-cols-4. The container
+// uses grid-flow-dense so the row-spanning widgets leave no holes:
+//   • Live Operations Map     — col-span-2 · row-span-2 (tactical canvas)
+//   • Incoming Alerts         — col-span-1 · row-span-2 (scrolling feed)
+//   • Crowdsourced Reports    — col-span-1 · row-span-1 (verify/reject)
+//   • 72-h River Forecast     — col-span-2 · row-span-1 (Recharts area)
+//   • Shelter Status / Resource / Responder / AI Suggestion — 1×1 cells
+// plus three baseline stat cells. The View-as-Public toggle (Phase 1 ·
+// Step 10) stays mounted so officials can preview the citizen app with
+// one switch.
 // ---------------------------------------------------------------------
 
-const READOUTS = [
-  { label: "ACTIVE INCIDENTS", value: "12", tone: "text-red-300" },
-  { label: "DISTRICTS COVERED", value: "38/38", tone: "text-emerald-300" },
-  { label: "FIELD RESPONDERS", value: "214", tone: "text-[var(--dl-blue-light)]" },
-  { label: "REPORTS / 10 MIN", value: "47", tone: "text-orange-300" },
+/** Baseline stat cells filling the remaining grid slots. The last one
+    spans the full row on md (3 stats + 2-col grid = 1 orphan otherwise). */
+const STAT_CELLS: Array<{
+  label: string;
+  value: string;
+  tone: string;
+  mdFull?: boolean;
+}> = [
+  { label: "Active Events", value: "3", tone: "text-severity-red-300" },
+  { label: "People at Risk", value: "12,480", tone: "text-severity-amber-300" },
+  { label: "Responders Online", value: "45", tone: "text-severity-green-300", mdFull: true },
 ];
 
 export default function GovDashboardPage() {
@@ -25,138 +55,91 @@ export default function GovDashboardPage() {
   const previewing = cookies().get("view_as_public")?.value === "true";
 
   return (
-    <main className="relative flex min-h-screen flex-col bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)]">
-      {/* Ambient backdrop */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_75%_-10%,rgba(37,99,235,0.26),transparent),radial-gradient(ellipse_45%_40%_at_0%_110%,rgba(37,99,235,0.12),transparent)]"
-      />
+    <main className="min-h-screen bg-primary text-foreground">
+      {/* Phase 7 · Step 2 — persistent situation-awareness top bar. */}
+      <SituationHeader />
 
-      <div className="relative z-10 flex flex-1 flex-col">
-        {/* Header */}
-        <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-5 md:px-6">
-          <div className="flex items-center gap-2.5">
-            <span className="h-3 w-3 animate-pulse-ring rounded-full bg-severity-red-500" />
-            <span className="text-sm font-bold tracking-tight text-white">
-              Gov Command Center
-            </span>
+      <div className="mx-auto w-full max-w-[1720px]">
+        {/* Page title strip */}
+        <div className="flex flex-wrap items-end justify-between gap-3 px-4 pt-6 sm:px-6">
+          <div>
+            <p className="eoc-label text-[var(--dl-blue-light)]">
+              BIHAR · OPERATIONAL OVERVIEW · LIVE
+            </p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-white md:text-3xl">
+              District Command Overview
+            </h1>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="eoc-label hidden text-[var(--dl-text-muted)] sm:block">
-              ROLE · DISTRICT_ADMIN
-            </span>
-            <Link
-              href="/"
-              className="rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium transition hover:border-[var(--dl-blue)]/60 hover:text-white"
+
+          {/* View-as-Public toggle (Phase 1 · Step 10) */}
+          <div className="w-full max-w-sm">
+            <ViewAsPublicToggle initialActive={previewing} />
+          </div>
+        </div>
+
+        {/* MASSIVE responsive grid — 1 / 2 / 4 columns, dense packing so
+            the row-spanning widgets leave no holes. */}
+        <div className="grid grid-flow-dense grid-cols-1 gap-4 p-4 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
+          {/* Step 3 — Live Operations Map: spans 2 cols × 2 rows. */}
+          <div className="md:col-span-2 lg:col-span-2 lg:row-span-2">
+            <LiveMapWidget />
+          </div>
+
+          {/* Step 4 — Incoming system alerts: 1 col × 2 rows. */}
+          <div className="lg:row-span-2">
+            <AlertFeedWidget />
+          </div>
+
+          {/* Step 4 — Crowdsourced reports: 1 col × 1 row. */}
+          <div>
+            <CrowdReportsWidget />
+          </div>
+
+          {/* Step 3 — 72-hour flood forecast: spans 2 cols. */}
+          <div className="md:col-span-2 lg:col-span-2">
+            <FloodChartWidget />
+          </div>
+
+          {/* Step 5 — Shelter status: occupancy bars (1×1). */}
+          <div>
+            <ShelterStatusWidget />
+          </div>
+
+          {/* Step 5 — Resource inventory donut + low-stock (1×1). */}
+          <div>
+            <ResourceWidget />
+          </div>
+
+          {/* Step 6 — Field responder tracker (1×1). */}
+          <div>
+            <ResponderTracker />
+          </div>
+
+          {/* Step 6 — AI suggestion with glowing purple border (1×1). */}
+          <div>
+            <AISuggestionsWidget />
+          </div>
+
+          {/* Baseline stat cells filling the remaining slots. */}
+          {STAT_CELLS.map((stat) => (
+            <div
+              key={stat.label}
+              className={`flex min-h-[150px] flex-col justify-between rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition hover:border-white/20 ${
+                stat.mdFull ? "md:col-span-2 lg:col-span-1" : ""
+              }`}
             >
-              Home
-            </Link>
-          </div>
-        </header>
-
-        {/* Hero + readouts */}
-        <section className="mx-auto w-full max-w-5xl px-4 py-6 md:px-6 md:py-8">
-          <p className="eoc-label text-[var(--dl-blue-light)]">
-            BIHAR · OPERATIONAL OVERVIEW · LIVE
-          </p>
-          <h1 className="mt-2 text-balance text-3xl font-bold tracking-tight text-white md:text-4xl">
-            District Command Overview
-          </h1>
-          <p className="mt-3 max-w-2xl text-[var(--dl-text-on-navy)] md:text-lg">
-            Triage incoming reports, dispatch responders and keep your district ahead of
-            the disaster.
-          </p>
-
-          <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-            {READOUTS.map((readout) => (
-              <div
-                key={readout.label}
-                className="rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-4 backdrop-blur"
-              >
-                <p className={`font-mono text-2xl font-bold ${readout.tone}`}>
-                  {readout.value}
-                </p>
-                <p className="eoc-label mt-1 text-[var(--dl-text-muted)]">
-                  {readout.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* View as Public toggle */}
-        <section className="mx-auto w-full max-w-5xl px-4 md:px-6">
-          <ViewAsPublicToggle initialActive={previewing} />
-          <p className="mt-2 text-xs text-[var(--dl-text-muted)]">
-            Enter the citizen app exactly as your residents see it — alerts, shelters and
-            SOS. A red PREVIEW MODE banner stays on top while you&apos;re inside, with one
-            click back to this screen.
-          </p>
-        </section>
-
-        {/* Placeholder command modules */}
-        <section className="mx-auto w-full max-w-5xl flex-1 px-4 pb-12 pt-8 md:px-6">
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[
-              {
-                icon: Radio,
-                title: "Incident Triage",
-                description: "Live SOS reports ranked by severity and district.",
-              },
-              {
-                icon: Map,
-                title: "Evacuation Planner",
-                description: "Route citizens away from flood zones in real time.",
-              },
-              {
-                icon: Users,
-                title: "Responder Dispatch",
-                description: "Assign field teams to open incidents.",
-              },
-              {
-                icon: Activity,
-                title: "Situation Reports",
-                description: "AI-drafted briefings for the control room.",
-              },
-            ].map((module) => (
-              <div
-                key={module.title}
-                className="flex items-start gap-4 rounded-[var(--dl-radius)] border border-white/10 bg-white/5 p-5 backdrop-blur transition hover:border-white/20"
-              >
-                <span
-                  aria-hidden="true"
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--dl-blue)]/20 text-[var(--dl-blue-light)]"
-                >
-                  <module.icon className="h-5 w-5" />
-                </span>
-                <div>
-                  <h2 className="flex items-center gap-2 text-base font-bold text-white">
-                    {module.title}
-                    <ArrowRight
-                      aria-hidden="true"
-                      className="h-4 w-4 text-[var(--dl-text-muted)]"
-                    />
-                  </h2>
-                  <p className="mt-1 text-sm text-[var(--dl-text-muted)]">
-                    {module.description}
-                  </p>
-                  <p className="eoc-label mt-2 text-[var(--dl-text-muted)]">
-                    PHASE 2 · COMING SOON
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              <p className="eoc-label text-[var(--dl-text-muted)]">{stat.label}</p>
+              <p className={`font-mono text-3xl font-bold ${stat.tone}`}>{stat.value}</p>
+              <p className="text-xs text-[var(--dl-text-muted)]">Phase 7 · live feed</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10 py-5">
-        <p className="flex items-center justify-center gap-2 text-center text-xs text-[var(--dl-text-muted)]">
-          <ShieldCheck
-            aria-hidden="true"
-            className="h-3.5 w-3.5 text-[var(--dl-blue-light)]"
-          />
+      <footer className="border-t border-white/10 py-5">
+        <p className="flex items-center justify-center gap-2 px-4 text-center text-xs text-[var(--dl-text-muted)]">
+          <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 text-[var(--dl-blue-light)]" />
           Authorized personnel only · All access is logged &amp; audited
         </p>
       </footer>

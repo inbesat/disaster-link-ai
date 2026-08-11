@@ -98,6 +98,17 @@ export async function middleware(request: NextRequest) {
   }
 
   // =========================================================================
+  // PHASE 7 · STEP 10 — /gov/overview (Multi-District State HQ) is
+  // super_admin-only. Any other gov role (or a public citizen slipping
+  // through) is bounced to the district Command Center.
+  // =========================================================================
+  if (pathname === "/gov/overview" && role !== "super_admin") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/gov/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  // =========================================================================
   // GUEST MODE: bypass auth/session/onboarding for the read-only demo, EXCEPT
   // the admin panel — guests must never reach admin controls.
   // =========================================================================

@@ -25,10 +25,17 @@ const REQUIREMENTS = [
   "Every login written to the audit log",
 ];
 
+/** Demo role options — the selector on the form (Phase 7 · Step 10). */
+const DEMO_ROLES = [
+  { key: "district_admin" as const, label: "District Admin", description: "District Command Center" },
+  { key: "super_admin" as const, label: "Super Admin", description: "State HQ Multi-District Overview" },
+];
+
 export default function GovLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState<"district_admin" | "super_admin">("district_admin");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,9 +52,9 @@ export default function GovLoginPage() {
     setError(null);
     setLoading(true);
     try {
-      // Demo auth: any credentials pass; sets role=district_admin and
-      // redirects to /gov/dashboard.
-      await govLogin();
+      // Demo auth: any credentials pass; writes the selected role cookie
+      // (district_admin → /gov/dashboard, super_admin → /gov/overview).
+      await govLogin(role);
     } catch (err) {
       setLoading(false);
       setError(err instanceof Error ? err.message : "Sign-in failed. Try again.");
@@ -169,10 +176,47 @@ export default function GovLoginPage() {
               </div>
 
               <div>
+                <p className="eoc-label mb-1.5 block text-[var(--dl-text-on-navy)]">
+                  Demo Role
+                </p>
+                <div
+                  role="radiogroup"
+                  aria-label="Demo role"
+                  className="grid grid-cols-2 gap-2"
+                >
+                  {DEMO_ROLES.map((option) => {
+                    const active = role === option.key;
+                    return (
+                      <button
+                        key={option.key}
+                        type="button"
+                        role="radio"
+                        aria-checked={active}
+                        onClick={() => setRole(option.key)}
+                        className={`rounded-[var(--dl-radius-sm)] border px-3 py-2.5 text-left transition ${
+                          active
+                            ? "border-[var(--dl-blue-light)]/60 bg-[var(--dl-blue)]/20"
+                            : "border-white/15 bg-white/5 hover:border-white/25"
+                        }`}
+                      >
+                        <span
+                          className={`block text-sm font-semibold ${active ? "text-[var(--dl-blue-light)]" : "text-white"}`}
+                        >
+                          {option.label}
+                        </span>
+                        <span className="mt-0.5 block text-[11px] text-[var(--dl-text-muted)]">
+                          {option.description}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
                 <label
                   htmlFor="gov-password"
-                  className="eoc-label mb-1.5 block text-[var(--dl-text-on-navy)]"
-                >
+                  className="eoc-label mb-1.5 block text-[var(--dl-text-on-navy)]">
                   Password
                 </label>
                 <div className="relative">

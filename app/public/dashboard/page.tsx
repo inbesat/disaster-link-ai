@@ -15,6 +15,7 @@ import FamilyStrip from "@/components/public/FamilyStrip";
 import NearbySheltersList from "@/components/public/NearbySheltersList";
 import PullToRefresh from "@/components/public/PullToRefresh";
 import SafetyOverview from "@/components/public/SafetyOverview";
+import SafetyTipsFeed from "@/components/public/ai/SafetyTipsFeed";
 import NearestHelpCard from "@/components/public/sos/NearestHelpCard";
 
 // ---------------------------------------------------------------------
@@ -118,6 +119,12 @@ export default function PublicDashboardPage() {
             contextual action → 3-day forecast (Phase 2 · Steps 2–5) */}
         <section className="mt-8">
           <SafetyOverview />
+        </section>
+
+        {/* Phase 6 · Step 8 — Sahayak's rotating safety tips (one every
+            5s, pauses on hover). Proactive advice between chats. */}
+        <section className="mt-8">
+          <SafetyTipsFeed />
         </section>
 
         {/* Phase 5 · Step 6 — "Help Nearby" auto-finder. Client island:
