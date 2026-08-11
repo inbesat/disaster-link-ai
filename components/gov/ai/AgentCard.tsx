@@ -145,7 +145,7 @@ export function AgentCard({
         <div className="flex items-center justify-between gap-2">
           <h3 className="truncate text-sm font-bold text-white">{name}</h3>
           <span
-            className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${meta.classes}`}
+            className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider ${meta.classes}`}
           >
             <StatusIcon
               className={`h-3 w-3 ${meta.spin ? "animate-spin" : ""}`}

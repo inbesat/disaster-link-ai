@@ -94,3 +94,136 @@ export function anonymizePII(text: string): string {
 export function redactReportText(text: string): string {
   return sanitizeInput(anonymizePII(text));
 }
+
+// ---------------------------------------------------------------------
+// sanitizeShelterForPublic — Step 4/6 · Public API field allow-list.
+//
+// The shelters table is shared by both modes (Phase 12 cross-mode bridge):
+// PUBLIC = name, location, capacity, occupancy, facilities (amenities are
+// exactly what a citizen needs to pick a shelter); GOV-ONLY = contact_person,
+// phone, operational_notes — the latter withheld here at the API layer.
+// RLS (0020) already permits anon SELECTs at the row level, so this
+// allow-list is the actual column-level enforcement boundary for the
+// public endpoint; the gov endpoint returns the full row untouched.
+// ---------------------------------------------------------------------
+
+export type PublicSafeShelter = {
+  id: string;
+  name: string;
+  district: string | null;
+  lat: number;
+  lng: number;
+  capacity: number;
+  currentOccupancy: number;
+  status: string;
+  /** Amenity flags { water, food, medical, … } — public, like the map chips. */
+  facilities?: Record<string, boolean> | null;
+  imageUrl?: string | null;
+  updatedAt?: Date;
+};
+
+/**
+ * Input shape for the shelter sanitizer: same as the public output but the
+ * `facilities` column arrives as Prisma `JsonValue`, so it is accepted as
+ * `unknown` and normalized below.
+ */
+export type ShelterRowInput = Omit<PublicSafeShelter, "facilities"> & {
+  facilities?: unknown;
+};
+
+/**
+ * Coerce the JSON `facilities` column into a boolean amenity map. Anything
+ * that is not a plain object (or any non-boolean value inside it) is
+ * dropped, so a malformed gov-stored value can never leak into the public
+ * payload as a string/array.
+ */
+function normalizeFacilities(value: unknown): Record<string, boolean> | null {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return null;
+  const out: Record<string, boolean> = {};
+  for (const [key, flag] of Object.entries(value)) {
+    if (typeof flag === "boolean") out[key] = flag;
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
+/**
+ * Pick only the citizen-safe fields off a shelter row. Gov-only columns
+ * (contactPerson, phone, operationalNotes) are dropped; the display name is
+ * run through sanitizeInput and facilities normalized to a boolean map as
+ * defense-in-depth.
+ */
+export function sanitizeShelterForPublic(shelter: ShelterRowInput): PublicSafeShelter {
+  return {
+    id: shelter.id,
+    name: sanitizeInput(shelter.name),
+    district: shelter.district,
+    lat: shelter.lat,
+    lng: shelter.lng,
+    capacity: shelter.capacity,
+    currentOccupancy: shelter.currentOccupancy,
+    status: shelter.status,
+    facilities: normalizeFacilities(shelter.facilities),
+    imageUrl: shelter.imageUrl ?? null,
+    updatedAt: shelter.updatedAt,
+  };
+}
+
+// ---------------------------------------------------------------------
+// sanitizePredictionForPublic / sanitizeAlertForPublic — Step 4 · the rest
+// of the cross-mode scrubber. Same idea as the shelter allow-list: the
+// shared tables carry gov-only columns that RLS permits anon to read at the
+// row level, so the public endpoints strip them here.
+// ---------------------------------------------------------------------
+
+export type PublicSafePrediction = {
+  id: string;
+  lat: number;
+  lng: number;
+  predictionTimestamp: Date;
+  riskLevel: string;
+  createdAt?: Date;
+};
+
+/**
+ * Pick only the citizen-safe fields off a flood prediction row. The raw ML
+ * payload (raw_model_output) and model confidence (confidence_score) are
+ * gov-only and never leave the public endpoint.
+ */
+export function sanitizePredictionForPublic(
+  prediction: PublicSafePrediction,
+): PublicSafePrediction {
+  return {
+    id: prediction.id,
+    lat: prediction.lat,
+    lng: prediction.lng,
+    predictionTimestamp: prediction.predictionTimestamp,
+    riskLevel: prediction.riskLevel,
+    createdAt: prediction.createdAt,
+  };
+}
+
+export type PublicSafeAlert = {
+  id: string;
+  severity: string;
+  message: string;
+  district: string | null;
+  sentAt: Date;
+  createdAt?: Date;
+};
+
+/**
+ * Pick only the citizen-safe fields off an alert row. Hides internal
+ * delivery stats (channel) and composer details (trigger_condition, ack
+ * state, internal FK). The message is XSS-stripped as defense-in-depth
+ * (no PII redaction — gov alerts intentionally carry helpline numbers).
+ */
+export function sanitizeAlertForPublic(alert: PublicSafeAlert): PublicSafeAlert {
+  return {
+    id: alert.id,
+    severity: alert.severity,
+    message: sanitizeInput(alert.message),
+    district: alert.district,
+    sentAt: alert.sentAt,
+    createdAt: alert.createdAt,
+  };
+}

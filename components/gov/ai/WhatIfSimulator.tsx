@@ -106,7 +106,7 @@ export function WhatIfSimulator() {
             <span className="block text-xs font-bold uppercase tracking-wider text-white">
               What-If Scenario Simulator
             </span>
-            <span className="block text-[10px] uppercase tracking-wider text-muted">
+            <span className="block text-[0.625rem] uppercase tracking-wider text-muted">
               Stress-test the plan before execution
             </span>
           </span>
@@ -125,7 +125,7 @@ export function WhatIfSimulator() {
         >
           {/* Rainfall Intensity */}
           <label className="flex items-center gap-3">
-            <span className="flex w-24 shrink-0 items-center gap-1.5 text-[11px] font-semibold text-slate-300">
+            <span className="flex w-24 shrink-0 items-center gap-1.5 text-[0.6875rem] font-semibold text-slate-300">
               <CloudRain className="h-3.5 w-3.5 shrink-0 text-accent" aria-hidden />
               Rainfall
             </span>
@@ -139,14 +139,14 @@ export function WhatIfSimulator() {
               aria-label="Rainfall intensity increase"
               className="w-full accent-accent-purple"
             />
-            <span className="w-10 shrink-0 text-right font-mono text-[11px] font-bold tabular-nums text-accent-warning">
+            <span className="w-10 shrink-0 text-right font-mono text-[0.6875rem] font-bold tabular-nums text-accent-warning">
               +{rainfall}%
             </span>
           </label>
 
           {/* Shelter Capacity */}
           <label className="flex items-center gap-3">
-            <span className="flex w-24 shrink-0 items-center gap-1.5 text-[11px] font-semibold text-slate-300">
+            <span className="flex w-24 shrink-0 items-center gap-1.5 text-[0.6875rem] font-semibold text-slate-300">
               <Home className="h-3.5 w-3.5 shrink-0 text-accent" aria-hidden />
               Shelter
             </span>
@@ -160,14 +160,14 @@ export function WhatIfSimulator() {
               aria-label="Shelter capacity reduction"
               className="w-full accent-accent-purple"
             />
-            <span className="w-10 shrink-0 text-right font-mono text-[11px] font-bold tabular-nums text-severity-amber-300">
+            <span className="w-10 shrink-0 text-right font-mono text-[0.6875rem] font-bold tabular-nums text-severity-amber-300">
               -{shelterCut}%
             </span>
           </label>
 
           {/* Simulate Bridge Collapse */}
           <div className="flex items-center justify-between gap-3">
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-300">
+            <span className="flex items-center gap-1.5 text-[0.6875rem] font-semibold text-slate-300">
               <TriangleAlert
                 className={`h-3.5 w-3.5 shrink-0 ${bridgeDown ? "text-accent-danger" : "text-muted"}`}
                 aria-hidden
@@ -223,12 +223,12 @@ export function WhatIfSimulator() {
             aria-hidden
           />
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-black uppercase tracking-wider text-accent-danger">
+            <p className="text-[0.625rem] font-black uppercase tracking-wider text-accent-danger">
               Delta Alert
             </p>
             <ul className="mt-0.5 space-y-0.5">
               {deltas.map((delta) => (
-                <li key={delta.id} className="text-[11px] leading-relaxed text-slate-200">
+                <li key={delta.id} className="text-[0.6875rem] leading-relaxed text-slate-200">
                   {delta.message}
                 </li>
               ))}
@@ -247,11 +247,11 @@ export function WhatIfSimulator() {
 
       {/* Slim footer readout */}
       <div className="flex items-center justify-between border-t border-white/10 px-3 py-1.5">
-        <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-muted">
+        <span className="flex items-center gap-1.5 text-[0.5625rem] font-bold uppercase tracking-wider text-muted">
           <SlidersHorizontal className="h-3 w-3" aria-hidden />
           Scenario parameters
         </span>
-        <span className="font-mono text-[9px] uppercase tracking-wider text-muted">
+        <span className="font-mono text-[0.5625rem] uppercase tracking-wider text-muted">
           {bridgeDown ? "Bridge offline" : "All routes nominal"}
         </span>
       </div>

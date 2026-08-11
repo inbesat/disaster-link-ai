@@ -214,7 +214,7 @@ export function SituationHeader() {
                   {stat.trend && <ArrowUp className="h-3 w-3" strokeWidth={2.5} aria-hidden />}
                   {stat.value}
                 </p>
-                <p className="eoc-label mt-0.5 text-[10px] text-[var(--dl-text-muted)]">
+                <p className="eoc-label mt-0.5 text-[0.625rem] text-[var(--dl-text-muted)]">
                   {stat.label}
                 </p>
               </div>
@@ -234,7 +234,7 @@ export function SituationHeader() {
               initial={{ opacity: 0.2 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="text-[11px] font-semibold tabular-nums text-[#7dd3a8]"
+              className="text-[0.6875rem] font-semibold tabular-nums text-[#7dd3a8]"
             >
               Last synced: {syncLabel}
             </motion.p>

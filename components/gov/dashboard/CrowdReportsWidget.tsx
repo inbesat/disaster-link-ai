@@ -60,7 +60,7 @@ export function CrowdReportsWidget() {
           <MessageSquareWarning aria-hidden="true" className="h-4 w-4 text-severity-amber-300" />
           <h2 className="eoc-label text-white">Crowdsourced Reports</h2>
         </div>
-        <span className="rounded-full border border-severity-amber-400/30 bg-severity-amber-400/10 px-2.5 py-1 text-[11px] font-semibold text-severity-amber-300">
+        <span className="rounded-full border border-severity-amber-400/30 bg-severity-amber-400/10 px-2.5 py-1 text-[0.6875rem] font-semibold text-severity-amber-300">
           {reports.filter((r) => r.status === "pending").length} unverified
         </span>
       </header>
@@ -80,8 +80,8 @@ export function CrowdReportsWidget() {
                   : "border-white/10 bg-black/20 hover:bg-black/30"
               }`}
             >
-              <p className="text-[13px] leading-snug text-white/90">{report.text}</p>
-              <p className="mt-1 text-[11px] text-[var(--dl-text-muted)]">
+              <p className="text-[0.8125rem] leading-snug text-white/90">{report.text}</p>
+              <p className="mt-1 text-[0.6875rem] text-[var(--dl-text-muted)]">
                 <span className="font-semibold text-white/60">{report.area}</span>
                 {" · "}
                 {report.time}
@@ -122,7 +122,7 @@ export function CrowdReportsWidget() {
       </ul>
 
       {verifiedCount > 0 && (
-        <footer className="border-t border-white/10 px-5 py-3 text-[11px] text-[var(--dl-text-muted)]">
+        <footer className="border-t border-white/10 px-5 py-3 text-[0.6875rem] text-[var(--dl-text-muted)]">
           <span className="font-semibold text-severity-green-300">{verifiedCount}</span> verified
           {verifiedCount === 1 ? " report" : " reports"} promoted to the live map.
         </footer>

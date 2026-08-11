@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+// Phase 14 · Step 8 — route-aware navigation map. Loaded client-only
+// (maplibre-gl touches `window` — the codebase-wide map convention).
+const FieldRouteMap = dynamic(
+  () => import("@/components/field/FieldRouteMap"),
+  { ssr: false, loading: () => <p className="p-8 text-center text-lg text-gray-400">Loading map…</p> },
+);
 
 export const metadata: Metadata = {
-  title: "Deployment Map | Field",
+  title: "Field Navigation | Field",
 };
 
 export default function FieldMapPage() {
-  return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-amber-300">Deployment Map</h1>
-      <div className="flex min-h-[60vh] items-center justify-center rounded-xl border-2 border-dashed border-[#1c2740] bg-[#0d1526] p-8 text-center">
-        <p className="text-lg text-gray-400">
-          Live deployment map for field responders arrives in a later Phase 19 step.
-        </p>
-      </div>
-    </div>
-  );
+  return <FieldRouteMap />;
 }

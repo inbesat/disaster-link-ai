@@ -83,7 +83,7 @@ export function EmergencyDial() {
                     : "text-[var(--dl-blue)] transition group-hover:scale-110"
                 }`}
               />
-              <span className="text-[10px] font-bold uppercase leading-none tracking-wide">
+              <span className="text-[0.625rem] font-bold uppercase leading-none tracking-wide">
                 {line.label}
               </span>
               <span
@@ -97,7 +97,7 @@ export function EmergencyDial() {
           );
         })}
       </div>
-      <p className="mt-2 text-[11px] text-[var(--dl-text-muted)]">
+      <p className="mt-2 text-[0.6875rem] text-[var(--dl-text-muted)]">
         Taps open your phone&apos;s dialer with the number pre-filled.
       </p>
     </section>

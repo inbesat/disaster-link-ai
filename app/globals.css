@@ -360,6 +360,16 @@
     color: var(--text-primary);
   }
 
+  /* ===================================================================
+     A11y (Phase 13 · Step 10): keep the root font at the user's default.
+     Every text size below is rem-based (Tailwind's scale + the rem
+     conversions across the citizen surface), so OS-level font-size
+     preferences scale the whole app.
+     =================================================================== */
+  html {
+    font-size: 100%;
+  }
+
   /* Slim EOC-style scrollbars */
   ::-webkit-scrollbar {
     width: 10px;
@@ -409,9 +419,11 @@
     @apply rounded-eoc border border-solid bg-surface;
   }
 
-  /* Monospace "system readout" label — JetBrains Mono for data */
+  /* Monospace "system readout" label — JetBrains Mono for data.
+     rem (0.6875rem = 11px at the default root) so it scales with the
+     user's OS font-size (Phase 13 · Step 10). */
   .eoc-label {
-    @apply font-mono text-[11px] uppercase tracking-widest text-slate-400;
+    @apply font-mono text-[0.6875rem] uppercase tracking-widest text-slate-400;
   }
 
   .text-balance {
@@ -640,6 +652,123 @@
 }
 .glow-purple-soft {
   box-shadow: var(--glow-purple);
+}
+
+/* =====================================================================
+   HIGH CONTRAST MODE (Phase 13 · Step 10 · Strict Accessibility)
+   ---------------------------------------------------------------------
+   html.high-contrast is toggled by HighContrastContext (Settings →
+   High Contrast Mode). It overrides the ROADMAP tokens (--bg-primary /
+   --text-primary — the exact names the step spec calls out) to PURE
+   black-on-white, re-maps the legacy --dl-* navy tokens the citizen and
+   landing surfaces consume, strips decorative gradients (ambient glows,
+   gradient card fills, the body's radial wash) and raises subtle borders
+   to clearly visible white. Severity colors are kept — red/amber/green
+   carry meaning — but their tints now ride on the pure black surface.
+   ===================================================================== */
+/* The :root:not(.dark) light "day ops" palette (0,2,0) outranks a bare
+   html.high-contrast (0,1,1), so the token block below also matches via
+   :root:not(.dark).high-contrast (0,3,0) — every palette state (dark
+   class on or off) resolves to pure black-on-white. */
+html.high-contrast,
+:root:not(.dark).high-contrast {
+  color-scheme: dark;
+
+  /* Roadmap tokens — the spec's exact overrides. */
+  --bg-primary: #000000;
+  --bg-secondary: #000000;
+  --bg-tertiary: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: #ffffff;
+  --text-muted: #e5e7eb;
+  --border-subtle: #ffffff;
+  --border-active: #ffffff;
+
+  /* RGB channel twins so /opacity utilities (bg-primary/90 …) work too. */
+  --bg-primary-rgb: 0 0 0;
+  --bg-secondary-rgb: 0 0 0;
+  --bg-tertiary-rgb: 0 0 0;
+  --text-primary-rgb: 255 255 255;
+  --text-secondary-rgb: 255 255 255;
+  --text-muted-rgb: 229 231 235;
+  --border-subtle-rgb: 255 255 255;
+  --border-active-rgb: 255 255 255;
+
+  /* Aliased surfaces (shadcn + legacy shell). */
+  --background: #000000;
+  --foreground: #ffffff;
+  --surface: #000000;
+  --surface-elevated: #000000;
+  --surface-muted: #000000;
+  --border: #ffffff;
+  --border-strong: #ffffff;
+  --card: #000000;
+  --card-foreground: #ffffff;
+  --popover: #000000;
+  --popover-foreground: #ffffff;
+  --muted: #000000;
+  --muted-foreground: #e5e7eb;
+  --input: #ffffff;
+  --ring: #ffffff;
+
+  /* Shadows and glows are decorative — removed for clarity. */
+  --shadow-card: none;
+  --shadow-modal: none;
+  --glow-blue: none;
+  --glow-red: none;
+  --glow-amber: none;
+  --glow-purple: none;
+}
+
+/* The legacy --dl-* tokens are scoped to .landing-page; this needs the
+   extra class to win that scope. Pages that reference --dl-* WITHOUT the
+   landing-page scope (dashboard, settings, …) fall through to the body's
+   pure-black bg / pure-white text anyway. */
+html.high-contrast .landing-page {
+  --dl-navy: #000000;
+  --dl-navy-2: #000000;
+  --dl-navy-3: #000000;
+  --dl-white: #ffffff;
+  --dl-text-on-navy: #ffffff;
+  --dl-text-muted: #e5e7eb;
+  --dl-text-dark: #ffffff;
+  --dl-shadow-soft: none;
+  --dl-shadow-glow-blue: none;
+  --dl-shadow-glow-orange: none;
+
+  --navy: #000000;
+  --navy-2: #000000;
+  --navy-3: #000000;
+  --white: #ffffff;
+  --text-on-navy: #ffffff;
+  --text-muted: #e5e7eb;
+  --text-dark: #ffffff;
+  --shadow-soft: none;
+  --shadow-glow-blue: none;
+  --shadow-glow-orange: none;
+}
+
+/* Force the body to pure black under high contrast: the root layout
+   paints <body> with an unlayered bg-[#0B1F3A] utility, which outranks
+   the @layer base body rule — so the !important override is required.
+   (The ambient radial wash is removed too.) */
+html.high-contrast body {
+  background-color: #000000 !important;
+  background-image: none;
+}
+
+/* Strip decorative gradients everywhere: Tailwind's bg-gradient-to-*
+   utilities AND arbitrary radial/linear-gradient values both contain
+   "gradient" in the class name. Solid colour surfaces and icons are
+   untouched. */
+html.high-contrast [class*="gradient"] {
+  background-image: none !important;
+}
+
+/* Subtle white borders become clearly visible lines on the black
+   surface (the step spec asks for the "subtle" ones removed). */
+html.high-contrast [class*="border-white/"] {
+  border-color: rgba(255, 255, 255, 0.75) !important;
 }
 
 /* ---------------------------------------------------------------------
@@ -879,13 +1008,21 @@
   top: 66px;
 }
 
-.gov-ops-map .maplibregl-ctrl-group.mapbox-gl-draw_ctrl {
+/* The Alert Composer's mini target map (Phase 11) reuses the same dark
+ * draw toolbar. Controls sit at the top-left with a little breathing room. */
+.alert-target-map .maplibregl-ctrl-top-left {
+  top: 12px;
+}
+
+.gov-ops-map .maplibregl-ctrl-group.mapbox-gl-draw_ctrl,
+.alert-target-map .maplibregl-ctrl-group.mapbox-gl-draw_ctrl {
   background: transparent;
   border-radius: 12px;
   box-shadow: none;
 }
 
-.gov-ops-map .mapbox-gl-draw_ctrl-draw-btn {
+.gov-ops-map .mapbox-gl-draw_ctrl-draw-btn,
+.alert-target-map .mapbox-gl-draw_ctrl-draw-btn {
   width: 38px;
   height: 38px;
   margin: 4px;
@@ -897,26 +1034,33 @@
     box-shadow 0.15s ease;
 }
 
-.gov-ops-map .mapbox-gl-draw_ctrl-draw-btn:hover {
+.gov-ops-map .mapbox-gl-draw_ctrl-draw-btn:hover,
+.alert-target-map .mapbox-gl-draw_ctrl-draw-btn:hover {
   background-color: #16223a;
 }
 
 .gov-ops-map .mapbox-gl-draw_ctrl-draw-btn.active,
-.gov-ops-map .mapbox-gl-draw_ctrl-draw-btn.active:hover {
+.gov-ops-map .mapbox-gl-draw_ctrl-draw-btn.active:hover,
+.alert-target-map .mapbox-gl-draw_ctrl-draw-btn.active,
+.alert-target-map .mapbox-gl-draw_ctrl-draw-btn.active:hover {
   background-color: #1a2a45;
   box-shadow: 0 0 14px rgba(91, 141, 246, 0.45);
 }
 
 /* White icon fills (the stock data-URIs are black → invisible on dark). */
-.gov-ops-map .mapbox-gl-draw_point {
+.gov-ops-map .mapbox-gl-draw_point,
+.alert-target-map .mapbox-gl-draw_point {
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23ffffff'%3E%3Cpath d='m10 2c-3.3 0-6 2.7-6 6s6 9 6 9 6-5.7 6-9-2.7-6-6-6zm0 2c2.1 0 3.8 1.7 3.8 3.8 0 1.5-1.8 3.9-2.9 5.2h-1.7c-1.1-1.4-2.9-3.8-2.9-5.2-.1-2.1 1.6-3.8 3.7-3.8z'/%3E%3C/svg%3E");
 }
-.gov-ops-map .mapbox-gl-draw_polygon {
+.gov-ops-map .mapbox-gl-draw_polygon,
+.alert-target-map .mapbox-gl-draw_polygon {
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23ffffff'%3E%3Cpath d='m15 12.3v-4.6c.6-.3 1-1 1-1.7 0-1.1-.9-2-2-2-.7 0-1.4.4-1.7 1h-4.6c-.3-.6-1-1-1.7-1-1.1 0-2 .9-2 2 0 .7.4 1.4 1 1.7v4.6c-.6.3-1 1-1 1.7 0 1.1.9 2 2 2 .7 0 1.4-.4 1.7-1h4.6c.3.6 1 1 1.7 1 1.1 0 2-.9 2-2 0-.7-.4-1.4-1-1.7zm-8-.3v-4l1-1h4l1 1v4l-1 1h-4z'/%3E%3C/svg%3E");
 }
-.gov-ops-map .mapbox-gl-draw_line {
+.gov-ops-map .mapbox-gl-draw_line,
+.alert-target-map .mapbox-gl-draw_line {
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23ffffff'%3E%3Cpath d='m13.5 3.5c-1.4 0-2.5 1.1-2.5 2.5 0 .3 0 .6.2.9l-3.8 3.8c-.3-.1-.6-.2-.9-.2-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5c0-.3 0-.6-.2-.9l3.8-3.8c.3.1.6.2.9.2 1.4 0 2.5-1.1 2.5-2.5s-1.1-2.5-2.5-2.5z'/%3E%3C/svg%3E");
 }
-.gov-ops-map .mapbox-gl-draw_trash {
+.gov-ops-map .mapbox-gl-draw_trash,
+.alert-target-map .mapbox-gl-draw_trash {
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23ffffff'%3E%3Cpath d='M10,3.4 c-0.8,0-1.5,0.5-1.8,1.2H5l-1,1v1h12v-1l-1-1h-3.2C11.5,3.9,10.8,3.4,10,3.4z M5,8v7c0,1,1,2,2,2h6c1,0,2-1,2-2V8h-2v5.5h-1.5V8h-3 v5.5H7V8H5z'/%3E%3C/svg%3E");
 }

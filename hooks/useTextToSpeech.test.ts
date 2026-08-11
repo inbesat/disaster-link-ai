@@ -7,7 +7,12 @@
 // ---------------------------------------------------------------------
 
 import { describe, expect, it } from "vitest";
-import { speakAlert, stopSpeaking, supportsSpeech } from "./useTextToSpeech";
+import {
+  speakAlert,
+  stopSpeaking,
+  supportsSpeech,
+  voiceLangForLocale,
+} from "./useTextToSpeech";
 
 describe("useTextToSpeech (unsupported environment)", () => {
   it("reports no speech support when speechSynthesis is absent", () => {
@@ -20,5 +25,24 @@ describe("useTextToSpeech (unsupported environment)", () => {
 
   it("stopSpeaking is a safe no-op", () => {
     expect(() => stopSpeaking()).not.toThrow();
+  });
+});
+
+describe("voiceLangForLocale (Phase 13 · Step 7)", () => {
+  it("maps the major Indian languages to BCP-47 tags", () => {
+    expect(voiceLangForLocale("hi")).toBe("hi-IN");
+    expect(voiceLangForLocale("bn")).toBe("bn-IN");
+    expect(voiceLangForLocale("ta")).toBe("ta-IN");
+    expect(voiceLangForLocale("te")).toBe("te-IN");
+    expect(voiceLangForLocale("mr")).toBe("mr-IN");
+    expect(voiceLangForLocale("gu")).toBe("gu-IN");
+    expect(voiceLangForLocale("kn")).toBe("kn-IN");
+    expect(voiceLangForLocale("ml")).toBe("ml-IN");
+  });
+
+  it("falls back to undefined (English narration) for locales without reliable voices", () => {
+    expect(voiceLangForLocale("en")).toBeUndefined();
+    expect(voiceLangForLocale("sat")).toBeUndefined();
+    expect(voiceLangForLocale("sa")).toBeUndefined();
   });
 });

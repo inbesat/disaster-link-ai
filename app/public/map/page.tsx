@@ -13,9 +13,11 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { ArrowLeft, Map as MapIcon } from "lucide-react";
+import { ArrowLeft, Map as MapIcon, WifiOff } from "lucide-react";
 import BottomNav from "@/components/public/BottomNav";
+import LowBandwidthShelterList from "@/components/public/lowbandwidth/LowBandwidthShelterList";
 import OfflineMapBadge from "@/components/public/map/OfflineMapBadge";
+import { useBandwidth } from "@/lib/contexts/BandwidthContext";
 
 const PublicMap = dynamic(() => import("@/components/public/map/PublicMap"), {
   ssr: false,
@@ -32,6 +34,10 @@ const PublicMap = dynamic(() => import("@/components/public/map/PublicMap"), {
 });
 
 export default function PublicMapPage() {
+  // Phase 13 · Step 2 — in extreme low-bandwidth mode the heavy MapLibre
+  // map is swapped for a ~0.5KB text list of the nearest shelters.
+  const { isLowBandwidthMode } = useBandwidth();
+
   return (
     <main className="relative h-[100dvh] w-full overflow-hidden bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)]">
       {/* Ambient backdrop while the map streams in */}
@@ -40,10 +46,23 @@ export default function PublicMapPage() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_80%_-10%,rgba(37,99,235,0.22),transparent),radial-gradient(ellipse_45%_40%_at_0%_110%,rgba(249,115,22,0.14),transparent)]"
       />
 
-      {/* Map — fills the entire viewport */}
-      <div className="absolute inset-0">
-        <PublicMap />
-      </div>
+      {/* Phase 13 · Step 2 — MapLibre map, or its text-only data-saver
+          replacement when extreme low-bandwidth mode is on. */}
+      {isLowBandwidthMode ? (
+        <div className="absolute inset-0 overflow-y-auto">
+          <div className="mx-auto w-full max-w-md px-4 pb-[calc(96px+env(safe-area-inset-bottom))] pt-24">
+            <div className="mb-3 flex items-center gap-2 rounded-lg border border-[var(--dl-orange)]/30 bg-[var(--dl-orange)]/10 px-3 py-2 text-[0.6875rem] font-medium text-[var(--dl-orange-light)]">
+              <WifiOff aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+              Map hidden in low-bandwidth mode to save data
+            </div>
+            <LowBandwidthShelterList />
+          </div>
+        </div>
+      ) : (
+        <div className="absolute inset-0">
+          <PublicMap />
+        </div>
+      )}
 
       {/* Floating gradient header over the map */}
       <header className="absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-[#0a1120]/85 via-[#0a1120]/40 to-transparent px-4 pb-6 pt-5">
@@ -61,7 +80,7 @@ export default function PublicMapPage() {
             </span>
             <div>
               <h1 className="text-base font-bold text-white">Map</h1>
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-[var(--dl-text-muted)]">
+              <p className="text-[0.6875rem] font-semibold uppercase tracking-widest text-[var(--dl-text-muted)]">
                 FIND YOUR WAY TO SAFETY
               </p>
             </div>

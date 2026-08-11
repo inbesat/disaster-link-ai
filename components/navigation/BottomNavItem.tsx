@@ -15,7 +15,7 @@
 //
 // Rendered as a <button> so the shell owns navigation (router.push).
 // Optional notification badge: a tiny dot pinned to the icon's top-right —
-// when badgeCount > 0 the dot grows into a number pill (text-[8px]) in
+// when badgeCount > 0 the dot grows into a number pill (text-[0.5rem]) in
 // badgeColor.
 // ---------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ export function BottomNavItem({
         aria-hidden={badgeCount <= 0}
         aria-label={badgeCount > 0 ? `${label}: ${badgeCount} new items` : undefined}
         className={`absolute -right-1.5 -top-1 flex items-center justify-center rounded-full font-bold leading-none text-white ${badgeColor} ${
-          badgeCount > 0 ? "h-4 min-w-4 px-1 text-[8px]" : "h-2 w-2"
+          badgeCount > 0 ? "h-4 min-w-4 px-1 text-[0.5rem]" : "h-2 w-2"
         }`}
       >
         {badgeCount > 0 ? (badgeCount > 99 ? "99+" : String(badgeCount)) : null}
@@ -94,7 +94,7 @@ export function BottomNavItem({
         <Icon className="h-6 w-6" strokeWidth={1.5} style={iconStyle} aria-hidden />
         {badge}
       </span>
-      <span className="truncate text-[10px] font-semibold">{label}</span>
+      <span className="truncate text-[0.625rem] font-semibold">{label}</span>
     </button>
   );
 }

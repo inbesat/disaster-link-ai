@@ -117,14 +117,14 @@ export default function GovResourcesPage() {
 
         {/* Summary strip — per-category totals + status chips */}
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-purple/40 bg-accent-purple/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-accent-purple">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-purple/40 bg-accent-purple/10 px-2.5 py-1 text-[0.6875rem] font-bold uppercase tracking-wider text-accent-purple">
             <Boxes aria-hidden className="h-3.5 w-3.5" />
             {counts.total} assets
           </span>
           {counts.byCategory.map((category) => (
             <span
               key={category}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-slate-300"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[0.6875rem] font-semibold text-slate-300"
             >
               <span aria-hidden>{CATEGORY_META[category].emoji}</span>
               {CATEGORY_META[category].label}
@@ -137,7 +137,7 @@ export default function GovResourcesPage() {
           {(Object.keys(STATUS_META) as ResourceStatus[]).map((status) => (
             <span
               key={status}
-              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-300"
+              className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold text-slate-300"
             >
               <span
                 aria-hidden

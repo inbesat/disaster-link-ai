@@ -145,7 +145,7 @@ export default function LocationSetupPage() {
           <LocateFixed aria-hidden="true" className={locating ? "h-6 w-6 animate-spin" : "h-6 w-6"} />
           {locating ? "Finding you…" : "Enable GPS Location"}
         </button>
-        <p className="mt-2 text-center font-mono text-[11px] uppercase tracking-widest text-[var(--dl-text-muted)]">
+        <p className="mt-2 text-center font-mono text-[0.6875rem] uppercase tracking-widest text-[var(--dl-text-muted)]">
           Precise · private · never shared
         </p>
 

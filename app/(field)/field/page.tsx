@@ -1,51 +1,20 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import {
-  Home,
-  PackageSearch,
-  MapPin,
-  Siren,
-  Phone,
-} from "lucide-react";
+import { Phone } from "lucide-react";
 import OfflineBanner from "@/components/field/OfflineBanner";
-import AssignmentList from "@/components/field/AssignmentList";
+import EmergencyRecallBanner from "@/components/field/EmergencyRecallBanner";
+import QuickStatusGrid from "@/components/field/QuickStatusGrid";
+import TaskList from "@/components/field/TaskList";
+import QRScannerModal from "@/components/field/QRScannerModal";
+import ShiftHandover from "@/components/field/ShiftHandover";
+import VoiceNoteReporter from "@/components/field/VoiceNoteReporter";
 import GpsCheckIn from "@/components/field/GpsCheckIn";
 import DamageReporterModal from "@/components/field/DamageReporterModal";
-import VoiceNoteReporter from "@/components/field/VoiceNoteReporter";
-import EmergencyRecallBanner from "@/components/field/EmergencyRecallBanner";
 import RecallTestButton from "@/components/field/RecallTestButton";
 import TaskDispatchButton from "@/components/field/TaskDispatchButton";
 
 export const metadata: Metadata = {
-  title: "Field Responder | DRIP",
+  title: "Field Tasks | DRIP",
 };
-
-const QUICK_ACTIONS = [
-  {
-    href: "/shelter-update",
-    label: "Update Shelter",
-    detail: "Report occupancy",
-    icon: Home,
-  },
-  {
-    href: "/request-resources",
-    label: "Request Resources",
-    detail: "Boats, food, meds",
-    icon: PackageSearch,
-  },
-  {
-    href: "/report",
-    label: "Report Hazard",
-    detail: "Flood / blocked road",
-    icon: Siren,
-  },
-  {
-    href: "/field/map",
-    label: "Deployment Map",
-    detail: "View live zones",
-    icon: MapPin,
-  },
-];
 
 export default function FieldHomePage() {
   return (
@@ -54,35 +23,27 @@ export default function FieldHomePage() {
 
       <EmergencyRecallBanner />
 
-      {/* Greeting */}
+      {/* On-duty greeting */}
       <section className="rounded-xl border-2 border-cyan-400/30 bg-[#0d1526] p-5">
         <p className="text-2xl font-bold text-amber-300">On duty</p>
         <p className="mt-1 text-lg text-gray-200">
           Your district is on <span className="font-bold text-red-400">AMBER WATCH</span>.
-          Shelter occupancy and resource requests need your live updates.
+          Priority tasks below — swipe left to act.
         </p>
       </section>
 
-      {/* Quick actions */}
+      {/* Phase 14 · Step 4 — one-tap tactical status grid */}
+      <QuickStatusGrid />
+
+      {/* Phase 14 · Steps 2+3 — prioritized swipeable task cards */}
+      <TaskList />
+
+      {/* Phase 14 · Step 5 — hardware QR / barcode scanning */}
       <section>
         <h2 className="mb-3 text-lg font-bold uppercase tracking-wider text-cyan-300">
-          Quick Actions
+          Resource Scanning
         </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {QUICK_ACTIONS.map(({ href, label, detail, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="flex min-h-[72px] items-center gap-4 rounded-xl border-2 border-[#1c2740] bg-[#0d1526] px-5 py-4 transition hover:border-amber-400 hover:bg-[#111a2e]"
-            >
-              <Icon className="h-7 w-7 shrink-0 text-amber-300" />
-              <span className="leading-tight">
-                <span className="block text-lg font-bold text-gray-100">{label}</span>
-                <span className="block text-base text-gray-400">{detail}</span>
-              </span>
-            </Link>
-          ))}
-        </div>
+        <QRScannerModal />
       </section>
 
       {/* Voice-to-text field notes */}
@@ -93,9 +54,6 @@ export default function FieldHomePage() {
 
       {/* Rapid Photo Inspection */}
       <DamageReporterModal />
-
-      {/* My Assignments */}
-      <AssignmentList />
 
       {/* Emergency line */}
       <section className="flex flex-col gap-3 rounded-xl border-2 border-red-400/40 bg-red-500/5 p-5 sm:flex-row sm:items-center sm:justify-between">
@@ -110,6 +68,9 @@ export default function FieldHomePage() {
           CALL NOW
         </a>
       </section>
+
+      {/* Phase 14 · Step 10 — end-of-shift handover */}
+      <ShiftHandover />
 
       {/* Simulation: command-room dispatch demos (recall + critical task) */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

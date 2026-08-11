@@ -95,10 +95,10 @@ export default function LocationTracker() {
 
             {/* Copy + countdown */}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-bold text-white">
+              <p className="truncate text-[0.8125rem] font-bold text-white">
                 Sharing Live GPS with Command Center &amp; Family
               </p>
-              <p className="mt-0.5 text-[11px] font-semibold tabular-nums text-severity-green-300">
+              <p className="mt-0.5 text-[0.6875rem] font-semibold tabular-nums text-severity-green-300">
                 Active for: {formatDuration(remaining)}
               </p>
             </div>
@@ -112,7 +112,7 @@ export default function LocationTracker() {
                   stopSharingLocation();
                   triggerLightHaptic();
                 }}
-                className="shrink-0 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white/70 transition hover:border-severity-green-400/50 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400"
+                className="shrink-0 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-white/70 transition hover:border-severity-green-400/50 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400"
               >
                 Stop
               </button>

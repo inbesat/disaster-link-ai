@@ -149,7 +149,7 @@ export default function TurnByTurnNav({ shelter, origin, onExit }: TurnByTurnNav
                 exit={{ opacity: 0, y: reduceMotion ? 0 : -10 }}
                 transition={{ duration: reduceMotion ? 0 : 0.25 }}
               >
-                <p className="text-[22px] font-extrabold leading-tight text-white">
+                <p className="text-[1.375rem] font-extrabold leading-tight text-white">
                   {step.instruction}
                 </p>
                 <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-[var(--dl-text-muted)]">
@@ -197,7 +197,7 @@ export default function TurnByTurnNav({ shelter, origin, onExit }: TurnByTurnNav
             href={directionsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--dl-text-muted)] transition hover:text-white"
+            className="inline-flex items-center gap-1 text-[0.6875rem] font-semibold text-[var(--dl-text-muted)] transition hover:text-white"
           >
             <ExternalLink aria-hidden="true" className="h-3 w-3" />
             Open in Maps

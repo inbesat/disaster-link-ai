@@ -130,7 +130,7 @@ function ChecklistCard({ data }: { data: ChecklistCardData }) {
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="inline-flex items-center gap-1 rounded-full bg-[#34d399]/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#6ee7b7]"
+            className="inline-flex items-center gap-1 rounded-full bg-[#34d399]/20 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-[#6ee7b7]"
           >
             <CheckCircle2 className="h-3 w-3" aria-hidden />
             {data.readyLabel}
@@ -210,10 +210,10 @@ function RouteCard({ data }: { data: RouteCardData }) {
       </div>
 
       <div className="px-4 py-3">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--dl-text-muted)]">
+        <p className="text-[0.625rem] font-bold uppercase tracking-wider text-[var(--dl-text-muted)]">
           {data.title}
         </p>
-        <p className="mt-1 flex items-center gap-1.5 text-[15px] font-black leading-snug text-white">
+        <p className="mt-1 flex items-center gap-1.5 text-[0.9375rem] font-black leading-snug text-white">
           <Route className="h-4 w-4 shrink-0 text-[#34d399]" aria-hidden />
           <span>
             {data.walkDistance} {data.to}{" "}
@@ -230,12 +230,12 @@ function RouteCard({ data }: { data: RouteCardData }) {
 function EscalationCard({ data }: { data: EscalationCardData }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-[#fbbf24]/35 bg-gradient-to-br from-[#7c2d12]/50 to-[#431407]/60 p-4 shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
-      <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#fdba74]">
+      <p className="flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-[#fdba74]">
         <PhoneCall className="h-3 w-3" aria-hidden />
         {data.title}
       </p>
 
-      <p className="mt-2 text-[15px] font-semibold leading-relaxed text-white">
+      <p className="mt-2 text-[0.9375rem] font-semibold leading-relaxed text-white">
         {data.message}
       </p>
 
@@ -249,7 +249,7 @@ function EscalationCard({ data }: { data: EscalationCardData }) {
         {data.actionLabel}
       </motion.a>
 
-      <p className="mt-2 text-center text-[11px] text-[#fdba74]/80">{data.note}</p>
+      <p className="mt-2 text-center text-[0.6875rem] text-[#fdba74]/80">{data.note}</p>
     </div>
   );
 }
@@ -266,7 +266,7 @@ function ActionCard({ data, onAction }: { data: ActionCardData; onAction?: () =>
         <p className="text-sm font-bold text-white">{data.title}</p>
       </div>
 
-      <p className="mt-2 text-[13px] leading-relaxed text-[#a9bccf]">{data.description}</p>
+      <p className="mt-2 text-[0.8125rem] leading-relaxed text-[#a9bccf]">{data.description}</p>
 
       <motion.button
         type="button"

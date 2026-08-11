@@ -81,7 +81,7 @@ export function WeatherCarousel() {
               <div className="flex items-center justify-between gap-2">
                 <div>
                   <p className="text-sm font-bold text-white">{day.day}</p>
-                  <p className="text-[11px] text-[var(--dl-text-muted)]">{day.date}</p>
+                  <p className="text-[0.6875rem] text-[var(--dl-text-muted)]">{day.date}</p>
                 </div>
                 <SeverityBadge variant={day.risk} label={day.riskLabel} size="sm" />
               </div>
@@ -99,7 +99,7 @@ export function WeatherCarousel() {
                     {day.temp}
                     <span className="text-lg text-[var(--dl-text-muted)]">°C</span>
                   </p>
-                  <p className="text-[11px] font-medium uppercase tracking-wider text-[var(--dl-text-muted)]">
+                  <p className="text-[0.6875rem] font-medium uppercase tracking-wider text-[var(--dl-text-muted)]">
                     {day.rain > 0 ? `${day.rain}mm rain` : "No rain"}
                   </p>
                 </div>
@@ -110,7 +110,7 @@ export function WeatherCarousel() {
       </div>
 
       {/* Carousel hint */}
-      <p className="mt-1 text-center text-[11px] text-[var(--dl-text-muted)]">
+      <p className="mt-1 text-center text-[0.6875rem] text-[var(--dl-text-muted)]">
         Swipe for the 3-day outlook
       </p>
     </section>

@@ -200,7 +200,7 @@ export default function PublicAlertsPage() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => setFilter(key)}
-                  className={`shrink-0 rounded-full border px-4 py-2 text-[13px] font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
+                  className={`shrink-0 rounded-full border px-4 py-2 text-[0.8125rem] font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
                     active
                       ? "border-[#F97316] bg-[#F97316]/20 text-[#FDBA74]"
                       : "border-white/10 bg-white/5 text-[var(--dl-text-muted)] hover:border-white/25 hover:text-[var(--dl-text-on-navy)]"
@@ -216,7 +216,7 @@ export default function PublicAlertsPage() {
         {/* Feed */}
         {alerts.length > 0 ? (
           <>
-            <p className="mt-4 text-center text-[11px] text-[var(--dl-text-muted)]">
+            <p className="mt-4 text-center text-[0.6875rem] text-[var(--dl-text-muted)]">
               Swipe right on an alert to mark it read
             </p>
             <ul className="mt-3 space-y-3">

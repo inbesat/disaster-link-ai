@@ -1,7 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/server/prisma";
+import { PUBLIC_SHELTERS_CACHE_TAG } from "@/lib/cache-tags";
 
 export type ShelterFacilities = {
   water?: boolean;
@@ -60,6 +61,10 @@ export async function addShelter(data: ShelterInput) {
 
   revalidatePath("/shelters");
   revalidatePath("/dashboard");
+  // Step 8 · cache invalidation pipeline: purge the 5-minute CDN cache of
+  // the Public shelters endpoint so the Citizen App sees the new shelter
+  // immediately instead of waiting for revalidate = 300 to expire.
+  revalidateTag(PUBLIC_SHELTERS_CACHE_TAG);
   return shelter;
 }
 
@@ -86,5 +91,8 @@ export async function updateOccupancy(shelterId: string, newOccupancy: number) {
 
   revalidatePath("/shelters");
   revalidatePath("/dashboard");
+  // Step 8 · cache invalidation pipeline: purge the Public endpoint's
+  // cached shelter list so occupancy changes propagate instantly.
+  revalidateTag(PUBLIC_SHELTERS_CACHE_TAG);
   return updated;
 }

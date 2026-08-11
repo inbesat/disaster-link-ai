@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Bot, Lightbulb } from "lucide-react";
 import { useTranslation, type TranslationKey } from "@/lib/i18n/LanguageContext";
+import { useBatterySaver } from "@/hooks/useBatterySaver";
 
 /** Rotating tip keys — the display strings live in the locale files. */
 const TIP_KEYS: TranslationKey[] = ["tip_1", "tip_2", "tip_3", "tip_4", "tip_5"];
@@ -35,17 +36,22 @@ export function SafetyTipsFeed() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
+  // Phase 13 · Step 8 — under 20% battery the rotation pauses entirely
+  // (the current tip stays visible); the banner tells the citizen to pull
+  // down to refresh. A dead phone is deadly, so no timer churn.
+  const { isBatteryLow } = useBatterySaver();
+
   // Rotate every 5s; pause on hover/focus so the current tip can be read.
   // The interval no-ops while the tab is hidden so a backgrounded dashboard
   // doesn't keep churning slides.
   useEffect(() => {
-    if (paused) return;
+    if (paused || isBatteryLow) return;
     const id = window.setInterval(() => {
       if (document.hidden) return;
       setIndex((i) => (i + 1) % TIP_KEYS.length);
     }, ROTATE_MS);
     return () => window.clearInterval(id);
-  }, [paused]);
+  }, [paused, isBatteryLow]);
 
   const tipKey = TIP_KEYS[index];
 
@@ -76,7 +82,7 @@ export function SafetyTipsFeed() {
         </span>
 
         <div className="min-w-0 flex-1">
-          <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#6ee7b7]">
+          <p className="flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-[#6ee7b7]">
             <Lightbulb className="h-3 w-3" aria-hidden />
             {t("tips_label")}
           </p>
@@ -88,7 +94,7 @@ export function SafetyTipsFeed() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
                 transition={{ duration: 0.35 }}
-                className="text-[15px] font-semibold leading-snug text-white"
+                className="text-[0.9375rem] font-semibold leading-snug text-white"
               >
                 {t(tipKey)}
               </motion.p>

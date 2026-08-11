@@ -88,11 +88,11 @@ export function DashboardTopBar({
               {displayName}
             </span>
             {guest ? (
-              <span className="block text-[11px] font-medium uppercase tracking-wider text-accent">
+              <span className="block text-[0.6875rem] font-medium uppercase tracking-wider text-accent">
                 Demo mode
               </span>
             ) : (
-              <span className="block text-[11px] text-muted">{email}</span>
+              <span className="block text-[0.6875rem] text-muted">{email}</span>
             )}
           </span>
         </div>

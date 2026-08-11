@@ -5,10 +5,13 @@ import {
   Bell,
   HeartHandshake,
   MapPin,
+  Settings,
   Siren,
 } from "lucide-react";
 import GuestModeBanner from "@/components/GuestModeBanner";
 import AITeaser from "@/components/public/AITeaser";
+import BandwidthGate from "@/components/public/BandwidthGate";
+import BatterySaverBanner from "@/components/public/BatterySaverBanner";
 import BottomNav from "@/components/public/BottomNav";
 import EmergencyDial from "@/components/public/EmergencyDial";
 import FamilyStrip from "@/components/public/FamilyStrip";
@@ -88,6 +91,11 @@ export default function PublicDashboardPage() {
 
       {/* Phone-frame column — single column at every breakpoint */}
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[calc(88px+env(safe-area-inset-bottom))] pt-5">
+        {/* Phase 13 · Step 8 — yellow battery-saver banner while the
+            device is under 20% (client island; renders nothing otherwise).
+            Auto-refresh timers pause while it's visible. */}
+        <BatterySaverBanner />
+
         {/* Pull-to-refresh wraps the entire dashboard content (Step 10) */}
         <PullToRefresh>
         {/* Header */}
@@ -106,6 +114,14 @@ export default function PublicDashboardPage() {
                   ? `+91 ${phone.slice(-4).padStart(4, "•")}`
                   : "NOT SIGNED IN"}
             </span>
+            {/* Phase 13 · Step 2 — settings (low-bandwidth toggle lives there) */}
+            <Link
+              href="/public/settings"
+              aria-label="Settings"
+              className="flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/5 text-[var(--dl-text-muted)] transition hover:border-[var(--dl-orange)]/60 hover:text-white"
+            >
+              <Settings aria-hidden="true" className="h-4 w-4" />
+            </Link>
             <Link
               href="/"
               className="rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium transition hover:border-[var(--dl-blue)]/60 hover:text-white"
@@ -122,9 +138,12 @@ export default function PublicDashboardPage() {
         </section>
 
         {/* Phase 6 · Step 8 — Sahayak's rotating safety tips (one every
-            5s, pauses on hover). Proactive advice between chats. */}
+            5s, pauses on hover). Proactive advice between chats. Hidden in
+            low-bandwidth mode (Phase 13 · Step 2). */}
         <section className="mt-8">
-          <SafetyTipsFeed />
+          <BandwidthGate>
+            <SafetyTipsFeed />
+          </BandwidthGate>
         </section>
 
         {/* Phase 5 · Step 6 — "Help Nearby" auto-finder. Client island:
@@ -183,9 +202,12 @@ export default function PublicDashboardPage() {
         </section>
 
         {/* AI Safety Assistant teaser — prompt pills deep-link to
-            /public/ai?q=… (Phase 2 · Step 9) */}
+            /public/ai?q=… (Phase 2 · Step 9). Hidden in low-bandwidth
+            mode (Phase 13 · Step 2). */}
         <section className="mt-8">
-          <AITeaser />
+          <BandwidthGate>
+            <AITeaser />
+          </BandwidthGate>
         </section>
         </PullToRefresh>
       </div>

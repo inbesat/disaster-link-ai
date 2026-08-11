@@ -43,6 +43,13 @@ model User {
   verificationIdUrl String?  @map("verification_id_url") // gov ID/verification document (Phase 1)
   isGuest           Boolean  @default(false) @map("is_guest") // guest/demo session flag (Phase 1)
   isApproved        Boolean  @default(true) @map("is_approved") // gov account approval gate (Phase 1)
+  // Phase 13 · Step 4 — SMS fallback status. Citizens with no internet text
+  // "SAFE" to the Twilio webhook; the status is persisted here so family
+  // members and responders can see it (mirrors the in-app drip:i-am-safe
+  // flow, which is per-browser localStorage only). Requires a migration:
+  //   npx prisma migrate dev --name add_safety_status
+  safetyStatus      String    @default("unknown") @map("safety_status")
+  lastSafeAt        DateTime? @map("last_safe_at")
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -117,15 +124,24 @@ model EmergencyPlan {
 
 // ---------------------------------------------------------------------
 // flood_predictions  (ML output store — written by the FastAPI service)
+//
+// Phase 12 · Cross-Mode Data Bridge: a single table behind BOTH modes.
+//   PUBLIC fields  — risk_level drives citizen-facing risk overlays.
+//   GOV-ONLY fields — raw_model_output (full ML payload) + confidence_score
+//   are filtered server-side; RLS policies (supabase/…/rls_policies) never
+//   expose them to anon users.
 // ---------------------------------------------------------------------
 model FloodPrediction {
   id                  String   @id @default(uuid()) @db.Uuid
   lat                 Float
   lng                 Float
   predictionTimestamp DateTime @map("prediction_timestamp") @db.Timestamptz
-  riskLevel           String   @map("risk_level")
-  confidenceScore     Float    @map("confidence_score")
-  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz
+  // ── Public-safe ─────────────────────────────────────────────────
+  riskLevel String @map("risk_level")
+  // ── Gov-only ────────────────────────────────────────────────────
+  rawModelOutput   Json?  @map("raw_model_output") // raw ML tensor/JSON output
+  confidenceScore  Float  @map("confidence_score") // model confidence 0–1
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
 
   @@index([riskLevel, predictionTimestamp])
   @@index([predictionTimestamp]) // prediction history / time-series charts
@@ -135,6 +151,11 @@ model FloodPrediction {
 
 // ---------------------------------------------------------------------
 // shelters  (PostGIS geometry(Point, 4326) + denormalised lat/lng)
+// Phase 12 · Cross-Mode Data Bridge: one table, two audiences — PUBLIC
+// (name, location, capacity, occupancy, facilities) + GOV-ONLY
+// (contact_person, phone, operational_notes), the latter withheld at the
+// API/RLS layer. Facilities stay public so citizens can pick a shelter
+// by the amenities it offers.
 // ---------------------------------------------------------------------
 model Shelter {
   id               String                                @id @default(uuid()) @db.Uuid
@@ -144,7 +165,8 @@ model Shelter {
   lng              Float
   capacity         Int
   currentOccupancy Int                                   @default(0) @map("current_occupancy")
-  facilities       Json? // { water, food, medical }
+  facilities       Json?                                 // { water, food, medical }
+  operationalNotes String?                               @map("operational_notes") // gov-only comms/logs
   status           String                                @default("open")
   contactPerson    String?                               @map("contact_person")
   phone            String?

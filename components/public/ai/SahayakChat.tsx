@@ -108,13 +108,22 @@ export function SahayakChat() {
   const dragControls = useDragControls();
 
   // Translate-y for a snap point, in px (shows `snap` fraction of content).
+  // SSR-safe: `constraintBottom` calls this during render, where `window`
+  // does not exist — vh>0 only becomes true after the resize listener
+  // fires client-side, so guard the fallback explicitly.
   const snapToPx = useCallback(
-    (fraction: number) => (vh > 0 ? vh * (1 - fraction) : window.innerHeight * (1 - fraction)),
+    (fraction: number) => {
+      if (vh > 0) return vh * (1 - fraction);
+      if (typeof window === "undefined") return 0;
+      return window.innerHeight * (1 - fraction);
+    },
     [vh],
   );
   // Fully hidden translate-y — past the 60% position, off the bottom edge.
   const closedPx = useCallback(
-    () => snapToPx(SNAP_COLLAPSED) + window.innerHeight * CLOSED_MARGIN,
+    () =>
+      snapToPx(SNAP_COLLAPSED) +
+      (typeof window === "undefined" ? 0 : window.innerHeight) * CLOSED_MARGIN,
     [snapToPx],
   );
 
@@ -415,7 +424,7 @@ export function SahayakChat() {
                   <WifiOff className="h-4 w-4 shrink-0 text-[#fcd34d]" aria-hidden />
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-[#fde68a]">{t("offline_title")}</p>
-                    <p className="truncate text-[11px] text-[#fbbf24]/90">
+                    <p className="truncate text-[0.6875rem] text-[#fbbf24]/90">
                       {t("offline_desc")}
                     </p>
                   </div>
@@ -503,7 +512,7 @@ export function SahayakChat() {
                       onKeyDown={handleComposerKey}
                       placeholder={t("sahayak_placeholder")}
                       aria-label={t("sahayak_placeholder")}
-                      className="max-h-[108px] min-h-[32px] flex-1 resize-none bg-transparent py-2.5 text-[15px] text-white outline-none placeholder:text-[#7f96ad]"
+                      className="max-h-[108px] min-h-[32px] flex-1 resize-none bg-transparent py-2.5 text-[0.9375rem] text-white outline-none placeholder:text-[#7f96ad]"
                     />
                   </div>
                   <motion.button

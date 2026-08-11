@@ -117,7 +117,7 @@ export function ResourceMap() {
                   {CATEGORY_META[selected.category].emoji}
                 </span>
               </div>
-              <p className="mt-0.5 text-[11px] uppercase tracking-wider text-slate-500">
+              <p className="mt-0.5 text-[0.6875rem] uppercase tracking-wider text-slate-500">
                 {CATEGORY_META[selected.category].label} · {selected.location}
               </p>
 
@@ -135,7 +135,7 @@ export function ResourceMap() {
                 />
               </div>
 
-              <p className="mt-2 flex items-center gap-1 text-[10px] text-slate-500">
+              <p className="mt-2 flex items-center gap-1 text-[0.625rem] text-slate-500">
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${STATUS_META[selected.status].dot}`}
                   aria-hidden
@@ -149,14 +149,14 @@ export function ResourceMap() {
 
       {/* Legend */}
       <div className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-lg border border-white/10 bg-[#0d1526]/90 px-3 py-2 backdrop-blur">
-        <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
+        <p className="text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-slate-500">
           Status
         </p>
         <ul className="mt-1.5 flex flex-col gap-1">
           {(["available", "deployed", "maintenance"] as const).map((status) => (
             <li
               key={status}
-              className="flex items-center gap-1.5 text-[11px] text-slate-300"
+              className="flex items-center gap-1.5 text-[0.6875rem] text-slate-300"
             >
               <span
                 aria-hidden
@@ -184,7 +184,7 @@ function Row({
   dotClass?: string;
 }) {
   return (
-    <p className="flex items-center justify-between gap-2 text-[11px]">
+    <p className="flex items-center justify-between gap-2 text-[0.6875rem]">
       <span className="text-slate-500">{label}</span>
       <span
         className={`flex items-center gap-1.5 font-semibold text-slate-800 ${

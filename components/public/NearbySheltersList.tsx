@@ -101,7 +101,7 @@ export function NearbySheltersList() {
               </div>
 
               {/* Distance / walk / occupancy readout */}
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-[var(--dl-text-muted)]">
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.6875rem] text-[var(--dl-text-muted)]">
                 <span className="flex items-center gap-1">
                   <Footprints aria-hidden="true" className="h-3.5 w-3.5" />
                   {shelter.walkMins} mins walk
@@ -136,7 +136,7 @@ export function NearbySheltersList() {
                 )}
                 {shelter.food && <FacilityChip icon={UtensilsCrossed} label="Food" />}
                 {!shelter.medical && !shelter.food && (
-                  <span className="text-[11px] text-[var(--dl-text-muted)]">
+                  <span className="text-[0.6875rem] text-[var(--dl-text-muted)]">
                     Basic shelter only
                   </span>
                 )}
@@ -151,7 +151,7 @@ export function NearbySheltersList() {
 
 function FacilityChip({ icon: Icon, label }: { icon: LucideIcon; label: string }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--dl-text-on-navy)]">
+    <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[0.625rem] font-semibold uppercase tracking-wider text-[var(--dl-text-on-navy)]">
       <Icon aria-hidden="true" className="h-3 w-3 text-[var(--dl-orange-light)]" />
       {label}
     </span>

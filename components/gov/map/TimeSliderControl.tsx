@@ -79,14 +79,14 @@ export function TimeSliderControl({ hour, onChange }: TimeSliderControlProps) {
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Brain aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/70">
+          <p className="text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-white/70">
             XGBoost · 72-Hour Flood Forecast
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
           <span
-            className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${STATUS_STYLES[status]}`}
+            className={`rounded-full border px-2.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wide ${STATUS_STYLES[status]}`}
           >
             {status}
           </span>
@@ -131,7 +131,7 @@ export function TimeSliderControl({ hour, onChange }: TimeSliderControlProps) {
         {FORECAST_TICKS.map((t) => (
           <span
             key={t}
-            className={`flex h-4 flex-col items-center gap-0.5 text-[9px] font-medium ${
+            className={`flex h-4 flex-col items-center gap-0.5 text-[0.5625rem] font-medium ${
               t === hour ? "text-[var(--dl-blue-light)]" : "text-white/35"
             }`}
           >
@@ -142,7 +142,7 @@ export function TimeSliderControl({ hour, onChange }: TimeSliderControlProps) {
       </div>
 
       {/* Footer — extent factor readout. */}
-      <div className="mt-1.5 flex items-center justify-between text-[10px] font-medium text-white/50">
+      <div className="mt-1.5 flex items-center justify-between text-[0.625rem] font-medium text-white/50">
         <span>Flood extent ×{floodScaleForHour(hour).toFixed(2)}</span>
         <span>
           {hour === 0

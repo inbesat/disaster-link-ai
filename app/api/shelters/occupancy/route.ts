@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/server/prisma";
+import { PUBLIC_SHELTERS_CACHE_TAG } from "@/lib/cache-tags";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,10 @@ export async function POST(request: NextRequest) {
   try {
     const shelter = await prisma.shelter.findUnique({ where: { id: shelterId } });
     if (!shelter) {
-      return NextResponse.json({ ok: false, error: "Shelter not found." }, { status: 404 });
+      return NextResponse.json(
+        { ok: false, error: "Shelter not found." },
+        { status: 404 },
+      );
     }
 
     const occupancy = Math.max(0, newOccupancy);
@@ -40,6 +44,10 @@ export async function POST(request: NextRequest) {
 
     revalidatePath("/shelters");
     revalidatePath("/dashboard");
+    // Step 8 · cache invalidation pipeline: this replay endpoint is the
+    // field-offline sync path for shelter writes — purge the Public
+    // endpoint's cached list too so offline updates reach the Citizen App.
+    revalidateTag(PUBLIC_SHELTERS_CACHE_TAG);
     return NextResponse.json({ ok: true, shelter: updated });
   } catch (error) {
     console.error("Failed to sync shelter occupancy:", error);

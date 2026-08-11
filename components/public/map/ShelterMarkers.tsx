@@ -248,7 +248,7 @@ function ShelterSheet({ shelter, distanceKm, onNavigate, onClose }: ShelterSheet
           {/* Header row: status badge + close */}
           <div className="flex items-start justify-between gap-3">
             <span
-              className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ${meta.badge}`}
+              className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-widest ${meta.badge}`}
             >
               {isFull ? "⚠" : status === "available" ? "✓" : "◐"} {meta.label}
             </span>
@@ -335,7 +335,7 @@ function ShelterSheet({ shelter, distanceKm, onNavigate, onClose }: ShelterSheet
 
 function FacilityChip({ icon: Icon, label }: { icon: typeof Stethoscope; label: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-[var(--dl-text-on-navy)]">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[0.6875rem] font-semibold text-[var(--dl-text-on-navy)]">
       <Icon aria-hidden="true" className="h-3.5 w-3.5 text-[var(--dl-orange-light)]" />
       {label}
     </span>

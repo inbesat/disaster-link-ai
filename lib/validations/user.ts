@@ -16,6 +16,22 @@ export type Role = (typeof ROLES)[number];
 export const userRoleSchema = z.enum(ROLES);
 
 // ---------------------------------------------------------------------
+// Gov roles — the allow-list for Command Center API endpoints (Step 7).
+// Mirrors GOV_ROLES in middleware.ts; keep in sync.
+// ---------------------------------------------------------------------
+export const GOV_ROLES = ["field_responder", "district_admin", "super_admin"] as const;
+
+export type GovRole = (typeof GOV_ROLES)[number];
+
+// ---------------------------------------------------------------------
+// Admin roles — the strict allow-list for admin-only endpoints (e.g. the
+// Step 10 open-data export). Mirrors ADMIN_ROLES in middleware.ts.
+// ---------------------------------------------------------------------
+export const ADMIN_ROLES = ["super_admin", "district_admin"] as const;
+
+export type AdminRole = (typeof ADMIN_ROLES)[number];
+
+// ---------------------------------------------------------------------
 // Responder organizations
 // ---------------------------------------------------------------------
 export const ORGANIZATIONS = ["NDRF", "SDRF", "NGO", "Govt"] as const;
@@ -68,10 +84,7 @@ export const profileSettingsSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters long"),
   displayName: z.string().min(1, "Display name is required"),
   phone: indianPhoneSchema,
-  bio: z
-    .string()
-    .max(280, "Bio must be 280 characters or fewer")
-    .optional(),
+  bio: z.string().max(280, "Bio must be 280 characters or fewer").optional(),
   designation: designationSchema,
 });
 

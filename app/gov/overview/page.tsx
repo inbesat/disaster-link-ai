@@ -103,7 +103,7 @@ export default function GovOverviewPage() {
                     </p>
                   </div>
                   <span
-                    className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold tracking-wide ${meta.chip}`}
+                    className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.6875rem] font-bold tracking-wide ${meta.chip}`}
                   >
                     <ShieldAlert aria-hidden="true" className="h-3.5 w-3.5" />
                     {meta.label}
@@ -112,7 +112,7 @@ export default function GovOverviewPage() {
 
                 {/* Risk meter */}
                 <div className="mt-4">
-                  <div className="flex items-center justify-between text-[11px] text-[var(--dl-text-muted)]">
+                  <div className="flex items-center justify-between text-[0.6875rem] text-[var(--dl-text-muted)]">
                     <span className="eoc-label">ACTIVE RISK LEVEL</span>
                     <span className="font-mono font-bold text-white/80">{district.riskScore}/100</span>
                   </div>
@@ -127,7 +127,7 @@ export default function GovOverviewPage() {
                 {/* Summary stats */}
                 <dl className="mt-4 grid grid-cols-2 gap-3">
                   <div className="rounded-[var(--dl-radius-sm)] border border-white/10 bg-black/20 p-3">
-                    <dt className="flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-[var(--dl-text-muted)]">
+                    <dt className="flex items-center gap-1.5 text-[0.625rem] uppercase tracking-wide text-[var(--dl-text-muted)]">
                       <Users aria-hidden="true" className="h-3 w-3" /> Evacuees
                     </dt>
                     <dd className="mt-1 font-mono text-xl font-bold tabular-nums text-white">
@@ -135,7 +135,7 @@ export default function GovOverviewPage() {
                     </dd>
                   </div>
                   <div className="rounded-[var(--dl-radius-sm)] border border-white/10 bg-black/20 p-3">
-                    <dt className="flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-[var(--dl-text-muted)]">
+                    <dt className="flex items-center gap-1.5 text-[0.625rem] uppercase tracking-wide text-[var(--dl-text-muted)]">
                       <Boxes aria-hidden="true" className="h-3 w-3" /> Resources Deployed
                     </dt>
                     <dd className="mt-1 font-mono text-xl font-bold tabular-nums text-white">

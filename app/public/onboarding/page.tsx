@@ -3,7 +3,20 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { MotionConfig, motion, type Variants } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowRight,
+  BellRing,
+  ChevronLeft,
+  ChevronRight,
+  Map,
+  Tent,
+  Users,
+  Volume2,
+  VolumeX,
+  type LucideIcon,
+} from "lucide-react";
+import { useTextToSpeech, voiceLangForLocale } from "@/hooks/useTextToSpeech";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 // ---------------------------------------------------------------------
 // app/public/onboarding/page.tsx — Phase 1 · Step 5 · Public Onboarding
@@ -19,9 +32,14 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 const SETUP_URL = "/public/setup";
 
 type Slide = {
-  icon: string;
+  /** Large SVG icon for the chip — Phase 13 · Step 7 keeps the design
+      icon-driven so low-literacy citizens read pictures, not words. */
+  Icon: LucideIcon;
   title: string;
   description: string;
+  /** Spoken narration in English + Hindi (Phase 13 · Step 7): the button
+      reads the slide aloud in the citizen's preferred language. */
+  narration: { en: string; hi: string };
   illustration: ReactNode;
 };
 
@@ -30,7 +48,7 @@ function AlertIllustration() {
     <div className="relative w-64 rounded-2xl border border-white/10 bg-[var(--dl-navy-2)]/80 p-4 text-left shadow-[var(--dl-shadow-soft)]">
       <div className="flex items-center gap-2">
         <span className="h-2.5 w-2.5 animate-pulse-ring rounded-full bg-severity-red-500" />
-        <p className="font-mono text-[10px] uppercase tracking-widest text-severity-red-400">
+        <p className="font-mono text-[0.625rem] uppercase tracking-widest text-severity-red-400">
           Critical · Flood
         </p>
       </div>
@@ -39,10 +57,10 @@ function AlertIllustration() {
         Evacuate now · Safe routes below
       </p>
       <div className="mt-3 flex gap-1.5">
-        <span className="rounded-md bg-severity-red-500/20 px-2 py-1 font-mono text-[10px] text-severity-red-300">
+        <span className="rounded-md bg-severity-red-500/20 px-2 py-1 font-mono text-[0.625rem] text-severity-red-300">
           ALERT
         </span>
-        <span className="rounded-md bg-white/10 px-2 py-1 font-mono text-[10px] text-[var(--dl-text-on-navy)]">
+        <span className="rounded-md bg-white/10 px-2 py-1 font-mono text-[0.625rem] text-[var(--dl-text-on-navy)]">
           09:41 IST
         </span>
       </div>
@@ -87,7 +105,7 @@ function ShelterIllustration() {
       </div>
       <div className="mt-3 flex items-center gap-1.5">
         <span className="h-2 w-2 animate-pulse-ring rounded-full bg-severity-green-500" />
-        <span className="font-mono text-[10px] uppercase tracking-widest text-severity-green-400">
+        <span className="font-mono text-[0.625rem] uppercase tracking-widest text-severity-green-400">
           Shelter open
         </span>
       </div>
@@ -119,31 +137,47 @@ function FamilyIllustration() {
 
 const SLIDES: Slide[] = [
   {
-    icon: "🌊",
+    Icon: BellRing,
     title: "Get real-time flood alerts",
     description:
       "Know the moment water levels turn dangerous. Life-safety alerts reach you and your family before the flood does.",
+    narration: {
+      en: "Get real time flood alerts. Know the moment water levels turn dangerous. Life safety alerts reach you and your family before the flood does.",
+      hi: "बाढ़ की चेतावनी तुरंत पाएं। पानी खतरनाक होने से पहले ही आपको और आपके परिवार को जीवन रक्षक सूचनाएं मिलती हैं।",
+    },
     illustration: <AlertIllustration />,
   },
   {
-    icon: "🧭",
+    Icon: Map,
     title: "See safe evacuation routes",
     description:
       "Clear, verified routes out of your area — updated as roads close, so you never walk into danger.",
+    narration: {
+      en: "See safe evacuation routes. Clear, verified routes out of your area, updated as roads close, so you never walk into danger.",
+      hi: "अपने इलाके से निकलने के सुरक्षित रास्ते देखें। सड़कें बंद होने पर भी ये अपडेट होते रहते हैं, ताकि आप कभी खतरे की ओर न जाएं।",
+    },
     illustration: <RouteIllustration />,
   },
   {
-    icon: "🏕️",
+    Icon: Tent,
     title: "Find nearest shelter",
     description:
       "Locate the closest open shelter with live capacity — school, community hall or relief camp.",
+    narration: {
+      en: "Find nearest shelter. Locate the closest open shelter with live capacity, school, community hall or relief camp.",
+      hi: "अपने सबसे नज़दीकी खुले आश्रय स्थल का पता लगाएं — स्कूल, सामुदायिक भवन या राहत शिविर, खाली बिस्तरों की जानकारी के साथ।",
+    },
     illustration: <ShelterIllustration />,
   },
   {
-    icon: "👨‍👩‍👧",
+    Icon: Users,
     title: "Stay connected with family",
     description:
       "Add your family contacts so they're alerted and checked on, even when you can't reach them.",
+    narration: {
+      en: "Stay connected with family. Add your family contacts so they're alerted and checked on, even when you can't reach them.",
+      hi: "अपने परिवार के संपर्क जोड़ें ताकि आप उन तक न पहुंच पाने पर भी उन्हें सूचनाएं और सुरक्षा की जांच मिलती रहे।",
+    },
     illustration: <FamilyIllustration />,
   },
 ];
@@ -162,6 +196,38 @@ export default function OnboardingPage() {
     [],
   );
   const goPrev = useCallback(() => setIndex((i) => Math.max(i - 1, 0)), []);
+
+  // Phase 13 · Step 7 — language-aware narration. `supported` gates the
+  // button (no dead controls on browsers without speechSynthesis).
+  const { language } = useTranslation();
+  const { speak, stop, speaking, supported } = useTextToSpeech();
+  const isHindi = language === "hi";
+  // The narration text is only ever Hindi (Devanagari) or English, so the
+  // voice must match the SPOKEN text — not the UI language. A Bengali UI
+  // still narrates English copy with an English voice; only Hindi gets the
+  // hi-IN voice (voiceLangForLocale("en") is undefined by design).
+  const voiceLang = isHindi ? voiceLangForLocale("hi") : undefined;
+
+  const narrationFor = useCallback(
+    (slide: Slide) => (isHindi ? slide.narration.hi : slide.narration.en),
+    [isHindi],
+  );
+
+  const toggleListen = useCallback(
+    (text: string) => {
+      if (speaking) {
+        stop();
+        return;
+      }
+      speak(text, voiceLang);
+    },
+    [speaking, speak, stop, voiceLang],
+  );
+
+  // Swiping/arrowing to another slide cuts off any in-flight narration.
+  useEffect(() => {
+    stop();
+  }, [index, stop]);
 
   // Arrow-key navigation (desktop).
   useEffect(() => {
@@ -253,9 +319,9 @@ export default function OnboardingPage() {
 
                     <span
                       aria-hidden="true"
-                      className="mt-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--dl-orange)]/15 text-3xl ring-1 ring-[var(--dl-orange)]/30"
+                      className="mt-10 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--dl-orange)]/15 text-white ring-1 ring-[var(--dl-orange)]/30"
                     >
-                      {slide.icon}
+                      <slide.Icon className="h-8 w-8" strokeWidth={1.8} />
                     </span>
                     <h1 className="mt-5 max-w-sm text-3xl font-bold tracking-tight text-white">
                       {slide.title}
@@ -264,8 +330,57 @@ export default function OnboardingPage() {
                       {slide.description}
                     </p>
 
+                    {/* Phase 13 · Step 7 — massive "Tap to Listen" narration
+                        button. Reads the slide aloud in the preferred
+                        language (Hindi when the app is in Hindi, otherwise
+                        English); flips to a pulsing Stop state while
+                        speaking. */}
+                    {supported && (
+                    <button
+                      type="button"
+                      onClick={() => toggleListen(narrationFor(slide))}
+                      aria-pressed={speaking}
+                      aria-label={speaking ? "Stop narration" : "Listen to this slide"}
+                      className={`mt-8 flex items-center gap-3.5 rounded-full py-2.5 pl-2.5 pr-6 transition-all duration-300 ${
+                        speaking
+                          ? "bg-white/10 text-white ring-2 ring-[var(--dl-orange)]"
+                          : "bg-[var(--dl-orange)] text-white shadow-[0_10px_32px_rgba(234,88,12,0.4)] hover:bg-[#EA5B0C] hover:shadow-[0_12px_38px_rgba(234,88,12,0.5)]"
+                      }`}
+                    >
+                      <span
+                        className={`relative flex h-12 w-12 items-center justify-center rounded-full ${
+                          speaking ? "bg-[var(--dl-orange)]/25" : "bg-white/20"
+                        }`}
+                      >
+                        {speaking && (
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-0 animate-ping rounded-full bg-[var(--dl-orange)]/40 motion-reduce:animate-none"
+                          />
+                        )}
+                        {speaking ? (
+                          <VolumeX className="h-6 w-6" aria-hidden="true" />
+                        ) : (
+                          <Volume2 className="h-6 w-6" aria-hidden="true" />
+                        )}
+                      </span>
+                      <span className="text-left">
+                        <span className="block text-base font-bold leading-tight">
+                          {speaking ? "Speaking…" : "Tap to Listen"}
+                        </span>
+                        <span className="block text-[0.6875rem] font-medium opacity-80">
+                          {speaking
+                            ? "Tap to stop"
+                            : isHindi
+                              ? "हिन्दी में सुनें"
+                              : "Listen in your language"}
+                        </span>
+                      </span>
+                    </button>
+                    )}
+
                     {i === 0 && (
-                      <p className="mt-8 font-mono text-[11px] uppercase tracking-widest text-[var(--dl-text-muted)]">
+                      <p className="mt-8 font-mono text-[0.6875rem] uppercase tracking-widest text-[var(--dl-text-muted)]">
                         ← Swipe to explore →
                       </p>
                     )}

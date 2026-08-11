@@ -114,7 +114,7 @@ export function MoreBottomSheet({ open, onClose }: MoreSheetProps) {
               <span className="w-7" aria-hidden />
             </div>
 
-            <p className="px-5 pb-1 pt-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            <p className="px-5 pb-1 pt-2 text-[0.625rem] font-bold uppercase tracking-widest text-slate-500">
               More
             </p>
 
@@ -123,7 +123,7 @@ export function MoreBottomSheet({ open, onClose }: MoreSheetProps) {
               {ITEMS.map((item) => {
                 const Icon = item.icon;
                 const baseClassName =
-                  "flex min-h-[72px] flex-col items-center justify-center gap-1.5 rounded-xl p-3 text-[11px] font-semibold transition-colors duration-150 motion-reduce:transition-none";
+                  "flex min-h-[72px] flex-col items-center justify-center gap-1.5 rounded-xl p-3 text-[0.6875rem] font-semibold transition-colors duration-150 motion-reduce:transition-none";
                 if (item.kind === "logout") {
                   return (
                     <button

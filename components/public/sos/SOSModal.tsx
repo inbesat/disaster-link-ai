@@ -286,7 +286,7 @@ export default function SOSModal() {
             {/* Grab handle + swipe hint */}
             <div className="flex flex-col items-center pt-3">
               <span aria-hidden="true" className="h-1.5 w-12 rounded-full bg-white/20" />
-              <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--dl-text-muted)]">
+              <p className="mt-1.5 text-[0.625rem] font-semibold uppercase tracking-widest text-[var(--dl-text-muted)]">
                 Swipe down to close
               </p>
             </div>
@@ -341,7 +341,7 @@ export default function SOSModal() {
                         strokeWidth={2}
                       />
                     )}
-                    <span className="text-[13px] font-bold leading-tight">
+                    <span className="text-[0.8125rem] font-bold leading-tight">
                       {action.label}
                     </span>
                   </>
@@ -373,7 +373,7 @@ export default function SOSModal() {
             </div>
 
                 {/* Reassurance footer */}
-                <p className="px-5 pt-4 text-center text-[11px] text-[var(--dl-text-muted)]">
+                <p className="px-5 pt-4 text-center text-[0.6875rem] text-[var(--dl-text-muted)]">
                   Your SOS includes your saved location. Help is on the way.
                 </p>
               </>

@@ -2,9 +2,10 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Battery, BatteryFull, BatteryLow, Wifi, WifiOff } from "lucide-react";
-import QuickActionsNav from "@/components/field/QuickActionsNav";
+import FieldBottomNav from "@/components/field/FieldBottomNav";
 import SosPanicModal from "@/components/field/SosPanicModal";
 import SyncStatusBadge from "@/components/field/SyncStatusBadge";
+import PreDeploymentChecklist from "@/components/field/PreDeploymentChecklist";
 import BackButton from "@/components/ui/BackButton";
 
 interface FieldProfile {
@@ -67,7 +68,10 @@ export default function FieldShell({
   const battery = useBattery(78);
 
   return (
-    <div className="min-h-screen bg-[#0A0F1D] text-[17px] text-gray-100">
+    // Phase 14 · Step 1 — strict mobile shell: max-w-md column centered on
+    // desktop, overflow-x hidden (no horizontal scroll on field devices),
+    // safe-area insets handled by the bottom nav + pb below.
+    <div className="min-h-screen overflow-x-hidden bg-[#0A0F1D] text-[1.0625rem] text-gray-100">
       {/* Header — mobile-first, high visibility */}
       <header className="sticky top-0 z-40 border-b-2 border-cyan-400/40 bg-[#0A0F1D]">
         <div className="flex items-center justify-between gap-3 px-4 py-3">
@@ -118,11 +122,19 @@ export default function FieldShell({
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 pb-28 pt-6">{children}</main>
+      <main className="mx-auto w-full max-w-md px-4 pb-32 pt-6">{children}</main>
 
-      <QuickActionsNav />
+      {/* Phase 14 · Step 1 — 5-tab responder bottom nav (Tasks/Map/Team/
+          Chat/SOS). The older QuickActionsNav quick-action bar is replaced
+          by the QuickStatusGrid living on the Tasks page (Step 4). */}
+      <FieldBottomNav />
 
       <SyncStatusBadge />
+
+      {/* Phase 14 · Step 9 — pre-deployment readiness checklist. Auto-opens
+          once per shift (first login) on every field page; renders nothing
+          once confirmed. */}
+      <PreDeploymentChecklist />
     </div>
   );
 }

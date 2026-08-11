@@ -197,7 +197,7 @@ function ComparePane({
 
       {/* Pane badge — top left of the pane. */}
       <div className="pointer-events-none absolute left-3 top-3 z-10 rounded-lg border border-white/15 bg-[#0d1526]/90 px-3 py-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.5)] backdrop-blur">
-        <span className="flex items-center gap-1.5 text-[11px] font-bold tracking-wider text-white/90">
+        <span className="flex items-center gap-1.5 text-[0.6875rem] font-bold tracking-wider text-white/90">
           <span
             aria-hidden="true"
             className="h-2 w-2 rounded-full"
@@ -205,7 +205,7 @@ function ComparePane({
           />
           {title}
         </span>
-        <span className="mt-0.5 block text-[9px] uppercase tracking-wide text-white/40">
+        <span className="mt-0.5 block text-[0.5625rem] uppercase tracking-wide text-white/40">
           {caption}
         </span>
       </div>

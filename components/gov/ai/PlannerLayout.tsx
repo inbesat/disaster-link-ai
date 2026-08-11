@@ -132,7 +132,7 @@ export function PlannerLayout({
               <h1 className="truncate text-sm font-bold leading-tight text-white">
                 AI Emergency Planner
               </h1>
-              <p className="hidden truncate text-[10px] uppercase tracking-[0.18em] text-muted sm:block">
+              <p className="hidden truncate text-[0.625rem] uppercase tracking-[0.18em] text-muted sm:block">
                 Multi-agent orchestration · Government
               </p>
             </div>
@@ -149,14 +149,14 @@ export function PlannerLayout({
             aria-haspopup="dialog"
             aria-expanded={planOpen}
             aria-controls="planner-live-plan"
-            className="inline-flex items-center gap-1.5 rounded-full bg-accent-purple/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-accent-purple ring-1 ring-accent-purple/40 shadow-[0_0_16px_rgba(139,92,246,0.25)] transition hover:bg-accent-purple/25 active:scale-95 lg:hidden"
+            className="inline-flex items-center gap-1.5 rounded-full bg-accent-purple/15 px-3 py-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-accent-purple ring-1 ring-accent-purple/40 shadow-[0_0_16px_rgba(139,92,246,0.25)] transition hover:bg-accent-purple/25 active:scale-95 lg:hidden"
           >
             <Radio className="h-3.5 w-3.5" aria-hidden />
             View Live Plan
           </button>
 
           {/* Active district chip */}
-          <span className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-slate-200 md:inline-flex">
+          <span className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[0.6875rem] font-semibold text-slate-200 md:inline-flex">
             <MapPinned className="h-3 w-3 text-accent" aria-hidden />
             {district}
           </span>
@@ -166,7 +166,7 @@ export function PlannerLayout({
             {AGENTS.map((agent) => (
               <span
                 key={agent.id}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-300"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 text-[0.625rem] font-semibold uppercase tracking-wider text-slate-300"
               >
                 <span className="relative flex h-1.5 w-1.5" aria-hidden>
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
@@ -178,7 +178,7 @@ export function PlannerLayout({
           </div>
 
           {/* Live badge */}
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-purple/40 bg-accent-purple/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-purple shadow-[0_0_14px_rgba(139,92,246,0.25)]">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-purple/40 bg-accent-purple/10 px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-wider text-accent-purple shadow-[0_0_14px_rgba(139,92,246,0.25)]">
             <span
               className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-purple"
               aria-hidden

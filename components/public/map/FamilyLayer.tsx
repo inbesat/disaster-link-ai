@@ -136,7 +136,7 @@ function FamilyAvatarMarker({ member, isSelected, onTap }: FamilyAvatarMarkerPro
       >
         {/* Circular avatar with initials — no photos in the demo */}
         <span
-          className={`flex h-11 w-11 items-center justify-center rounded-full border-2 text-[13px] font-bold text-white shadow-[0_4px_14px_rgba(0,0,0,0.45)] backdrop-blur-sm ${
+          className={`flex h-11 w-11 items-center justify-center rounded-full border-2 text-[0.8125rem] font-bold text-white shadow-[0_4px_14px_rgba(0,0,0,0.45)] backdrop-blur-sm ${
             isSelected
               ? "border-[var(--dl-orange)] bg-[var(--dl-navy-2)] ring-2 ring-[var(--dl-orange)]/40"
               : "border-white/30 bg-gradient-to-br from-[var(--dl-navy-3)] to-[var(--dl-navy-1)]"

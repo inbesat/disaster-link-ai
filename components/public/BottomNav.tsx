@@ -101,7 +101,7 @@ export default function BottomNav() {
                   <Icon className="h-5 w-5" strokeWidth={2} />
                 </span>
                 <span
-                  className={`text-[10px] font-semibold uppercase tracking-wider transition-colors duration-150 ${
+                  className={`text-[0.625rem] font-semibold uppercase tracking-wider transition-colors duration-150 ${
                     active ? "text-[var(--dl-orange)]" : "text-[var(--dl-text-muted)]"
                   }`}
                 >
@@ -130,7 +130,7 @@ export default function BottomNav() {
                 <Icon className="h-5 w-5" strokeWidth={2} />
               </span>
               <span
-                className={`text-[10px] font-semibold uppercase tracking-wider transition-colors duration-150 ${
+                className={`text-[0.625rem] font-semibold uppercase tracking-wider transition-colors duration-150 ${
                   active ? "text-[var(--dl-orange)]" : "text-[var(--dl-text-muted)]"
                 }`}
               >

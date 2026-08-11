@@ -135,7 +135,7 @@ export function QuickActionDock() {
                 {/* Tooltip */}
                 <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg border border-white/10 bg-[#0d1526]/95 px-3 py-1.5 text-right opacity-0 shadow-lg backdrop-blur transition-opacity duration-150 group-hover:opacity-100">
                   <span className="block text-xs font-semibold text-white">{action.label}</span>
-                  <span className="block text-[10px] text-[var(--dl-text-muted)]">{action.hint}</span>
+                  <span className="block text-[0.625rem] text-[var(--dl-text-muted)]">{action.hint}</span>
                 </span>
                 <button
                   type="button"

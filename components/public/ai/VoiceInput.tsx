@@ -234,8 +234,8 @@ export function VoiceInput({ onResult, lang = "en-IN", disabled = false }: Voice
         whileHover={disabled ? undefined : { scale: 1.06 }}
         className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399] disabled:cursor-not-allowed disabled:opacity-40 ${
           listening
-            ? "border-[#f87171]/70 bg-gradient-to-br from-[#ef4444] to-[#dc2626] text-white shadow-[0_0_24px_rgba(239,68,68,0.55)]"
-            : "border-[#34d399]/40 bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] hover:border-[#34d399]"
+            ? "border-[#f87171]/70 bg-[#ef4444] bg-gradient-to-br from-[#ef4444] to-[#dc2626] text-white shadow-[0_0_24px_rgba(239,68,68,0.55)]"
+            : "border-[#34d399]/40 bg-[#16a34a] bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] hover:border-[#34d399]"
         }`}
       >
         {/* Pulsing halo ring while listening. */}
@@ -270,7 +270,7 @@ export function VoiceInput({ onResult, lang = "en-IN", disabled = false }: Voice
             <div className="flex items-center gap-3 rounded-2xl border border-[#f87171]/30 bg-[#0f172a]/95 px-4 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.4)] backdrop-blur">
               <Waveform />
               <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-2 text-[13px] font-bold uppercase tracking-wider text-[#fca5a5]">
+                <p className="flex items-center gap-2 text-[0.8125rem] font-bold uppercase tracking-wider text-[#fca5a5]">
                   <span
                     aria-hidden
                     className="h-2 w-2 animate-pulse rounded-full bg-[#f87171]"

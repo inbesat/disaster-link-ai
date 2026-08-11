@@ -29,6 +29,7 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { MapPin, PhoneCall, Square, Volume2, X } from "lucide-react";
 import { triggerCriticalHaptic } from "@/hooks/useHaptics";
 import { stopSpeaking, useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { formatCountdown } from "@/lib/alerts/countdown";
 
 /** Default countdown — 4 hours to flood, per the spec ("04:00:00"). */
 const DEFAULT_COUNTDOWN_SECONDS = 4 * 60 * 60;
@@ -47,15 +48,6 @@ export type CriticalAlertOverlayProps = {
   /** Override the mock countdown length (seconds). */
   countdownSeconds?: number;
 };
-
-/** 14400 → "04:00:00" (zero-padded). */
-export function formatCountdown(totalSeconds: number): string {
-  const clamped = Math.max(0, Math.floor(totalSeconds));
-  const h = Math.floor(clamped / 3600);
-  const m = Math.floor((clamped % 3600) / 60);
-  const s = clamped % 60;
-  return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
-}
 
 export function CriticalAlertOverlay({
   open,
@@ -146,7 +138,7 @@ export function CriticalAlertOverlay({
 
             {/* Top row — dismiss */}
             <div className="relative z-10 flex items-center justify-between p-5">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/20 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white/90">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/20 px-3 py-1 text-[0.6875rem] font-bold uppercase tracking-widest text-white/90">
                 <span className="h-2 w-2 animate-ping rounded-full bg-white" aria-hidden />
                 Official Warning
               </span>
@@ -207,7 +199,7 @@ export function CriticalAlertOverlay({
 
               {/* Mock countdown */}
               <div className="mt-8 w-full max-w-xs rounded-2xl border border-white/30 bg-black/25 p-4 backdrop-blur">
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-white/75">
+                <p className="text-[0.6875rem] font-semibold uppercase tracking-widest text-white/75">
                   Flood expected in
                 </p>
                 <p
@@ -217,7 +209,7 @@ export function CriticalAlertOverlay({
                 >
                   {formatCountdown(remaining)}
                 </p>
-                <p className="mt-1 text-[11px] text-white/70">
+                <p className="mt-1 text-[0.6875rem] text-white/70">
                   Move to the nearest shelter before this timer ends
                 </p>
               </div>

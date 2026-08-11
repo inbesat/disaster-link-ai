@@ -87,11 +87,11 @@ export function PlanApprovalBar() {
       {status === "pending" && (
         <div className="flex flex-col gap-2.5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-warning/40 bg-accent-warning/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-warning shadow-[0_0_12px_rgba(245,158,11,0.25)]">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-warning/40 bg-accent-warning/10 px-2.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-accent-warning shadow-[0_0_12px_rgba(245,158,11,0.25)]">
               <AlertTriangle className="h-3 w-3" aria-hidden />
               Pending Approval
             </span>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[0.6875rem] text-slate-400">
               The AI cannot deploy resources until a commander signs off.
             </p>
           </div>
@@ -130,9 +130,9 @@ export function PlanApprovalBar() {
                 Executing
               </p>
             </div>
-            <span className="font-mono text-[10px] text-slate-400">PNP-6-B1</span>
+            <span className="font-mono text-[0.625rem] text-slate-400">PNP-6-B1</span>
           </div>
-          <p className="mt-1 text-[11px] leading-relaxed text-slate-300">
+          <p className="mt-1 text-[0.6875rem] leading-relaxed text-slate-300">
             Plan locked. Alerts broadcasting and field units deploying — telemetry will
             confirm within 5 minutes.
           </p>
@@ -149,7 +149,7 @@ export function PlanApprovalBar() {
             <p className="text-xs font-bold uppercase tracking-wider text-accent-warning">
               Revising plan
             </p>
-            <p className="text-[11px] text-slate-300">
+            <p className="text-[0.6875rem] text-slate-300">
               Swarm agents are addressing requested changes…
             </p>
           </div>
@@ -157,7 +157,7 @@ export function PlanApprovalBar() {
       )}
 
       {status !== "pending" && (
-        <p className="mt-2 flex items-center gap-1.5 text-[10px] text-muted">
+        <p className="mt-2 flex items-center gap-1.5 text-[0.625rem] text-muted">
           <Lock className="h-3 w-3" aria-hidden />
           Nothing deploys without commander authorization.
         </p>

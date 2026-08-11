@@ -141,7 +141,7 @@ export function OrchestrationFlow() {
           </span>
           <div className="min-w-0">
             <h2 className="truncate text-sm font-bold text-white">Agent Orchestration</h2>
-            <p className="truncate text-[10px] uppercase tracking-[0.18em] text-muted">
+            <p className="truncate text-[0.625rem] uppercase tracking-[0.18em] text-muted">
               Swarm pipeline · 5 agents · Sequential
             </p>
           </div>
@@ -150,15 +150,15 @@ export function OrchestrationFlow() {
         {/* Progress readout */}
         <div className="hidden items-center gap-2 sm:flex">
           {running ? (
-            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-accent-purple">
+            <span className="font-mono text-[0.625rem] font-bold uppercase tracking-wider text-accent-purple">
               {completedCount}/{EMERGENCY_AGENTS.length} complete
             </span>
           ) : finished ? (
-            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-accent-success">
+            <span className="font-mono text-[0.625rem] font-bold uppercase tracking-wider text-accent-success">
               Plan generated
             </span>
           ) : (
-            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted">
+            <span className="font-mono text-[0.625rem] font-bold uppercase tracking-wider text-muted">
               Standby
             </span>
           )}
@@ -168,7 +168,7 @@ export function OrchestrationFlow() {
           type="button"
           onClick={handleGenerate}
           disabled={running}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-accent-purple px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-[0_0_16px_rgba(139,92,246,0.4)] transition hover:bg-accent-purple/90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-accent-purple px-3 py-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-white shadow-[0_0_16px_rgba(139,92,246,0.4)] transition hover:bg-accent-purple/90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {running ? (
             <>

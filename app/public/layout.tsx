@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import PreviewModeBanner from "@/components/gov/PreviewModeBanner";
 import PublicAlertHost from "@/components/public/PublicAlertHost";
+import BandwidthGate from "@/components/public/BandwidthGate";
 import { SOSProvider } from "@/components/public/sos/SOSContext";
 import SOSModal from "@/components/public/sos/SOSModal";
 import EmergencyModeBanner from "@/components/public/sos/EmergencyModeBanner";
@@ -8,6 +9,8 @@ import LocationTracker from "@/components/public/sos/LocationTracker";
 import SafetyNudge from "@/components/public/sos/SafetyNudge";
 import ShakeToSOSHost from "@/components/public/sos/ShakeToSOSHost";
 import SahayakChat from "@/components/public/ai/SahayakChat";
+import PwaInstallPrompt from "@/components/pwa/PwaInstallPrompt";
+import { BandwidthProvider } from "@/lib/contexts/BandwidthContext";
 
 // ---------------------------------------------------------------------
 // app/public/layout.tsx — Phase 1 · Step 10. Wraps every citizen page
@@ -32,10 +35,18 @@ import SahayakChat from "@/components/public/ai/SahayakChat";
 export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
     <SOSProvider>
-      <PreviewModeBanner />
-      {children}
-      <PublicAlertHost />
-      <SOSModal />
+      {/* Phase 13 · Step 2 — extreme low-bandwidth flag for every /public
+          page (maps/images/AI hidden while active). */}
+      <BandwidthProvider>
+        <PreviewModeBanner />
+        {children}
+        <PublicAlertHost />
+
+        {/* Phase 13 · Step 3 — install banner: appears above the BottomNav
+            when the browser can install the app (beforeinstallprompt) and
+            the citizen hasn't dismissed it. Renders nothing otherwise. */}
+        <PwaInstallPrompt />
+        <SOSModal />
 
       {/* Phase 5 · Steps 4–5 — one fixed top stack hosts the Emergency
           banner and the live-location tracker, so the tracker always sits
@@ -55,8 +66,12 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <ShakeToSOSHost />
 
       {/* Phase 6 · Steps 1–2 — the Sahayak safety companion: FAB + draggable
-          bottom sheet with the WhatsApp-style welcome bubble. */}
-      <SahayakChat />
+          bottom sheet with the WhatsApp-style welcome bubble. Hidden in
+          low-bandwidth mode (it streams AI tokens — Phase 13 · Step 2). */}
+      <BandwidthGate>
+        <SahayakChat />
+      </BandwidthGate>
+      </BandwidthProvider>
     </SOSProvider>
   );
 }

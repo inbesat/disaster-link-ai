@@ -129,7 +129,7 @@ export default function GovLoginPage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 border-t border-white/10 pt-4 font-mono text-[11px] leading-relaxed text-[var(--dl-text-muted)]">
+              <p className="mt-6 border-t border-white/10 pt-4 font-mono text-[0.6875rem] leading-relaxed text-[var(--dl-text-muted)]">
                 Unauthorized access is tracked &amp; logged.
                 <br />
                 System: DRIP-GOV v2.4 · Encrypted channel ✓
@@ -204,7 +204,7 @@ export default function GovLoginPage() {
                         >
                           {option.label}
                         </span>
-                        <span className="mt-0.5 block text-[11px] text-[var(--dl-text-muted)]">
+                        <span className="mt-0.5 block text-[0.6875rem] text-[var(--dl-text-muted)]">
                           {option.description}
                         </span>
                       </button>

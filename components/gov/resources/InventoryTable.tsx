@@ -156,7 +156,7 @@ export function InventoryTable() {
               </span>
               <div>
                 <p className="font-semibold text-white">{row.original.name}</p>
-                <p className="text-[11px] uppercase tracking-wider text-muted">
+                <p className="text-[0.6875rem] uppercase tracking-wider text-muted">
                   {CATEGORY_META[row.original.category].label}
                 </p>
               </div>
@@ -170,7 +170,7 @@ export function InventoryTable() {
         cell: ({ row }) => (
           <span className="font-mono tabular-nums text-white">
             {row.original.quantity.toLocaleString("en-IN")}
-            <span className="ml-1 text-[11px] text-muted">{row.original.unit}</span>
+            <span className="ml-1 text-[0.6875rem] text-muted">{row.original.unit}</span>
           </span>
         ),
       }),
@@ -188,7 +188,7 @@ export function InventoryTable() {
           const status = row.original.status;
           return (
             <span
-              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${STATUS_CHIP[status]}`}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.625rem] font-bold uppercase tracking-wider ${STATUS_CHIP[status]}`}
             >
               <span
                 className={`h-1.5 w-1.5 rounded-full ${STATUS_META[status].dot}`}
@@ -297,7 +297,7 @@ export function InventoryTable() {
                         <button
                           type="button"
                           onClick={header.column.getToggleSortingHandler()}
-                          className="group inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-muted transition hover:text-white"
+                          className="group inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-[0.15em] text-muted transition hover:text-white"
                         >
                           {flexRender(
                             header.column.columnDef.header,
@@ -313,7 +313,7 @@ export function InventoryTable() {
                           />
                         </button>
                       ) : (
-                        <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted">
+                        <span className="text-[0.625rem] font-bold uppercase tracking-[0.15em] text-muted">
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
@@ -356,11 +356,11 @@ export function InventoryTable() {
 
       {/* Footer */}
       <div className="flex items-center justify-between border-t border-white/10 bg-[#0d1526] px-4 py-2.5">
-        <p className="text-[11px] uppercase tracking-wider text-muted">
+        <p className="text-[0.6875rem] uppercase tracking-wider text-muted">
           Showing <span className="font-bold text-white">{filteredCount}</span> of{" "}
           {RESOURCE_INVENTORY.length} district assets
         </p>
-        <p className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-slate-600 sm:block">
+        <p className="hidden font-mono text-[0.625rem] uppercase tracking-[0.2em] text-slate-600 sm:block">
           Inventory feed · live sync
         </p>
       </div>

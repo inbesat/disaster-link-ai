@@ -91,7 +91,7 @@ export default function ReportIncidentFAB({ onSubmit }: ReportIncidentFABProps) 
             transition={{ duration: 0.18 }}
             className="w-60 overflow-hidden rounded-2xl border border-white/10 bg-[#0a1120]/95 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl"
           >
-            <p className="px-4 pb-1 pt-3 text-[10px] font-bold uppercase tracking-widest text-[var(--dl-text-muted)]">
+            <p className="px-4 pb-1 pt-3 text-[0.625rem] font-bold uppercase tracking-widest text-[var(--dl-text-muted)]">
               Report what you see
             </p>
             {REPORT_OPTIONS.map((option) => (

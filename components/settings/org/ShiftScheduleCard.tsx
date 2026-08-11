@@ -14,50 +14,30 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { AlarmClock, ChevronDown, Users } from "lucide-react";
-
-type ShiftId = "morning" | "evening" | "night";
-
-type Shift = {
-  id: ShiftId;
-  name: string;
-  start: string;
-  end: string;
-};
-
-const DEFAULT_SHIFTS: Shift[] = [
-  { id: "morning", name: "Morning", start: "06:00", end: "14:00" },
-  { id: "evening", name: "Evening", start: "14:00", end: "22:00" },
-  { id: "night", name: "Night", start: "22:00", end: "06:00" },
-];
-
-const TEAM_MEMBERS = [
-  { name: "Anita Sharma", role: "Super Admin" },
-  { name: "Rajesh Nair", role: "District Admin" },
-  { name: "Priya Menon", role: "Field Responder" },
-  { name: "Karan Verma", role: "Field Responder" },
-  { name: "Sita Thomas", role: "Viewer" },
-  { name: "Vikram Yadav", role: "Field Responder" },
-  { name: "Meera Pillai", role: "District Admin" },
-  { name: "Devil Kumar", role: "Field Responder" },
-];
-
-const DEFAULT_ROSTER: Record<ShiftId, string[]> = {
-  morning: ["Anita Sharma", "Karan Verma"],
-  evening: ["Priya Menon", "Meera Pillai"],
-  night: ["Rajesh Nair", "Devil Kumar"],
-};
+import { AlarmClock, AlertTriangle, ChevronDown, Users } from "lucide-react";
+import {
+  DEFAULT_ROSTER,
+  DEFAULT_SHIFTS,
+  TEAM_MEMBERS,
+  findShiftConflicts,
+  type Shift,
+  type ShiftId,
+  type ShiftRoster,
+} from "@/lib/settings/shift-schedule";
 
 export default function ShiftScheduleCard() {
   const [shifts, setShifts] = useState<Shift[]>(DEFAULT_SHIFTS);
   const [activeShiftId, setActiveShiftId] = useState<ShiftId>("night");
-  const [roster, setRoster] = useState<Record<ShiftId, string[]>>(
-    DEFAULT_ROSTER,
-  );
+  const [roster, setRoster] = useState<ShiftRoster>(DEFAULT_ROSTER);
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const activeShift = shifts.find((s) => s.id === activeShiftId)!;
   const activeRoster = roster[activeShiftId];
+
+  // Phase 10 · Step 5 — conflict detection: a responder booked into more
+  // than one shift is a scheduling hazard (double duty rotations, confused
+  // alert routing). Pure helper from lib/settings/shift-schedule.
+  const conflicts = findShiftConflicts(roster);
 
   function setTime(id: ShiftId, field: "start" | "end", value: string) {
     setShifts((prev) =>
@@ -108,6 +88,34 @@ export default function ShiftScheduleCard() {
         Standard duty shifts define when the command centre stays reachable
         around the clock.
       </p>
+
+      {/* Conflict warning — surfaces double-booked responders (Step 5) */}
+      {conflicts.length > 0 && (
+        <div
+          role="alert"
+          className="mt-4 flex items-start gap-2.5 rounded-md border border-amber-400/50 bg-amber-500/10 px-3 py-2.5"
+        >
+          <AlertTriangle
+            className="mt-0.5 h-4 w-4 shrink-0 text-amber-300"
+            aria-hidden
+          />
+          <div className="text-xs leading-relaxed">
+            <p className="font-bold uppercase tracking-wider text-amber-300">
+              Shift conflict{conflicts.length === 1 ? "" : "s"} detected
+            </p>
+            <p className="mt-1 text-slate-300">
+              {conflicts
+                .map(
+                  (c) =>
+                    `${c.member} is on ${c.shifts
+                      .map((s) => s.toLowerCase())
+                      .join(" + ")} — assign them to one shift only.`,
+                )
+                .join(" ")}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Shift table */}
       <div className="mt-5 overflow-hidden rounded-md border border-[#1c2740]">

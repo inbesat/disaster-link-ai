@@ -62,7 +62,7 @@ export function RAGSourcesPanel({
         aria-controls={panelId}
         className="flex w-full items-center justify-between gap-2 rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-left transition hover:border-accent-purple/40"
       >
-        <span className="flex min-w-0 items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-300">
+        <span className="flex min-w-0 items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-slate-300">
           <FileText className="h-3 w-3 shrink-0 text-accent-purple" aria-hidden />
           <span className="truncate">References &amp; Grounding</span>
           <ChevronDown
@@ -72,7 +72,7 @@ export function RAGSourcesPanel({
         </span>
 
         <span
-          className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+          className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[0.5625rem] font-bold uppercase tracking-wider ${
             highConfidence
               ? "border-accent-success/40 bg-accent-success/10 text-accent-success"
               : "border-accent-warning/40 bg-accent-warning/10 text-accent-warning"
@@ -99,13 +99,13 @@ export function RAGSourcesPanel({
                   className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-purple"
                   aria-hidden
                 />
-                <span className="text-[11px] leading-snug text-slate-300">
+                <span className="text-[0.6875rem] leading-snug text-slate-300">
                   {source.title}
                 </span>
               </div>
             );
           })}
-          <p className="pt-1 text-[9px] uppercase tracking-wider text-muted">
+          <p className="pt-1 text-[0.5625rem] uppercase tracking-wider text-muted">
             Retrieved via RAG · Grounded in official policy
           </p>
         </div>

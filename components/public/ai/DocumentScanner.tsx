@@ -151,7 +151,7 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
                 </span>
                 <div>
                   <p className="text-sm font-bold text-white">{t("scan_title")}</p>
-                  <p className="text-[11px] text-[var(--dl-text-muted)]">{t("scan_subtitle")}</p>
+                  <p className="text-[0.6875rem] text-[var(--dl-text-muted)]">{t("scan_subtitle")}</p>
                 </div>
               </div>
               <IconButton label={t("scan_close")} variant="ghost" size="sm" onClick={handleClose}>
@@ -257,7 +257,7 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
                   <div className="flex items-center gap-2 rounded-2xl border border-[#34d399]/30 bg-[#34d399]/10 px-4 py-3">
                     <CheckCircle2 className="h-5 w-5 shrink-0 text-[#34d399]" aria-hidden />
                     <p className="text-sm font-bold text-[#6ee7b7]">{t("scan_success_title")}</p>
-                    <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold tabular-nums text-[#a7f3d0]">
+                    <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[0.625rem] font-bold tabular-nums text-[#a7f3d0]">
                       {result.confidence.toFixed(1)}% {t("scan_confidence")}
                     </span>
                   </div>

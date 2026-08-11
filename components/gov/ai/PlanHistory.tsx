@@ -156,7 +156,7 @@ export function PlanHistory() {
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={DRAWER_ID}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-300 transition hover:border-accent-purple/50 hover:text-accent-purple"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-slate-300 transition hover:border-accent-purple/50 hover:text-accent-purple"
       >
         <HistoryIcon className="h-3.5 w-3.5" aria-hidden />
         History
@@ -187,7 +187,7 @@ export function PlanHistory() {
                 </span>
                 <div>
                   <h3 className="text-sm font-bold text-white">Plan History</h3>
-                  <p className="text-[10px] uppercase tracking-wider text-muted">
+                  <p className="text-[0.625rem] uppercase tracking-wider text-muted">
                     Version control &amp; audits
                   </p>
                 </div>
@@ -220,7 +220,7 @@ export function PlanHistory() {
                       <span className="font-medium text-slate-400">{plan.label}</span>
                     </p>
                     <span
-                      className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${plan.badge.classes}`}
+                      className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[0.5625rem] font-bold uppercase tracking-wider ${plan.badge.classes}`}
                     >
                       {plan.current && (
                         <ShieldCheck className="h-2.5 w-2.5" aria-hidden />
@@ -228,7 +228,7 @@ export function PlanHistory() {
                       {plan.badge.label}
                     </span>
                   </div>
-                  <p className="mt-0.5 font-mono text-[10px] text-muted">{plan.meta}</p>
+                  <p className="mt-0.5 font-mono text-[0.625rem] text-muted">{plan.meta}</p>
 
                   <div className="mt-2.5 flex flex-wrap gap-1.5">
                     {actionsFor(plan).map((action) => (
@@ -236,7 +236,7 @@ export function PlanHistory() {
                         key={action.label}
                         type="button"
                         onClick={action.run}
-                        className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-semibold text-slate-300 transition hover:border-accent-purple/50 hover:text-accent-purple active:scale-95"
+                        className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-[0.625rem] font-semibold text-slate-300 transition hover:border-accent-purple/50 hover:text-accent-purple active:scale-95"
                       >
                         <action.icon className="h-3 w-3" aria-hidden />
                         {action.label}
@@ -249,7 +249,7 @@ export function PlanHistory() {
 
             {/* Drawer footer */}
             <div className="border-t border-white/10 px-4 py-3">
-              <p className="flex items-center gap-1.5 text-[10px] text-muted">
+              <p className="flex items-center gap-1.5 text-[0.625rem] text-muted">
                 <ShieldCheck className="h-3 w-3 text-accent-success" aria-hidden />
                 Every change is logged &amp; audited · 5 revisions stored
               </p>

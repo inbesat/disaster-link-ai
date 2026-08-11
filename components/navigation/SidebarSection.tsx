@@ -30,7 +30,7 @@ export function SidebarSection({ label, children, className = "" }: SidebarSecti
       className={`${collapsed ? "mt-3 border-t border-subtle pt-3 first:mt-0 first:border-t-0 first:pt-0" : ""} ${className}`}
     >
       {!collapsed && (
-        <p className="px-3 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-wider text-muted">
+        <p className="px-3 pb-2 pt-4 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted">
           {label}
         </p>
       )}

@@ -28,7 +28,7 @@ export function QuickActions() {
 
   return (
     <div className="mx-2 mb-1 rounded-lg border border-subtle bg-tertiary p-2">
-      <p className="px-1 pb-2 text-[10px] font-semibold uppercase tracking-wider text-muted">
+      <p className="px-1 pb-2 text-[0.625rem] font-semibold uppercase tracking-wider text-muted">
         Quick actions
       </p>
       <div className="space-y-1">

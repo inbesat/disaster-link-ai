@@ -72,12 +72,78 @@ export async function middleware(request: NextRequest) {
   const isGuest = request.cookies.get("guest_mode")?.value === "true";
   const role = request.cookies.get("role")?.value ?? "";
   const viewAsPublic = request.cookies.get("view_as_public")?.value === "true";
+  const isSandbox = request.cookies.get("sandbox")?.value === "true";
   const adminRequested = isAdminRoute(pathname);
 
   const isPublicRole = role === PUBLIC_ROLE;
   const isGovRole = (GOV_ROLES as readonly string[]).includes(role);
   const isOnGov = pathname === "/gov" || pathname.startsWith("/gov/");
   const isOnPublic = pathname === "/public" || pathname.startsWith("/public/");
+
+  // Fast path: non-sandbox API traffic never needs the middleware — it was
+  // never matched before Phase 15, so skip all auth work for it now.
+  if (pathname.startsWith("/api/") && !isSandbox) {
+    return NextResponse.next();
+  }
+
+  // =========================================================================
+  // PHASE 15 · STEP 4 — JUDGES' SANDBOX (read-only Public Citizen session).
+  //
+  // Visiting /api/sandbox sets a short-lived `sandbox=true` cookie and lands
+  // on /public/dashboard. From then on:
+  //   • every non-GET request is answered with a mock success payload so
+  //     forms take their normal success path (the client shows its usual
+  //     success toast) but NOTHING is ever persisted — judges can click
+  //     around as much as they like;
+  //   • API reads still work (maps, shelters, alerts — the whole citizen
+  //     app is functional);
+  //   • gov/admin/field/auth/protected pages bounce back to the citizen
+  //     dashboard, so a sandbox user can never wander into the Command
+  //     Center or any privileged surface.
+  // =========================================================================
+  if (isSandbox) {
+    // Lock down writes — mock success, never persist.
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      // Server actions POST with a `next-action` header and expect an
+      // RSC-encoded response — a bare JSON body makes the action client
+      // throw. For those, return the redirect so the page simply reloads
+      // (the UI's next paint reflects no change — read-only stays true).
+      if (request.headers.get("next-action")) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/public/dashboard";
+        return NextResponse.redirect(url);
+      }
+      return NextResponse.json(
+        {
+          ok: true,
+          mock: true,
+          sandbox: true,
+          message: "Sandbox read-only — change simulated, not saved.",
+        },
+        { status: 200 },
+      );
+    }
+    // API reads pass straight through.
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.next();
+    }
+    // Non-citizen surfaces → the citizen dashboard.
+    if (
+      pathname === "/" ||
+      pathname === "/login" ||
+      pathname === "/signup" ||
+      matchesBase(pathname, "/auth") ||
+      isOnGov ||
+      adminRequested ||
+      isProtected(pathname)
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/public/dashboard";
+      return NextResponse.redirect(url);
+    }
+    // Citizen pages pass through as the read-only public identity.
+    return NextResponse.next();
+  }
 
   // =========================================================================
   // PHASE 1 · DUAL-MODE CROSSOVER GUARDS — users cannot slip into the wrong
@@ -264,6 +330,11 @@ export const config = {
     "/evacuations",
     "/ai-planner",
     "/settings/:path*",
+    // Phase 15 · Step 4 — the sandbox write-lockdown must cover EVERY API
+    // route (a sandbox user could otherwise POST straight past the page
+    // guards to /api/shelters/occupancy or similar). Non-sandbox API
+    // traffic short-circuits at the top of the handler with zero auth work.
+    "/api/:path*",
     "/settings/organization/:path*",
     "/settings/integrations/:path*",
   ],

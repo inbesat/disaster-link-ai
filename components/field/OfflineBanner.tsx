@@ -74,7 +74,7 @@ export default function OfflineBanner() {
       {!online && (
         <div className="relative z-30 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border-b-2 border-amber-400/60 bg-amber-500 px-3 py-2 text-center">
           <WifiOff className="h-5 w-5 shrink-0 text-black" />
-          <p className="text-[15px] font-bold text-black">
+          <p className="text-[0.9375rem] font-bold text-black">
             ⚠️ OFFLINE MODE: Saving actions locally. Will auto-sync when connection is restored.
           </p>
           {pending > 0 && (
@@ -82,7 +82,7 @@ export default function OfflineBanner() {
               type="button"
               onClick={syncNow}
               disabled={syncing}
-              className="flex min-h-[48px] min-w-[48px] items-center justify-center gap-2 rounded-full bg-black px-5 text-[15px] font-bold text-amber-300 transition hover:opacity-90 disabled:opacity-60"
+              className="flex min-h-[48px] min-w-[48px] items-center justify-center gap-2 rounded-full bg-black px-5 text-[0.9375rem] font-bold text-amber-300 transition hover:opacity-90 disabled:opacity-60"
             >
               <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
               {syncing ? "Syncing…" : `Sync Now (${pending} pending)`}
@@ -99,7 +99,7 @@ export default function OfflineBanner() {
             type="button"
             onClick={syncNow}
             disabled={syncing}
-            className="flex min-h-[48px] min-w-[48px] items-center gap-2 rounded-full border border-emerald-400 bg-emerald-500/15 px-5 text-[15px] font-bold text-emerald-200 transition hover:bg-emerald-500/25 disabled:opacity-60"
+            className="flex min-h-[48px] min-w-[48px] items-center gap-2 rounded-full border border-emerald-400 bg-emerald-500/15 px-5 text-[0.9375rem] font-bold text-emerald-200 transition hover:bg-emerald-500/25 disabled:opacity-60"
           >
             <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
             {syncing ? "Syncing offline changes…" : `Sync Now — ${pending} pending`}

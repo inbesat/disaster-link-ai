@@ -109,7 +109,7 @@ export default function SosHistoryPage() {
                       />
                       {formatSosDate(entry.date)}
                     </p>
-                    <span className="shrink-0 rounded-full border border-[var(--dl-orange)]/40 bg-[var(--dl-orange)]/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#FDBA74]">
+                    <span className="shrink-0 rounded-full border border-[var(--dl-orange)]/40 bg-[var(--dl-orange)]/10 px-2.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-[#FDBA74]">
                       {entry.incidentType}
                     </span>
                   </div>
@@ -125,7 +125,7 @@ export default function SosHistoryPage() {
                   <p className="mt-1 text-xs text-[var(--dl-text-muted)]">
                     {entry.location}
                   </p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-[var(--dl-text-on-navy)]/85">
+                  <p className="mt-2 text-[0.8125rem] leading-relaxed text-[var(--dl-text-on-navy)]/85">
                     {entry.summary}
                   </p>
                 </div>
@@ -134,7 +134,7 @@ export default function SosHistoryPage() {
           </ol>
         </section>
 
-        <p className="mt-6 text-center text-[11px] text-[var(--dl-text-muted)]">
+        <p className="mt-6 text-center text-[0.6875rem] text-[var(--dl-text-muted)]">
           Keep this log for insurance and relief documentation.
         </p>
       </div>

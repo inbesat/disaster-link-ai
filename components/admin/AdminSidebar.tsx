@@ -61,7 +61,7 @@ function SidebarContent() {
       </nav>
 
       <div className="border-t border-[#1c2740] px-5 py-4">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+        <p className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
           Super Admin
         </p>
         <p className="mt-1 text-xs text-slate-400">
@@ -104,10 +104,10 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
-          <span className="hidden items-center gap-1 rounded border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-400 sm:inline-flex">
+          <span className="hidden items-center gap-1 rounded border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-widest text-red-400 sm:inline-flex">
             Elevated Access
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0b1120] px-2.5 py-1 font-mono text-[10px] text-slate-400">
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0b1120] px-2.5 py-1 font-mono text-[0.625rem] text-slate-400">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
             LIVE
           </span>

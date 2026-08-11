@@ -143,7 +143,7 @@ export function SafetyHero({
           <p className="mt-0.5 text-sm font-semibold text-white">{area}</p>
         </div>
         {updatedAt && (
-          <p className="font-mono text-[11px] uppercase tracking-widest text-[var(--dl-text-muted)]">
+          <p className="font-mono text-[0.6875rem] uppercase tracking-widest text-[var(--dl-text-muted)]">
             UPD {updatedAt}
           </p>
         )}

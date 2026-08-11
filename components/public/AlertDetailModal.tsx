@@ -158,7 +158,7 @@ export function AlertDetailModal({
                     }
                     size="sm"
                   />
-                  <span className="text-[11px] tabular-nums text-[var(--dl-text-muted)]">
+                  <span className="text-[0.6875rem] tabular-nums text-[var(--dl-text-muted)]">
                     {relativeTime(alert.timestamp)}
                   </span>
                 </div>
@@ -212,12 +212,12 @@ export function AlertDetailModal({
                     </span>
                   </div>
                   <div className="flex items-center justify-between bg-white/5 px-4 py-2.5">
-                    <p className="text-[11px] text-[var(--dl-text-muted)]">
+                    <p className="text-[0.6875rem] text-[var(--dl-text-muted)]">
                       Map preview — nearest shelter 1.2 km away
                     </p>
                     <Link
                       href="/public/map"
-                      className="text-[11px] font-semibold text-[var(--dl-orange-light)] hover:text-[var(--dl-orange)]"
+                      className="text-[0.6875rem] font-semibold text-[var(--dl-orange-light)] hover:text-[var(--dl-orange)]"
                     >
                       View full map
                     </Link>
@@ -257,7 +257,7 @@ export function AlertDetailModal({
                   <MessageCircle aria-hidden="true" className="h-5 w-5" />
                   Share to WhatsApp
                 </a>
-                <p className="mt-2 text-center text-[11px] text-[var(--dl-text-muted)]">
+                <p className="mt-2 text-center text-[0.6875rem] text-[var(--dl-text-muted)]">
                   Opens WhatsApp with this alert pre-filled
                 </p>
               </div>

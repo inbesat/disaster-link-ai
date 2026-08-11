@@ -115,7 +115,7 @@ export function FamilyStrip() {
       <section aria-label="Family safety status" className="space-y-3">
         <div className="flex items-center justify-between">
           <p className="eoc-label text-[var(--dl-text-muted)]">MY FAMILY</p>
-          <p className="text-[11px] text-[var(--dl-text-muted)]">
+          <p className="text-[0.6875rem] text-[var(--dl-text-muted)]">
             Tap a member to reach them
           </p>
         </div>
@@ -144,7 +144,7 @@ export function FamilyStrip() {
                     }`}
                   />
                 </span>
-                <span className="w-full truncate text-center text-[11px] font-medium text-[var(--dl-text-on-navy)]">
+                <span className="w-full truncate text-center text-[0.6875rem] font-medium text-[var(--dl-text-on-navy)]">
                   {member.name.split(" ")[0]}
                 </span>
               </button>

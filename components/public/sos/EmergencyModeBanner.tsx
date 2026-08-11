@@ -126,7 +126,7 @@ export default function EmergencyModeBanner() {
                   className="h-5 w-5 shrink-0 animate-pulse text-white"
                   strokeWidth={2.25}
                 />
-                <p className="text-[13px] font-black uppercase leading-tight tracking-wide text-white">
+                <p className="text-[0.8125rem] font-black uppercase leading-tight tracking-wide text-white">
                   Emergency Mode Active: Help is on the way.
                 </p>
               </div>
@@ -156,7 +156,7 @@ export default function EmergencyModeBanner() {
                   onKeyUp={abortHold}
                   aria-label="Hold for 2 seconds to cancel the SOS"
                   aria-busy={holding}
-                  className="relative flex h-11 flex-1 items-center justify-center overflow-hidden rounded-xl border-2 border-white/50 text-[11px] font-black uppercase tracking-wider text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="relative flex h-11 flex-1 items-center justify-center overflow-hidden rounded-xl border-2 border-white/50 text-[0.6875rem] font-black uppercase tracking-wider text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   {/* Hold-progress fill */}
                   <span

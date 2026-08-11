@@ -202,7 +202,7 @@ export function Sidebar({
           }`}
         >
           {!isCollapsed && (
-            <span className="pl-2 text-[11px] font-medium uppercase tracking-widest text-muted">
+            <span className="pl-2 text-[0.6875rem] font-medium uppercase tracking-widest text-muted">
               Collapse
             </span>
           )}

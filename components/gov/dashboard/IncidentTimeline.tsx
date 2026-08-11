@@ -93,14 +93,14 @@ export function IncidentTimeline() {
 
             <div className="min-w-0 flex-1">
               <p className="flex items-baseline gap-2">
-                <span className="font-mono text-[11px] font-semibold tabular-nums text-white/70">
+                <span className="font-mono text-[0.6875rem] font-semibold tabular-nums text-white/70">
                   {event.time}
                 </span>
-                <span className="truncate text-[13px] font-semibold text-white/90">
+                <span className="truncate text-[0.8125rem] font-semibold text-white/90">
                   {event.title}
                 </span>
               </p>
-              <p className="mt-0.5 text-[11px] leading-snug text-[var(--dl-text-muted)]">
+              <p className="mt-0.5 text-[0.6875rem] leading-snug text-[var(--dl-text-muted)]">
                 {event.detail}
               </p>
             </div>
@@ -117,12 +117,12 @@ export function IncidentTimeline() {
           </span>
           <div className="min-w-0 flex-1">
             <p className="flex items-baseline gap-2">
-              <span className="font-mono text-[11px] font-semibold tabular-nums text-white/70">
+              <span className="font-mono text-[0.6875rem] font-semibold tabular-nums text-white/70">
                 now
               </span>
-              <span className="text-[13px] font-semibold text-severity-green-300">System Online</span>
+              <span className="text-[0.8125rem] font-semibold text-severity-green-300">System Online</span>
             </p>
-            <p className="mt-0.5 text-[11px] text-[var(--dl-text-muted)]">
+            <p className="mt-0.5 text-[0.6875rem] text-[var(--dl-text-muted)]">
               All command feeds live · awaiting next event
             </p>
           </div>

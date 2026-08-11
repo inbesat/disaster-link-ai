@@ -43,7 +43,7 @@ export function SidebarHeader({ expanded, className = "" }: SidebarHeaderProps) 
         <p className="whitespace-nowrap text-sm font-bold tracking-widest text-primary">
           DRIP
         </p>
-        <p className="whitespace-nowrap text-[10px] font-medium uppercase tracking-widest text-muted">
+        <p className="whitespace-nowrap text-[0.625rem] font-medium uppercase tracking-widest text-muted">
           Command Center
         </p>
       </div>

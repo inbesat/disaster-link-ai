@@ -62,7 +62,7 @@ export function ResponderTracker() {
           <Users aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
           <h2 className="eoc-label text-white">Responder Tracker</h2>
         </div>
-        <span className="rounded-full border border-severity-green-400/30 bg-severity-green-400/10 px-2.5 py-1 text-[11px] font-semibold text-severity-green-300">
+        <span className="rounded-full border border-severity-green-400/30 bg-severity-green-400/10 px-2.5 py-1 text-[0.6875rem] font-semibold text-severity-green-300">
           {TEAMS.length} active
         </span>
       </header>
@@ -85,8 +85,8 @@ export function ResponderTracker() {
                   <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${meta.dot}`} />
                 </span>
                 <div className="min-w-0">
-                  <p className="truncate text-[13px] font-semibold text-white/90">{team.unit}</p>
-                  <p className="flex items-center gap-1 truncate text-[11px] text-[var(--dl-text-muted)]">
+                  <p className="truncate text-[0.8125rem] font-semibold text-white/90">{team.unit}</p>
+                  <p className="flex items-center gap-1 truncate text-[0.6875rem] text-[var(--dl-text-muted)]">
                     <Navigation aria-hidden="true" className="h-3 w-3 shrink-0" />
                     {team.location}
                   </p>
@@ -94,11 +94,11 @@ export function ResponderTracker() {
               </div>
 
               <div className="flex shrink-0 items-center gap-2">
-                <span className="hidden rounded px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-white/60 sm:inline">
+                <span className="hidden rounded px-1.5 py-0.5 text-[0.625rem] font-semibold tabular-nums text-white/60 sm:inline">
                   {team.members} pers
                 </span>
                 <span
-                  className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${meta.chip}`}
+                  className={`rounded-full border px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wide ${meta.chip}`}
                 >
                   {meta.label}
                 </span>

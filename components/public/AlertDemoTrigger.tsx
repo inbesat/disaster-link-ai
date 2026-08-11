@@ -109,7 +109,7 @@ export function AlertDemoTrigger() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open demo tools"
-        className="fixed bottom-[calc(88px+env(safe-area-inset-bottom))] left-4 z-50 flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-white/70 backdrop-blur transition hover:border-[var(--dl-orange)]/50 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
+        className="fixed bottom-[calc(88px+env(safe-area-inset-bottom))] left-4 z-50 flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[0.6875rem] font-bold uppercase tracking-wider text-white/70 backdrop-blur transition hover:border-[var(--dl-orange)]/50 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
       >
         <FlaskConical aria-hidden="true" className="h-3.5 w-3.5" />
         Dev Tools

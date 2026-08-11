@@ -34,7 +34,7 @@ export function LiveMapWidget() {
         <div className="flex items-center gap-2.5">
           <Layers aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
           <h2 className="eoc-label text-white">Live Operations Map</h2>
-          <span className="rounded-full border border-[var(--dl-blue-light)]/30 bg-[var(--dl-blue)]/15 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-[var(--dl-blue-light)]">
+          <span className="rounded-full border border-[var(--dl-blue-light)]/30 bg-[var(--dl-blue)]/15 px-2 py-0.5 text-[0.625rem] font-semibold tracking-wide text-[var(--dl-blue-light)]">
             MAPLIBRE READY
           </span>
         </div>
@@ -145,7 +145,7 @@ export function LiveMapWidget() {
               <span className={`absolute inline-flex h-full w-full animate-ping rounded-full ${m.tone} opacity-60`} />
               <span className={`relative inline-flex h-3 w-3 rounded-full ${m.tone}`} />
             </span>
-            <span className="absolute left-1/2 top-3 -translate-x-1/2 whitespace-nowrap rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-white/90">
+            <span className="absolute left-1/2 top-3 -translate-x-1/2 whitespace-nowrap rounded bg-black/70 px-1.5 py-0.5 text-[0.5625rem] font-semibold tracking-wide text-white/90">
               {m.label}
             </span>
           </div>
@@ -154,16 +154,16 @@ export function LiveMapWidget() {
 
       {/* Legend */}
       <footer className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-white/10 px-5 py-3">
-        <span className="flex items-center gap-1.5 text-[11px] text-[var(--dl-text-muted)]">
+        <span className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--dl-text-muted)]">
           <span className="h-2.5 w-2.5 rounded-sm bg-severity-red-400/70" /> Flood zone
         </span>
-        <span className="flex items-center gap-1.5 text-[11px] text-[var(--dl-text-muted)]">
+        <span className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--dl-text-muted)]">
           <span className="h-2.5 w-2.5 rounded-sm bg-severity-amber-400/70" /> Road closed
         </span>
-        <span className="flex items-center gap-1.5 text-[11px] text-[var(--dl-text-muted)]">
+        <span className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--dl-text-muted)]">
           <span className="h-2.5 w-2.5 rounded-sm bg-severity-green-400/70" /> Shelter
         </span>
-        <span className="flex items-center gap-1.5 text-[11px] text-[var(--dl-text-muted)]">
+        <span className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--dl-text-muted)]">
           <Compass aria-hidden="true" className="h-3 w-3 text-[var(--dl-blue-light)]" /> MapLibre GL target
         </span>
       </footer>

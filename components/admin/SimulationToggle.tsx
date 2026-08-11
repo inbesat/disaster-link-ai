@@ -43,13 +43,13 @@ export default function SimulationToggle({ active }: { active: boolean }) {
     >
       <div className="leading-tight">
         <p
-          className={`text-[11px] font-bold uppercase tracking-wider ${
+          className={`text-[0.6875rem] font-bold uppercase tracking-wider ${
             active ? "text-yellow-300" : "text-slate-400"
           }`}
         >
           {active ? "Simulation Active" : "Master Breaker"}
         </p>
-        <p className="text-[10px] text-slate-500">
+        <p className="text-[0.625rem] text-slate-500">
           {active ? "Blocking real alerts" : "Off · live mode"}
         </p>
       </div>

@@ -145,7 +145,7 @@ function ExecutionChip({
       onClick={onClick}
       title={executed ? "Mark step as not yet executed" : "Mark step as executed"}
       aria-pressed={executed}
-      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider transition active:scale-95 ${
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider transition active:scale-95 ${
         executed
           ? "border-accent-success/50 bg-accent-success/10 text-accent-success"
           : "border-white/15 bg-white/[0.04] text-slate-500 hover:border-accent-success/40 hover:text-accent-success"
@@ -184,7 +184,7 @@ function ProgressRow({
             <Icon className="h-3.5 w-3.5 text-accent-purple" aria-hidden />
             {meta.label}
           </span>
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-accent-purple">
+          <span className="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-accent-purple">
             <span
               className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-purple"
               aria-hidden
@@ -195,7 +195,7 @@ function ProgressRow({
         <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
           <div className="h-full w-full animate-pulse rounded-full bg-accent-purple/70" />
         </div>
-        <p className="mt-1.5 font-mono text-[10px] text-slate-400">{meta.unit}</p>
+        <p className="mt-1.5 font-mono text-[0.625rem] text-slate-400">{meta.unit}</p>
       </div>
     );
   }
@@ -215,7 +215,7 @@ function ProgressRow({
           <Icon className="h-3.5 w-3.5 text-accent-success" aria-hidden />
           {meta.label}
         </span>
-        <span className="font-mono text-[11px] font-bold tabular-nums text-accent-success">
+        <span className="font-mono text-[0.6875rem] font-bold tabular-nums text-accent-success">
           {pct}%
         </span>
       </div>
@@ -225,7 +225,7 @@ function ProgressRow({
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="mt-1.5 font-mono text-[10px] text-slate-400">{detail}</p>
+      <p className="mt-1.5 font-mono text-[0.625rem] text-slate-400">{detail}</p>
     </div>
   );
 }
@@ -320,7 +320,7 @@ export function PlanVisualizer() {
           </div>
         </div>
         {executing ? (
-          <p className="mt-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-accent-success">
+          <p className="mt-1.5 flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-accent-success">
             <span
               className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-success"
               aria-hidden
@@ -328,7 +328,7 @@ export function PlanVisualizer() {
             Execution mode · Live · v2.0 approved
           </p>
         ) : (
-          <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+          <p className="mt-1.5 text-[0.625rem] font-semibold uppercase tracking-wider text-slate-500">
             Classification: Official · Draft v3 · Approved by: Commander
           </p>
         )}
@@ -339,7 +339,7 @@ export function PlanVisualizer() {
         {halted && (
           <div className="mb-3 flex items-start gap-2.5 rounded-lg border border-accent-danger/50 bg-accent-danger/10 px-3 py-2.5 animate-in fade-in duration-200">
             <span className="mt-0.5 h-2 w-2 shrink-0 animate-pulse rounded-full bg-accent-danger" />
-            <p className="text-[11px] font-bold uppercase tracking-wider text-accent-danger">
+            <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-accent-danger">
               Operations halted — field units notified. Re-approve to resume.
             </p>
           </div>
@@ -378,7 +378,7 @@ export function PlanVisualizer() {
                   {/* step number node */}
                   <span
                     aria-hidden
-                    className={`absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-full border font-mono text-[11px] font-bold ${
+                    className={`absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-full border font-mono text-[0.6875rem] font-bold ${
                       isExecuted
                         ? "border-accent-success/60 bg-accent-success/10 text-accent-success"
                         : isOpen
@@ -417,7 +417,7 @@ export function PlanVisualizer() {
                           <p className="text-sm font-black uppercase tracking-[0.18em] text-white">
                             {step.title}
                           </p>
-                          <p className="truncate text-[10px] uppercase tracking-wider text-muted">
+                          <p className="truncate text-[0.625rem] uppercase tracking-wider text-muted">
                             {step.subtitle}
                           </p>
                         </div>
@@ -451,7 +451,7 @@ export function PlanVisualizer() {
                                   {step.table.headers.map((header) => (
                                     <th
                                       key={header}
-                                      className="px-3 py-2 text-left font-mono text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                                      className="px-3 py-2 text-left font-mono text-[0.625rem] font-bold uppercase tracking-wider text-slate-400"
                                     >
                                       {header}
                                     </th>
@@ -502,7 +502,7 @@ export function PlanVisualizer() {
 
         {/* Document footer */}
         {!executing && (
-          <p className="mt-4 border-t border-white/10 pt-3 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-slate-600">
+          <p className="mt-4 border-t border-white/10 pt-3 text-center font-mono text-[0.625rem] uppercase tracking-[0.3em] text-slate-600">
             — End of operation order —
           </p>
         )}
@@ -522,7 +522,7 @@ export function PlanVisualizer() {
             />
             Halt Operations
           </button>
-          <p className="mt-1.5 text-center text-[10px] text-muted">
+          <p className="mt-1.5 text-center text-[0.625rem] text-muted">
             Immediately stops all automated deployments.
           </p>
         </div>

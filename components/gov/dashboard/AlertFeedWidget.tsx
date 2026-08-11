@@ -84,7 +84,7 @@ export function AlertFeedWidget() {
           <Radio aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
           <h2 className="eoc-label text-white">Incoming Alerts</h2>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[11px] font-semibold text-white/70">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[0.6875rem] font-semibold text-white/70">
           <span className="h-2 w-2 animate-pulse rounded-full bg-severity-green-400" aria-hidden />
           {alerts.length} queued
         </span>
@@ -132,8 +132,8 @@ export function AlertFeedWidget() {
               >
                 <span className={`mt-1 h-2 w-2 shrink-0 animate-pulse rounded-full ${s.dot}`} aria-hidden />
                 <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-medium leading-snug text-white/90">{alert.title}</p>
-                  <p className="mt-1 flex items-center gap-2 text-[11px] text-[var(--dl-text-muted)]">
+                  <p className="text-[0.8125rem] font-medium leading-snug text-white/90">{alert.title}</p>
+                  <p className="mt-1 flex items-center gap-2 text-[0.6875rem] text-[var(--dl-text-muted)]">
                     <span className={`rounded px-1.5 py-0.5 font-semibold uppercase tracking-wide ${s.chip} ${s.label}`}>
                       {alert.severity}
                     </span>
@@ -170,7 +170,7 @@ export function AlertFeedWidget() {
         </div>
       )}
 
-      <footer className="flex items-center gap-2 border-t border-white/10 px-5 py-3 text-[11px] text-[var(--dl-text-muted)]">
+      <footer className="flex items-center gap-2 border-t border-white/10 px-5 py-3 text-[0.6875rem] text-[var(--dl-text-muted)]">
         <ShieldAlert aria-hidden="true" className="h-3.5 w-3.5" />
         One-tap broadcast reaches all opted-in residents in the district.
       </footer>

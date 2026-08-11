@@ -50,11 +50,11 @@ export function FloodChartWidget() {
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-5 py-4">
         <div className="flex items-center gap-2.5">
           <h2 className="eoc-label text-white">72-Hour River Level Forecast</h2>
-          <span className="rounded-full border border-severity-red-400/30 bg-severity-red-400/10 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-severity-red-300">
+          <span className="rounded-full border border-severity-red-400/30 bg-severity-red-400/10 px-2 py-0.5 text-[0.625rem] font-semibold tracking-wide text-severity-red-300">
             GANGA · PATNA
           </span>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-severity-red-400/30 bg-severity-red-400/10 px-2.5 py-1 text-[11px] font-semibold text-severity-red-300">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-severity-red-400/30 bg-severity-red-400/10 px-2.5 py-1 text-[0.6875rem] font-semibold text-severity-red-300">
           <span className="h-2 w-2 animate-pulse rounded-full bg-severity-red-400" aria-hidden />
           Critical mark&nbsp;·&nbsp;{CRITICAL_LEVEL} m
         </span>

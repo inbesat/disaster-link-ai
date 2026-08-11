@@ -166,12 +166,12 @@ export function PlannerChat() {
           </span>
           <div>
             <p className="text-sm font-semibold text-white">AI Commander</p>
-            <p className="text-[10px] uppercase tracking-wider text-muted">
+            <p className="text-[0.625rem] uppercase tracking-wider text-muted">
               Gov planner · tool-calling
             </p>
           </div>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-purple/40 bg-accent-purple/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-purple">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-purple/40 bg-accent-purple/10 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-accent-purple">
           <span
             className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-purple"
             aria-hidden
@@ -197,7 +197,7 @@ export function PlannerChat() {
             <div key={msg.id} className="flex flex-col items-start">
               <div className="max-w-[92%] rounded-xl rounded-bl-md border-l-4 border-accent-purple bg-secondary px-3.5 py-2.5">
                 {msg.querying ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-md border border-accent-purple/40 bg-accent-purple/10 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-purple">
+                  <span className="inline-flex items-center gap-1.5 rounded-md border border-accent-purple/40 bg-accent-purple/10 px-2 py-1 text-[0.625rem] font-bold uppercase tracking-wider text-accent-purple">
                     <Database className="h-3 w-3 animate-pulse" aria-hidden />
                     Querying Database…
                   </span>
@@ -224,7 +224,7 @@ export function PlannerChat() {
               type="button"
               onClick={() => submit(prompt.label)}
               disabled={querying}
-              className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-accent-purple/30 bg-accent-purple/10 px-2.5 py-1.5 text-[11px] font-semibold text-accent-purple transition hover:bg-accent-purple/20 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-accent-purple/30 bg-accent-purple/10 px-2.5 py-1.5 text-[0.6875rem] font-semibold text-accent-purple transition hover:bg-accent-purple/20 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Terminal className="h-3 w-3 shrink-0" aria-hidden />
               <span className="truncate">{prompt.label}</span>

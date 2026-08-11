@@ -107,7 +107,7 @@ export function MapContextMenu({ x, y, lng, lat, onClose }: MapContextMenuProps)
       className="absolute z-40 w-56 overflow-hidden rounded-xl border border-white/10 bg-[#0d1526]/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl"
       style={{ left, top }}
     >
-      <p className="border-b border-white/10 px-3.5 py-2 font-mono text-[10px] tabular-nums text-white/40">
+      <p className="border-b border-white/10 px-3.5 py-2 font-mono text-[0.625rem] tabular-nums text-white/40">
         {lat.toFixed(4)}, {lng.toFixed(4)}
       </p>
 
@@ -122,10 +122,10 @@ export function MapContextMenu({ x, y, lng, lat, onClose }: MapContextMenuProps)
             >
               <action.icon aria-hidden="true" className={`h-4 w-4 shrink-0 ${action.tone}`} />
               <span className="min-w-0">
-                <span className="block text-[13px] font-semibold text-white">
+                <span className="block text-[0.8125rem] font-semibold text-white">
                   {action.label}
                 </span>
-                <span className="block truncate text-[10px] text-white/40">{action.hint}</span>
+                <span className="block truncate text-[0.625rem] text-white/40">{action.hint}</span>
               </span>
             </button>
           </li>

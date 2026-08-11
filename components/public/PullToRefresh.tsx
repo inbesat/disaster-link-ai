@@ -166,7 +166,7 @@ export function PullToRefresh({ children }: { children: ReactNode }) {
             }`}
           />
           <span
-            className="text-[11px] font-semibold text-white"
+            className="text-[0.6875rem] font-semibold text-white"
             aria-live="polite"
           >
             {refreshing
@@ -189,7 +189,7 @@ export function PullToRefresh({ children }: { children: ReactNode }) {
       </div>
 
       {/* Last-updated stamp — bottom of the dashboard content */}
-      <p className="mt-6 text-center text-[11px] text-[var(--dl-text-muted)]">
+      <p className="mt-6 text-center text-[0.6875rem] text-[var(--dl-text-muted)]">
         Last updated: {relativeLabel(lastUpdatedAt)}
       </p>
     </div>

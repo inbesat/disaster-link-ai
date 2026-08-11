@@ -36,7 +36,7 @@ export function ShelterStatusWidget() {
         <div className="flex items-center gap-2.5">
           <h2 className="eoc-label text-white">Shelter Status</h2>
         </div>
-        <span className="rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[11px] font-semibold text-white/70">
+        <span className="rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[0.6875rem] font-semibold text-white/70">
           {SHELTERS.filter((s) => (s.occupied / s.capacity) * 100 > 90).length} critical
         </span>
       </header>
@@ -50,10 +50,10 @@ export function ShelterStatusWidget() {
           return (
             <li key={shelter.id}>
               <div className="mb-1.5 flex items-baseline justify-between gap-2">
-                <p className="truncate text-[13px] font-medium text-white/90">
+                <p className="truncate text-[0.8125rem] font-medium text-white/90">
                   {shelter.name}
                 </p>
-                <p className="shrink-0 text-[11px] tabular-nums text-[var(--dl-text-muted)]">
+                <p className="shrink-0 text-[0.6875rem] tabular-nums text-[var(--dl-text-muted)]">
                   <span className={critical ? "font-bold text-severity-red-300" : "text-white/80"}>
                     {shelter.occupied.toLocaleString()}
                   </span>
@@ -79,7 +79,7 @@ export function ShelterStatusWidget() {
                 />
               </div>
 
-              <p className="mt-1 text-right text-[10px] tabular-nums text-[var(--dl-text-muted)]">
+              <p className="mt-1 text-right text-[0.625rem] tabular-nums text-[var(--dl-text-muted)]">
                 {pct}% occupied
               </p>
             </li>

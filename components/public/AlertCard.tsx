@@ -176,12 +176,12 @@ export function AlertCard({
               rumour (Phase 3 · Step 8) */}
           <div className="mt-2.5">
             {alert.isOfficial ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-sky-500/40 bg-sky-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-300">
+              <span className="inline-flex items-center gap-1 rounded-full border border-sky-500/40 bg-sky-500/15 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-sky-300">
                 <BadgeCheck aria-hidden="true" className="h-3 w-3" />
                 Verified by District Authority
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--dl-text-muted)]">
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-[var(--dl-text-muted)]">
                 <Megaphone aria-hidden="true" className="h-3 w-3" />
                 Community Report
               </span>
@@ -195,7 +195,7 @@ export function AlertCard({
               label={meta.label}
               size="sm"
             />
-            <span className="text-[11px] tabular-nums text-[var(--dl-text-muted)]">
+            <span className="text-[0.6875rem] tabular-nums text-[var(--dl-text-muted)]">
               {mounted ? relativeTime(alert.timestamp) : "\u2026"}
             </span>
 
@@ -207,7 +207,7 @@ export function AlertCard({
                   onClick={() => castVote("up")}
                   aria-pressed={vote === "up"}
                   aria-label="Upvote this community report"
-                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold tabular-nums transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
+                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.6875rem] font-semibold tabular-nums transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
                     vote === "up"
                       ? "border-severity-green-500/50 bg-severity-green-500/15 text-severity-green-300"
                       : "border-white/10 bg-white/5 text-[var(--dl-text-muted)] hover:border-white/25 hover:text-[var(--dl-text-on-navy)]"
@@ -221,7 +221,7 @@ export function AlertCard({
                   onClick={() => castVote("down")}
                   aria-pressed={vote === "down"}
                   aria-label="Downvote this community report"
-                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold tabular-nums transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
+                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[0.6875rem] font-semibold tabular-nums transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
                     vote === "down"
                       ? "border-severity-red-500/50 bg-severity-red-500/15 text-severity-red-300"
                       : "border-white/10 bg-white/5 text-[var(--dl-text-muted)] hover:border-white/25 hover:text-[var(--dl-text-on-navy)]"
@@ -240,7 +240,7 @@ export function AlertCard({
               {read ? (
                 <span
                   role="status"
-                  className="inline-flex items-center gap-1 rounded-full border border-severity-green-500/40 bg-severity-green-500/15 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-severity-green-300"
+                  className="inline-flex items-center gap-1 rounded-full border border-severity-green-500/40 bg-severity-green-500/15 px-2 py-1 text-[0.625rem] font-bold uppercase tracking-wider text-severity-green-300"
                 >
                   <CheckCircle2 aria-hidden="true" className="h-3 w-3" />
                   Read
@@ -250,7 +250,7 @@ export function AlertCard({
                   type="button"
                   onClick={markRead}
                   aria-label={`Mark "${alert.title}" as read`}
-                  className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-[var(--dl-text-muted)] transition hover:border-severity-green-500/50 hover:text-severity-green-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
+                  className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[0.6875rem] font-semibold text-[var(--dl-text-muted)] transition hover:border-severity-green-500/50 hover:text-severity-green-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
                 >
                   <Check aria-hidden="true" className="h-3 w-3" />
                   Mark read

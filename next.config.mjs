@@ -1,5 +1,23 @@
 /** @type {import('next').NextConfig} */
 
+// Phase 13 · Step 1 — PWA. next-pwa generates a workbox service worker
+// into public/ that precaches the app, applies runtime caching and serves
+// the /~offline page for offline navigations (fallbacks.document). The
+// web-push + offline-shell handlers live in worker/index.js and are
+// bundled into the generated worker via customWorkerDir (they no-op when
+// workbox is present, so there is no respondWith conflict). Fully disabled
+// in development; registration is done client-side in production
+// (components/pwa/ServiceWorkerRegister.tsx).
+import withPWAInit from "next-pwa";
+
+const withPWA = withPWAInit({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: false,
+  customWorkerDir: "worker",
+  fallbacks: { document: "/~offline" },
+});
+
 // Phase 24 · CORS lockdown.
 //
 // Allow list resolution order:
@@ -11,9 +29,7 @@
 // is also emitted so cookie/session auth can work cross-origin. When the
 // value is "*", that header is omitted — browsers reject "*" + credentials.
 const allowedOrigin =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  process.env.VERCEL_PROJECT_PRODUCTION_URL ??
-  "*";
+  process.env.NEXT_PUBLIC_SITE_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "*";
 
 const isWildcard = allowedOrigin === "*";
 
@@ -26,7 +42,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  
+
   async headers() {
     return [
       {
@@ -53,4 +69,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

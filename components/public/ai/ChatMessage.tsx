@@ -96,7 +96,7 @@ export function ChatMessage({ role, children, timestamp }: ChatMessageProps) {
               : "rounded-2xl rounded-br-[4px] bg-[#c8e6fb] text-[#12283a]"
           }`}
         >
-          <p className="text-[15px] leading-relaxed sm:text-base">{children}</p>
+          <p className="text-[0.9375rem] leading-relaxed sm:text-base">{children}</p>
         </div>
 
         {/* Meta row — feedback (AI only) + timestamp, tiny and muted. */}
@@ -143,7 +143,7 @@ export function ChatMessage({ role, children, timestamp }: ChatMessageProps) {
           )}
 
           {timestamp && (
-            <span className="text-[10px] tabular-nums text-[var(--dl-text-muted)]">
+            <span className="text-[0.625rem] tabular-nums text-[var(--dl-text-muted)]">
               {timestamp}
             </span>
           )}

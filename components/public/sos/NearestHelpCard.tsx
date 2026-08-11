@@ -67,7 +67,7 @@ export default function NearestHelpCard() {
         </span>
         <div>
           <h2 className="text-base font-bold text-white">Help Nearby</h2>
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-[var(--dl-text-muted)]">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-widest text-[var(--dl-text-muted)]">
             Closest help while you wait
           </p>
         </div>

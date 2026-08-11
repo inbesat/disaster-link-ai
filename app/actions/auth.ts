@@ -1,10 +1,10 @@
 "use server";
 
-import { randomInt } from "node:crypto";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { rateLimit } from "@/lib/security/rate-limit";
+import { consumeOtp, generateOtp, issueOtp, normalizePhone } from "@/lib/security/otp";
 
 const GUEST_COOKIE = "guest_mode";
 
@@ -41,23 +41,6 @@ const GETOTP_SEND_URL =
   process.env.GETOTP_SEND_URL ?? "https://api.otp.dev/v1/verifications";
 const GETOTP_CHANNEL = process.env.GETOTP_CHANNEL ?? "sms";
 const GETOTP_SENDER = process.env.GETOTP_SENDER ?? "GetOTP";
-const OTP_TTL_MS = 5 * 60 * 1000; // codes expire after 5 minutes
-
-// code -> { phone, expiresAt } (in-memory; resets on server restart, which
-// is fine for a demo — a production build would back this with a KV store).
-const otpStore = new Map<string, { phone: string; expiresAt: number }>();
-
-function generateOtp(length = 6): string {
-  // Cryptographically-random digits — never Math.random for OTP material.
-  let code = "";
-  for (let i = 0; i < length; i++) code += randomInt(0, 10);
-  return code;
-}
-
-function normalizePhone(raw: string): string | null {
-  const phone = (raw ?? "").replace(/[\s\-()]/g, "");
-  return /^\+?\d{7,15}$/.test(phone) ? phone : null;
-}
 
 /**
  * Send a 6-digit OTP to the given phone number via GetOTP.
@@ -89,7 +72,7 @@ export async function sendOTP(
 
   if (!apiKey) {
     console.log(`[getotp] DEMO — no GETOTP_API_KEY. OTP for ${phone}: ${code}`);
-    otpStore.set(code, { phone, expiresAt: Date.now() + OTP_TTL_MS });
+    issueOtp(code, phone);
     return {
       ok: true,
       message: "OTP sent (demo) — check the server console for the code.",
@@ -123,12 +106,12 @@ export async function sendOTP(
 
     if (!res.ok) throw new Error(`GetOTP returned ${res.status}`);
 
-    otpStore.set(code, { phone, expiresAt: Date.now() + OTP_TTL_MS });
+    issueOtp(code, phone);
     return { ok: true, message: "OTP sent to your phone. It expires in 5 minutes." };
   } catch (error) {
     console.warn("[getotp] API call failed — simulating success.", error);
     console.log(`[getotp] DEMO FALLBACK — OTP for ${phone}: ${code}`);
-    otpStore.set(code, { phone, expiresAt: Date.now() + OTP_TTL_MS });
+    issueOtp(code, phone);
     return {
       ok: true,
       message: "OTP sent (fallback demo) — check the server console for the code.",
@@ -153,12 +136,11 @@ export async function verifyOTP(code: string): Promise<{ ok: false; message: str
     return { ok: false, message: "Too many attempts. Request a new code." };
   }
 
-  const entry = otpStore.get(token);
-  if (!entry || entry.expiresAt < Date.now()) {
-    if (entry) otpStore.delete(token);
+  // Consume the code (single-use). null for unknown/expired/malformed.
+  const phone = consumeOtp(token);
+  if (!phone) {
     return { ok: false, message: "Invalid or expired code. Request a new one." };
   }
-  otpStore.delete(token);
 
   // Real-mode path: the phone must be a Supabase Auth user that received a
   // matching code. Since GetOTP (not Supabase) generated this code, this
@@ -169,7 +151,7 @@ export async function verifyOTP(code: string): Promise<{ ok: false; message: str
     try {
       const supabase = createClient();
       const { error } = await supabase.auth.verifyOtp({
-        phone: entry.phone,
+        phone,
         token,
         type: "sms",
       });

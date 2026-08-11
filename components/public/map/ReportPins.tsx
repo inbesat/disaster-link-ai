@@ -62,7 +62,7 @@ export default function ReportPins({ pins }: { pins: ReportPin[] }) {
                 <Icon aria-hidden="true" className="h-5 w-5" strokeWidth={2.25} />
               </span>
               {/* Tiny label chip */}
-              <span className="rounded-full bg-[#0a1120]/85 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
+              <span className="rounded-full bg-[#0a1120]/85 px-2 py-0.5 text-[0.625rem] font-bold text-white backdrop-blur-sm">
                 {reportLabel(pin.type)}
               </span>
             </motion.div>

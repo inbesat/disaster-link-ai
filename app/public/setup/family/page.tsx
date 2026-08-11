@@ -190,7 +190,7 @@ export default function FamilySetupPage() {
             </p>
           )}
 
-          <p className="text-center font-mono text-[11px] uppercase tracking-widest text-[var(--dl-text-muted)]">
+          <p className="text-center font-mono text-[0.6875rem] uppercase tracking-widest text-[var(--dl-text-muted)]">
             {filledCount} of {MAX_CONTACTS} slots used
           </p>
 

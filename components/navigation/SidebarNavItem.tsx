@@ -180,14 +180,14 @@ export function SidebarNavItem({
       />
       {!collapsed && <span className="min-w-0 flex-1 truncate">{label}</span>}
       {!collapsed && badgeCount !== undefined && badgeCount > 0 && (
-        <span className="shrink-0 rounded-full bg-accent-primary/15 px-1.5 py-px text-[10px] font-bold leading-4 text-accent-primary tabular-nums">
+        <span className="shrink-0 rounded-full bg-accent-primary/15 px-1.5 py-px text-[0.625rem] font-bold leading-4 text-accent-primary tabular-nums">
           {formatCount(badgeCount)}
         </span>
       )}
       {!collapsed && shortcut && (
         <kbd
           aria-hidden
-          className="shrink-0 rounded border border-subtle bg-tertiary px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted"
+          className="shrink-0 rounded border border-subtle bg-tertiary px-1.5 py-0.5 font-mono text-[0.625rem] font-medium text-muted"
         >
           {shortcut}
         </kbd>
@@ -244,7 +244,7 @@ export function SidebarNavItem({
                   <Link
                     href={sub.href}
                     aria-current={subActive ? "page" : undefined}
-                    className={`flex h-8 items-center gap-2 rounded-md border-l-2 pl-[42px] pr-2 text-[13px] transition-colors duration-150 motion-reduce:transition-none ${
+                    className={`flex h-8 items-center gap-2 rounded-md border-l-2 pl-[42px] pr-2 text-[0.8125rem] transition-colors duration-150 motion-reduce:transition-none ${
                       subActive
                         ? "border-accent-primary bg-accent-primary/10 text-primary"
                         : "border-transparent text-muted hover:bg-white/5 hover:text-foreground"
@@ -252,7 +252,7 @@ export function SidebarNavItem({
                   >
                     <span className="min-w-0 flex-1 truncate">{sub.label}</span>
                     {sub.badgeCount !== undefined && sub.badgeCount > 0 && (
-                      <span className="shrink-0 rounded-full bg-accent-primary/15 px-1.5 py-px text-[10px] font-bold leading-4 text-accent-primary tabular-nums">
+                      <span className="shrink-0 rounded-full bg-accent-primary/15 px-1.5 py-px text-[0.625rem] font-bold leading-4 text-accent-primary tabular-nums">
                         {formatCount(sub.badgeCount)}
                       </span>
                     )}

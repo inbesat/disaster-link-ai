@@ -5,8 +5,12 @@ import ToastViewport from "@/components/ui/Toast";
 import EmergencyContactCard from "@/components/EmergencyContactCard";
 import SimulationToggle from "@/components/admin/SimulationToggle";
 import DemoController from "@/components/demo/DemoController";
+import DemoHotkeysHost from "@/components/demo/DemoHotkeysHost";
 import ShortcutModal from "@/components/ui/ShortcutModal";
+import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
+import PwaUpdateBanner from "@/components/pwa/PwaUpdateBanner";
 import ThemeProvider from "@/components/providers/ThemeProvider";
+import { HighContrastProvider } from "@/lib/contexts/HighContrastContext";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { MapSettingsProvider } from "@/lib/settings/MapSettingsContext";
 import { SIMULATION_COOKIE } from "@/lib/admin/simulation";
@@ -36,6 +40,18 @@ export const metadata: Metadata = {
   title: "Disaster Response Intelligence Platform",
   description:
     "Flood prediction, emergency planning, and resource allocation for the Bharat Shakti Hackathon.",
+  // Phase 13 · Step 1 — PWA hooks: manifest + installable web app metadata.
+  manifest: "/manifest.json",
+  themeColor: "#0a0f1a",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Bharat Shakti",
+  },
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/icon-192.png",
+  },
 };
 
 export default function RootLayout({
@@ -75,6 +91,9 @@ export default function RootLayout({
           <SimulationToggle active={simulationActive} />
         </div>
 
+        {/* Phase 13 · Step 10 — high-contrast mode (a11y). Applies the
+            `high-contrast` class to <html> for every surface. */}
+        <HighContrastProvider>
         <ThemeProvider>
           <LanguageProvider>
             <MapSettingsProvider>
@@ -83,10 +102,23 @@ export default function RootLayout({
             </MapSettingsProvider>
           </LanguageProvider>
         </ThemeProvider>
+        </HighContrastProvider>
 
         {/* Phase 10 · Step 4 — secret pitch-day controller: renders nothing
             unless the URL carries ?demo=1. */}
         <DemoController />
+
+        {/* Phase 15 · Step 3 — invisible demo hotkeys: Shift+1 flood,
+            Shift+2 shelter full, Shift+3 responder arrival, Shift+0 reset.
+            Renders nothing; a single global keydown listener. */}
+        <DemoHotkeysHost />
+
+        {/* Phase 13 · Step 1 — PWA service worker (production only). */}
+        <ServiceWorkerRegister />
+
+        {/* Phase 13 · Step 3 — new-version banner ("Reload" once a fresh
+            build takes over). Renders nothing until then. */}
+        <PwaUpdateBanner />
 
         {/* Phase 11 · Step 5 — power-user shortcuts reference: renders
             nothing until "?" (Shift+/) is pressed. */}

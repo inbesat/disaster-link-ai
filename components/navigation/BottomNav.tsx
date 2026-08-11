@@ -293,7 +293,7 @@ export function BottomNav({
               className="flex min-w-0 flex-1 flex-col items-center justify-center gap-1.5 rounded-md text-slate-400 transition-colors duration-150 motion-reduce:transition-none outline-none hover:text-slate-200 focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
             >
               <ChevronLeft className="h-6 w-6" strokeWidth={1.5} aria-hidden />
-              <span className="truncate text-[10px] font-semibold">Back</span>
+              <span className="truncate text-[0.625rem] font-semibold">Back</span>
             </button>
             {MAP_TOOLS.map((tool) => (
               <BottomNavItem

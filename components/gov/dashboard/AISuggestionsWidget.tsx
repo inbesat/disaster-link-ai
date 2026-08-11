@@ -32,7 +32,7 @@ export function AISuggestionsWidget() {
           <p className="eoc-label text-severity-purple-300">AI SUGGESTION</p>
         </div>
 
-        <p className="mt-3 text-[13px] leading-relaxed text-white/85">
+        <p className="mt-3 text-[0.8125rem] leading-relaxed text-white/85">
           AI drafted an{" "}
           <span className="font-semibold text-white">evacuation plan for Sector 4</span> based
           on flood forecasts, shelter capacity and road closures.
@@ -52,7 +52,7 @@ export function AISuggestionsWidget() {
           Review Plan
         </button>
 
-        <p className="mt-3 text-[10px] leading-relaxed text-[var(--dl-text-muted)]">
+        <p className="mt-3 text-[0.625rem] leading-relaxed text-[var(--dl-text-muted)]">
           Generated 3 min ago · confidence 87% · human review recommended
         </p>
       </div>

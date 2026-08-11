@@ -200,7 +200,7 @@ export default function PublicMap() {
       <div
         role="img"
         aria-label="Legend: red areas are danger zones, everything else is safe"
-        className="pointer-events-none absolute bottom-[calc(140px+env(safe-area-inset-bottom))] left-4 z-10 flex items-center gap-3 rounded-full bg-[#0a1120]/70 px-3 py-1.5 text-[11px] font-medium text-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.3)] backdrop-blur-sm"
+        className="pointer-events-none absolute bottom-[calc(140px+env(safe-area-inset-bottom))] left-4 z-10 flex items-center gap-3 rounded-full bg-[#0a1120]/70 px-3 py-1.5 text-[0.6875rem] font-medium text-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.3)] backdrop-blur-sm"
       >
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-severity-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)]" />

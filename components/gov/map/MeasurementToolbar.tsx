@@ -63,7 +63,7 @@ export function MeasurementToolbar({
             {/* Tooltip — right side of the left-edge toolbar */}
             <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-lg border border-white/10 bg-[#0d1526]/95 px-3 py-1.5 opacity-0 shadow-lg backdrop-blur transition-opacity duration-150 group-hover:opacity-100">
               <span className="block text-xs font-semibold text-white">{tool.label}</span>
-              <span className="block text-[10px] text-[var(--dl-text-muted)]">{tool.hint}</span>
+              <span className="block text-[0.625rem] text-[var(--dl-text-muted)]">{tool.hint}</span>
             </span>
           </span>
         );

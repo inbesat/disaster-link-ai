@@ -244,7 +244,7 @@ export default function PublicAlertSettingsPage() {
           </div>
         </section>
 
-        <p className="mt-5 text-center text-[11px] text-[var(--dl-text-muted)]">
+        <p className="mt-5 text-center text-[0.6875rem] text-[var(--dl-text-muted)]">
           Changes save automatically on this device.
         </p>
       </div>

@@ -81,7 +81,7 @@ export function AdvancedLayerControl() {
           </ul>
 
           <footer className="border-t border-white/10 px-4 py-2.5">
-            <p className="text-[10px] leading-relaxed text-[var(--dl-text-muted)]">
+            <p className="text-[0.625rem] leading-relaxed text-[var(--dl-text-muted)]">
               Opacity applies per layer. Flood zones render at half strength
               for readability under route lines.
             </p>
@@ -112,7 +112,7 @@ function LayerRow({ layerKey }: { layerKey: GovMapLayerKey }) {
           onClick={() => toggleLayer(layerKey)}
           className="flex min-w-0 flex-1 items-center justify-between gap-2 text-left"
         >
-          <span className="truncate text-[13px] font-medium text-white/90">
+          <span className="truncate text-[0.8125rem] font-medium text-white/90">
             {GOV_LAYER_LABELS[layerKey]}
           </span>
           <span
@@ -152,7 +152,7 @@ function LayerRow({ layerKey }: { layerKey: GovMapLayerKey }) {
                 aria-label={`${GOV_LAYER_LABELS[layerKey]} opacity`}
                 className="h-1.5 w-full cursor-pointer accent-[var(--dl-blue-light)]"
               />
-              <span className="w-9 shrink-0 text-right text-[11px] font-semibold tabular-nums text-white/70">
+              <span className="w-9 shrink-0 text-right text-[0.6875rem] font-semibold tabular-nums text-white/70">
                 {state.opacity}%
               </span>
             </div>

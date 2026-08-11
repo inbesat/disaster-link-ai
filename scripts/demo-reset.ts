@@ -1,4 +1,8 @@
 /**
+ * ⚠️ SUPERSEDED — see scripts/seed-demo.ts (Phase 15). `npm run demo:reset`
+ * now runs the new seeder, which seeds a richer hero scenario (5 shelters,
+ * 12 responders, 3 villages). This file is kept for reference/docs only.
+ *
  * Demo Reset / Hero Scenario Seeder (Phase 23 · Step 3)
  * ------------------------------------------------------------------
  * Wipes operational demo tables, then injects a deterministic "Hero

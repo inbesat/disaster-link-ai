@@ -96,7 +96,7 @@ function RoadClosureMarker({ closure, isOpen, onToggle }: RoadClosureMarkerProps
                 aria-hidden="true"
                 className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-severity-red-500/40 bg-[#0a1120]"
               />
-              <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-severity-red-300">
+              <p className="flex items-center gap-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-severity-red-300">
                 <span aria-hidden="true" className="text-xs leading-none">
                   🚧
                 </span>
