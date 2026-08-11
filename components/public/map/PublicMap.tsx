@@ -34,11 +34,15 @@ import { readCitizenLocation } from "@/hooks/useSafetyStatus";
 import { resolveCitizenMapView } from "@/lib/map/citizen-view";
 import type { CitizenMapView } from "@/lib/map/citizen-view";
 import { generateCitizenFloodZones } from "@/lib/map/citizen-flood-zones";
+import { classifyCitizenRoute, type RouteSafetyClassification } from "@/lib/map/route-safety";
+import { CITIZEN_ROAD_CLOSURES } from "@/lib/map/citizen-road-closures";
 import { CITIZEN_SHELTERS, type CitizenShelter } from "@/lib/map/citizen-shelters";
 import UserLocationDot from "./UserLocationDot";
 import FloodZones from "./FloodZones";
 import ShelterMarkers from "./ShelterMarkers";
 import EvacuationRoutes from "./EvacuationRoutes";
+import RouteSafetyOverlay from "./RouteSafetyOverlay";
+import OfflineRouteDirections from "./OfflineRouteDirections";
 import TurnByTurnNav from "./TurnByTurnNav";
 import RoadClosures from "./RoadClosures";
 import FamilyLayer from "./FamilyLayer";
@@ -121,6 +125,24 @@ export default function PublicMap() {
     [view],
   );
 
+  // Phase 1 · Step 9 — one shared safety grading for the selected route,
+  // feeding both the route lines and the safety-score badge so they can
+  // never disagree.
+  const routeSafety = useMemo<RouteSafetyClassification | null>(() => {
+    const shelter = selectedShelterId
+      ? CITIZEN_SHELTERS.find((s) => s.id === selectedShelterId) ?? null
+      : null;
+    if (!shelter) return null;
+    return classifyCitizenRoute(
+      view.center.lat,
+      view.center.lng,
+      shelter.lat,
+      shelter.lng,
+      zones,
+      CITIZEN_ROAD_CLOSURES,
+    );
+  }, [selectedShelterId, view, zones]);
+
   return (
     <div className="relative h-full w-full">
       <Map
@@ -150,11 +172,14 @@ export default function PublicMap() {
           navigating={navigating}
           onNavigate={startNavigation}
         />
-        <EvacuationRoutes
-          origin={view.center}
-          zones={zones}
-          selectedShelterId={selectedShelterId}
+        <EvacuationRoutes classification={routeSafety} />
+        {/* Phase 1 · Step 9 — safety-score badge over the route. */}
+        <RouteSafetyOverlay
+          classification={routeSafety}
+          shelterId={selectedShelterId}
         />
+        {/* Phase 1 · Step 10 — cached turn-by-turn text while offline. */}
+        <OfflineRouteDirections shelterId={selectedShelterId} />
         {/* Step 7 — barricade markers stay on top of the route lines. */}
         <RoadClosures />
         {/* Step 8 — family avatars (mounted only while the layer is on). */}

@@ -4,25 +4,27 @@
 // components/public/BottomNav.tsx — Phase 2 · Step 1 · Citizen app bottom
 // navigation.
 //
-// Sticky 4-item bar pinned to the bottom of the mobile-first citizen app:
-// Home (active on the dashboard) · Alerts · Map · SOS. Centered to the
-// same max-w-md column as the dashboard shell (mx-auto), with safe-area
-// padding for notched phones (pb-[env(safe-area-inset-bottom)]).
+// Sticky 5-item bar pinned to the bottom of the mobile-first citizen app:
+// Home (active on the dashboard) · Alerts · Map · Settings · SOS. Centered
+// to the same max-w-md column as the dashboard shell (mx-auto), with
+// safe-area padding for notched phones (pb-[env(safe-area-inset-bottom)]).
 //
 // Active state auto-derives from the current route (same isPathActive
 // convention as the gov SidebarNavItem), so the Home tab lights up on the
 // dashboard and future /public/alerts and /public/map pages highlight
-// their own tab with zero prop-threading. The SOS tab is the emergency
+// their own tab with zero prop-threading. The Settings tab links to the
+// citizen settings hub (/public/settings) and drops out during Emergency
+// Mode like the Alerts tab. The SOS tab is the emergency
 // action — Phase 5 · Step 1 — it opens the global SOS modal (see
 // components/public/sos) instead of navigating, and gets the citizen
 // orange treatment (filled tile + Siren icon) so it reads as the panic
-// button, while staying in the same even grid so all four items stay
+// button, while staying in the same even grid so all five items stay
 // evenly spaced.
 // ---------------------------------------------------------------------
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BellRing, Home, Map, Siren, type LucideIcon } from "lucide-react";
+import { BellRing, Home, Map, Settings, Siren, type LucideIcon } from "lucide-react";
 import { useSOS } from "@/components/public/sos/SOSContext";
 
 type NavItem = {
@@ -48,6 +50,12 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/public/dashboard", icon: Home },
   { label: "Alerts", href: "/public/alerts", icon: BellRing, hideDuringEmergency: true },
   { label: "Map", href: "/public/map", icon: Map },
+  {
+    label: "Settings",
+    href: "/public/settings",
+    icon: Settings,
+    hideDuringEmergency: true,
+  },
   { label: "SOS", href: "/public/sos", icon: Siren, emergency: true },
 ];
 

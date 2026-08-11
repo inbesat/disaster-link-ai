@@ -22,6 +22,7 @@
 
 import { useEffect, useState } from "react";
 import { Smartphone, Monitor, RefreshCw, Radio } from "lucide-react";
+import ScreenRecorder from "@/components/demo/ScreenRecorder";
 
 export default function DemoPresentation() {
   // Frames mount immediately (no dark void on first paint). Once the
@@ -138,6 +139,11 @@ export default function DemoPresentation() {
         the hero scenario between runs with{" "}
         <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-cyan-300">npm run demo:reset</code>
       </footer>
+
+      {/* Phase 15 · Step 8 — hidden highlight-reel recorder: an almost
+          invisible red dot bottom-right; click to record, click again to
+          download the .webm pitch flow. */}
+      <ScreenRecorder />
     </div>
   );
 }

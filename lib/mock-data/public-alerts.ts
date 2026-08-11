@@ -182,6 +182,34 @@ export function writeSafeStatus(): void {
   }
 }
 
+// --- "Trapped" status (Phase 1 · Step 2) --------------------------------
+// When Mitron detects an emergency intent it marks the citizen as TRAPPED
+// — the mirror image of "I am Safe". Persisted so a reload keeps the
+// trapped flag (the control-room/family view in this demo reads it the
+// same way it reads the SOS-active flag). Same guarded helpers as above.
+
+export const TRAPPED_STATUS_KEY = "drip:citizen-trapped";
+
+/** SSR-safe read — true while the citizen is marked as trapped. */
+export function readTrappedStatus(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(TRAPPED_STATUS_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+/** Mark the citizen as trapped (guarded, never throws). */
+export function writeTrappedStatus(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(TRAPPED_STATUS_KEY, "1");
+  } catch {
+    // storage unavailable — trapped status just won't persist
+  }
+}
+
 // --- Active SOS state (Phase 5 · Step 4) --------------------------------
 // Once a rescue/medical SOS is confirmed, the app enters Emergency Mode:
 // a persistent red banner on every page until the citizen cancels it. The

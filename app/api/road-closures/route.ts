@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
+import { demoWhere, resolveDemoScope } from "@/lib/demo/scope";
 
 export const dynamic = "force-dynamic";
 
 /** Load active road closures (used by the map to draw blockers). */
 export async function GET() {
   try {
+    // Phase 2 · Step 8 — session isolation: a demo session sees only its
+    // own isDemo rows; a real user never sees any demo rows.
+    const scope = resolveDemoScope();
     const closures = await prisma.roadClosure.findMany({
-      where: { isActive: true },
+      where: { isActive: true, ...demoWhere(scope) },
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json({ ok: true, closures });
@@ -38,12 +42,17 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // Phase 2 · Step 8 — closures created from a demo session are tagged
+    // demo rows owned by that session; they never leak into real views.
+    const scope = resolveDemoScope();
     const closure = await prisma.roadClosure.create({
       data: {
         lat,
         lng,
         reason: typeof body.reason === "string" ? body.reason : "Flooded road",
         isActive: true,
+        isDemo: scope.demo,
+        sessionId: scope.demo ? scope.sessionId : null,
       },
     });
     return NextResponse.json({ ok: true, closure });

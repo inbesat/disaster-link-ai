@@ -1,68 +1,49 @@
 "use client";
 
 // ---------------------------------------------------------------------
-// components/public/map/EvacuationRoutes.tsx — Phase 4 · Step 5 · Route
-// lines from the citizen to a shelter.
+// components/public/map/EvacuationRoutes.tsx — Phase 1 · Step 9 · Graded
+// evacuation route lines.
 //
-// When a shelter is selected, draws the mock evacuation route with a very
-// thick line (width 6) in two visual states:
-//   • Green — safe segments, leading the citizen away from danger.
-//   • Red + animated dashes — flooded segments, drawn over the danger
-//     zone so the citizen sees exactly where NOT to linger.
+// Draws the mock evacuation route from decide's citizen location to the
+// selected shelter, coloured segment-by-segment by the Route Safety
+// engine (lib/map/route-safety.ts). Each segment carries one of four
+// hazards:
+//   • safe    — solid green, the path to follow.
+//   • watch   — amber, danger within ~1.5 km: be alert.
+//   • flooded — red + animated dashes, drawn over the flood zone:
+//               don't linger.
+//   • closed  — black over a grey casing: blocked by a road closure.
 //
-// A dark casing sits underneath so the red dashes stay readable over the
-// red flood fill. The dash animation advances the line-dasharray phase on
-// a timer (MapLibre paint-property transition), and is disabled under
-// reduced-motion so nothing loops for users who asked for calm.
+// A dark casing sits underneath, and a lighter grey casing is drawn only
+// under closed segments so the near-black closed line stays visible on
+// the dark basemap. The dash animation on flooded segments is disabled
+// under reduced-motion.
 // ---------------------------------------------------------------------
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { Layer, Source, useMap } from "react-map-gl/maplibre";
 import { useReducedMotion } from "framer-motion";
-import type { CitizenFloodZones } from "@/lib/map/citizen-flood-zones";
-import { CITIZEN_SHELTERS } from "@/lib/map/citizen-shelters";
-import { buildCitizenEvacuationRoute } from "@/lib/map/citizen-evacuation-route";
+import type { FilterSpecification } from "maplibre-gl";
+import { ROUTE_HAZARD_COLORS, type RouteSafetyClassification } from "@/lib/map/route-safety";
 
 /** Base dash pattern — values are multiplied by line-width (6) in px. */
 const BASE_DASH = [0.5, 1.75] as const;
 const FLOODED_LAYER_ID = "citizen-route-flooded";
 
 type EvacuationRoutesProps = {
-  /** Citizen's current location — where every route starts. */
-  origin: { lat: number; lng: number };
-  /** Binary danger zones — shared with the FloodZones overlay. */
-  zones: CitizenFloodZones;
-  /** Id of the selected shelter (null → draw nothing). */
-  selectedShelterId: string | null;
+  /** Pre-computed per-segment safety grading (null → draw nothing). */
+  classification: RouteSafetyClassification | null;
 };
 
-export default function EvacuationRoutes({
-  origin,
-  zones,
-  selectedShelterId,
-}: EvacuationRoutesProps) {
+export default function EvacuationRoutes({ classification }: EvacuationRoutesProps) {
   const { current: map } = useMap();
   const reduceMotion = useReducedMotion();
-
-  const route = useMemo(() => {
-    const shelter = selectedShelterId
-      ? CITIZEN_SHELTERS.find((s) => s.id === selectedShelterId) ?? null
-      : null;
-    if (!shelter) return null;
-    return buildCitizenEvacuationRoute(
-      origin.lat,
-      origin.lng,
-      shelter.lat,
-      shelter.lng,
-      zones,
-    );
-  }, [origin, selectedShelterId, zones]);
 
   // Advance the dash phase so flooded segments visually "flow" away from
   // danger. Guarded on the layer existing (it unmounts with the Source).
   useEffect(() => {
     const mlMap = map?.getMap();
-    if (!mlMap || !route || reduceMotion) return;
+    if (!mlMap || !classification || reduceMotion) return;
     let step = 0;
     const timer = window.setInterval(() => {
       if (!mlMap.getLayer(FLOODED_LAYER_ID)) return;
@@ -73,13 +54,19 @@ export default function EvacuationRoutes({
       ]);
     }, 160);
     return () => window.clearInterval(timer);
-  }, [map, route, reduceMotion]);
+  }, [map, classification, reduceMotion]);
 
-  if (!route) return null;
+  if (!classification) return null;
+
+  const data = { type: "FeatureCollection" as const, features: classification.features };
+  const closedFilter: FilterSpecification = ["==", ["get", "hazard"], "closed"];
+  const safeFilter: FilterSpecification = ["==", ["get", "hazard"], "safe"];
+  const watchFilter: FilterSpecification = ["==", ["get", "hazard"], "watch"];
+  const floodedFilter: FilterSpecification = ["==", ["get", "hazard"], "flooded"];
 
   return (
-    <Source id="citizen-evacuation-route" type="geojson" data={route}>
-      {/* Dark casing — keeps the colored lines readable over the red fill. */}
+    <Source id="citizen-evacuation-route" type="geojson" data={data}>
+      {/* Dark casing — keeps all colored lines readable over the red fill. */}
       <Layer
         id="citizen-route-casing"
         type="line"
@@ -87,30 +74,64 @@ export default function EvacuationRoutes({
         paint={{
           "line-color": "#0a1120",
           "line-opacity": 0.9,
-          "line-width": 8.5,
+          "line-width": 9,
         }}
       />
-      {/* Safe segments — solid green, the path to follow. */}
+      {/* Grey casing under closed segments so the near-black line shows. */}
+      <Layer
+        id="citizen-route-closed-casing"
+        type="line"
+        filter={closedFilter}
+        layout={{ "line-cap": "round", "line-join": "round" }}
+        paint={{
+          "line-color": "#9ca3af",
+          "line-opacity": 0.95,
+          "line-width": 9,
+        }}
+      />
+      {/* Safe — solid green, the path to follow. */}
       <Layer
         id="citizen-route-safe"
         type="line"
-        filter={["==", ["get", "flooded"], false]}
+        filter={safeFilter}
         layout={{ "line-cap": "round", "line-join": "round" }}
         paint={{
-          "line-color": "#34d399",
+          "line-color": ROUTE_HAZARD_COLORS.safe,
           "line-width": 6,
         }}
       />
-      {/* Flooded segments — red, dashed, animated away from danger. */}
+      {/* Watch — amber, near danger but passable. */}
+      <Layer
+        id="citizen-route-watch"
+        type="line"
+        filter={watchFilter}
+        layout={{ "line-cap": "round", "line-join": "round" }}
+        paint={{
+          "line-color": ROUTE_HAZARD_COLORS.watch,
+          "line-width": 6,
+        }}
+      />
+      {/* Flooded — red, dashed, animated away from danger. */}
       <Layer
         id={FLOODED_LAYER_ID}
         type="line"
-        filter={["==", ["get", "flooded"], true]}
+        filter={floodedFilter}
         layout={{ "line-cap": "round", "line-join": "round" }}
         paint={{
-          "line-color": "#ef4444",
+          "line-color": ROUTE_HAZARD_COLORS.flooded,
           "line-width": 6,
           "line-dasharray": [BASE_DASH[0], BASE_DASH[1]],
+        }}
+      />
+      {/* Closed — blocked by a road closure, rendered over the grey casing. */}
+      <Layer
+        id="citizen-route-closed"
+        type="line"
+        filter={closedFilter}
+        layout={{ "line-cap": "round", "line-join": "round" }}
+        paint={{
+          "line-color": ROUTE_HAZARD_COLORS.closed,
+          "line-width": 6,
         }}
       />
     </Source>

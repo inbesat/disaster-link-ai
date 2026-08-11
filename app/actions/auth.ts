@@ -1,10 +1,12 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { consumeOtp, generateOtp, issueOtp, normalizePhone } from "@/lib/security/otp";
+import { DEMO_SESSION_COOKIE } from "@/lib/demo/scope";
 
 const GUEST_COOKIE = "guest_mode";
 
@@ -192,6 +194,7 @@ export async function signOutAction() {
   cookies().delete(GUEST_COOKIE);
   cookies().delete("role");
   cookies().delete("view_as_public");
+  cookies().delete("demo_mode");
   redirect("/login");
 }
 
@@ -237,6 +240,8 @@ export async function exitGuestMode() {
   cookies().delete("guest_mode");
   cookies().delete("role");
   cookies().delete("view_as_public");
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
   redirect("/");
 }
 
@@ -268,6 +273,82 @@ export async function govLogin(role: "district_admin" | "super_admin" = "distric
   // 7-day gov session.
   setSessionCookie("role", role, 60 * 60 * 24 * 7);
   redirect(role === "super_admin" ? "/gov/overview" : "/gov/dashboard");
+}
+
+// ---------------------------------------------------------------------
+// Phase 2 · Step 2 — One-Tap gov demo login (two-door landing flow).
+//
+// The AdminDemo modal's "One-Tap Login" drops judges straight into the
+// District Command Center with ZERO typing: it writes BOTH the role
+// session cookie (so the middleware admits district_admin to /gov/*) and
+// a `demo_mode=true` marker (the demo-session flag the landing sets on
+// its local state too), then redirects to /gov/dashboard. Real auth
+// would verify against Supabase — here the demo accepts the prefilled
+// credentials shown on the modal.
+// ---------------------------------------------------------------------
+export async function govDemoLogin() {
+  // One identity per browser: drop any guest/citizen session first.
+  cookies().delete("guest_mode");
+  cookies().delete("view_as_public");
+  // Short demo-session marker + the full 7-day gov role cookie. Phase 2 ·
+  // Step 8 — every demo login pins a fresh session UUID so demo DB rows are
+  // owned by exactly one demo session and can never leak into real views.
+  setSessionCookie("demo_mode", "true", 60 * 60 * 24);
+  setSessionCookie(DEMO_SESSION_COOKIE, randomUUID(), 60 * 60 * 24);
+  setSessionCookie("role", "district_admin", 60 * 60 * 24 * 7);
+  redirect("/gov/dashboard");
+}
+
+// ---------------------------------------------------------------------
+// Phase 2 · Step 3 — One-tap citizen demo login (two-door landing flow).
+//
+// The PublicLoginModal's "One-Tap Experience" drops judges straight into
+// the Citizen Companion app: it writes BOTH the role=public session
+// cookie (so the middleware admits the citizen to /public/*) and the
+// demo_mode=true marker, then lands on /public/dashboard. The prefilled
+// phone/OTP/location/language shown on the modal are applied client-side
+// before this action runs (localStorage `citizen_location`).
+// ---------------------------------------------------------------------
+export async function publicDemoLogin() {
+  // One identity per browser: drop any guest/gov session first.
+  cookies().delete("guest_mode");
+  cookies().delete("view_as_public");
+  // Short demo-session marker + the full 7-day public role cookie. Phase 2 ·
+  // Step 8 — the fresh UUID scopes every demo DB row to this exact session.
+  setSessionCookie("demo_mode", "true", 60 * 60 * 24);
+  setSessionCookie(DEMO_SESSION_COOKIE, randomUUID(), 60 * 60 * 24);
+  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
+  redirect("/public/dashboard");
+}
+
+// ---------------------------------------------------------------------
+// Phase 2 · Step 6 — "Reset Demo Data" from the DemoIndicators strip.
+// Clears every demo-session marker and returns to the two-door landing.
+// (The client also wipes the localStorage demo seed before calling.)
+// ---------------------------------------------------------------------
+export async function exitDemoMode() {
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("guest_mode");
+  cookies().delete("role");
+  cookies().delete("view_as_public");
+  redirect("/demo");
+}
+
+// ---------------------------------------------------------------------
+// Phase 2 · Step 10 — Demo-to-real conversion cleanup (no redirect).
+//
+// Called by the signup page after a judge converts to a real account: it
+// clears every demo-session marker IN PLACE so the /signup flow (and its
+// welcome modal) keeps rendering. The client wipes the localStorage
+// scenario seed + analytics trail before calling.
+// ---------------------------------------------------------------------
+export async function clearDemoSession() {
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("guest_mode");
+  cookies().delete("role");
+  cookies().delete("view_as_public");
 }
 
 // ---------------------------------------------------------------------

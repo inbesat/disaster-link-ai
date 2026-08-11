@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import DemoConversionWelcome from "@/components/demo/DemoConversionWelcome";
 
 let supabase: ReturnType<typeof createClient> | null = null;
 
@@ -54,6 +55,15 @@ export default function SignupPage() {
         <p className="mt-1 text-sm text-slate-400">
           Create an account to join the response network.
         </p>
+
+        {/* Phase 2 · Step 10 — demo→real conversion: welcome modal +
+            prefill context when arriving from the ConversionBanner
+            (?converted=demo). Suspense-wrapped for useSearchParams. */}
+        <Suspense fallback={null}>
+          <div className="mt-4">
+            <DemoConversionWelcome />
+          </div>
+        </Suspense>
 
         <form onSubmit={handleSignup} className="mt-6 space-y-4">
           <div>

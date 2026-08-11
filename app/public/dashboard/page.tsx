@@ -13,9 +13,12 @@ import AITeaser from "@/components/public/AITeaser";
 import BandwidthGate from "@/components/public/BandwidthGate";
 import BatterySaverBanner from "@/components/public/BatterySaverBanner";
 import BottomNav from "@/components/public/BottomNav";
+import CenterDirectory from "@/components/public/CenterDirectory";
 import EmergencyDial from "@/components/public/EmergencyDial";
 import FamilyStrip from "@/components/public/FamilyStrip";
 import NearbySheltersList from "@/components/public/NearbySheltersList";
+import OfflineRouteCacheSync from "@/components/public/OfflineRouteCacheSync";
+import PublicOfflineBanner from "@/components/public/PublicOfflineBanner";
 import PullToRefresh from "@/components/public/PullToRefresh";
 import SafetyOverview from "@/components/public/SafetyOverview";
 import SafetyTipsFeed from "@/components/public/ai/SafetyTipsFeed";
@@ -93,6 +96,9 @@ export default function PublicDashboardPage() {
       {/* Guest mode banner (persistent while guest_mode=true) */}
       <GuestModeBanner />
 
+      {/* Phase 1 · Step 10 — sticky amber strip while offline. */}
+      <PublicOfflineBanner />
+
       {/* Responsive content column — max-w-7xl on desktop, full width on
           phones. Mobile bottom padding clears the fixed 72px BottomNav;
           md+ drops it (the nav is hidden there) for md:py-10. */}
@@ -101,6 +107,10 @@ export default function PublicDashboardPage() {
             device is under 20% (client island; renders nothing otherwise).
             Auto-refresh timers pause while it's visible. */}
         <BatterySaverBanner />
+
+        {/* Phase 1 · Step 10 — passive cache builder (renders nothing);
+            keeps the offline route snapshot fresh whenever we're online. */}
+        <OfflineRouteCacheSync />
 
         {/* Pull-to-refresh wraps the entire dashboard content (Step 10) */}
         <PullToRefresh>
@@ -174,6 +184,13 @@ export default function PublicDashboardPage() {
             (Phase 2 · Step 8; replaces the old Call-1070 strip) */}
         <section className="mt-8">
           <EmergencyDial />
+        </section>
+
+        {/* Phase 1 · Step 4 — Disaster Management Center Directory:
+            filterable NDRF/Police/Hospital/Fire cards with one-tap call
+            + an emoji mini-map. */}
+        <section className="mt-8">
+          <CenterDirectory />
         </section>
 
         {/* Module grid — stacks on phones, two-up on desktop */}

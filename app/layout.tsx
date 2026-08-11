@@ -6,6 +6,14 @@ import EmergencyContactCard from "@/components/EmergencyContactCard";
 import SimulationToggle from "@/components/admin/SimulationToggle";
 import DemoController from "@/components/demo/DemoController";
 import DemoHotkeysHost from "@/components/demo/DemoHotkeysHost";
+import DemoIndicators from "@/components/demo/DemoIndicators";
+import ScenarioSelector from "@/components/demo/ScenarioSelector";
+import ActionTriggersPanel from "@/components/demo/ActionTriggersPanel";
+import ConversionBanner from "@/components/demo/ConversionBanner";
+import ImpactMetrics from "@/components/demo/ImpactMetrics";
+import LiveDemoQR from "@/components/demo/LiveDemoQR";
+import QADrawer from "@/components/demo/QADrawer";
+import DemoOrchestrator from "@/components/demo/DemoOrchestrator";
 import ShortcutModal from "@/components/ui/ShortcutModal";
 import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
 import PwaUpdateBanner from "@/components/pwa/PwaUpdateBanner";
@@ -60,6 +68,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const simulationActive = cookies().get(SIMULATION_COOKIE)?.value === "true";
+  // Phase 2 — dual demo sessions pin a `demo_mode` cookie (govDemoLogin /
+  // publicDemoLogin in app/actions/auth.ts). While active, the amber
+  // sandbox strip + scenario switcher render for every surface.
+  const demoMode = cookies().get("demo_mode")?.value === "true";
+  const demoRole = cookies().get("role")?.value;
+  const demoIndicatorMode = demoRole === "public" ? "citizen" : "government";
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -78,6 +92,21 @@ export default function RootLayout({
             </span>
           </div>
         )}
+
+        {/* Phase 2 · Steps 5–6 — persistent sandbox indicators + live
+            scenario switcher, shown only while a demo session is active.
+            The amber strip sticks to the very top; the scenario dropdown
+            sits an inch below it at the top-right; both render nothing
+            outside demo mode. */}
+        {demoMode && <DemoIndicators mode={demoIndicatorMode} />}
+        {demoMode && <ScenarioSelector />}
+
+        {/* Phase 2 · Steps 7 + 10 — God-Mode one-click action triggers
+            (right edge, below the scenario switcher) and the demo→real
+            conversion banner (bottom center). Both render nothing outside
+            demo mode. */}
+        {demoMode && <ActionTriggersPanel mode={demoIndicatorMode} />}
+        {demoMode && <ConversionBanner mode={demoIndicatorMode} />}
 
         {/* SimulationToggle — bottom-LEFT so it never collides with the
             fixed elements that own the bottom-right corner: the emergency
@@ -109,9 +138,27 @@ export default function RootLayout({
         <DemoController />
 
         {/* Phase 15 · Step 3 — invisible demo hotkeys: Shift+1 flood,
-            Shift+2 shelter full, Shift+3 responder arrival, Shift+0 reset.
-            Renders nothing; a single global keydown listener. */}
+            Shift+2 shelter full, Shift+3 responder arrival, Shift+9 impact
+            overlay, Q sandbox QR, Shift+0 reset. Renders nothing; a single
+            global keydown listener. */}
         <DemoHotkeysHost />
+
+        {/* Phase 15 · Step 5 — live-impact metrics overlay (Shift+9).
+            Renders nothing until toggled. */}
+        <ImpactMetrics />
+
+        {/* Phase 15 · Step 6 — judges' sandbox QR modal (Q key).
+            Renders nothing until opened. */}
+        <LiveDemoQR />
+
+        {/* Phase 15 · Step 9 — Q&A anticipation drawer (Shift+4).
+            Renders nothing until toggled. */}
+        <QADrawer />
+
+        {/* Phase 15 · Step 10 — draggable master dev-tools panel with the
+            5-minute teleprompter. Renders nothing outside development mode
+            (or when the URL carries ?devtools=1). */}
+        <DemoOrchestrator />
 
         {/* Phase 13 · Step 1 — PWA service worker (production only). */}
         <ServiceWorkerRegister />

@@ -9,6 +9,9 @@
 //   • Shift + 1 → issue a "Critical Flood Warning" (mock server action)
 //   • Shift + 2 → mark the demo shelter (Central Community Hall) FULL
 //   • Shift + 3 → simulate a field responder arriving on-scene
+//   • Shift + 4 → open the Q&A anticipation drawer
+//   • Shift + 9 → toggle the cinematic live-impact metrics overlay
+//   • Q         → open the judges' sandbox QR modal (no modifiers)
 //   • Shift + 0 → reset the scenario to the hero state (calls the reset
 //                 API — same data as `npm run demo:reset`)
 //
@@ -100,13 +103,31 @@ export function useDemoHotkeys() {
     );
   }, []);
 
+  // The dev-tools orchestrator (DemoOrchestrator) can trigger the same reset
+  // without importing this hook — it just dispatches the global event.
+  useEffect(() => {
+    const onReset = () => void resetScenario();
+    window.addEventListener("demo:reset", onReset);
+    return () => window.removeEventListener("demo:reset", onReset);
+  }, [resetScenario]);
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (isEditableTarget(event.target)) return;
       // Strictly Shift + top-row digit (NO ctrl/meta/alt). event.code is
       // layout-independent — Shift+1 is "!" in event.key on US layouts,
       // but always "Digit1" in event.code, so these fire on any keyboard.
-      if (!event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) return;
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+      // Q (bare, no shift) — judges' sandbox QR modal.
+      if (!event.shiftKey && event.code === "KeyQ") {
+        event.preventDefault();
+        triggerHeavyHaptic();
+        window.dispatchEvent(new CustomEvent("demo:toggle-qr"));
+        return;
+      }
+
+      if (!event.shiftKey) return;
 
       switch (event.code) {
         case "Digit1":
@@ -120,6 +141,16 @@ export function useDemoHotkeys() {
         case "Digit3":
           event.preventDefault();
           void responderArrival();
+          break;
+        case "Digit4":
+          event.preventDefault();
+          triggerHeavyHaptic();
+          window.dispatchEvent(new CustomEvent("demo:toggle-qa"));
+          break;
+        case "Digit9":
+          event.preventDefault();
+          triggerHeavyHaptic();
+          window.dispatchEvent(new CustomEvent("demo:toggle-impact"));
           break;
         case "Digit0":
           event.preventDefault();

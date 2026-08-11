@@ -13,8 +13,7 @@
 // ---------------------------------------------------------------------
 
 import { booleanPointInPolygon } from "@turf/turf";
-import type { Feature, FeatureCollection, LineString } from "geojson";
-import type { CitizenFloodZones } from "./citizen-flood-zones";
+import type { Feature, FeatureCollection, LineString, Polygon } from "geojson";
 
 export type CitizenRouteSegment = Feature<LineString, { flooded: boolean }>;
 
@@ -43,7 +42,7 @@ export function buildCitizenEvacuationRoute(
   originLng: number,
   destinationLat: number,
   destinationLng: number,
-  dangerZones: CitizenFloodZones,
+  dangerZones: FeatureCollection<Polygon>,
 ): CitizenEvacuationRoute {
   const seed = Math.floor((originLat + destinationLat) * 1000 + (originLng + destinationLng) * 1000);
   const lngScale = Math.cos((originLat * Math.PI) / 180) || 1;

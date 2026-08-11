@@ -9,6 +9,12 @@
 // (Patna district, 3 villages, 5 shelters, 12 responders, 1 critical
 // flood prediction, reports + pending allocations, alerts, closure).
 //
+// Phase 2 · Step 8 (Session isolation): every row is tagged
+// `{ isDemo: true, sessionId }` and the wipe only ever touches demo rows
+// (`where: { isDemo: true }`) — a reset can NEVER delete real ops data,
+// and demo data is owned by a single demo session (the `demo_session_id`
+// cookie UUID passed in by the API layer).
+//
 // UNTOUCHED: users (upserted by email, never deleted), alert_rules,
 // alert_templates, emergency_documents, weather_data, data_source,
 // push_subscriptions.
@@ -50,35 +56,47 @@ export type ResetScenarioResult = {
 };
 
 /**
- * Wipe operational tables and seed the hero scenario. Throws when the
- * database is unreachable — callers decide whether to fail or mock.
+ * Wipe demo rows and re-seed the hero scenario. Throws when the database
+ * is unreachable — callers decide whether to fail or mock.
+ *
+ * @param options.sessionId — the owning demo session UUID. When set, every
+ *   seeded row carries it so `demoWhere()` scoping can hand the row only
+ *   back to that exact session. null keeps rows session-orphaned (legacy
+ *   CLI-driven seeds) — still `isDemo: true` and never visible to real
+ *   users.
  */
-export async function resetDemoScenario(): Promise<ResetScenarioResult> {
+export async function resetDemoScenario(options?: {
+  sessionId?: string | null;
+}): Promise<ResetScenarioResult> {
   // Lazy import — the CLI's .env loader must run first (see header note).
   const { prisma } = await import("../../server/prisma");
+  const sessionId = options?.sessionId ?? null;
+  const DEMO_TAG = { isDemo: true, sessionId };
 
-  // 1. WIPE — dependency order (children before parents).
+  // 1. WIPE — dependency order (children before parents). Only ever demo
+  // rows: `npm run demo:reset` must never delete real ops data.
   const wiped = await prisma.$transaction([
-    prisma.resourceMovement.deleteMany(),
-    prisma.resourceRequest.deleteMany(),
-    prisma.planFeedback.deleteMany(),
-    prisma.auditLog.deleteMany(),
-    prisma.evacuationPlan.deleteMany(),
-    prisma.roadClosure.deleteMany(),
-    prisma.crowdsourcedReport.deleteMany(),
-    prisma.alertLog.deleteMany(),
-    prisma.emergencyPlan.deleteMany(),
-    prisma.resourceAllocation.deleteMany(),
-    prisma.floodPrediction.deleteMany(),
-    prisma.disasterEvent.deleteMany(),
-    prisma.resource.deleteMany(),
-    prisma.shelter.deleteMany(),
+    prisma.resourceMovement.deleteMany({ where: { isDemo: true } }),
+    prisma.resourceRequest.deleteMany({ where: { isDemo: true } }),
+    prisma.planFeedback.deleteMany({ where: { isDemo: true } }),
+    prisma.auditLog.deleteMany({ where: { isDemo: true } }),
+    prisma.evacuationPlan.deleteMany({ where: { isDemo: true } }),
+    prisma.roadClosure.deleteMany({ where: { isDemo: true } }),
+    prisma.crowdsourcedReport.deleteMany({ where: { isDemo: true } }),
+    prisma.alertLog.deleteMany({ where: { isDemo: true } }),
+    prisma.emergencyPlan.deleteMany({ where: { isDemo: true } }),
+    prisma.resourceAllocation.deleteMany({ where: { isDemo: true } }),
+    prisma.floodPrediction.deleteMany({ where: { isDemo: true } }),
+    prisma.disasterEvent.deleteMany({ where: { isDemo: true } }),
+    prisma.resource.deleteMany({ where: { isDemo: true } }),
+    prisma.shelter.deleteMany({ where: { isDemo: true } }),
   ]);
   const wipedTotal = wiped.reduce((sum, r) => sum + r.count, 0);
 
   // 2. SEED — the Hero Scenario.
   const disasterEvent = await prisma.disasterEvent.create({
     data: {
+      ...DEMO_TAG,
       name: "Ganga Flood Emergency — Patna",
       type: "flood",
       status: "active",
@@ -89,6 +107,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
 
   await prisma.floodPrediction.create({
     data: {
+      ...DEMO_TAG,
       lat: 25.5941,
       lng: 85.1376,
       predictionTimestamp: new Date(),
@@ -102,6 +121,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
     await Promise.all([
       prisma.shelter.create({
         data: {
+          ...DEMO_TAG,
           name: "Central Community Hall",
           district: "Patna (Ganga)",
           lat: 25.6,
@@ -116,6 +136,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
       }),
       prisma.shelter.create({
         data: {
+          ...DEMO_TAG,
           name: "Riverside High School",
           district: "Patna (Ganga)",
           lat: 25.585,
@@ -130,6 +151,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
       }),
       prisma.shelter.create({
         data: {
+          ...DEMO_TAG,
           name: "District Hospital Annex",
           district: "Patna (Ganga)",
           lat: 25.608,
@@ -144,6 +166,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
       }),
       prisma.shelter.create({
         data: {
+          ...DEMO_TAG,
           name: "Sampatchak Relief Camp",
           district: "Patna (Ganga)",
           lat: 25.5743,
@@ -158,6 +181,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
       }),
       prisma.shelter.create({
         data: {
+          ...DEMO_TAG,
           name: "Patliputra Sports Complex",
           district: "Patna (Ganga)",
           lat: 25.6125,
@@ -206,19 +230,19 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
 
   const [boats, medical, food, water, teams] = await Promise.all([
     prisma.resource.create({
-      data: { name: "Rescue Boats", category: "boat", quantity: 12, unit: "boats", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
+      data: { ...DEMO_TAG, name: "Rescue Boats", category: "boat", quantity: 12, unit: "boats", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
     }),
     prisma.resource.create({
-      data: { name: "Medical First-Aid Kits", category: "medical", quantity: 40, unit: "kits", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
+      data: { ...DEMO_TAG, name: "Medical First-Aid Kits", category: "medical", quantity: 40, unit: "kits", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
     }),
     prisma.resource.create({
-      data: { name: "Dry Food Packets", category: "food", quantity: 2000, unit: "packets", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
+      data: { ...DEMO_TAG, name: "Dry Food Packets", category: "food", quantity: 2000, unit: "packets", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
     }),
     prisma.resource.create({
-      data: { name: "Drinking Water Bottles", category: "water", quantity: 5000, unit: "bottles", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
+      data: { ...DEMO_TAG, name: "Drinking Water Bottles", category: "water", quantity: 5000, unit: "bottles", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
     }),
     prisma.resource.create({
-      data: { name: "NDRF Rescue Team", category: "personnel", quantity: 6, unit: "teams", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
+      data: { ...DEMO_TAG, name: "NDRF Rescue Team", category: "personnel", quantity: 6, unit: "teams", lat: 25.594, lng: 85.132, status: "available", depotName: "Sadar Depot" },
     }),
   ]);
 
@@ -232,6 +256,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
   for (const plan of allocationPlans) {
     await prisma.resourceAllocation.create({
       data: {
+        ...DEMO_TAG,
         resourceId: plan.resource.id,
         disasterEventId: disasterEvent.id,
         destinationLat: plan.lat,
@@ -247,6 +272,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
   await Promise.all([
     prisma.alertLog.create({
       data: {
+        ...DEMO_TAG,
         severity: "critical",
         channel: "in_app",
         message:
@@ -258,6 +284,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
     }),
     prisma.alertLog.create({
       data: {
+        ...DEMO_TAG,
         severity: "watch",
         channel: "in_app",
         message: "🌊 Watch: river discharge rising near Patna. Monitor shelter occupancy.",
@@ -271,6 +298,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
   await Promise.all([
     prisma.crowdsourcedReport.create({
       data: {
+        ...DEMO_TAG,
         lat: 25.606,
         lng: 85.152,
         reportType: "flooding",
@@ -282,6 +310,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
     }),
     prisma.crowdsourcedReport.create({
       data: {
+        ...DEMO_TAG,
         lat: 25.615,
         lng: 85.098,
         reportType: "road_blocked",
@@ -293,6 +322,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
     }),
     prisma.crowdsourcedReport.create({
       data: {
+        ...DEMO_TAG,
         lat: 25.62,
         lng: 85.12,
         reportType: "rescue",
@@ -307,6 +337,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
   await Promise.all([
     prisma.evacuationPlan.create({
       data: {
+        ...DEMO_TAG,
         villageName: "Kankarbagh Lowlands",
         assignedShelterId: shelterCentral.id,
         shelterId: shelterCentral.id,
@@ -321,6 +352,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
     }),
     prisma.evacuationPlan.create({
       data: {
+        ...DEMO_TAG,
         villageName: "Rajendra Nagar Basti",
         assignedShelterId: shelterHospital.id,
         shelterId: shelterHospital.id,
@@ -335,6 +367,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
     }),
     prisma.evacuationPlan.create({
       data: {
+        ...DEMO_TAG,
         villageName: "Patliputra Colony",
         assignedShelterId: shelterPatliputra.id,
         shelterId: shelterPatliputra.id,
@@ -351,6 +384,7 @@ export async function resetDemoScenario(): Promise<ResetScenarioResult> {
 
   await prisma.roadClosure.create({
     data: {
+      ...DEMO_TAG,
       lat: 25.613,
       lng: 85.102,
       reason: "Flooded road — Ashok Rajpath",
