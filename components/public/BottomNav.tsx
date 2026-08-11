@@ -57,7 +57,7 @@ function isPathActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export default function BottomNav() {
+export default function BottomNav({ className }: { className?: string }) {
   const pathname = usePathname();
   const { isOpen, open, emergency } = useSOS();
 
@@ -70,7 +70,9 @@ export default function BottomNav() {
   return (
     <nav
       aria-label="Citizen navigation"
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-md border-t border-white/10 bg-[#0F2A4F]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg"
+      className={`fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-md border-t border-white/10 bg-[#0F2A4F]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg${
+        className ? ` ${className}` : ""
+      }`}
     >
       <div
         className="grid h-[72px] items-stretch"

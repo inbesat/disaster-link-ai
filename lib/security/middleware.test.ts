@@ -175,4 +175,27 @@ describe("Supabase mode (env configured)", () => {
       `${BASE}/login?next=/command-center`,
     );
   });
+
+  it("admits a role-cookie session on protected routes without a Supabase user", async () => {
+    getUserMock.mockResolvedValue({ data: { user: null }, error: null });
+    for (const path of ["/dashboard", "/command-center", "/inventory", "/alerts"]) {
+      const res = await middleware(makeRequest(path, { role: "district_admin" }));
+      expect(locationOf(res)).toBeNull();
+    }
+  });
+
+  it("admits a role-cookie session to the admin panel only for admin roles", async () => {
+    getUserMock.mockResolvedValue({ data: { user: null }, error: null });
+    const ok = await middleware(makeRequest("/users", { role: "district_admin" }));
+    expect(locationOf(ok)).toBeNull();
+    const denied = await middleware(makeRequest("/users", { role: "field_responder" }));
+    expect(locationOf(denied)).toBe(`${BASE}/403`);
+  });
+
+  it("admits guests (guest_mode=true) to protected routes incl. /dashboard", async () => {
+    const res = await middleware(
+      makeRequest("/dashboard", { guest_mode: "true" }),
+    );
+    expect(locationOf(res)).toBeNull();
+  });
 });

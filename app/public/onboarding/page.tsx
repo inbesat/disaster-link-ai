@@ -25,11 +25,14 @@ import { useTranslation } from "@/lib/i18n/LanguageContext";
 //   2. See safe evacuation routes
 //   3. Find nearest shelter
 //   4. Stay connected with family
-// Dot indicators, Skip (top), and "Continue to Setup" on the last slide.
+// Dot indicators, Skip (top), and "Continue to Dashboard" on the last
+// slide.
 // ---------------------------------------------------------------------
 
-/** Where citizens land after onboarding (next phase of the plan). */
-const SETUP_URL = "/public/setup";
+/** Where citizens land after onboarding — straight onto the citizen
+    dashboard. (Was /public/setup, which had no landing page of its own —
+    walking there caused a 404.) */
+const NEXT_URL = "/public/dashboard";
 
 type Slide = {
   /** Large SVG icon for the chip — Phase 13 · Step 7 keeps the design
@@ -239,7 +242,7 @@ export default function OnboardingPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, [goNext, goPrev]);
 
-  const goToSetup = () => router.push(SETUP_URL);
+  const goToDashboard = () => router.push(NEXT_URL);
   const isLast = index === SLIDES.length - 1;
 
   return (
@@ -258,7 +261,7 @@ export default function OnboardingPage() {
         {!isLast ? (
           <button
             type="button"
-            onClick={goToSetup}
+            onClick={goToDashboard}
             className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium text-[var(--dl-text-on-navy)] transition hover:border-[var(--dl-orange)]/50 hover:text-white"
           >
             Skip
@@ -434,10 +437,10 @@ export default function OnboardingPage() {
           {isLast ? (
             <button
               type="button"
-              onClick={goToSetup}
+              onClick={goToDashboard}
               className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[var(--dl-orange)] px-4 py-3.5 text-base font-bold text-white transition hover:bg-[#EA5B0C]"
             >
-              Continue to Setup
+              Continue to Dashboard
               <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </button>
           ) : (

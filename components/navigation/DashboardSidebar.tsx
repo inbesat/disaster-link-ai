@@ -30,10 +30,13 @@ import {
   NAVIGATION_ROUTES,
   filterRoutesByRole,
 } from "@/lib/config/navigation";
+import { LogOut } from "lucide-react";
+import { clearGuestMode, signOutAction } from "@/app/actions/auth";
 import useHotkeys from "@/hooks/useHotkeys";
 import Sidebar, { type SidebarVariant } from "./Sidebar";
 import SidebarSection from "./SidebarSection";
 import SidebarNavItem from "./SidebarNavItem";
+import { useSidebar } from "./sidebar-context";
 
 // Top-level navigation hotkeys (Phase 2 · Step 9) — `mod` = Cmd on macOS,
 // Ctrl on Windows/Linux. Display strings use the ⌘ glyph for brevity.
@@ -60,6 +63,8 @@ type DashboardSidebarProps = {
   alertsBadgeCount?: number;
   /** Active user role — filters which nav routes render (mock default). */
   userRole?: Role;
+  /** Guest (demo) mode — sign-out becomes "Exit Demo" (clearGuestMode). */
+  guest?: boolean;
   /** Controlled collapsed state — omit for internal state. */
   collapsed?: boolean;
   /** Callback when the toggle is pressed (controlled mode). */
@@ -79,6 +84,7 @@ const MOCK_ROLE: Role = "district_admin";
 export function DashboardSidebar({
   alertsBadgeCount,
   userRole = MOCK_ROLE,
+  guest = false,
   collapsed,
   onToggle,
   isOpenMobile,
@@ -103,6 +109,7 @@ export function DashboardSidebar({
       onCloseMobile={onCloseMobile}
       variant={variant}
       className={className}
+      footer={<SignOutButton guest={guest} />}
     >
       {NAV_SECTIONS.map((section) => {
         const sectionRoutes = visibleRoutes.filter((route) => route.section === section);
@@ -136,3 +143,36 @@ export function DashboardSidebar({
 }
 
 export default DashboardSidebar;
+
+// ---------------------------------------------------------------------
+// Sign Out — pinned at the absolute bottom of the sidebar (via Sidebar's
+// `footer` slot). Officials log out through the server action, which ends
+// the Supabase session AND clears the demo role/guest cookies before
+// redirecting to /login. Guests get "Exit Demo" (clearGuestMode) so the
+// read-only demo ride can't leave a stale session behind.
+//
+// Mirrors SidebarNavItem's row styling: collapses to an icon-only button on
+// the 64px rail (native `title` tooltip doubles for the label there).
+// ---------------------------------------------------------------------
+function SignOutButton({ guest }: { guest: boolean }) {
+  const { collapsed } = useSidebar();
+  const label = guest ? "Exit Demo" : "Sign Out";
+
+  return (
+    <div className="border-t border-subtle p-2">
+      <form action={guest ? clearGuestMode : signOutAction}>
+        <button
+          type="submit"
+          aria-label={collapsed ? label : undefined}
+          title={collapsed ? label : undefined}
+          className={`flex h-10 w-full items-center gap-3 rounded-md border-l-2 border-transparent px-3 text-sm text-muted transition-colors duration-150 motion-reduce:transition-none hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] ${
+            collapsed ? "justify-center px-0" : ""
+          }`}
+        >
+          <LogOut className="h-[18px] w-[18px] shrink-0" aria-hidden />
+          {!collapsed && <span className="min-w-0 flex-1 truncate">{label}</span>}
+        </button>
+      </form>
+    </div>
+  );
+}

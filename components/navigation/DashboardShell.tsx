@@ -96,6 +96,7 @@ export function DashboardShell({
         onToggle={() => setCollapsed((c) => !c)}
         alertsBadgeCount={alertsBadgeCount}
         userRole={userRole}
+        guest={guest}
         isOpenMobile={mobileOpen}
         onCloseMobile={closeMobile}
       />

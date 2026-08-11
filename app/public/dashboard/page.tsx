@@ -79,7 +79,8 @@ export default function PublicDashboardPage() {
   const isGuest = cookies().get("guest_mode")?.value === "true";
 
   return (
-    <main className="relative flex min-h-screen flex-col bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)]">
+    <div className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-[#0a0f1a] shadow-2xl border-x border-white/10 sm:mt-10 sm:max-h-[90vh] sm:min-h-0 sm:h-[90vh] sm:rounded-3xl sm:border-y">
+    <main className="relative flex h-full min-h-screen flex-col overflow-y-auto bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)] sm:min-h-0">
       {/* Ambient backdrop */}
       <div
         aria-hidden="true"
@@ -212,8 +213,12 @@ export default function PublicDashboardPage() {
         </PullToRefresh>
       </div>
 
-      {/* Sticky citizen bottom nav — Home (active) · Alerts · Map · SOS */}
-      <BottomNav />
+      {/* Sticky citizen bottom nav — Home (active) · Alerts · Map · SOS.
+          Inside the phone frame on sm+ it switches to sticky (via the
+          sm:!sticky override) so it pins to the bottom of the phone
+          rather than the browser window. */}
+      <BottomNav className="sm:!sticky" />
     </main>
+    </div>
   );
 }

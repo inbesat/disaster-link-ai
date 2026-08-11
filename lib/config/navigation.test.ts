@@ -21,8 +21,8 @@ describe("NAVIGATION_ROUTES", () => {
     const labels = NAVIGATION_ROUTES.map((route) => route.label);
     expect(labels).toEqual(
       expect.arrayContaining([
-        "Dashboard",
-        "Live Map",
+        "Overview",
+        "Command Center",
         "Alerts",
         "Shelters",
         "Resources",
@@ -54,10 +54,8 @@ describe("NAVIGATION_ROUTES", () => {
 });
 
 describe("filterRoutesByRole — role matrix", () => {
-  it("field_responder sees Dashboard, Live Map, Alerts, Routes, AI, Team", () => {
+  it("field_responder sees Alerts, Routes, AI, Team", () => {
     expect(labelsFor("field_responder")).toEqual([
-      "Dashboard",
-      "Live Map",
       "Alerts",
       "Evacuation Routes",
       "AI Planner",
@@ -65,10 +63,10 @@ describe("filterRoutesByRole — role matrix", () => {
     ]);
   });
 
-  it("district_admin adds Shelters, Resources, Satellite", () => {
+  it("district_admin adds Overview, Command Center, Shelters, Resources, Satellite", () => {
     expect(labelsFor("district_admin")).toEqual([
-      "Dashboard",
-      "Live Map",
+      "Overview",
+      "Command Center",
       "Alerts",
       "Evacuation Routes",
       "Shelters",

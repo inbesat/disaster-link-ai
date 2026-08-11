@@ -10,9 +10,15 @@ const ROLES = ["super_admin", "district_admin", "field_responder", "viewer"] as 
 const PUBLIC_ROLE = "public";
 const GOV_ROLES = ["field_responder", "district_admin", "super_admin"] as const;
 
-// Path prefixes requiring a user (authenticated or guest).
+// Path prefixes requiring a user (authenticated or guest). Every entry is
+// admit-through for any cookie session — a valid `role` cookie OR a
+// guest_mode=true cookie — so demo users never get bounced back to /login
+// when they switch between pages (e.g. /dashboard ↔ /command-center).
 const PROTECTED_PATHS = [
   "/command-center",
+  "/dashboard",
+  "/inventory",
+  "/alerts",
   "/field",
   "/shelter-update",
   "/shelters",
@@ -32,9 +38,11 @@ const DASHBOARD_PATHS = ["/public/dashboard", "/gov/dashboard"] as const;
 // demo guests) is bounced to /403. The matcher in `config` below must also
 // list each of these so this middleware actually runs for them.
 // ---------------------------------------------------------------------------
+// Note: /dashboard (the Operational metrics overview) is deliberately NOT an
+// admin route — it lives in the (dashboard) shell and is reachable by any
+// cookie session, exactly like /command-center and /inventory.
 const ADMIN_BASES = [
   "/admin",
-  "/dashboard",
   "/users",
   "/districts",
   "/bulk-ops",
@@ -246,22 +254,41 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Any protected OR admin route requires an authenticated user.
+  // Any protected OR admin route requires an authenticated user. A demo cookie
+  // session — a valid `role` cookie (written by govLogin / publicOtpLogin /
+  // enableGuestMode in app/actions/auth.ts) or a guest_mode=true cookie —
+  // counts as authenticated even when no Supabase session is available. This
+  // is the fix for the "bounced back to /login" bug: cookie-signed users are
+  // admitted instead of being redirected on every protected route change.
   if (!user) {
-    // Phase 1 · Dual-mode dashboards accept the mock role cookie as a valid
-    // session (citizen/gov logins don't create Supabase users in the demo).
-    if (isDashboard(pathname) && !role) {
+    const hasCookieSession = isGuest || Boolean(role) || viewAsPublic;
+
+    // Phase 1 · Dual-mode dashboards accept a cookie session as a valid
+    // identity (citizen/gov logins don't create Supabase users in the demo).
+    if (isDashboard(pathname) && !hasCookieSession) {
       const url = request.nextUrl.clone();
       url.pathname = "/";
       return NextResponse.redirect(url);
     }
 
-    if (isProtected(pathname) || adminRequested) {
+    if ((isProtected(pathname) || adminRequested) && !hasCookieSession) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       url.searchParams.set("next", pathname);
       return NextResponse.redirect(url);
     }
+
+    // Cookie-session users are admitted to all protected routes, but the
+    // strict Admin Control Panel still enforces the admin role straight from
+    // the cookie when there's no DB profile to consult — mirrors the
+    // user + profile branch below.
+    if (adminRequested && !ADMIN_ROLES.includes(role as (typeof ADMIN_ROLES)[number])) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/403";
+      return NextResponse.redirect(url);
+    }
+
+    return response;
   }
 
   if (user) {
@@ -317,6 +344,8 @@ export const config = {
     "/public/:path*",
     "/command-center/:path*",
     "/dashboard/:path*",
+    "/inventory/:path*",
+    "/alerts/:path*",
     "/users/:path*",
     "/districts/:path*",
     "/bulk-ops/:path*",

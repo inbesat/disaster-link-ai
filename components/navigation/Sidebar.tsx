@@ -40,6 +40,10 @@ export type SidebarVariant = "fixed" | "inline";
 type SidebarProps = {
   /** Nav links / sections rendered in the scrollable middle region. */
   children?: ReactNode;
+  /** Optional content pinned to the very bottom of the sidebar (e.g. the
+   * Sign Out button). Always visible — mobile drawer AND desktop rail — so
+   * it must render its own icon-only state when collapsed. */
+  footer?: ReactNode;
   /** Controlled collapsed state — omit for internal state. */
   collapsed?: boolean;
   /** Callback when the toggle is pressed (controlled mode). */
@@ -98,6 +102,7 @@ function useIsTabletUp(): boolean {
 
 export function Sidebar({
   children,
+  footer,
   collapsed,
   onToggle,
   defaultCollapsed = false,
@@ -221,6 +226,11 @@ export function Sidebar({
             )}
           </IconButton>
         </div>
+
+        {/* Footer slot — pinned below the collapse toggle at the absolute
+            bottom (Sign Out lives here). Always rendered so it works inside
+            both the desktop rail and the mobile drawer. */}
+        {footer && <div className="shrink-0">{footer}</div>}
       </aside>
     </SidebarContext.Provider>
   );

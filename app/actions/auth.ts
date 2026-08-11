@@ -8,16 +8,28 @@ import { consumeOtp, generateOtp, issueOtp, normalizePhone } from "@/lib/securit
 
 const GUEST_COOKIE = "guest_mode";
 
+// Shared cookie options for every demo session cookie. `path: "/"` is
+// mandatory — without it Next.js scopes the cookie to the current route
+// segment, so the session silently vanishes the moment the user switches
+// pages (e.g. /dashboard ↔ /command-center /inventory) and the middleware
+// bounces them back to /login. Centralised here so no login action can
+// forget it.
+const SESSION_COOKIE_OPTIONS = {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
+  path: "/",
+} as const;
+
+/** Set a demo session cookie with the full, site-wide options (path included). */
+function setSessionCookie(name: string, value: string, maxAge: number) {
+  cookies().set(name, value, { ...SESSION_COOKIE_OPTIONS, maxAge });
+}
+
 // Shared by Continue as Guest and the GetOTP demo bypass — keeps the cookie
 // options (httpOnly/sameSite/secure/path/maxAge) in one place.
 function setGuestCookie() {
-  cookies().set(GUEST_COOKIE, "true", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
-  });
+  setSessionCookie(GUEST_COOKIE, "true", 60 * 60 * 24 * 7);
 }
 
 // ---------------------------------------------------------------------
@@ -173,7 +185,13 @@ export async function verifyOTP(code: string): Promise<{ ok: false; message: str
 export async function signOutAction() {
   const supabase = createClient();
   await supabase.auth.signOut();
+  // Drop the whole demo cookie session — not just guest_mode. The demo
+  // logins (govLogin / publicOtpLogin / enableGuestMode) authenticate via
+  // the `role` cookie alone, so the middleware would otherwise treat a
+  // "logged-out" official as still signed in.
   cookies().delete(GUEST_COOKIE);
+  cookies().delete("role");
+  cookies().delete("view_as_public");
   redirect("/login");
 }
 
@@ -191,6 +209,9 @@ export async function setGuestMode() {
 
 export async function clearGuestMode() {
   cookies().delete(GUEST_COOKIE);
+  // Public guests also ride a role=public cookie — clear it so the exit is
+  // a true logout (a stale public role cookie would pass the middleware).
+  cookies().delete("role");
   redirect("/login");
 }
 
@@ -204,14 +225,9 @@ export async function clearGuestMode() {
 export async function enableGuestMode() {
   // One identity per browser: drop any gov preview session.
   cookies().delete("view_as_public");
+  // 7-day public browse session.
+  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
   setGuestCookie();
-  cookies().set("role", "public", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7-day browse session
-  });
   redirect("/public/dashboard");
 }
 
@@ -249,13 +265,8 @@ export async function govLogin(role: "district_admin" | "super_admin" = "distric
   // Clear any stale guest/citizen session so one browser holds one identity.
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
-  cookies().set("role", role, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7-day gov session
-  });
+  // 7-day gov session.
+  setSessionCookie("role", role, 60 * 60 * 24 * 7);
   redirect(role === "super_admin" ? "/gov/overview" : "/gov/dashboard");
 }
 
@@ -268,13 +279,8 @@ export async function setViewAsPublic() {
   // One identity per browser: a previewing official is never also a guest,
   // so the sticky preview and guest banners can never stack (Step 10).
   cookies().delete("guest_mode");
-  cookies().set("view_as_public", "true", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24, // 24h preview session
-  });
+  // 24h preview session.
+  setSessionCookie("view_as_public", "true", 60 * 60 * 24);
   redirect("/public/dashboard");
 }
 
@@ -288,22 +294,11 @@ export async function publicOtpLogin(phoneNumber: string) {
   // Clear any stale guest/gov session so one browser holds one identity.
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
-  cookies().set("role", "public", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7-day citizen session
-  });
+  // 7-day citizen session.
+  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
   // Remember the number so the citizen onboarding step can prefill it.
   if (phone) {
-    cookies().set("citizen_phone", phone, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
+    setSessionCookie("citizen_phone", phone, 60 * 60 * 24 * 7);
   }
   redirect("/public/onboarding");
 }

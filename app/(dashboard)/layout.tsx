@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { ROLES, type Role } from "@/lib/validations/user";
+import { ROLES, ROLE_LABELS, type Role } from "@/lib/validations/user";
 import { prisma } from "@/server/prisma";
 import DashboardShell from "@/components/navigation/DashboardShell";
 import AlertTicker from "@/components/dashboard/AlertTicker";
@@ -16,6 +16,10 @@ const FALLBACK_ACTIVE_ALERTS = 2;
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const guest = cookies().get("guest_mode")?.value === "true";
+  // A `role` cookie alone is a valid demo session (govLogin/publicOtpLogin
+  // write it without creating a Supabase user) — without this fallback the
+  // user gets bounced to /login on every protected route change.
+  const roleCookie = cookies().get("role")?.value;
 
   let displayName = "Guest Commander";
   let email: string | null = null;
@@ -30,30 +34,35 @@ export default async function DashboardLayout({ children }: { children: ReactNod
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
+    if (user) {
+      const { data: profile } = await supabase
+        .from("users")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      if (!profile?.role) {
+        redirect("/profile-setup");
+      }
+
+      if (!OPERATIONAL_ROLES.includes(profile.role as (typeof ROLES)[number])) {
+        redirect("/403");
+      }
+      userRole = profile.role as Role;
+
+      const meta = user.user_metadata ?? {};
+      displayName =
+        (meta.name as string) || (meta.full_name as string) || (user.email ?? "Responder");
+      email = user.email ?? null;
+      avatarUrl = (meta.avatar_url as string) || null;
+    } else if (roleCookie && (ROLES as readonly string[]).includes(roleCookie)) {
+      // Demo cookie-only session: no Supabase user, but the middleware's
+      // `role` cookie is the auth signal. Use it for the sidebar nav.
+      userRole = roleCookie as Role;
+      displayName = ROLE_LABELS[userRole];
+    } else {
       redirect("/login?next=/command-center");
     }
-
-    const { data: profile } = await supabase
-      .from("users")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    if (!profile?.role) {
-      redirect("/profile-setup");
-    }
-
-    if (!OPERATIONAL_ROLES.includes(profile.role as (typeof ROLES)[number])) {
-      redirect("/403");
-    }
-    userRole = profile.role as Role;
-
-    const meta = user.user_metadata ?? {};
-    displayName =
-      (meta.name as string) || (meta.full_name as string) || (user.email ?? "Responder");
-    email = user.email ?? null;
-    avatarUrl = (meta.avatar_url as string) || null;
   }
 
   // Live "Active Alerts" badge for the sidebar nav: count unacknowledged

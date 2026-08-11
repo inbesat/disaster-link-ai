@@ -8,16 +8,16 @@
 // active user's role, and renders only what they can access.
 //
 // Role matrix:
-//   field_responder → Dashboard, Live Map, Alerts, Evacuation Routes,
-//                     AI Planner, Team
-//   district_admin  → + Shelters, Resources, Satellite
+//   field_responder → Alerts, Evacuation Routes, AI Planner, Team
+//   district_admin  → + Overview, Command Center, Shelters, Resources, Satellite
 //   super_admin     → everything (incl. Settings)
 //
 // Route targets are the REAL pages that exist today:
-//   Live Map    → /command-center (the map is embedded there)
-//   Resources   → /inventory      (resource inventory)
-//   Team        → /directory      (member directory)
-//   Satellite   → /settings/integrations (Satellite GIS card)
+//   Overview       → /dashboard        (metrics overview)
+//   Command Center → /command-center   (live map view)
+//   Resources      → /inventory       (resource inventory)
+//   Team           → /directory       (member directory)
+//   Satellite      → /settings/integrations (Satellite GIS card)
 // ---------------------------------------------------------------------
 
 import {
@@ -82,18 +82,18 @@ export type NavRoute = {
 export const NAVIGATION_ROUTES: NavRoute[] = [
   // ------------------------------------------------------- OPERATIONS ----
   {
-    label: "Dashboard",
-    href: "/command-center",
+    label: "Overview",
+    href: "/dashboard",
     icon: LayoutDashboard,
     section: "operations",
-    allowedRoles: ["field_responder", "district_admin", "super_admin"],
+    allowedRoles: ["district_admin", "super_admin"],
   },
   {
-    label: "Live Map",
+    label: "Command Center",
     href: "/command-center",
     icon: Map,
     section: "operations",
-    allowedRoles: ["field_responder", "district_admin", "super_admin"],
+    allowedRoles: ["district_admin", "super_admin"],
   },
   {
     label: "Alerts",
