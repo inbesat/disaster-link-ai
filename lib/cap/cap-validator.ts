@@ -2,15 +2,15 @@
 // lib/cap/cap-validator.ts — Phase 3 · CAP 1.2 validation.
 //
 // Enforces the CAP 1.2 mandatory-field rules before a message is stored
-// or dispatched. Because the deployment can't always shell out to a C
-// XSD validator, the primary check is structural: required elements at
-// the alert + info level, enum membership (status/msgType/scope/category/
-// urgency/severity/certainty), well-formed geometry, and coherent
-// timestamp ordering (sent <= effective < expires).
+// or dispatched. Because the deployment must stay dependency-free (no
+// native C++ bindings like libxmljs2 — they crash Vercel builds), the
+// primary check is structural: required elements at the alert + info
+// level, enum membership (status/msgType/scope/category/urgency/
+// severity/certainty), well-formed geometry, and coherent timestamp
+// ordering (sent <= effective < expires).
 //
-// When `libxmljs2` is installed, validateCapXml() additionally runs the
-// official OASIS CAP-v1.2.xsd against the generated document (using the
-// DTD in the DOCTYPE as the schema source) — see the optional branch.
+// validateCapXml() uses the pure-JS validateCAP() helper — regex/tag
+// matching only, zero runtime dependencies.
 // ---------------------------------------------------------------------
 
 import { CAP_NAMESPACE } from "./cap-builder";
@@ -18,6 +18,12 @@ import type { CapInfo } from "./types";
 
 export interface CapValidationResult {
   ok: boolean;
+  errors: string[];
+}
+
+/** Result shape for the pure-JS XML validator. */
+export interface CapXmlValidation {
+  isValid: boolean;
   errors: string[];
 }
 
@@ -146,70 +152,53 @@ export function validateCapAlert(input: CapAlertLike): CapValidationResult {
 }
 
 // ---------------------------------------------------------------------
-// Optional XSD validation via libxmljs2 (when installed).
-// The official schema is bundled alongside the module on the filesystem.
+// Dependency-free XML validation (validateCAP).
+// Pure regex/tag matching — good enough for our own builder output and
+// keeps Vercel builds free of native bindings.
 // ---------------------------------------------------------------------
 
-const CAP_XSD_PATH =
-  "node_modules/cap-xsd/CAP-v1.2.xsd";
+/** Elements (outside <info>) that CAP 1.2 mandates on every alert. */
+const REQUIRED_ALERT_TAGS = ["identifier", "sender", "sent", "status", "msgType", "scope"];
 
-/** Namespace for the CAP XSD (OASIS). */
-export const CAP_XSD_NS = "http://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2";
-
-/**
- * Validate an already-generated CAP XML string against the OASIS XSD.
- * Falls back to the structural validator when the native binding or the
- * schema file is unavailable (works everywhere, zero native deps).
- */
-export async function validateCapXml(capXml: string): Promise<CapValidationResult> {
-  try {
-    // libxmljs2 is an optional native binding never installed in demo/dev.
-    // @ts-expect-error — optional dependency without bundled types
-    const libxml = await import("libxmljs2").catch(() => null);
-    if (!libxml) return structuralValidateXml(capXml);
-
-    const { readFile } = await import("node:fs/promises");
-    const schema = await readFile(CAP_XSD_PATH, "utf8").catch(() => null);
-    if (!schema) return structuralValidateXml(capXml);
-
-    const doc = libxml.parseXml(capXml);
-    const xsd = libxml.parseXml(schema);
-    const errors = doc
-      .validate(xsd)
-      .map((err: { message: string }) => err.message.trim())
-      .filter(Boolean);
-    return { ok: errors.length === 0, errors };
-  } catch {
-    return structuralValidateXml(capXml);
-  }
-}
-
-/**
- * Lightweight well-formedness + namespace check for the generated XML.
- * Sufficient for our own output (builder guarantees structure) and keeps
- * validation dependency-free.
- */
-function structuralValidateXml(capXml: string): CapValidationResult {
+/** Lightweight well-formedness + mandatory-tag check for generated CAP XML. */
+export function validateCAP(xmlString: string): CapXmlValidation {
   const errors: string[] = [];
 
-  const rootMatch = capXml.match(/<alert(?:[^>]*)xmlns="([^"]+)"/);
+  if (!xmlString || !xmlString.trim()) {
+    return { isValid: false, errors: ["CAP XML is empty"] };
+  }
+
+  const rootMatch = xmlString.match(/<alert(?:[^>]*)xmlns="([^"]+)"/);
   if (!rootMatch) {
     errors.push("Missing <alert> root element with CAP xmlns");
   } else if (rootMatch[1] !== CAP_NAMESPACE) {
     errors.push(`Unexpected alert xmlns "${rootMatch[1]}" (expected ${CAP_NAMESPACE})`);
   }
 
-  const openCount = (capXml.match(/<alert[\s>]/g) ?? []).length;
-  const closeCount = (capXml.match(/<\/alert>/g) ?? []).length;
+  const openCount = (xmlString.match(/<alert[\s>]/g) ?? []).length;
+  const closeCount = (xmlString.match(/<\/alert>/g) ?? []).length;
   if (openCount !== 1 || closeCount !== 1) {
     errors.push("Expected exactly one <alert> element");
   }
 
-  for (const el of ["identifier", "sender", "sent", "status", "msgType", "scope"]) {
-    if (!capXml.includes(`<${el}>`)) errors.push(`Missing mandatory element <${el}>`);
+  for (const tag of REQUIRED_ALERT_TAGS) {
+    const re = new RegExp(`<${tag}>[\\s\\S]*?</${tag}>`);
+    if (!re.test(xmlString)) {
+      errors.push(`Missing mandatory element <${tag}>`);
+    }
   }
-  const infoCount = (capXml.match(/<info>/g) ?? []).length;
+
+  const infoCount = (xmlString.match(/<info>[\s\S]*?<\/info>/g) ?? []).length;
   if (infoCount < 1) errors.push("Missing mandatory <info> block");
 
-  return { ok: errors.length === 0, errors };
+  return { isValid: errors.length === 0, errors };
+}
+
+/**
+ * Validate an already-generated CAP XML string (async, Promise-shaped so
+ * callers/tests keep working). Pure-JS — no native dependencies.
+ */
+export async function validateCapXml(capXml: string): Promise<CapValidationResult> {
+  const { isValid, errors } = validateCAP(capXml);
+  return { ok: isValid, errors };
 }
