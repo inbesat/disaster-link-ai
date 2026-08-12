@@ -58,7 +58,7 @@ export function parseSmsForm(rawBody: string): TwilioSmsForm {
 }
 
 /** Recognised SMS commands (case-insensitive, punctuation-tolerant). */
-export type SmsCommand = "STATUS" | "SAFE" | "HELP";
+export type SmsCommand = "STATUS" | "SAFE" | "SHELTER" | "ROUTE" | "HELP";
 
 /**
  * Normalise a citizen's message to a known command. Trims, uppercases and
@@ -73,6 +73,8 @@ export function normalizeSmsCommand(body: string): SmsCommand | null {
     .trim();
   if (cleaned === "STATUS") return "STATUS";
   if (cleaned === "SAFE") return "SAFE";
+  if (cleaned === "SHELTER" || cleaned === "SHELTERS" || cleaned === "NEAREST") return "SHELTER";
+  if (cleaned === "ROUTE" || cleaned === "DIRECTIONS" || cleaned === "EVACUATE") return "ROUTE";
   if (cleaned === "HELP" || cleaned === "COMMANDS" || cleaned === "MENU") return "HELP";
   return null;
 }
@@ -110,6 +112,24 @@ export function statusReplyMessage(): string {
   return `Bharat Shakti: ${s.district} is under ${s.riskSmsWord}. Nearest shelter: ${s.shelter.name}, ${s.shelterDistanceKm}km away. Call 1070 for help.`;
 }
 
+/** "SHELTER" reply — nearest shelter details with facilities. */
+export function shelterReplyMessage(): string {
+  const s = getLiteStatus();
+  const facilities: string[] = [];
+  if (s.shelter.medical) facilities.push("medical");
+  if (s.shelter.food) facilities.push("food");
+  const facStr = facilities.length ? ` Facilities: ${facilities.join(", ")}.` : "";
+  const pct = Math.round((s.shelter.occupancy / s.shelter.capacity) * 100);
+  const status = pct >= 100 ? "FULL" : pct >= 80 ? "FILLING" : "OPEN";
+  return `Nearest shelter: ${s.shelter.name} (${s.shelterDistanceKm}km).${facStr} Status: ${status} (${pct}% full). Reply ROUTE for directions.`;
+}
+
+/** "ROUTE" reply — evacuation guidance. */
+export function routeReplyMessage(): string {
+  const s = getLiteStatus();
+  return `Evacuation route to ${s.shelter.name}: ${s.shelterDistanceKm}km via main roads. Avoid flooded streets. Walk if water is below knee level. Call 1070 for rescue.`;
+}
+
 /** "SAFE" reply (sent after the DB status update succeeds). */
 export const SAFE_REPLY =
   "Your status is marked SAFE. Family members have been notified.";
@@ -124,5 +144,5 @@ export const NOT_REGISTERED_REPLY =
 
 /** "HELP" / unknown-command reply. */
 export function helpReplyMessage(): string {
-  return `Reply STATUS for current risk and nearest shelter, or SAFE to mark yourself safe and notify your family.`;
+  return `Reply: STATUS (risk + shelter), SHELTER (nearest shelter details), ROUTE (evacuation guidance), SAFE (mark yourself safe + notify family).`;
 }

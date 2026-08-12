@@ -120,17 +120,18 @@ describe("Supabase mode (env configured)", () => {
     expect(result).toMatchObject({ ok: false, status: 403 });
   });
 
-  it("falls back to the role cookie when the user has no profile row", async () => {
+  it("rejects when the user has no profile row (no cookie fallback)", async () => {
     getUserMock.mockResolvedValue({ data: { user: { id: "u1" } }, error: null });
     maybeSingleMock.mockResolvedValue({ data: null, error: null });
     cookieStore.set("role", "field_responder");
-    expect((await requireRole(GOV_ROLES)).ok).toBe(true);
+    const result = await requireRole(GOV_ROLES);
+    expect(result.ok).toBe(false);
   });
 
-  it("falls back to the role cookie when there is no session at all", async () => {
+  it("rejects when there is no session at all (no cookie fallback)", async () => {
     getUserMock.mockResolvedValue({ data: { user: null }, error: null });
     cookieStore.set("role", "super_admin");
-    expect((await requireRole(GOV_ROLES)).ok).toBe(true);
+    expect((await requireRole(GOV_ROLES)).ok).toBe(false);
   });
 
   it("401s an unauthenticated caller with no cookie", async () => {
@@ -144,10 +145,10 @@ describe("Supabase mode (env configured)", () => {
     expect((await requireRole(GOV_ROLES)).ok).toBe(false);
   });
 
-  it("survives a Supabase lookup failure by trusting the role cookie", async () => {
+  it("fails closed (401) when the Supabase lookup throws", async () => {
     getUserMock.mockRejectedValue(new Error("network down"));
     cookieStore.set("role", "district_admin");
     const result = await requireRole(GOV_ROLES);
-    expect(result).toEqual({ ok: true, role: "district_admin" });
+    expect(result).toMatchObject({ ok: false, status: 401 });
   });
 });

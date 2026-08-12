@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
 import { getEmbedding } from "@/lib/retrieval/retrieve";
+import { requireRole } from "@/lib/security/require-role";
 
 export const dynamic = "force-dynamic";
+
+const GOV_ROLES = ["super_admin", "district_admin"] as const;
 
 /**
  * POST /api/retrieval/embed · optional body: { title?, content? }
@@ -14,6 +17,10 @@ export const dynamic = "force-dynamic";
  * `{ ok: false, reason }` — retrieval keeps working via keyword search.
  */
 export async function POST(request: NextRequest) {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
   let docs: { id: string; title: string; content: string }[] = [];
 
   // Optional: embed a single new document by title+content.

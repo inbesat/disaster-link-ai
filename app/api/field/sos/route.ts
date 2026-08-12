@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/security/sanitize";
 
 export const runtime = "nodejs";
 
@@ -19,7 +20,10 @@ export async function POST(req: Request) {
       {
         ok,
         ack: body.type === "SOS_EMERGENCY" ? "control-room-ack" : "rejected",
-        payload: body,
+        payload: {
+          ...body,
+          responder: typeof body.responder === "string" ? sanitizeInput(body.responder) : undefined,
+        },
         notifiedUnits: 4,
       },
       { status: ok ? 200 : 422 },

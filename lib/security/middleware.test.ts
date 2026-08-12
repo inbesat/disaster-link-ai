@@ -146,7 +146,9 @@ describe("Supabase mode (env configured)", () => {
   it("admits a logged-in admin to an admin route", async () => {
     getUserMock.mockResolvedValue({ data: { user: { id: "u1" } }, error: null });
     maybeSingleMock.mockResolvedValue({ data: { role: "super_admin" }, error: null });
-    const res = await middleware(makeRequest("/admin/users"));
+    const res = await middleware(
+      makeRequest("/admin/users", { "2fa_verified": "true" }),
+    );
     expect(locationOf(res)).toBeNull();
   });
 
@@ -155,6 +157,15 @@ describe("Supabase mode (env configured)", () => {
     maybeSingleMock.mockResolvedValue({ data: { role: "field_responder" }, error: null });
     const res = await middleware(makeRequest("/admin/users"));
     expect(locationOf(res)).toBe(`${BASE}/403`);
+  });
+
+  it("redirects an admin without 2FA verification to /2fa-setup", async () => {
+    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } }, error: null });
+    maybeSingleMock.mockResolvedValue({ data: { role: "super_admin" }, error: null });
+    const res = await middleware(makeRequest("/admin/users"));
+    expect(decodeURIComponent(locationOf(res) ?? "")).toBe(
+      `${BASE}/2fa-setup?next=/admin/users`,
+    );
   });
 
   it("sends a session without a profile to /profile-setup for protected routes", async () => {

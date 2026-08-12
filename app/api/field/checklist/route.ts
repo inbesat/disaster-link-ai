@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/security/sanitize";
 
 export const runtime = "nodejs";
 
@@ -40,9 +41,9 @@ export async function POST(request: NextRequest) {
     ok: true,
     ack: "readiness-logged",
     log: {
-      responder: typeof body.responder === "string" ? body.responder : "unknown",
-      shiftDate: typeof body.shiftDate === "string" ? body.shiftDate : "unknown",
-      items,
+      responder: sanitizeInput(typeof body.responder === "string" ? body.responder : "unknown"),
+      shiftDate: sanitizeInput(typeof body.shiftDate === "string" ? body.shiftDate : "unknown"),
+      items: items.map(sanitizeInput),
       confirmed: true,
       at: typeof body.at === "string" ? body.at : new Date().toISOString(),
     },

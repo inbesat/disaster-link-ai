@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import ToastViewport from "@/components/ui/Toast";
@@ -50,7 +50,6 @@ export const metadata: Metadata = {
     "Flood prediction, emergency planning, and resource allocation for the Bharat Shakti Hackathon.",
   // Phase 13 · Step 1 — PWA hooks: manifest + installable web app metadata.
   manifest: "/manifest.json",
-  themeColor: "#0a0f1a",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -60,6 +59,10 @@ export const metadata: Metadata = {
     icon: "/icons/icon-192.png",
     apple: "/icons/icon-192.png",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0a0f1a",
 };
 
 export default function RootLayout({

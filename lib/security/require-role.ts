@@ -34,19 +34,13 @@ function deny(authenticated: boolean): RequireRoleResult {
 /**
  * Resolve the caller's role and check it against the allow-list.
  *
- * - Supabase configured: reads profile.role from the `users` table, falling
- *   back to the demo `role` cookie when the session has no profile (demo gov
- *   logins don't create Supabase users — same tolerance the chat route uses).
+ * - Supabase configured: reads profile.role from the `users` table. NO cookie
+ *   fallback — the `role` cookie alone is never trusted when real auth is
+ *   configured. A missing session or failed lookup fails closed (401).
  * - Cookie-only demo mode (no Supabase env): the `role` cookie is the auth
  *   signal, exactly as in middleware.ts.
  *
  * Guests never pass: the public Citizen App has its own read-only endpoints.
- *
- * DEMO NOTE: when Supabase is configured, a request with no session (or a
- * failed lookup) still falls back to the `role` cookie — a deliberate
- * tolerance so demo gov logins work, mirroring app/api/chat. That is an
- * auth bypass the moment real auth is enforced; before production, drop the
- * cookie fallbacks and fail closed (401).
  */
 export async function requireRole(
   allowedRoles: readonly string[],
@@ -73,7 +67,7 @@ export async function requireRole(
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return cookieAdmitted ? { ok: true, role: roleCookie } : deny(false);
+      return deny(false);
     }
 
     const { data: profile } = await supabase
@@ -82,12 +76,11 @@ export async function requireRole(
       .eq("id", user.id)
       .maybeSingle();
 
-    const role = (profile?.role as string | undefined) ?? roleCookie;
+    const role = profile?.role as string | undefined;
+    if (!role) return deny(true);
     return allowedRoles.includes(role) ? { ok: true, role } : deny(true);
   } catch (error) {
-    // Supabase unreachable — fall back to the demo cookie rather than
-    // failing closed on a cold start.
-    console.error("[requireRole] Supabase lookup failed; using role cookie.", error);
-    return cookieAdmitted ? { ok: true, role: roleCookie } : deny(cookieAdmitted);
+    console.error("[requireRole] Supabase lookup failed; denying access.", error);
+    return deny(false);
   }
 }

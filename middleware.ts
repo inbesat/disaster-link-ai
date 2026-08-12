@@ -46,6 +46,8 @@ const ADMIN_BASES = [
   "/users",
   "/districts",
   "/bulk-ops",
+  "/fm-stations",
+  "/tts-preview",
   "/analytics",
   "/audit-logs",
   "/health",
@@ -319,6 +321,14 @@ export async function middleware(request: NextRequest) {
         url.pathname = "/403";
         return NextResponse.redirect(url);
       }
+      // 2FA enforcement: admin users must verify 2FA before accessing admin routes
+      const twoFaVerified = request.cookies.get("2fa_verified")?.value === "true";
+      if (!twoFaVerified) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/2fa-setup";
+        url.searchParams.set("next", pathname);
+        return NextResponse.redirect(url);
+      }
     }
 
     // General protected routes: onboard users without a role.
@@ -349,6 +359,8 @@ export const config = {
     "/users/:path*",
     "/districts/:path*",
     "/bulk-ops/:path*",
+    "/fm-stations/:path*",
+    "/tts-preview/:path*",
     "/analytics/:path*",
     "/audit-logs/:path*",
     "/health/:path*",

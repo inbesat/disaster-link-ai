@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { probeEmergencyPlanner, type ProviderGroup } from "@/lib/ai/openrouter";
+import { createRateLimiter } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
+
+// Rate limit: 5 provider probes per minute per IP (each fires live API calls)
+const aiTestLimiter = createRateLimiter(5, 60_000);
 
 // ---------------------------------------------------------------------
 // app/api/ai/test/route.ts — live "Test Connection" for Settings · AI.
@@ -40,6 +44,17 @@ async function isOperator(): Promise<boolean> {
 export async function GET(req: Request) {
   if (!(await isOperator())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Rate limit check
+  const forwarded = req.headers.get("x-forwarded-for");
+  const ip = forwarded ? forwarded.split(",")[0].trim() : "anonymous";
+  const rateResult = aiTestLimiter(`aitest:${ip}`);
+  if (!rateResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait before trying again." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rateResult.resetTime - Date.now()) / 1000)) } },
+    );
   }
 
   const url = new URL(req.url);

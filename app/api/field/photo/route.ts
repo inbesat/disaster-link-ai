@@ -15,9 +15,15 @@ export async function POST(req: Request) {
       lng?: number;
       at?: string;
     };
+    // Sanitize the filename to prevent path traversal attacks
+    const rawName = body.name ?? "anonymous";
+    const safeName = rawName
+      .replace(/[^a-zA-Z0-9_-]/g, "_")
+      .replace(/\.{2,}/g, "_")
+      .slice(0, 100);
     return NextResponse.json({
       ok: true,
-      path: `reports/${body.name ?? "anonymous"}.jpg`,
+      path: `reports/${safeName || "anonymous"}.jpg`,
       severity: body.severity ?? null,
       coords: [body.lat, body.lng],
     });

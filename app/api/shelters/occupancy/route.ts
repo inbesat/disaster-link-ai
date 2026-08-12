@@ -2,11 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/server/prisma";
 import { PUBLIC_SHELTERS_CACHE_TAG } from "@/lib/cache-tags";
+import { requireRole } from "@/lib/security/require-role";
 
 export const dynamic = "force-dynamic";
 
+const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
+
 /** Replay endpoint for the field-offline sync queue (shelter occupancy writes). */
 export async function POST(request: NextRequest) {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
   let body: { shelterId?: unknown; occupancy?: unknown };
   try {
     body = (await request.json()) as typeof body;

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sanitizeInput } from "@/lib/security/sanitize";
 
 export const runtime = "nodejs";
 
@@ -28,12 +29,12 @@ export async function POST(request: NextRequest) {
     ok: true,
     ack: "handover-logged",
     report: {
-      responder: typeof body.responder === "string" ? body.responder : "unknown",
+      responder: sanitizeInput(typeof body.responder === "string" ? body.responder : "unknown"),
       tasksCompleted:
         typeof body.tasksCompleted === "number" ? body.tasksCompleted : 0,
       resourcesDispatched:
         typeof body.resourcesDispatched === "number" ? body.resourcesDispatched : 0,
-      notes: typeof body.notes === "string" ? body.notes : "",
+      notes: sanitizeInput(typeof body.notes === "string" ? body.notes : ""),
       at: typeof body.at === "string" ? body.at : new Date().toISOString(),
     },
   });

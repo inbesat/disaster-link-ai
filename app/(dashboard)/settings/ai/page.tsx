@@ -13,7 +13,7 @@
 // ---------------------------------------------------------------------
 
 import { useState } from "react";
-import { Bot, Database, MessageSquareText } from "lucide-react";
+import { Bot, Database, MessageSquareText, DollarSign, AlertTriangle, TrendingUp } from "lucide-react";
 import SettingsSection from "@/components/settings/SettingsSection";
 import Toggle from "@/components/settings/Toggle";
 import type {
@@ -292,6 +292,115 @@ export default function AiSettingsPage() {
           Sensitive actions always route through the human-in-the-loop approval bar.
         </p>
       </SettingsSection>
+
+      {/* Billing Caps Section */}
+      <SettingsSection
+        title="Billing Caps & Usage"
+        description="Set spending limits for AI providers to prevent surprise bills."
+        icon={DollarSign}
+      >
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {/* Groq */}
+          <BillingCapCard
+            provider="Groq"
+            icon={TrendingUp}
+            status="green"
+            currentUsage={2.45}
+            monthlyCap={20}
+            requestsToday={156}
+          />
+          {/* OpenRouter */}
+          <BillingCapCard
+            provider="OpenRouter"
+            icon={TrendingUp}
+            status="amber"
+            currentUsage={8.72}
+            monthlyCap={15}
+            requestsToday={89}
+          />
+          {/* Bluesminds */}
+          <BillingCapCard
+            provider="Bluesminds"
+            icon={TrendingUp}
+            status="green"
+            currentUsage={0.15}
+            monthlyCap={10}
+            requestsToday={12}
+          />
+          {/* Total */}
+          <div className="flex flex-col gap-3 rounded-xl border border-border bg-[var(--bg-secondary)] p-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-tertiary text-muted">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-slate-200">Monthly Total</h3>
+                <p className="text-xs text-muted">Combined across all providers</p>
+              </div>
+            </div>
+            <div className="flex items-end justify-between">
+              <div>
+                <span className="text-2xl font-bold text-slate-100">$11.32</span>
+                <span className="text-sm text-muted"> / $45.00</span>
+              </div>
+              <span className="text-xs font-medium text-emerald-400">25% used</span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-tertiary">
+              <div className="h-full w-[25%] rounded-full bg-emerald-500" />
+            </div>
+            <p className="text-xs text-muted">
+              Alert at 80% ($36.00). Caps reset on the 1st of each month.
+            </p>
+          </div>
+        </div>
+      </SettingsSection>
+    </div>
+  );
+}
+
+function BillingCapCard({
+  provider,
+  icon: Icon,
+  status,
+  currentUsage,
+  monthlyCap,
+  requestsToday,
+}: {
+  provider: string;
+  icon: typeof DollarSign;
+  status: "green" | "amber" | "red";
+  currentUsage: number;
+  monthlyCap: number;
+  requestsToday: number;
+}) {
+  const pct = Math.min(100, (currentUsage / monthlyCap) * 100);
+  const barColor = pct > 80 ? "bg-red-500" : pct > 50 ? "bg-amber-500" : "bg-emerald-500";
+  const statusColors = { green: "bg-green-500", amber: "bg-amber-500", red: "bg-red-500" };
+
+  return (
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-[var(--bg-secondary)] p-5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-tertiary text-muted">
+            <Icon className="h-5 w-5" />
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-slate-200">{provider}</h3>
+            <p className="text-xs text-muted">{requestsToday} requests today</p>
+          </div>
+        </div>
+        <div className={`h-2.5 w-2.5 rounded-full ${statusColors[status]}`} />
+      </div>
+      <div className="flex items-end justify-between">
+        <div>
+          <span className="text-xl font-bold text-slate-100">${currentUsage.toFixed(2)}</span>
+          <span className="text-sm text-muted"> / ${monthlyCap.toFixed(2)}</span>
+        </div>
+        <span className="text-xs font-medium text-slate-400">{pct.toFixed(0)}% used</span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-tertiary">
+        <div className={`h-full rounded-full ${barColor}`} style={{ width: `${pct}%` }} />
+      </div>
     </div>
   );
 }

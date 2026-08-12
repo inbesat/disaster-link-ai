@@ -28,6 +28,8 @@ import {
   normalizeSmsCommand,
   parseSmsForm,
   statusReplyMessage,
+  shelterReplyMessage,
+  routeReplyMessage,
   SAFE_REPLY,
   SAFE_FAILED_REPLY,
   NOT_REGISTERED_REPLY,
@@ -82,6 +84,12 @@ export async function POST(request: NextRequest) {
     switch (command) {
       case "STATUS":
         reply = statusReplyMessage();
+        break;
+      case "SHELTER":
+        reply = shelterReplyMessage();
+        break;
+      case "ROUTE":
+        reply = routeReplyMessage();
         break;
       case "SAFE":
         reply = await recordSafeStatus(form.From ?? "");

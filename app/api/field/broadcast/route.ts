@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { notifyAllSubscribers } from "@/server/services/push-notifier";
+import { requireRole } from "@/lib/security/require-role";
+import { sanitizeInput } from "@/lib/security/sanitize";
 
 export const runtime = "nodejs";
+
+const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 export interface FieldBroadcast {
   id: string;
@@ -35,6 +39,11 @@ const RECALL_SECTOR = "Beta · Rajendra Nagar";
  *   { title?, message?, sector? }
  */
 export async function POST(request: NextRequest) {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   let body: { title?: unknown; message?: unknown; sector?: unknown } = {};
   try {
     body = (await request.json()) as typeof body;
@@ -74,7 +83,15 @@ export async function POST(request: NextRequest) {
  */
 export async function GET() {
   if (activeBroadcast) {
-    return NextResponse.json({ broadcast: activeBroadcast, lastId: activeBroadcast.id });
+    return NextResponse.json({
+      broadcast: {
+        ...activeBroadcast,
+        title: sanitizeInput(activeBroadcast.title),
+        message: sanitizeInput(activeBroadcast.message),
+        sector: sanitizeInput(activeBroadcast.sector),
+      },
+      lastId: activeBroadcast.id,
+    });
   }
 
   // Legacy fallback: an env-var-driven broadcast for externally provisioned setups.

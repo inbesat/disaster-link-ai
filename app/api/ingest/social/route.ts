@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { parseCitizenReport, issueLabel, type ParsedCitizenReport } from "@/lib/ai/groq-parser";
+import { sanitizeInput } from "@/lib/security/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -85,16 +86,16 @@ export async function GET() {
       lat: jitter(PATNA.lat),
       lng: jitter(PATNA.lng),
       report_type: reportType,
-      issue_label: issueLabel(parsed.issue),
+      issue_label: sanitizeInput(issueLabel(parsed.issue)),
       source: "social",
-      raw_text: rawText,
+      raw_text: sanitizeInput(rawText),
       confidence_score: +(parsed.severity / 100).toFixed(2),
       verification_status: "unverified",
       severity: parsed.severity,
       people_trapped: parsed.people_trapped,
       people_count: parsed.people_count,
-      locations: parsed.locations,
-      summary: parsed.summary,
+      locations: parsed.locations.map(sanitizeInput),
+      summary: sanitizeInput(parsed.summary),
     });
   }
 

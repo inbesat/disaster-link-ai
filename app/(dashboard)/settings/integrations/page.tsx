@@ -9,6 +9,8 @@ import {
   Activity,
   Eye,
   EyeOff,
+  Plus,
+  Trash2,
   type LucideIcon,
 } from "lucide-react";
 import SettingsSection from "@/components/settings/SettingsSection";
@@ -119,6 +121,149 @@ function IntegrationCard({
   );
 }
 
+type CustomApiConnection = {
+  id: string;
+  name: string;
+  baseUrl: string;
+  apiKey: string;
+};
+
+function CustomApiConnectionsCard() {
+  const [connections, setConnections] = useState<CustomApiConnection[]>([]);
+  const [showAdd, setShowAdd] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newBaseUrl, setNewBaseUrl] = useState("");
+  const [newApiKey, setNewApiKey] = useState("");
+  const [showKey, setShowKey] = useState<Record<string, boolean>>({});
+
+  const handleAdd = () => {
+    if (!newName.trim() || !newBaseUrl.trim()) {
+      showToast("error", { title: "Name and Base URL are required." });
+      return;
+    }
+    setConnections((prev) => [
+      ...prev,
+      { id: `custom-${Date.now()}`, name: newName.trim(), baseUrl: newBaseUrl.trim(), apiKey: newApiKey.trim() },
+    ]);
+    setNewName("");
+    setNewBaseUrl("");
+    setNewApiKey("");
+    setShowAdd(false);
+    showToast("success", { title: "Connection Added", description: `${newName} has been saved.` });
+  };
+
+  const handleRemove = (id: string) => {
+    setConnections((prev) => prev.filter((c) => c.id !== id));
+    showToast("success", { title: "Connection Removed" });
+  };
+
+  return (
+    <div className="flex flex-col gap-4 rounded-xl border border-border bg-[var(--bg-secondary)] p-5">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-tertiary text-muted">
+            <Plus className="h-5 w-5" />
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-slate-200">Custom API Connections</h3>
+            <p className="text-xs text-muted">Connect arbitrary REST APIs for external data sources or services.</p>
+          </div>
+        </div>
+        <button
+          onClick={() => setShowAdd(!showAdd)}
+          className="flex h-8 items-center gap-1.5 rounded-md bg-accent/15 px-3 text-xs font-semibold text-accent transition hover:bg-accent/25"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          Add Connection
+        </button>
+      </div>
+
+      {showAdd && (
+        <div className="flex flex-col gap-3 rounded-lg border border-subtle bg-tertiary/50 p-4">
+          <input
+            type="text"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            placeholder="Connection name (e.g. District Sensor Feed)"
+            className={inputClass}
+          />
+          <input
+            type="url"
+            value={newBaseUrl}
+            onChange={(e) => setNewBaseUrl(e.target.value)}
+            placeholder="Base URL (https://api.example.com)"
+            className={inputClass}
+          />
+          <div className="relative">
+            <input
+              type={showKey["new"] ? "text" : "password"}
+              value={newApiKey}
+              onChange={(e) => setNewApiKey(e.target.value)}
+              placeholder="API key (optional)"
+              className={inputClass}
+            />
+            <button
+              type="button"
+              onClick={() => setShowKey((p) => ({ ...p, new: !p["new"] }))}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-slate-300"
+            >
+              {showKey["new"] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={() => setShowAdd(false)}
+              className="rounded-md px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-200"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAdd}
+              className="rounded-md bg-accent px-3 py-1.5 text-xs font-semibold text-white hover:bg-accent/90"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      )}
+
+      {connections.length === 0 && !showAdd && (
+        <p className="py-4 text-center text-xs text-muted">
+          No custom connections configured. Add one to integrate external APIs.
+        </p>
+      )}
+
+      <div className="flex flex-col gap-2">
+        {connections.map((conn) => (
+          <div
+            key={conn.id}
+            className="flex items-center justify-between rounded-lg border border-subtle bg-tertiary/30 px-4 py-3"
+          >
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span className="text-sm font-medium text-slate-200">{conn.name}</span>
+              <span className="truncate text-xs text-muted">{conn.baseUrl}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowKey((p) => ({ ...p, [conn.id]: !p[conn.id] }))}
+                className="text-muted hover:text-slate-300"
+              >
+                {showKey[conn.id] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+              <button
+                onClick={() => handleRemove(conn.id)}
+                className="text-muted hover:text-red-400"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function IntegrationsContent() {
   const { settings, setWeatherApiKey } = useIntegrationSettings();
 
@@ -178,6 +323,14 @@ function IntegrationsContent() {
             onTestConnection={() => handleTestSuccess("State Gov Webhook")}
           />
         </div>
+      </SettingsSection>
+
+      <SettingsSection
+        title="Custom Connections"
+        description="Add arbitrary REST API endpoints for external data sources."
+        icon={Plus}
+      >
+        <CustomApiConnectionsCard />
       </SettingsSection>
     </div>
   );

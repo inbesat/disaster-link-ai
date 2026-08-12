@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
+import { requireRole } from "@/lib/security/require-role";
 
 export const dynamic = "force-dynamic";
+
+const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 /** List evacuation plans, most recently created first. */
 export async function GET() {
@@ -31,6 +34,11 @@ export async function GET() {
  * survives refresh and can be reviewed in the /evacuations tracker.
  */
 export async function POST(request: NextRequest) {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   let body: {
     villageName?: unknown;
     assignedShelterId?: unknown;

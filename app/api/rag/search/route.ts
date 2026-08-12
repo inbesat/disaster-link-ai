@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchSimilarDocuments } from "@/lib/rag/vector-search";
+import { createRateLimiter } from "@/lib/security/rate-limit";
 
 export const dynamic = "force-dynamic";
+
+// Rate limit: 10 RAG searches per minute per IP
+const ragSearchLimiter = createRateLimiter(10, 60_000);
 
 // ---------------------------------------------------------------------
 // POST /api/rag/search
@@ -10,6 +14,17 @@ export const dynamic = "force-dynamic";
 // similarity scores so judges can see exactly what the AI would be grounded on.
 // ---------------------------------------------------------------------
 export async function POST(request: NextRequest) {
+  // Rate limit check
+  const forwarded = request.headers.get("x-forwarded-for");
+  const ip = forwarded ? forwarded.split(",")[0].trim() : "anonymous";
+  const rateResult = ragSearchLimiter(`ragsearch:${ip}`);
+  if (!rateResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait before trying again." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rateResult.resetTime - Date.now()) / 1000)) } },
+    );
+  }
+
   let body: { query?: string; district?: string | null; topK?: number } = {};
   try {
     body = await request.json();

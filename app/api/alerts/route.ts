@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
+import { requireRole } from "@/lib/security/require-role";
 
 export const dynamic = "force-dynamic";
+
+const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 const DEFAULT_LIMIT = 20;
 
@@ -82,6 +85,11 @@ export async function GET(request: NextRequest) {
 
 // Mark one alert as acknowledged (mark-read).
 export async function PATCH(request: NextRequest) {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   let body: { id?: string };
   try {
     body = await request.json();

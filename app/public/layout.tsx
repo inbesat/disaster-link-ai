@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import PreviewModeBanner from "@/components/gov/PreviewModeBanner";
 import PublicAlertHost from "@/components/public/PublicAlertHost";
 import BandwidthGate from "@/components/public/BandwidthGate";
+import PublicSidebar from "@/components/public/PublicSidebar";
 import { SOSProvider } from "@/components/public/sos/SOSContext";
 import SOSModal from "@/components/public/sos/SOSModal";
 import EmergencyModeBanner from "@/components/public/sos/EmergencyModeBanner";
@@ -39,7 +40,14 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
           page (maps/images/AI hidden while active). */}
       <BandwidthProvider>
         <PreviewModeBanner />
-        {children}
+        {/* Desktop layout: sticky left sidebar + content on the right.
+            Mobile preserves the bottom nav (BottomNav is md:hidden inside
+            each page). PublicSidebar is hidden md:flex — it renders only
+            on md+ screens and never touches the mobile nav. */}
+        <div className="flex flex-col md:flex-row">
+          <PublicSidebar />
+          <div className="min-w-0 flex-1">{children}</div>
+        </div>
         <PublicAlertHost />
 
         {/* Phase 13 · Step 3 — install banner: appears above the BottomNav

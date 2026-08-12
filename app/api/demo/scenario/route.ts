@@ -3,9 +3,12 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/server/prisma";
 import { PUBLIC_SHELTERS_CACHE_TAG } from "@/lib/cache-tags";
 import { resolveDemoScope } from "@/lib/demo/scope";
+import { requireRole } from "@/lib/security/require-role";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+
+const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 /**
  * POST /api/demo/scenario
@@ -28,6 +31,11 @@ export const runtime = "nodejs";
  * Body: { action: string }
  */
 export async function POST(request: NextRequest) {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   let body: { action?: unknown };
   try {
     body = (await request.json()) as typeof body;

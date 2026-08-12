@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { notifyAllSubscribers } from "@/server/services/push-notifier";
+import { requireRole } from "@/lib/security/require-role";
 
 export const dynamic = "force-dynamic";
+
+const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 /**
  * POST /api/push/send
@@ -10,6 +13,11 @@ export const dynamic = "force-dynamic";
  *   { title, body, url, tag }
  */
 export async function POST(request: NextRequest) {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   let body: { title?: unknown; body?: unknown; url?: unknown; tag?: unknown } = {};
   try {
     body = (await request.json()) as typeof body;

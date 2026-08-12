@@ -18,13 +18,19 @@ type IngestResult = {
 };
 
 export async function GET(request: NextRequest) {
-  // Optional bearer-token guard for Vercel Cron.
+  // Bearer-token guard for Vercel Cron. Fails CLOSED: if CRON_SECRET is not
+  // configured (unset or still a placeholder), reject the request rather than
+  // silently allowing unauthenticated data ingestion.
   const secret = process.env.CRON_SECRET;
-  if (secret && !secret.startsWith("<")) {
-    const auth = request.headers.get("authorization");
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  if (!secret || secret.startsWith("<")) {
+    return NextResponse.json(
+      { error: "CRON_SECRET not configured — ingestion disabled." },
+      { status: 503 },
+    );
+  }
+  const auth = request.headers.get("authorization");
+  if (auth !== `Bearer ${secret}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const results: IngestResult[] = [];

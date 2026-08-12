@@ -98,6 +98,7 @@ model DisasterEvent {
   alertLogs           AlertLog[]
   emergencyDocuments  EmergencyDocument[]
   emergencyPlans      EmergencyPlan[]
+  capAlerts           CapAlert[]
 
   @@index([district]) // RLS scoping + district dashboards
   @@map("disaster_events")
@@ -498,6 +499,173 @@ model CrowdsourcedReport {
   @@index([reportType])
   @@index([verificationStatus, createdAt])
   @@map("crowdsourced_reports")
+}
+
+// ---------------------------------------------------------------------
+// chat_sessions + chat_messages (Phase 11 · Persistence)
+// Persists AI emergency planning conversations so history survives refresh.
+// ---------------------------------------------------------------------
+model ChatSession {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @map("user_id") @db.Uuid
+  title     String   @default("New Conversation")
+  district  String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  isDemo    Boolean  @default(false) @map("is_demo")
+  sessionId String?  @map("session_id")
+
+  messages ChatMessage[]
+
+  @@index([userId])
+  @@index([updatedAt])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid()) @db.Uuid
+  sessionId String   @map("session_id") @db.Uuid
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String   // user | assistant | tool
+  content   String
+  toolName  String?  @map("tool_name")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([sessionId])
+  @@index([createdAt])
+  @@map("chat_messages")
+}
+
+// ---------------------------------------------------------------------
+// tool_call_logs (Phase 10 · Observability)
+// Persistent record of every AI tool call for cost analysis + debugging.
+// ---------------------------------------------------------------------
+model ToolCallLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String?  @map("user_id") @db.Uuid
+  toolName    String   @map("tool_name")
+  input       Json?
+  output      Json?
+  durationMs  Int      @map("duration_ms")
+  success     Boolean  @default(true)
+  error       String?
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([toolName])
+  @@index([createdAt])
+  @@map("tool_call_logs")
+}
+
+// ---------------------------------------------------------------------
+// fm_stations (Phase 26 · FM Radio Emergency Broadcasting)
+// Self-curated registry of Indian FM stations + their coverage polygons.
+// `coverage_area` (PostGIS geography Polygon) is auto-computed by the
+// fm_stations_compute_coverage trigger from lat/lng + coverage_radius_km;
+// `findStationsInRadius()` (lib/fm/find-stations.ts) does the geospatial
+// "which stations cover this disaster zone" lookup with a turf fallback.
+// ---------------------------------------------------------------------
+model FmStation {
+  id                    String                                @id @default(uuid()) @db.Uuid
+  name                  String
+  frequency             String
+  city                  String
+  state                 String
+  callSign              String?                               @map("call_sign")
+  coverageRadiusKm      Int                                   @default(50) @map("coverage_radius_km")
+  lat                   Decimal?                              @db.Decimal(10, 8)
+  lng                   Decimal?                              @db.Decimal(11, 8)
+  operator              String?
+  type                  String                                @default("private") // private | air | community
+  emergencyApiEndpoint  String?                               @map("emergency_api_endpoint")
+  emergencyContactPhone String?                               @map("emergency_contact_phone")
+  emailAddress          String?                               @map("email_address")
+  rdsEnabled            Boolean                               @default(false) @map("rds_enabled")
+  rdsApiEndpoint        String?                               @map("rds_api_endpoint")
+  isActive              Boolean                               @default(true) @map("is_active")
+  createdAt             DateTime                              @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt             DateTime                              @updatedAt @map("updated_at") @db.Timestamptz
+
+  coverageArea          Unsupported("geography(Polygon, 4326)")?
+  broadcastLogs         FmBroadcastLog[]
+
+  @@index([state, city])
+  @@index([type])
+  @@map("fm_stations")
+}
+
+// ---------------------------------------------------------------------
+// fm_broadcast_logs (Phase 4) — per-station dispatch audit trail. One row
+// per strategy attempt for a CAP alert + station. Written by the FM
+// dispatcher (lib/broadcast/fm-dispatcher.ts); `retry_count` tracks the
+// retry budget, `status` moves sent → delivered / retrying → failed.
+// ---------------------------------------------------------------------
+model FmBroadcastLog {
+  id             String    @id @default(uuid()) @db.Uuid
+  capAlertId     String?   @map("cap_alert_id") @db.Uuid
+  capAlert       CapAlert? @relation(fields: [capAlertId], references: [id], onDelete: SetNull)
+  fmStationId    String?   @map("fm_station_id") @db.Uuid
+  fmStation      FmStation? @relation(fields: [fmStationId], references: [id], onDelete: SetNull)
+  strategy       String // cap_api | rds | ftp | email | ivr
+  status         String    @default("sent") // sent | delivered | failed | retrying
+  responseCode   Int?      @map("response_code")
+  responseBody   String?   @map("response_body")
+  broadcastTime  DateTime? @map("broadcast_time") @db.Timestamptz
+  retryCount     Int       @default(0) @map("retry_count")
+  testMode       Boolean   @default(false) @map("test_mode")
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([capAlertId])
+  @@index([fmStationId])
+  @@index([status])
+  @@map("fm_broadcast_logs")
+}
+
+// ---------------------------------------------------------------------
+// alert_audio (Phase 26) — generated TTS alert voices. One row per
+// generation; `cache_key` dedupes identical alerts for the 24 h cache.
+// The dispatch pipeline (Phase 3) links dispatches to an audio record
+// via `alertId`.
+// ---------------------------------------------------------------------
+model AlertAudio {
+  id         String   @id @default(uuid()) @db.Uuid
+  alertId    String?  @map("alert_id")
+  language   String
+  provider   String
+  durationSec Float   @map("duration_sec")
+  script     String
+  cacheKey   String   @map("cache_key")
+  audioUrl   String?  @map("audio_url")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([cacheKey])
+  @@index([alertId])
+  @@index([language])
+  @@map("alert_audio")
+}
+
+// ---------------------------------------------------------------------
+// cap_alerts (Phase 3) — CAP v1.2 alert audit trail. One row per CAP
+// message generated for an FM broadcast. `alertId` is the CAP
+// <identifier> (unique per sender); `disasterEventId` links the message
+// to the triggering disaster event. cap_xml holds the full document.
+// ---------------------------------------------------------------------
+model CapAlert {
+  id               String    @id @default(uuid()) @db.Uuid
+  alertId          String    @unique @map("alert_id")
+  disasterEventId  String?   @map("disaster_event_id") @db.Uuid
+  disasterEvent    DisasterEvent? @relation(fields: [disasterEventId], references: [id], onDelete: SetNull)
+  capXml           String    @map("cap_xml")
+  audioUrl         String?   @map("audio_url")
+  language         String?
+  severity         String?
+  status           String    @default("pending") // pending | sent | delivered | failed
+  sentAt           DateTime? @map("sent_at") @db.Timestamptz
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([disasterEventId])
+  @@index([status])
+  broadcastLogs       FmBroadcastLog[]
+  @@map("cap_alerts")
 }
 
 // ---------------------------------------------------------------------

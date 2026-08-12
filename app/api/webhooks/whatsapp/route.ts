@@ -24,7 +24,10 @@ import {
   normalizeWhatsappCommand,
   whatsappHelpReply,
   whatsappMenuReply,
-  whatsappShelterReply,
+  whatsappStatusReply,
+  whatsappSheltersTop3Reply,
+  whatsappRouteReply,
+  whatsappSosReply,
 } from "@/lib/sms/whatsapp-commands";
 
 /** Twilio needs a long-lived runtime — no edge. */
@@ -46,8 +49,17 @@ export async function POST(request: NextRequest) {
   const command = normalizeWhatsappCommand(form.Body ?? "");
   let reply: string;
   switch (command) {
+    case "STATUS":
+      reply = whatsappStatusReply();
+      break;
     case "SHELTER":
-      reply = whatsappShelterReply();
+      reply = whatsappSheltersTop3Reply();
+      break;
+    case "ROUTE":
+      reply = whatsappRouteReply();
+      break;
+    case "SAFE":
+      reply = whatsappSosReply();
       break;
     case "HELP":
       reply = whatsappHelpReply();
