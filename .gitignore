@@ -33,6 +33,7 @@ yarn-error.log*
 .vercel
 
 # next-pwa generated artifacts (regenerated on every production build)
+/public/sw.js
 /public/workbox-*.js
 /public/worker-*.js
 /public/fallback-*.js

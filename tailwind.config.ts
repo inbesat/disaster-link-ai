@@ -191,14 +191,14 @@ const config: Config = {
     animate,
     daisyui,
   ],
-  /* daisyUI — custom brand theme built on the DisasterLink tokens so the
+  /* daisyUI — custom brand theme built on the SafeSphere tokens so the
      semantic classes (navbar, btn-primary, menu, dropdown, …) render in
      our navy/blue/orange instead of daisyUI defaults. Applied via the
      `data-theme` attribute on the landing root (dark-first). */
   daisyui: {
     themes: [
       {
-        disasterlink: {
+        safesphere: {
           "primary": "#2563EB",
           "primary-content": "#FFFFFF",
           "secondary": "#F97316",
@@ -231,7 +231,7 @@ const config: Config = {
         },
       },
     ],
-    darkTheme: "disasterlink",
+    darkTheme: "safesphere",
     logs: false,
   },
 };

@@ -3,6 +3,7 @@ import { prisma } from "@/server/prisma";
 import { requireRole } from "@/lib/security/require-role";
 import { findStationsInRadius } from "@/lib/fm/find-stations";
 import { toCoords, type FmStationDTO } from "@/lib/fm/serialize";
+import { MOCK_FM_STATIONS } from "@/lib/fm/mock-stations";
 
 export const dynamic = "force-dynamic";
 
@@ -63,7 +64,16 @@ export async function GET(request: NextRequest) {
       count: covering.length,
     });
   } catch (error) {
+    // DB unreachable — answer coverage from the seeded demo list so the
+    // "Test Coverage" tool still works before migrations are pushed.
     console.error("Failed to test FM coverage:", error);
-    return NextResponse.json({ ok: true, covering: [], count: 0 });
+    const covering = findStationsInRadius(lat, lng, MOCK_FM_STATIONS, radius);
+    return NextResponse.json({
+      ok: true,
+      point: { lat, lng },
+      covering,
+      count: covering.length,
+      source: "mock",
+    });
   }
 }

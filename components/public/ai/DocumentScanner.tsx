@@ -21,7 +21,7 @@
 //     survives reloads — and privacy stays on the phone.
 //
 // Rendered as a modal driven by `open`/`onClose` (mounted inside the
-// Sahayak sheet, triggered by the composer's scan button).
+// Nova sheet, triggered by the composer's scan button).
 // ---------------------------------------------------------------------
 
 import { useEffect, useRef, useState } from "react";

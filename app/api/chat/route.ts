@@ -90,7 +90,7 @@ function withDistrictScope(
   return guarded;
 }
 
-const BASE_PROMPT = `You are the Bharat Shakti Emergency AI. You generate tactical 48-hour evacuation plans. You MUST use your tools to check real data before suggesting a plan. Be concise and authoritative.
+const BASE_PROMPT = `You are the SafeSphere Emergency AI. You generate tactical 48-hour evacuation plans. You MUST use your tools to check real data before suggesting a plan. Be concise and authoritative.
 
 Context from Official SOPs — retrieved laws, NDMA guidelines, and district procedures that MUST govern your planning. Follow these rules when planning:
 {SOP_CONTEXT}

@@ -74,11 +74,11 @@ record(
   aiTeaserGone,
   aiTeaserGone ? "no 'Need help preparing' teaser" : "teaser still visible!",
 );
-const chatFabGone = !dashText.includes("Ask Sahayak") && !dashText.includes("Sahayak");
+const chatFabGone = !dashText.includes("Ask Nova") && !dashText.includes("Nova");
 record(
   "AI chat bubble hidden in low-bandwidth mode",
   chatFabGone,
-  chatFabGone ? "no Sahayak FAB" : "chat bubble still visible!",
+  chatFabGone ? "no Nova FAB" : "chat bubble still visible!",
 );
 
 // --- Toggle OFF restores the map -----------------------------------------

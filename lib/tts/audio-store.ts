@@ -118,3 +118,66 @@ export async function storeAlertAudio(params: {
 export function clearAlertAudioCache(): void {
   cache.clear();
 }
+
+/**
+ * Phase 8 · retention — delete alert-audio files older than maxAgeDays.
+ * The shared beep asset (and any folder entries) is always kept. Storage
+ * is paged (100/page); failures are logged and never thrown so a cron run
+ * that hits a storage outage still reports what it could check.
+ */
+export async function pruneExpiredAlertAudio(options: {
+  maxAgeDays?: number;
+  dryRun?: boolean;
+} = {}): Promise<{
+  checked: number;
+  deleted: string[];
+  retained: number;
+  dryRun: boolean;
+}> {
+  const maxAgeDays = options.maxAgeDays ?? 90;
+  const dryRun = options.dryRun ?? false;
+  const cutoff = Date.now() - maxAgeDays * 24 * 3_600_000;
+  const deleted: string[] = [];
+  let checked = 0;
+
+  try {
+    const supabase = createClient();
+    let offset = 0;
+    for (;;) {
+      const { data, error } = await supabase.storage.from(BUCKET).list("", {
+        limit: 100,
+        offset,
+        sortBy: { column: "created_at", order: "asc" },
+      });
+      if (error) throw new Error(error.message);
+      if (!data || data.length === 0) break;
+      offset += data.length;
+
+      for (const item of data) {
+        // Folders carry no id (null in some API versions) and the shared
+        // beep asset is never pruned.
+        if (item.id == null || item.name === BEEP_FILE) continue;
+        checked += 1;
+        const created = item.created_at ? new Date(item.created_at).getTime() : null;
+        if (created !== null && created < cutoff) {
+          deleted.push(item.name);
+        }
+      }
+      if (data.length < 100) break;
+    }
+
+    if (!dryRun && deleted.length > 0) {
+      const { error } = await supabase.storage.from(BUCKET).remove(deleted);
+      if (error) throw new Error(error.message);
+    }
+  } catch (error) {
+    console.error("[audio-store] Retention prune failed:", error);
+  }
+
+  return {
+    checked,
+    deleted,
+    retained: checked - deleted.length,
+    dryRun,
+  };
+}

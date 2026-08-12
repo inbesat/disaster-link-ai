@@ -45,7 +45,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Disaster Response Intelligence Platform",
+  title: "SafeSphere Platform",
   description:
     "Flood prediction, emergency planning, and resource allocation for the Bharat Shakti Hackathon.",
   // Phase 13 · Step 1 — PWA hooks: manifest + installable web app metadata.
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Bharat Shakti",
+    title: "SafeSphere",
   },
   icons: {
     icon: "/icons/icon-192.png",

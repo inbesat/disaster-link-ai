@@ -10,8 +10,8 @@ const contacts = [
     icon: Mail,
     color: "blue",
     label: "Email",
-    value: "disasterlink095@gmail.com",
-    href: "mailto:disasterlink095@gmail.com",
+    value: "safesphere095@gmail.com",
+    href: "mailto:safesphere095@gmail.com",
   },
   {
     icon: Code,

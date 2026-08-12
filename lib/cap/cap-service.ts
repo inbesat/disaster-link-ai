@@ -18,6 +18,7 @@ import { isTtsLanguage, type TtsLanguage } from "@/lib/tts/types";
 import { buildCapAlert } from "./cap-builder";
 import { districtHeadline, resolveCapPreset, type CapDisasterType } from "./cap-templates";
 import { validateCapAlert } from "./cap-validator";
+import { hashCapXml } from "./cap-hash";
 import type { CapArea, CapSeverity, CapUrgency } from "./types";
 
 /** BCP-47 language tag per TTS language code (hi → hi-IN). */
@@ -152,7 +153,7 @@ export async function generateCapForEvent(
 
   const capInput = {
     identifier,
-    sender: "disasterlink.ai@ddma.gov.in",
+    sender: "safesphere.ai@ddma.gov.in",
     sent: sent.toISOString(),
     status: "Actual" as const,
     msgType: "Alert" as const,
@@ -192,12 +193,14 @@ export async function generateCapForEvent(
 
   const capXml = buildCapAlert(capInput);
 
-  // 6. Persist for the audit trail.
+  // 6. Persist for the audit trail — cap_hash is the tamper-proofing
+  // digest (Phase 8): recompute SHA-256(cap_xml) at review time and compare.
   const record = await prisma.capAlert.create({
     data: {
       alertId: identifier,
       disasterEventId,
       capXml,
+      capHash: hashCapXml(capXml),
       audioUrl: stored.audioUrl,
       language: BCP47[language],
       severity: preset.severity,

@@ -54,5 +54,5 @@ export function useCountUp<T extends HTMLElement = HTMLDivElement>(
     };
   }, [isIntersecting, target, duration]);
 
-  return { ref, count };
+  return { ref, count, isIntersecting };
 }

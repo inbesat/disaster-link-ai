@@ -183,7 +183,7 @@ export function writeSafeStatus(): void {
 }
 
 // --- "Trapped" status (Phase 1 · Step 2) --------------------------------
-// When Mitron detects an emergency intent it marks the citizen as TRAPPED
+// When Nova detects an emergency intent it marks the citizen as TRAPPED
 // — the mirror image of "I am Safe". Persisted so a reload keeps the
 // trapped flag (the control-room/family view in this demo reads it the
 // same way it reads the SOS-active flag). Same guarded helpers as above.

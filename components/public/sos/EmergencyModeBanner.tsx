@@ -34,6 +34,9 @@ import { useSOS } from "./SOSContext";
 /** How long the cancel button must be held (ms) before SOS is cancelled. */
 const HOLD_MS = 2000;
 
+/** Phase 5 · Step 4 lockdown — routes the citizen may stay on during Emergency Mode. */
+const LOCKED_ROUTES = ["/public/map", "/public/dashboard"];
+
 export default function EmergencyModeBanner() {
   const { emergency, cancelEmergency } = useSOS();
   const pathname = usePathname();
@@ -57,7 +60,6 @@ export default function EmergencyModeBanner() {
   // is locked onto the Map or Dashboard (per the spec). Any other /public
   // route (alerts, settings, setup…) bounces to the evacuation map, and
   // the check re-runs on every navigation so they can't wander off.
-  const LOCKED_ROUTES = ["/public/map", "/public/dashboard"];
   useEffect(() => {
     if (emergency && !LOCKED_ROUTES.includes(pathname)) {
       router.replace("/public/map");

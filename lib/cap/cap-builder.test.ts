@@ -16,7 +16,7 @@ const EXPIRES = "2026-08-13T06:05:00.000Z";
 function validInput(overrides: Partial<CapAlertInput> = {}): CapAlertInput {
   return {
     identifier: "dl-abc12345-xyz",
-    sender: "disasterlink.ai@ddma.gov.in",
+    sender: "safesphere.ai@ddma.gov.in",
     sent: SENT,
     status: "Actual",
     msgType: "Alert",

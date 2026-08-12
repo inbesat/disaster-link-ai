@@ -4,7 +4,7 @@ import LoginForm from "./LoginForm";
 import PasswordlessLogin from "./PasswordlessLogin";
 
 export const metadata: Metadata = {
-  title: "Sign In | Disaster Response",
+  title: "Sign In | SafeSphere",
 };
 
 export default function LoginPage() {

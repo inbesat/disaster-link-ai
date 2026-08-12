@@ -5,7 +5,7 @@
 // AI response cards.
 //
 // Text walls are useless in a disaster — the AI must hand back UI. These
-// are the three card types Sahayak can return instead of a plain bubble:
+// are the three card types Nova can return instead of a plain bubble:
 //
 //   • ChecklistCard — a tappable kit/packing checklist (Medicines, ID,
 //     Water…). Users tap items to cross them off; when everything is
@@ -13,9 +13,9 @@
 //   • RouteCard — a small map-snippet placeholder with a pin and dashed
 //     path, plus the bold line "Walk 1.2 km to Shelter X".
 //   • ActionCard — a one-tap action (e.g. "Tap to send 'I am safe' to
-//     your family"). The handler is supplied by SahayakChat.
+//     your family"). The handler is supplied by NovaChat.
 //
-// Every card renders as a left-aligned row with Sahayak's robot avatar,
+// Every card renders as a left-aligned row with Nova's robot avatar,
 // matching the ChatMessage layout, so cards read as part of the thread.
 // ---------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ export function ResponseCard({ data, onAction }: ResponseCardProps) {
       transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.8 }}
       className="flex w-full items-start gap-2"
     >
-      {/* Sahayak's avatar — same chip as ChatMessage so cards sit in-thread. */}
+      {/* Nova's avatar — same chip as ChatMessage so cards sit in-thread. */}
       <span
         aria-hidden
         className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#2a4d3c] ring-1 ring-[#dcf8c6]/30 shadow-[0_2px_10px_rgba(16,185,129,0.25)]"

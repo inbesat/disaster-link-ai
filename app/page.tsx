@@ -16,7 +16,7 @@ import FAQ from "@/app/(public)/landing/sections/FAQ";
 import Contact from "@/app/(public)/landing/sections/Contact";
 
 export const metadata: Metadata = {
-  title: "DisasterLink AI — AI-Powered Disaster Management Platform",
+  title: "SafeSphere — AI-Powered Disaster Management Platform",
   description:
     "Predict disasters before they strike and deliver critical alerts across 9 channels — reaching every citizen, even in the most remote villages.",
 };
@@ -26,7 +26,7 @@ export default function HomePage() {
     <div
       id="landing-root"
       className="landing-page font-sans"
-      data-theme="disasterlink"
+      data-theme="safesphere"
     >
       <Navbar />
       <Hero />

@@ -13,7 +13,7 @@ import type { AlertSeverity, AlertVoiceRequest, DisasterType } from "./types";
 
 /** Standard emergency-broadcast intro, per the EWS/CAP convention. */
 const INTRO =
-  "This is an emergency alert from DisasterLink AI, authorized by the " +
+  "This is an emergency alert from SafeSphere, authorized by the " +
   "District Disaster Management Authority.";
 
 /** Severity-tuned lead-in before the hazard template. */

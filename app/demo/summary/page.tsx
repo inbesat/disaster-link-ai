@@ -17,9 +17,9 @@ import type { Metadata } from "next";
 // ---------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: "Pitch Summary Slide | DRIP",
+  title: "Pitch Summary Slide | SafeSphere",
   description:
-    "One-page summary — the problem, the Bharat Shakti solution, the tech stack, and the team.",
+    "One-page summary — the problem, the SafeSphere solution, the tech stack, and the team.",
 };
 
 const PROBLEMS = [
@@ -102,10 +102,10 @@ export default function DemoSummaryPage() {
         <header className="relative z-10 flex items-end justify-between gap-6 border-b border-white/10 pb-4 print:border-slate-300">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-300 print:text-cyan-800">
-              Bharat Shakti · National Hackathon
+              SafeSphere · National Hackathon
             </p>
             <h1 className="mt-1.5 text-4xl font-black leading-tight tracking-tight">
-              Disaster Response Intelligence Platform
+              SafeSphere Platform
             </h1>
             <p className="mt-1 max-w-2xl text-sm text-slate-400 print:text-slate-600">
               From prediction to rescue in minutes, not hours — AI forecasting, automated
@@ -153,7 +153,7 @@ export default function DemoSummaryPage() {
           {/* The Solution */}
           <section className="col-span-3 flex flex-col gap-2.5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 print:border-slate-300 print:bg-slate-50">
             <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-300 print:text-emerald-700">
-              The Bharat Shakti Solution
+              The SafeSphere Solution
             </p>
             <div className="grid flex-1 grid-cols-2 gap-2.5">
               {PILLARS.map((pillar) => (
@@ -200,10 +200,10 @@ export default function DemoSummaryPage() {
             <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-amber-300 print:text-amber-700">
               The Team
             </p>
-            <p className="text-xl font-black leading-tight">Team DRIP</p>
+            <p className="text-xl font-black leading-tight">Team SafeSphere</p>
             <p className="text-[13px] leading-snug text-slate-300 print:text-slate-700">
               Four builders shipping one platform — prediction, alerting, allocation and
-              the citizen experience — for the Bharat Shakti mission.
+              the citizen experience — for the SafeSphere mission.
             </p>
             <div className="mt-auto flex flex-wrap gap-1.5">
               {TEAM.map((role) => (
@@ -222,10 +222,10 @@ export default function DemoSummaryPage() {
         <footer className="relative z-10 flex items-center justify-between border-t border-white/10 pt-3 text-[11px] text-slate-500 print:border-slate-300 print:text-slate-500">
           <span>
             <span className="font-mono font-bold text-cyan-300 print:text-cyan-800">DRIP</span>{" "}
-            · Disaster Response Intelligence Platform · live demo at /demo/present
+            · SafeSphere Platform · live demo at /demo/present
           </span>
           <span className="print:hidden">⌘/Ctrl + P → save this slide as PDF</span>
-          <span className="hidden print:block">Bharat Shakti · 2026</span>
+          <span className="hidden print:block">SafeSphere · 2026</span>
         </footer>
       </main>
     </>

@@ -7,6 +7,13 @@
 // allow-list. Guests (guest_mode cookie) and unauthenticated or
 // under-privileged callers are rejected with the proper 401/403 status.
 //
+// Session resolution mirrors middleware.ts + app/(admin)/layout.tsx: a
+// real Supabase user is judged by their profile row, and when there is NO
+// Supabase session the `role` cookie (written by govLogin/govDemoLogin)
+// is the auth signal — so the demo admin APIs work while Supabase env
+// vars are present but unused. A real logged-in user is NEVER overridden
+// by the cookie (profile wins, fail-closed on missing profile).
+//
 //   const auth = await requireRole(GOV_ROLES);
 //   if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 // ---------------------------------------------------------------------
@@ -34,11 +41,13 @@ function deny(authenticated: boolean): RequireRoleResult {
 /**
  * Resolve the caller's role and check it against the allow-list.
  *
- * - Supabase configured: reads profile.role from the `users` table. NO cookie
- *   fallback — the `role` cookie alone is never trusted when real auth is
- *   configured. A missing session or failed lookup fails closed (401).
+ * - Supabase configured + real user: profile.role from the `users` table
+ *   decides (missing profile or failed lookup fails closed, 401).
+ * - Supabase configured but NO signed-in user: the `role` cookie is the auth
+ *   signal — the demo cookie session (govDemoLogin / govLogin), exactly as
+ *   middleware.ts and the admin layout treat it. Guests still never pass.
  * - Cookie-only demo mode (no Supabase env): the `role` cookie is the auth
- *   signal, exactly as in middleware.ts.
+ *   signal, as before.
  *
  * Guests never pass: the public Citizen App has its own read-only endpoints.
  */
@@ -66,8 +75,11 @@ export async function requireRole(
       data: { user },
     } = await supabase.auth.getUser();
 
+    // No real Supabase session — admit the demo cookie session (same rule
+    // as middleware.ts / the admin layout). A real user is never overridden
+    // by the cookie: once `user` exists, the profile row below decides.
     if (!user) {
-      return deny(false);
+      return cookieAdmitted ? { ok: true, role: roleCookie } : deny(false);
     }
 
     const { data: profile } = await supabase

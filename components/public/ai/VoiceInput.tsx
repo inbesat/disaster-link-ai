@@ -12,7 +12,7 @@
 //      inline strip above the composer shows pulsing soundwave bars,
 //      "Listening…" and the live interim transcript.
 //   2. Tap again (or the engine auto-ends) → the final transcript is
-//      delivered via `onResult`; SahayakChat drops it into the input.
+//      delivered via `onResult`; NovaChat drops it into the input.
 //   3. The recognition `lang` follows the app's active UI language
 //      (en-IN, hi-IN, bn-IN, …) so a citizen speaks their own tongue —
 //      the LLM backend handles any translation downstream.
@@ -84,7 +84,7 @@ type VoiceInputProps = {
   lang?: string;
   /** Disable the mic (e.g. while a reply is being drafted). */
   disabled?: boolean;
-  /** Accent theme — green is the Sahayak default; violet matches Mitron. */
+  /** Accent theme — green is the Nova default; violet matches Nova. */
   tone?: "green" | "violet";
 };
 
@@ -270,7 +270,7 @@ export function VoiceInput({
       </motion.button>
 
       {/* Floating listening banner — anchored above the composer (the
-          composer container is `relative` in SahayakChat), so the mic
+          composer container is `relative` in NovaChat), so the mic
           stays in the input row while the waveform hovers above it. */}
       <AnimatePresence>
         {listening && (

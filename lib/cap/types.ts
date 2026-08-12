@@ -69,7 +69,7 @@ export interface CapInfo {
 export interface CapAlertInput {
   /** Unique alert identifier (UUID). */
   identifier: string;
-  /** Sender address, e.g. "disasterlink.ai@ddma.gov.in". */
+  /** Sender address, e.g. "safesphere.ai@ddma.gov.in". */
   sender: string;
   /** ISO 8601 sent timestamp. */
   sent: string;

@@ -179,7 +179,7 @@ export default function AllocationList({
       >
         <header className="border-b-2 border-black pb-3">
           <p className="text-[11px] font-bold uppercase tracking-widest">
-            Disaster Response Platform · Dispatch Manifest
+            SafeSphere Platform · Dispatch Manifest
           </p>
           <h1 className="mt-1 text-2xl font-black">DISPATCH MANIFEST</h1>
           <p className="mt-1 text-xs">

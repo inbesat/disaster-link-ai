@@ -8,7 +8,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   // Demo cookie-only admin session (govLogin writes `role` without creating
   // a Supabase user) — admit district_admin/super_admin straight from the
   // cookie so they aren't bounced to /login after middleware lets them in.
-  const roleCookie = cookies().get("role")?.value;
+  const roleCookie = await cookies().get("role")?.value;
   const validCookieSession =
     roleCookie === "super_admin" || roleCookie === "district_admin";
 

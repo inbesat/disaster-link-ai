@@ -88,7 +88,7 @@ describe("whatsappStatusReply", () => {
   const reply = whatsappStatusReply();
 
   it("reports the current flood risk for the district", () => {
-    expect(reply).toContain("*Bharat Shakti Status*");
+    expect(reply).toContain("*SafeSphere Status*");
     expect(reply).toContain("Patna is under");
     expect(reply).toContain("Nearest shelter: Patna Central Community Hall");
   });

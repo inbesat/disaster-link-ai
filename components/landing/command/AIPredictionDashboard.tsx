@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import ScrollReveal from "@/components/landing/ui/ScrollReveal";
 import {
@@ -65,23 +64,16 @@ function MetricRing({
   glow: string;
   delay: number;
 }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const { count } = useCountUp(isVisible ? value : 0, 1400);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true);
-      },
-      { threshold: 0.1 },
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+  // The count-up hook owns the IntersectionObserver: its `ref` is attached
+  // to the card below and `isIntersecting` gates both the animated number
+  // and the ring fill, so the ring never shows 0% before/without scrolling
+  // into view.
+  const { ref, count, isIntersecting } = useCountUp(value, 1400);
 
   const circumference = 2 * Math.PI * 52;
-  const strokeDashoffset = isVisible ? circumference * (1 - value / 100) : circumference;
+  const strokeDashoffset = isIntersecting
+    ? circumference * (1 - value / 100)
+    : circumference;
 
   return (
     <motion.div
@@ -92,7 +84,7 @@ function MetricRing({
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5, delay, ease: [0.2, 0.7, 0.2, 1] }}
       style={{
-        boxShadow: isVisible ? `0 0 30px -10px ${glow}` : "none",
+        boxShadow: isIntersecting ? `0 0 30px -10px ${glow}` : "none",
         transition: "box-shadow 1.4s ease",
       }}
     >

@@ -1,6 +1,6 @@
 # Security & Compliance Architecture
 
-**Disaster Response Intelligence Platform (DRIP)** · Phase 21 — Security, Privacy & Data Isolation
+**SafeSphere Platform** · Phase 21 — Security, Privacy & Data Isolation
 
 > This document describes the platform's security architecture for evaluators.
 > It covers tenant data isolation via PostgreSQL Row-Level Security, secrets

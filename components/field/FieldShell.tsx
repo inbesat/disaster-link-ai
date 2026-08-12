@@ -7,6 +7,7 @@ import SosPanicModal from "@/components/field/SosPanicModal";
 import SyncStatusBadge from "@/components/field/SyncStatusBadge";
 import PreDeploymentChecklist from "@/components/field/PreDeploymentChecklist";
 import BackButton from "@/components/ui/BackButton";
+import LanguageSelector from "@/components/ui/LanguageSelector";
 
 interface FieldProfile {
   name: string;
@@ -94,6 +95,8 @@ export default function FieldShell({
           </div>
 
           <div className="flex shrink-0 items-center gap-3">
+            <LanguageSelector />
+
             <div className="flex flex-col items-center gap-0.5" title="Battery level">
               <BatteryIcon level={battery} />
               <span

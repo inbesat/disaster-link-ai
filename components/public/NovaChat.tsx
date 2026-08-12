@@ -1,17 +1,17 @@
 "use client";
 
 // ---------------------------------------------------------------------
-// components/public/MitronChat.tsx — Phase 1 · Step 1 · the "Mitron" AI
+// components/public/NovaChat.tsx — Phase 1 · Step 1 · the "Nova" AI
 // floating companion.
 //
-// Mitron ("friends") is the citizen's life-saving AI companion, rebranded
-// from the earlier Sahayak shell with a warm, human feel:
+// Nova ("friends") is the citizen's life-saving AI companion, rebranded
+// from the earlier Nova shell with a warm, human feel:
 //
 //   • A persistent 56px floating chat bubble (the --bg-accent-purple
 //     token, #8b5cf6) pinned bottom-right on every /public screen.
 //   • Tap → a smooth framer-motion BOTTOM SHEET with two snap points —
 //     60% by default, draggable/flingable to 100% — and drag-down past
-//     60% to dismiss (same physics as SahayakChat/MapBottomSheet).
+//     60% to dismiss (same physics as NovaChat/MapBottomSheet).
 //   • Voice-first composer: the microphone is the LARGEST, most prominent
 //     control in the input row — bigger than the text field and glowing
 //     violet (VoiceInput with tone="violet").
@@ -19,18 +19,18 @@
 //     circle instead of a robot chip — in the header and beside replies.
 //
 // The welcome + replies are calm, human language; the mock reply uses the
-// existing translated sahayak_reply guidance so the answer still speaks
+// existing translated nova_reply guidance so the answer still speaks
 // the citizen's language. Voice results drop straight into the composer.
 //
 // Phase 1 · Step 2 — Emergency Intent Detection & Auto-SOS. If a citizen
-// says they're in danger, Mitron must ACT, not just chat:
+// says they're in danger, Nova must ACT, not just chat:
 //
 //   • Every input — typed OR the voice transcript — is intercepted BEFORE
 //     it reaches the reply path (see detectEmergency).
 //   • Emergency keywords (help / trapped / flood / rescue / medical /
 //     emergency — plus common Hindi equivalents) flip the sheet into
 //     red-tinted "Emergency Mode" with larger text.
-//   • Mitron auto-replies with a calming confirmation and programmatically
+//   • Nova auto-replies with a calming confirmation and programmatically
 //     triggers the SOS flow: the app enters Emergency Mode (red banner +
 //     nav lock), live GPS sharing starts, the citizen is marked TRAPPED,
 //     and the control room / family are notified (toast + persisted flag).
@@ -82,7 +82,7 @@ const nowTime = () =>
   }).format(new Date());
 
 const WELCOME =
-  "Namaste! I'm Mitron, your friendly safety companion. Ask me about shelters, safe routes or what to do in a flood — speak or type, whatever feels easier.";
+  "Namaste! I'm Nova, your friendly safety companion. Ask me about shelters, safe routes or what to do in a flood — speak or type, whatever feels easier.";
 
 /** Calming auto-reply when an emergency intent is detected. */
 const EMERGENCY_REPLY =
@@ -97,10 +97,10 @@ type ChatEntry = {
   center?: HelpCenter;
 };
 
-export function MitronChat() {
+export function NovaChat() {
   const { t, language } = useTranslation();
   const reduceMotion = useReducedMotion();
-  // Global SOS controls — Mitron sits under the public layout's SOSProvider,
+  // Global SOS controls — Nova sits under the public layout's SOSProvider,
   // so it can activate Emergency Mode + location sharing programmatically.
   const { activateEmergency, startSharingLocation } = useSOS();
 
@@ -277,7 +277,7 @@ export function MitronChat() {
     const trimmed = text.trim();
     if (!trimmed || typing) return;
     // Step 2 — intercept BEFORE the reply path. An emergency intent never
-    // reaches the normal LLM mock: Mitron acts instead of chatting.
+    // reaches the normal LLM mock: Nova acts instead of chatting.
     if (detectEmergency(trimmed)) {
       handleEmergency(trimmed);
       return;
@@ -305,7 +305,7 @@ export function MitronChat() {
         {
           id: `a-${Date.now()}`,
           role: "ai",
-          content: t("sahayak_reply"),
+          content: t("nova_reply"),
           timestamp: nowTime(),
         },
       ]);
@@ -341,7 +341,7 @@ export function MitronChat() {
       aria-hidden
       className={`relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] ring-2 ring-[#c4b5fd]/30 shadow-[0_2px_14px_rgba(139,92,246,0.45)] ${size}`}
     >
-      <span className={text} role="img" aria-label="Mitron's friendly face">
+      <span className={text} role="img" aria-label="Nova's friendly face">
         😊
       </span>
       <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-[#34d399] ring-2 ring-[#1e1b4b]" />
@@ -359,7 +359,7 @@ export function MitronChat() {
             ref={fabRef}
             type="button"
             onClick={openSheet}
-            aria-label="Open Mitron"
+            aria-label="Open Nova"
             initial={{ opacity: 0, scale: 0.7, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.7, y: 12 }}
@@ -381,7 +381,7 @@ export function MitronChat() {
         {open && (
           <>
             <motion.div
-              key="mitron-backdrop"
+              key="nova-backdrop"
               aria-hidden
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -392,10 +392,10 @@ export function MitronChat() {
             />
 
             <motion.section
-              key="mitron-sheet"
+              key="nova-sheet"
               role="dialog"
               aria-modal="true"
-              aria-label="Mitron safety assistant"
+              aria-label="Nova safety assistant"
               style={{ y, touchAction: "pan-y", willChange: "transform" }}
               transition={spring}
               drag="y"
@@ -425,9 +425,9 @@ export function MitronChat() {
                 <Avatar />
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-base font-bold leading-tight text-white">Mitron</p>
+                  <p className="text-base font-bold leading-tight text-white">Nova</p>
                   <p className="truncate text-xs text-[#c4b5fd]">
-                    {t("sahayak_online")} · {t("sahayak_status")}
+                    {t("nova_online")} · {t("nova_status")}
                   </p>
                 </div>
 
@@ -446,7 +446,7 @@ export function MitronChat() {
                 <button
                   type="button"
                   onClick={close}
-                  aria-label="Close Mitron"
+                  aria-label="Close Nova"
                   className="flex h-9 w-9 items-center justify-center rounded-full text-slate-300 transition hover:bg-white/10 hover:text-white"
                 >
                   <X className="h-5 w-5" aria-hidden />
@@ -572,8 +572,8 @@ export function MitronChat() {
                       value={draft}
                       onChange={(e) => setDraft(e.target.value)}
                       onKeyDown={handleComposerKey}
-                      placeholder="Ask Mitron — try “Where is the nearest shelter?”"
-                      aria-label="Message Mitron"
+                      placeholder="Ask Nova — try “Where is the nearest shelter?”"
+                      aria-label="Message Nova"
                       className="max-h-[108px] min-h-[32px] flex-1 resize-none bg-transparent py-2 text-[0.9375rem] text-white outline-none placeholder:text-[#8b7fbf]"
                     />
                   </div>
@@ -690,4 +690,4 @@ function CenterRecommendCard({
   );
 }
 
-export default MitronChat;
+export default NovaChat;

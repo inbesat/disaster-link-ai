@@ -72,3 +72,74 @@ export async function sendSMSAlert(
     };
   }
 }
+
+// ---------------------------------------------------------------------
+// Voice calls (Phase 5 · IVR fallback to FM station control rooms).
+// Same lazy client + demo-mode bypass conventions as sendSMSAlert.
+// ---------------------------------------------------------------------
+
+export type VoiceCallResult =
+  { ok: true; callSid: string } | { ok: false; error: string };
+
+export interface VoiceCallInput {
+  /** E.164 destination — the station control-room number. */
+  to: string;
+  /** The full TwiML document the call should play. */
+  twiml: string;
+  /** Absolute URL that receives call-status callbacks (optional). */
+  statusCallbackUrl?: string;
+}
+
+/**
+ * Place an outbound voice call that plays the supplied TwiML.
+ * Never throws — returns a result so callers can log/retry.
+ */
+export async function placeVoiceCall(input: VoiceCallInput): Promise<VoiceCallResult> {
+  if (isDemoMode()) {
+    console.log(`DEMO MODE: voice call bypassed (to ${input.to})`);
+    return { ok: true, callSid: "demo-bypass" };
+  }
+
+  const client = getClient();
+  if (!client) {
+    console.warn(
+      "[twilio] Voice call not placed: TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN not configured.",
+    );
+    return { ok: false, error: "Twilio not configured" };
+  }
+  if (!FROM_NUMBER) {
+    console.warn("[twilio] Voice call not placed: no TWILIO_PHONE_NUMBER configured.");
+    return { ok: false, error: "Twilio sender number not configured" };
+  }
+
+  try {
+    const call = await client.calls.create({
+      to: input.to,
+      from: FROM_NUMBER,
+      twiml: input.twiml,
+      ...(input.statusCallbackUrl
+        ? {
+            statusCallback: input.statusCallbackUrl,
+            statusCallbackEvent: [
+              "initiated",
+              "ringing",
+              "answered",
+              "completed",
+              "busy",
+              "failed",
+              "no-answer",
+            ] as const,
+            statusCallbackMethod: "POST" as const,
+          }
+        : {}),
+    });
+    console.log(`[twilio] Voice call placed (sid=${call.sid}) to ${input.to}`);
+    return { ok: true, callSid: call.sid };
+  } catch (error) {
+    console.error("[twilio] Voice call failed:", error);
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}

@@ -7,6 +7,12 @@
 // ("preferred_lang"). Covers English + the 22 scheduled languages of
 // India (Eighth Schedule). Missing keys fall back to the English string
 // (and finally to the key itself).
+//
+// Bundle strategy: only the English dictionary is statically imported
+// (it doubles as the type source and the fallback). The other 22
+// dictionaries are lazy webpack chunks loaded on first use, so a citizen
+// who only ever reads Hindi never downloads the other 21 languages, and
+// every translated page compiles 22 fewer JSON modules.
 // ---------------------------------------------------------------------
 
 import {
@@ -19,28 +25,6 @@ import {
   type ReactNode,
 } from "react";
 import en from "@/locales/en.json";
-import as from "@/locales/as.json";
-import bn from "@/locales/bn.json";
-import brx from "@/locales/brx.json";
-import doi from "@/locales/doi.json";
-import gu from "@/locales/gu.json";
-import hi from "@/locales/hi.json";
-import kn from "@/locales/kn.json";
-import ks from "@/locales/ks.json";
-import kok from "@/locales/kok.json";
-import mai from "@/locales/mai.json";
-import ml from "@/locales/ml.json";
-import mni from "@/locales/mni.json";
-import mr from "@/locales/mr.json";
-import ne from "@/locales/ne.json";
-import or from "@/locales/or.json";
-import pa from "@/locales/pa.json";
-import sa from "@/locales/sa.json";
-import sat from "@/locales/sat.json";
-import sd from "@/locales/sd.json";
-import ta from "@/locales/ta.json";
-import te from "@/locales/te.json";
-import ur from "@/locales/ur.json";
 import { isLocale, type Locale } from "@/lib/i18n/locales";
 
 // Re-export the canonical types from the shared registry so existing
@@ -50,34 +34,49 @@ export { isLocale, LOCALE_CODES as LOCALES, type Locale } from "@/lib/i18n/local
 /** The known translation keys — derived from the English dictionary. */
 export type TranslationKey = keyof typeof en;
 
+type Dict = Record<string, string>;
+
 const STORAGE_KEY = "preferred_lang";
 const FALLBACK_LOCALE: Locale = "en";
 
-const dictionaries = {
-  en,
-  as,
-  bn,
-  brx,
-  doi,
-  gu,
-  hi,
-  kn,
-  ks,
-  kok,
-  mai,
-  ml,
-  mni,
-  mr,
-  ne,
-  or,
-  pa,
-  sa,
-  sat,
-  sd,
-  ta,
-  te,
-  ur,
-} as Record<Locale, Record<string, string>>;
+/** Per-locale async loaders — each non-English dict is its own chunk. */
+const loaders: Record<Locale, () => Promise<Dict>> = {
+  en: () => Promise.resolve(en),
+  as: () => import("@/locales/as.json").then((m) => m.default as Dict),
+  bn: () => import("@/locales/bn.json").then((m) => m.default as Dict),
+  brx: () => import("@/locales/brx.json").then((m) => m.default as Dict),
+  doi: () => import("@/locales/doi.json").then((m) => m.default as Dict),
+  gu: () => import("@/locales/gu.json").then((m) => m.default as Dict),
+  hi: () => import("@/locales/hi.json").then((m) => m.default as Dict),
+  kn: () => import("@/locales/kn.json").then((m) => m.default as Dict),
+  ks: () => import("@/locales/ks.json").then((m) => m.default as Dict),
+  kok: () => import("@/locales/kok.json").then((m) => m.default as Dict),
+  mai: () => import("@/locales/mai.json").then((m) => m.default as Dict),
+  ml: () => import("@/locales/ml.json").then((m) => m.default as Dict),
+  mni: () => import("@/locales/mni.json").then((m) => m.default as Dict),
+  mr: () => import("@/locales/mr.json").then((m) => m.default as Dict),
+  ne: () => import("@/locales/ne.json").then((m) => m.default as Dict),
+  or: () => import("@/locales/or.json").then((m) => m.default as Dict),
+  pa: () => import("@/locales/pa.json").then((m) => m.default as Dict),
+  sa: () => import("@/locales/sa.json").then((m) => m.default as Dict),
+  sat: () => import("@/locales/sat.json").then((m) => m.default as Dict),
+  sd: () => import("@/locales/sd.json").then((m) => m.default as Dict),
+  ta: () => import("@/locales/ta.json").then((m) => m.default as Dict),
+  te: () => import("@/locales/te.json").then((m) => m.default as Dict),
+  ur: () => import("@/locales/ur.json").then((m) => m.default as Dict),
+};
+
+/** Module-level memo so each dictionary is fetched at most once. */
+const loaded: Partial<Record<Locale, Dict>> = { en };
+
+function loadDict(code: Locale): Promise<Dict> {
+  const cached = loaded[code];
+  if (cached) return Promise.resolve(cached);
+  return loaders[code]().then((dict) => {
+    loaded[code] = dict;
+    return dict;
+  });
+}
 
 type LanguageContextValue = {
   language: Locale;
@@ -92,10 +91,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   // Server renders "en" (matches SSR HTML → no hydration mismatch). The
   // stored preference is applied right after mount.
   const [language, setLanguageState] = useState<Locale>(FALLBACK_LOCALE);
+  const [dictionaries, setDictionaries] = useState<Partial<Record<Locale, Dict>>>({ en });
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (isLocale(stored)) setLanguageState(stored);
+    if (isLocale(stored) && stored !== "en") {
+      setLanguageState(stored);
+      void loadDict(stored).then((dict) =>
+        setDictionaries((prev) => (prev[stored] === dict ? prev : { ...prev, [stored]: dict })),
+      );
+    }
   }, []);
 
   const setLanguage = useCallback((lang: Locale) => {
@@ -103,15 +108,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (typeof window !== "undefined") {
       window.localStorage.setItem(STORAGE_KEY, lang);
     }
+    if (lang !== "en") {
+      // Kick off the lazy fetch; the UI keeps working via English fallback
+      // (or the previous dict) until the chunk arrives.
+      void loadDict(lang).then((dict) =>
+        setDictionaries((prev) => (prev[lang] === dict ? prev : { ...prev, [lang]: dict })),
+      );
+    }
   }, []);
 
   const t = useCallback(
     (key: TranslationKey): string => {
-      const active = dictionaries[language];
-      const english = dictionaries.en;
-      return active[key] ?? english[key] ?? key;
+      const active = dictionaries[language] ?? dictionaries.en;
+      return active?.[key] ?? en[key] ?? key;
     },
-    [language],
+    [language, dictionaries],
   );
 
   const value = useMemo(

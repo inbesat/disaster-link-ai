@@ -1,4 +1,4 @@
-# 🚨 Test the Disaster Response Platform — Friend-Friendly Guide
+# 🚨 Test the SafeSphere Platform — Friend-Friendly Guide
 
 This guide turns the technical QA checklist into plain-language steps.
 You don't need to know any code to run these. Just follow the steps and tick ✅
@@ -230,14 +230,14 @@ together like a team to plan a response.
 
 ---
 
-# Section D — Public AI Assistant "Mitron"
+# Section D — Public AI Assistant "Nova"
 *What this is:* a friendly AI helper for ordinary citizens in the app's bottom sheet.
 
 **Tester's tool:** Mobile.
 **Log in as:** Public citizen (or without login).
 
 1. **D1 — Open `/public/ai?q=hello` (or just `/public/ai`).**
-   *Passes when:* "Mitron" chat opens from the bottom (~60% height) and you can
+   *Passes when:* "Nova" chat opens from the bottom (~60% height) and you can
    swipe/drag it to full screen.
 
 2. **D2 — Tap "What should I pack?"**.
@@ -258,7 +258,7 @@ together like a team to plan a response.
    *Passes when:* a ~1.2 second canned response plays instead — and no crash.
 
 7. **D7 — Language preference.** Set your language (e.g. Hindi) in the settings.
-   *Passes when:* Mitron answers in that language.
+   *Passes when:* Nova answers in that language.
 
 8. **D8 — Offline mode.** Turn off Wi-Fi and ask a question.
    *Passes when:* a "Limited responses" badge appears and a local FAQ still answers.
@@ -739,7 +739,7 @@ together like a team to plan a response.
 **Tester's tool:** Laptop; O9 on Mobile.
 
 1. **O1 — Open `/`.**
-   *Passes when:* title "Disaster Response Intelligence…" and a full hero section.
+   *Passes when:* title "SafeSphere…" and a full hero section.
 
 2. **O2 — Sign In button.**
    *Passes when:* click → `/login`.

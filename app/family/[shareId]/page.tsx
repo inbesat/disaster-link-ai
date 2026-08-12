@@ -90,7 +90,7 @@ export default function FamilySharePage({ params }: { params: { shareId: string 
           href="/"
           className="mt-6 rounded-xl border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-white/40"
         >
-          Go to Bharat Shakti
+          Go to SafeSphere
         </Link>
       </main>
     );
@@ -152,7 +152,7 @@ export default function FamilySharePage({ params }: { params: { shareId: string 
         <footer className="mt-10 text-center">
           <p className="text-[0.8125rem] leading-relaxed text-[var(--dl-text-muted)]">
             This page is read-only. It updates when {citizen.name.split(" ")[0]} marks
-            their safety status in the Bharat Shakti app.
+            their safety status in the SafeSphere app.
           </p>
           <a
             href="tel:1070"

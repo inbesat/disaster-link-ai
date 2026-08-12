@@ -18,7 +18,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, Home, Monitor, ShieldCheck } from "lucide-react";
+import { ChevronLeft, Home, Monitor, RadioTower, ShieldCheck } from "lucide-react";
 import AdminLoginModal from "@/components/demo/AdminLoginModal";
 import PublicLoginModal from "@/components/demo/PublicLoginModal";
 
@@ -117,7 +117,7 @@ export default function DemoLandingPage() {
                 Experience the Public Safety App
               </span>
               <span className="mt-5 flex flex-wrap gap-2">
-                {["Safe routes", "SOS + family", "Mitron AI"].map((chip) => (
+                {["Safe routes", "SOS + family", "Nova AI"].map((chip) => (
                   <span
                     key={chip}
                     className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[0.6875rem] font-semibold text-[var(--dl-text-on-navy)]"
@@ -129,6 +129,35 @@ export default function DemoLandingPage() {
             </span>
           </button>
         </div>
+
+        {/* Phase 9/10 — FM Broadcast Simulator door */}
+        <Link
+          href="/demo/fm-broadcast"
+          className={`${cardBase} mt-5 min-h-0 flex-row items-center border-amber-400/40 bg-gradient-to-r from-amber-500/15 via-[#0d1526] to-[var(--dl-navy-2)]/60 p-6 hover:border-amber-300/70 hover:shadow-[0_24px_60px_rgba(245,158,11,0.18)]`}
+        >
+          <span className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-400/50 bg-amber-500/15 text-amber-300 shadow-[0_0_24px_rgba(245,158,11,0.3)]">
+            <RadioTower aria-hidden="true" className="h-8 w-8" strokeWidth={2} />
+          </span>
+          <span className="relative ml-5">
+            <span className="block text-lg font-black tracking-tight text-white">
+              FM BROADCAST SIMULATOR
+            </span>
+            <span className="mt-1 block text-sm text-[var(--dl-text-muted)]">
+              Simulate an AI-voiced calamity alert reaching FM radio — CAP feed, RDS text
+              and IVR fallback, fully simulated
+            </span>
+            <span className="mt-3 flex flex-wrap gap-2">
+              {["Map of India", "Animated pipeline", "Judges' view"].map((chip) => (
+                <span
+                  key={chip}
+                  className="rounded-full border border-amber-300/20 bg-amber-400/10 px-2.5 py-1 text-[0.6875rem] font-semibold text-amber-200/90"
+                >
+                  {chip}
+                </span>
+              ))}
+            </span>
+          </span>
+        </Link>
 
         <p className="mt-8 text-center text-sm text-[var(--dl-text-muted)]">
           Want both at once?{" "}

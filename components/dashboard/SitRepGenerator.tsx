@@ -64,7 +64,7 @@ export default function SitRepGenerator() {
               <div id="sitrep-report" className="bg-white p-8 text-black">
                 <header className="border-b-4 border-black pb-4">
                   <p className="text-[11px] font-bold uppercase tracking-widest">
-                    Disaster Response Platform · District EOC
+                    SafeSphere Platform · District EOC
                   </p>
                   <h1 className="mt-1 text-2xl font-black print:text-black">
                     DAILY SITUATION REPORT

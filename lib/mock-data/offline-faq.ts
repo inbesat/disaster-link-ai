@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------
 // lib/mock-data/offline-faq.ts — Phase 6 · Step 6 · the Offline FAQ
-// fallback for the Sahayak safety companion.
+// fallback for the Nova safety companion.
 //
 // When cellular towers are down the AI must still answer the five most
 // common safety questions. This is the mock local knowledge base: five

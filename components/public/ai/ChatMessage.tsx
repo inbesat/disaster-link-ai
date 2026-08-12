@@ -2,9 +2,9 @@
 
 // ---------------------------------------------------------------------
 // components/public/ai/ChatMessage.tsx — Phase 6 · Steps 2 + 10 · the
-// WhatsApp-style message bubble for the Sahayak safety companion.
+// WhatsApp-style message bubble for the Nova safety companion.
 //
-// Sahayak must feel like a friend, not a dashboard — so messages render
+// Nova must feel like a friend, not a dashboard — so messages render
 // as soft, light WhatsApp-style bubbles on the sheet's calm dark surface:
 //
 //   • ai   → left-aligned, classic WhatsApp green (#dcf8c6), dark ink,
@@ -78,7 +78,7 @@ export function ChatMessage({ role, children, timestamp }: ChatMessageProps) {
       transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.8 }}
       className={`flex w-full items-end gap-2 ${isAI ? "justify-start" : "justify-end"}`}
     >
-      {/* Avatar — only Sahayak gets one; the user needs no face here. */}
+      {/* Avatar — only Nova gets one; the user needs no face here. */}
       {isAI && (
         <span
           aria-hidden

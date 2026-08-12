@@ -154,7 +154,7 @@ export default function Hero() {
 
           <Reveal delay={0.2}>
             <p className="text-lg text-[#C9D6EC] mt-6 max-w-xl leading-relaxed">
-              DisasterLink AI predicts disasters before they strike and delivers critical
+              SafeSphere predicts disasters before they strike and delivers critical
               alerts across 9 communication channels — FM, TV, SMS, WhatsApp, Telegram and
               village loudspeakers — reaching every citizen, even where the internet goes dark.
             </p>

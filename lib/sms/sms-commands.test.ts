@@ -85,7 +85,7 @@ describe("escapeXml + buildTwiML", () => {
 describe("reply messages", () => {
   it("STATUS reply carries district risk + nearest shelter from lite-status", () => {
     const reply = statusReplyMessage();
-    expect(reply).toContain("Bharat Shakti: Patna is under");
+    expect(reply).toContain("SafeSphere: Patna is under");
     expect(reply).toContain("Nearest shelter: Patna Central Community Hall");
     expect(reply).toContain("Call 1070 for help");
   });

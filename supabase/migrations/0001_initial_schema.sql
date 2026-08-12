@@ -1,6 +1,6 @@
 -- =====================================================================
 -- 0001_initial_schema.sql
--- Disaster Response Intelligence Platform — Base Schema
+-- SafeSphere Platform — Base Schema
 -- Target: Supabase (PostgreSQL 15+) — run in the Supabase SQL Editor
 -- Requires: PostGIS (geospatial) + pgvector (RAG embeddings)
 -- =====================================================================

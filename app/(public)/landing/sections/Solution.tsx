@@ -37,7 +37,7 @@ export default function Solution() {
               One AI platform connecting prediction, broadcast, and rescue
             </h2>
             <p className="text-[#5B6B84] mt-4 leading-relaxed">
-              DisasterLink AI unifies satellite intelligence, weather APIs, IoT sensors,
+              SafeSphere unifies satellite intelligence, weather APIs, IoT sensors,
               and government networks into a single AI-powered command center — delivering
               verified alerts through 9 redundant channels.
             </p>

@@ -12,7 +12,7 @@ test("guest reaches the command center and the flood map layer is visible", asyn
 }) => {
   // 1. Homepage loads with its hero CTA.
   await page.goto("/");
-  await expect(page).toHaveTitle(/Disaster Response Intelligence/);
+  await expect(page).toHaveTitle(/SafeSphere/);
   await expect(page.getByRole("link", { name: "Sign In" }).first()).toBeVisible();
 
   // 2. Go to the login page and enter demo guest mode.

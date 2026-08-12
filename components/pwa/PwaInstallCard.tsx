@@ -61,7 +61,7 @@ export default function PwaInstallCard() {
 
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold text-white">
-            {isInstalled ? "Bharat Shakti is installed" : "Install the app"}
+            {isInstalled ? "SafeSphere is installed" : "Install the app"}
           </p>
           <p className="mt-1 text-xs leading-relaxed text-[var(--dl-text-muted)]">
             {isInstalled

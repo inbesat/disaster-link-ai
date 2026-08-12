@@ -17,6 +17,8 @@ export interface DispatchResult {
   responseBody: string;
   /** When the station reported the broadcast (API pushes). */
   broadcastTime?: string;
+  /** Provider-side reference (Twilio CallSid for ivr) — stored in external_ref. */
+  externalRef?: string;
   /** Reason for failure (for retry + logging). */
   error?: string;
 }
@@ -56,5 +58,6 @@ export interface FmBroadcastLogDTO {
   responseBody: string | null;
   broadcastTime: string | null;
   retryCount: number;
+  externalRef: string | null;
   createdAt: string;
 }

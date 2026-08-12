@@ -109,7 +109,7 @@ export function buildTwiML(message: string): string {
 /** "STATUS" reply — current risk + nearest shelter from lite-status. */
 export function statusReplyMessage(): string {
   const s = getLiteStatus();
-  return `Bharat Shakti: ${s.district} is under ${s.riskSmsWord}. Nearest shelter: ${s.shelter.name}, ${s.shelterDistanceKm}km away. Call 1070 for help.`;
+  return `SafeSphere: ${s.district} is under ${s.riskSmsWord}. Nearest shelter: ${s.shelter.name}, ${s.shelterDistanceKm}km away. Call 1070 for help.`;
 }
 
 /** "SHELTER" reply — nearest shelter details with facilities. */
@@ -140,7 +140,7 @@ export const SAFE_FAILED_REPLY =
 
 /** Reply when the From number is not a registered citizen. */
 export const NOT_REGISTERED_REPLY =
-  "Number not registered with Bharat Shakti. Reply HELP for options.";
+  "Number not registered with SafeSphere. Reply HELP for options.";
 
 /** "HELP" / unknown-command reply. */
 export function helpReplyMessage(): string {

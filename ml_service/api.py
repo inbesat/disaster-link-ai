@@ -61,7 +61,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Disaster Response ML Engine",
+    title="SafeSphere ML Engine",
     description="XGBoost flood-risk classifier (0=Low, 1=Medium, 2=High, 3=Critical)",
     version="0.1.0",
     lifespan=lifespan,

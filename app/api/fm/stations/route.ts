@@ -3,6 +3,7 @@ import { prisma } from "@/server/prisma";
 import { requireRole } from "@/lib/security/require-role";
 import { sanitizeInput } from "@/lib/security/sanitize";
 import { serializeFmStation } from "@/lib/fm/serialize";
+import { MOCK_FM_STATIONS } from "@/lib/fm/mock-stations";
 
 export const dynamic = "force-dynamic";
 
@@ -43,8 +44,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ ok: true, stations: rows });
   } catch (error) {
+    // DB unreachable (migrations not pushed / offline) — serve the seeded
+    // demo list so the admin UI and coverage tool keep working.
     console.error("Failed to list FM stations:", error);
-    return NextResponse.json({ ok: true, stations: [], source: "mock" });
+    return NextResponse.json({ ok: true, stations: MOCK_FM_STATIONS, source: "mock" });
   }
 }
 

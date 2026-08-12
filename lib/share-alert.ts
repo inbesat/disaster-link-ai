@@ -56,6 +56,6 @@ function formatAlertText(payload: ShareAlertPayload): string {
     lines.push('', `⏰ Predicted: ${payload.predictedTime}`);
   }
   lines.push('', `🔗 ${payload.url ?? 'https://drip-platform.vercel.app'}`);
-  lines.push('', '— Disaster Response Intelligence Platform');
+  lines.push('', '— SafeSphere Platform');
   return lines.join('\n');
 }

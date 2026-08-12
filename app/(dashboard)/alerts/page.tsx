@@ -4,7 +4,7 @@ import AlertHistoryTable from "@/components/dashboard/AlertHistoryTable";
 import Translated from "@/components/ui/Translated";
 
 export const metadata: Metadata = {
-  title: "Alert History | Disaster Response",
+  title: "Alert History | SafeSphere",
 };
 
 export const dynamic = "force-dynamic";

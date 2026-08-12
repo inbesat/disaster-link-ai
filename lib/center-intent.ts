@@ -2,7 +2,7 @@
 // lib/center-intent.ts — Phase 1 · Step 8 · AI Center Recommender intent.
 //
 // Pure detector: does a citizen's message ask for a help center ("Where is
-// the nearest hospital?" / "I need police")? MitronChat runs this AFTER the
+// the nearest hospital?" / "I need police")? NovaChat runs this AFTER the
 // emergency check (an emergency intent wins over a center lookup). When a
 // center type is matched, the chat renders a UI card from the Step 4
 // Center Directory data (lib/mock-data/help-centers) instead of text.

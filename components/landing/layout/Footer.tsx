@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Shield,
   Phone,
   Mail,
   Code,
@@ -10,6 +9,7 @@ import {
   Camera,
   Briefcase,
 } from "lucide-react";
+import Logo from "@/components/ui/Logo";
 
 export default function Footer() {
   return (
@@ -19,10 +19,8 @@ export default function Footer() {
           {/* Brand Column */}
           <div>
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#F97316] flex items-center justify-center">
-                <Shield className="text-white" size={18} />
-              </div>
-              <span className="text-white font-bold text-lg">DisasterLink AI</span>
+              <Logo className="h-9 w-9" />
+              <span className="text-white font-bold text-lg">SafeSphere</span>
             </div>
             <p className="text-sm text-[#C9D6EC]/70 leading-relaxed mb-6">
               AI-powered disaster management and last-mile emergency communication — built
@@ -149,7 +147,7 @@ export default function Footer() {
               <div className="flex items-center gap-2">
                 <Mail size={14} className="text-white/40" />
                 <span className="text-sm text-[#C9D6EC]/70">
-                  disasterlink095@gmail.com
+                  safesphere095@gmail.com
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -170,7 +168,7 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-[#C9D6EC]/40">
           <div>
-            © 2026 DisasterLink AI. Built for Smart India Hackathon. All data shown is
+            © 2026 SafeSphere. Built for Smart India Hackathon. All data shown is
             simulated for demonstration.
           </div>
           <div>Designed for public safety, accessibility & trust.</div>

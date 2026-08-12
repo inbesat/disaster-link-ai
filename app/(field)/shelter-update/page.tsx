@@ -5,7 +5,7 @@ import FieldOccupancyUpdater, {
 } from "@/components/field/FieldOccupancyUpdater";
 
 export const metadata: Metadata = {
-  title: "Shelter Check-In · Field Responder | Disaster Response",
+  title: "Shelter Check-In · Field Responder | SafeSphere",
 };
 
 export const dynamic = "force-dynamic";

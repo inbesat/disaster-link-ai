@@ -54,7 +54,7 @@ export class EmailStudioStrategy implements FMDispatchStrategy {
     try {
       const subject = `${SUBJECT_PREFIX} ${context.headline}`;
       const info = await transporter.sendMail({
-        from: process.env.FM_EMAIL_FROM ?? "disasterlink@ddma.gov.in",
+        from: process.env.FM_EMAIL_FROM ?? "safesphere@ddma.gov.in",
         to,
         subject,
         text: buildEmailBody(station, context),
@@ -127,7 +127,7 @@ function buildEmailBody(
     ``,
     `Instructions: ${context.capAlert.capXml ? extractInstruction(context.capAlert.capXml) : ""}`,
     ``,
-    `This is an automated emergency dispatch from DisasterLink AI (District Disaster Management Authority).`,
+    `This is an automated emergency dispatch from SafeSphere (District Disaster Management Authority).`,
   ].join("\n");
 }
 

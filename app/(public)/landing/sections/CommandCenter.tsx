@@ -24,7 +24,7 @@ export default function CommandCenter() {
         <SectionHead
           onNavy={true}
           center={true}
-          title="Inside the DisasterLink AI Command Center"
+          title="Inside the SafeSphere Command Center"
           subtitle="Real-time detection, prediction, and response coordination — all in one unified intelligence platform."
         />
 

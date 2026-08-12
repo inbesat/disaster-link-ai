@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  Shield,
   Menu,
   X,
   ArrowRight,
@@ -15,6 +14,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import Logo from "@/components/ui/Logo";
 
 const NAV_LINKS = [
   { label: "Platform", href: "#platform", icon: Cpu },
@@ -85,11 +85,9 @@ export default function Navbar() {
         {/* Left: brand */}
         <div className="navbar-start w-auto">
           <a href="#hero" className="flex items-center gap-3 group">
-            <span className="relative w-9 h-9 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#F97316] flex items-center justify-center shadow-md transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110">
-              <Shield size={18} className="text-white" aria-hidden="true" />
-            </span>
+            <Logo className="h-8 w-8 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
             <span className="hidden sm:block text-white font-bold text-lg tracking-tight font-[family-name:var(--font-display)]">
-              DisasterLink{" "}
+              SafeSphere{" "}
               <span className="bg-gradient-to-r from-[#5B8DF6] to-[#F97316] bg-clip-text text-transparent">
                 AI
               </span>

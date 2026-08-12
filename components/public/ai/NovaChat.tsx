@@ -1,10 +1,10 @@
 "use client";
 
 // ---------------------------------------------------------------------
-// components/public/ai/SahayakChat.tsx — Phase 6 · Steps 1–2 · the
+// components/public/ai/NovaChat.tsx — Phase 6 · Steps 1–2 · the
 // Public AI Safety Assistant shell.
 //
-// Sahayak ("helper") is the citizen's calm safety companion — it must
+// Nova ("helper") is the citizen's calm safety companion — it must
 // feel like a friend in the same room, not a tool in a dashboard. So:
 //
 //   • A friendly pill FAB floats bottom-right on every /public page and
@@ -20,7 +20,7 @@
 // gate: the companion lives on every screen size.
 //
 // The composer below is a MOCK: it appends the user's words and replies
-// with a calm canned answer (t("sahayak_reply")) after a short typing
+// with a calm canned answer (t("nova_reply")) after a short typing
 // pause so the demo never dead-ends. Later Phase 6 steps swap this for
 // real guidance. Above the input sits the Step 3 panic-proof QuickPrompts
 // row (each intent gets its own canned reply), and the Step 4 VoiceInput
@@ -80,7 +80,7 @@ type ChatEntry = {
   timestamp: string;
 };
 
-export function SahayakChat() {
+export function NovaChat() {
   const { t, language } = useTranslation();
   const reduceMotion = useReducedMotion();
   // Phase 6 · Step 6 — live connectivity (hydrates safe: online on first
@@ -139,7 +139,7 @@ export function SahayakChat() {
       {
         id: "welcome",
         role: "ai",
-        content: t("sahayak_welcome"),
+        content: t("nova_welcome"),
         timestamp: nowTime(),
       },
     ]);
@@ -258,7 +258,7 @@ export function SahayakChat() {
           // Inline the type check so TS narrows `answer` correctly.
           ...(typeof answer === "object"
             ? { card: answer }
-            : { content: answer ?? t("sahayak_reply") }),
+            : { content: answer ?? t("nova_reply") }),
           timestamp: nowTime(),
         },
       ]);
@@ -309,7 +309,7 @@ export function SahayakChat() {
             ref={fabRef}
             type="button"
             onClick={openSheet}
-            aria-label={t("sahayak_open")}
+            aria-label={t("nova_open")}
             initial={{ opacity: 0, scale: 0.8, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 12 }}
@@ -326,7 +326,7 @@ export function SahayakChat() {
                 className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-[#a7f3d0] ring-2 ring-[#16a34a]/60"
               />
             </span>
-            <span className="text-sm font-bold tracking-wide">Sahayak</span>
+            <span className="text-sm font-bold tracking-wide">Nova</span>
           </motion.button>
         )}
       </AnimatePresence>
@@ -337,7 +337,7 @@ export function SahayakChat() {
             {/* Dim the page behind the sheet so the conversation is the
                 only thing in the room. */}
             <motion.div
-              key="sahayak-backdrop"
+              key="nova-backdrop"
               aria-hidden
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -348,10 +348,10 @@ export function SahayakChat() {
             />
 
             <motion.section
-              key="sahayak-sheet"
+              key="nova-sheet"
               role="dialog"
               aria-modal="true"
-              aria-label="Sahayak safety assistant"
+              aria-label="Nova safety assistant"
               style={{ y, touchAction: "pan-y", willChange: "transform" }}
               transition={spring}
               drag="y"
@@ -385,9 +385,9 @@ export function SahayakChat() {
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-base font-bold leading-tight text-white">Sahayak</p>
+                  <p className="text-base font-bold leading-tight text-white">Nova</p>
                   <p className="truncate text-xs text-[#7dd3a8]">
-                    {t("sahayak_online")} · {t("sahayak_status")}
+                    {t("nova_online")} · {t("nova_status")}
                   </p>
                 </div>
 
@@ -405,7 +405,7 @@ export function SahayakChat() {
                 </IconButton>
 
                 <IconButton
-                  label={t("sahayak_close")}
+                  label={t("nova_close")}
                   variant="ghost"
                   size="sm"
                   onClick={close}
@@ -510,8 +510,8 @@ export function SahayakChat() {
                       value={draft}
                       onChange={(e) => setDraft(e.target.value)}
                       onKeyDown={handleComposerKey}
-                      placeholder={t("sahayak_placeholder")}
-                      aria-label={t("sahayak_placeholder")}
+                      placeholder={t("nova_placeholder")}
+                      aria-label={t("nova_placeholder")}
                       className="max-h-[108px] min-h-[32px] flex-1 resize-none bg-transparent py-2.5 text-[0.9375rem] text-white outline-none placeholder:text-[#7f96ad]"
                     />
                   </div>
@@ -519,7 +519,7 @@ export function SahayakChat() {
                     type="button"
                     onClick={handleSend}
                     disabled={!draft.trim() || typing}
-                    aria-label={t("sahayak_send")}
+                    aria-label={t("nova_send")}
                     whileTap={{ scale: 0.92 }}
                     className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399] disabled:cursor-not-allowed disabled:opacity-35"
                   >
@@ -544,4 +544,4 @@ export function SahayakChat() {
   );
 }
 
-export default SahayakChat;
+export default NovaChat;

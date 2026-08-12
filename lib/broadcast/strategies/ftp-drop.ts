@@ -3,7 +3,7 @@
 //
 // For legacy stations whose automation software (Zetta, Rivendell, …)
 // polls a watch folder. Uploads the voiced MP3 to the station's FTP server
-// under `/emergency/` with the DISASTERLINK_{alertId}_{timestamp}.mp3
+// under `/emergency/` with the SAFESPHERE_{alertId}_{timestamp}.mp3
 // filename, then uploads the CAP XML alongside it so the automation can
 // pair the audio with the alert metadata.
 //
@@ -71,7 +71,7 @@ export class FtpDropStrategy implements FMDispatchStrategy {
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "").slice(0, 15);
     const safeAlertId = context.alertId.replace(/[^a-zA-Z0-9_-]/g, "");
-    const base = `DISASTERLINK_${safeAlertId}_${timestamp}`;
+    const base = `SAFESPHERE_${safeAlertId}_${timestamp}`;
 
     const client = new Client();
     client.ftp.verbose = false;

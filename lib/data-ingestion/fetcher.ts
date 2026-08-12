@@ -1,7 +1,7 @@
 import { prisma } from "@/server/prisma";
 
 // ---------------------------------------------------------------------
-// Resilient data fetcher for the Disaster Response Platform.
+// Resilient data fetcher for the SafeSphere Platform.
 //
 // getSafeWeatherData() tries the live internal routes first, validates
 // the results, and falls back to deterministic synthetic data so the
@@ -46,7 +46,12 @@ function coordinateLabel(lat: number, lng: number) {
   return `${la}, ${lo}`;
 }
 
-function nearestDistrict(lat: number, lng: number) {
+/**
+ * Resolve the nearest known demo district for a coordinate (or a readable
+ * coordinate label when the point isn't near one). Exported so the ML
+ * bridge (lib/ml-client.ts) can drive the Phase 7 FM automation hook.
+ */
+export function nearestDistrict(lat: number, lng: number) {
   let best: (typeof DEMO_DISTRICTS)[number] = DEMO_DISTRICTS[0];
   let bestDistance = Infinity;
   for (const district of DEMO_DISTRICTS) {

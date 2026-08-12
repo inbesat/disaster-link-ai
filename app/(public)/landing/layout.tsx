@@ -14,7 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DisasterLink AI — AI-Powered Disaster Management Platform",
+  title: "SafeSphere — AI-Powered Disaster Management Platform",
 };
 
 export default function LandingLayout({ children }: { children: React.ReactNode }) {

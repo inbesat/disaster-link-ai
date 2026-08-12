@@ -1,4 +1,4 @@
-# 🎤 DEMO DAY CHECKLIST — Disaster Response Intelligence Platform
+# 🎤 DEMO DAY CHECKLIST — SafeSphere Platform
 
 **Goal:** a flawless 6-minute walkthrough that ends on Admin Analytics with the judges saying "where do I sign up?"
 **Demo geography:** Patna (Ganga) · Bharat Shakti Hackathon · Track: AI for Society · PS3

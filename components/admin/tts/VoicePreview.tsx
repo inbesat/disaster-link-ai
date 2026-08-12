@@ -9,9 +9,10 @@
 // MP3 URL and the exact spoken script, and offers a download.
 // ---------------------------------------------------------------------
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
+  Activity,
   Download,
   Loader2,
   Play,
@@ -50,10 +51,14 @@ const DISASTER_TYPES: { value: DisasterType; label: string }[] = [
 ];
 
 const TEMPLATE_DRAFTS: Record<DisasterType, string> = {
-  flood: "Heavy rainfall has caused the Ganga to cross the danger mark. Residents of riverside wards should move to higher ground immediately.",
-  cyclone: "Cyclone Remal is approaching the coast with wind speeds of 120 km/h. Stay indoors and secure loose objects.",
-  earthquake: "A seismic event of magnitude 6.2 has been detected. Drop, cover and hold on until the shaking stops.",
-  heatwave: "Extreme heatwave conditions are forecast with temperatures reaching 47°C. Avoid outdoor activity between 11 AM and 4 PM.",
+  flood:
+    "Heavy rainfall has caused the Ganga to cross the danger mark. Residents of riverside wards should move to higher ground immediately.",
+  cyclone:
+    "Cyclone Remal is approaching the coast with wind speeds of 120 km/h. Stay indoors and secure loose objects.",
+  earthquake:
+    "A seismic event of magnitude 6.2 has been detected. Drop, cover and hold on until the shaking stops.",
+  heatwave:
+    "Extreme heatwave conditions are forecast with temperatures reaching 47°C. Avoid outdoor activity between 11 AM and 4 PM.",
 };
 
 interface GenerateResult {
@@ -78,13 +83,102 @@ export default function VoicePreview() {
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [playing, setPlaying] = useState(false);
+  const [waveform, setWaveform] = useState<number[] | null>(null);
+  const [progress, setProgress] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const stopPlayback = useCallback(() => {
     audioRef.current?.pause();
     audioRef.current = null;
     setPlaying(false);
+    setProgress(0);
   }, []);
+
+  /**
+   * Decode the generated audio into per-bucket peak amplitudes so the
+   * waveform bars mirror the actual voiced alert (Web Audio, no libs).
+   */
+  async function computeWaveformPeaks(src: string): Promise<number[] | null> {
+    try {
+      const response = await fetch(src);
+      const arrayBuffer = await response.arrayBuffer();
+      const AudioCtx =
+        window.AudioContext ??
+        (window as unknown as { webkitAudioContext?: typeof AudioContext })
+          .webkitAudioContext;
+      if (!AudioCtx) return null;
+      const ctx = new AudioCtx();
+      try {
+        const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+        const channel = audioBuffer.getChannelData(0);
+        const BUCKETS = 96;
+        const step = Math.max(1, Math.floor(channel.length / BUCKETS));
+        const peaks: number[] = [];
+        for (let i = 0; i < BUCKETS; i += 1) {
+          let max = 0;
+          const start = i * step;
+          const end = Math.min(start + step, channel.length);
+          for (let j = start; j < end; j += 1) {
+            const value = Math.abs(channel[j]);
+            if (value > max) max = value;
+          }
+          peaks.push(max);
+        }
+        return peaks;
+      } finally {
+        void ctx.close();
+      }
+    } catch {
+      return null;
+    }
+  }
+
+  // Rebuild the waveform whenever a new alert is generated.
+  useEffect(() => {
+    let cancelled = false;
+    setWaveform(null);
+    setProgress(0);
+    const src = result?.audioUrl ?? result?.audioDataUri;
+    if (!src) {
+      setWaveform([]);
+      return;
+    }
+    void computeWaveformPeaks(src).then((peaks) => {
+      if (!cancelled) setWaveform(peaks ?? []);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [result]);
+
+  // Redraw the waveform bars when peaks or playback progress change.
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !waveform || waveform.length === 0) return;
+    const dpr = window.devicePixelRatio || 1;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    if (width === 0 || height === 0) return;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    context.scale(dpr, dpr);
+    context.clearRect(0, 0, width, height);
+
+    const barWidth = Math.max(2, width / waveform.length - 2);
+    const mid = height / 2;
+    waveform.forEach((value, index) => {
+      const barHeight = Math.max(2, Math.min(1, value) * (height - 8));
+      const x = (index * width) / waveform.length + 1;
+      const played = index / waveform.length <= progress;
+      context.fillStyle = played
+        ? "rgba(251, 191, 36, 0.9)" // amber-400 — played portion
+        : "rgba(30, 41, 59, 0.9)"; // slate-800 — pending portion
+      context.fillRect(x, mid - barHeight / 2, barWidth, barHeight);
+    });
+  }, [waveform, progress]);
 
   async function generate() {
     setGenerating(true);
@@ -140,12 +234,19 @@ export default function VoicePreview() {
     await new Promise<void>((resolve) => {
       const audio = new Audio(voiceSrc);
       audioRef.current = audio;
+      audio.addEventListener("timeupdate", () => {
+        if (audio.duration && Number.isFinite(audio.duration)) {
+          setProgress(audio.currentTime / audio.duration);
+        }
+      });
       audio.onended = () => {
         setPlaying(false);
+        setProgress(0);
         resolve();
       };
       audio.onerror = () => {
         setPlaying(false);
+        setProgress(0);
         resolve();
       };
       void audio.play();
@@ -289,19 +390,25 @@ export default function VoicePreview() {
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-3">
               <div className="rounded-md bg-[#0a0f1a] p-3">
-                <p className="text-[0.6875rem] uppercase tracking-wider text-slate-500">Provider</p>
+                <p className="text-[0.6875rem] uppercase tracking-wider text-slate-500">
+                  Provider
+                </p>
                 <p className="mt-1 text-sm font-semibold capitalize text-foreground">
                   {result.provider}
                 </p>
               </div>
               <div className="rounded-md bg-[#0a0f1a] p-3">
-                <p className="text-[0.6875rem] uppercase tracking-wider text-slate-500">Duration</p>
+                <p className="text-[0.6875rem] uppercase tracking-wider text-slate-500">
+                  Duration
+                </p>
                 <p className="mt-1 text-sm font-semibold text-foreground">
                   {result.durationSec.toFixed(1)} s
                 </p>
               </div>
               <div className="rounded-md bg-[#0a0f1a] p-3">
-                <p className="text-[0.6875rem] uppercase tracking-wider text-slate-500">Cache</p>
+                <p className="text-[0.6875rem] uppercase tracking-wider text-slate-500">
+                  Cache
+                </p>
                 <p className="mt-1 flex items-center gap-1 text-sm font-semibold text-foreground">
                   {result.cached ? (
                     <>
@@ -314,6 +421,28 @@ export default function VoicePreview() {
                   )}
                 </p>
               </div>
+            </div>
+
+            <div className="rounded-md border border-[#1c2740] bg-[#0a0f1a] p-3">
+              <div className="flex items-center justify-between">
+                <p className="flex items-center gap-1.5 text-[0.6875rem] uppercase tracking-wider text-slate-500">
+                  <Activity className="h-3 w-3" /> Waveform
+                </p>
+                {waveform === null ? (
+                  <span className="text-[0.6875rem] text-slate-600">
+                    Analyzing audio…
+                  </span>
+                ) : waveform.length === 0 ? (
+                  <span className="text-[0.6875rem] text-slate-600">Unavailable</span>
+                ) : null}
+              </div>
+              {waveform && waveform.length > 0 ? (
+                <canvas
+                  ref={canvasRef}
+                  className="mt-2 h-16 w-full"
+                  aria-label="Alert audio waveform"
+                />
+              ) : null}
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -339,7 +468,9 @@ export default function VoicePreview() {
               <p className="flex items-center gap-1.5 text-[0.6875rem] uppercase tracking-wider text-slate-500">
                 <FileText className="h-3 w-3" /> Spoken Script
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-slate-300">{result.script}</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-300">
+                {result.script}
+              </p>
             </div>
           </div>
         )}

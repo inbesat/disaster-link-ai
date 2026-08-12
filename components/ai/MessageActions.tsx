@@ -76,7 +76,7 @@ export default function MessageActions({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Bharat Shakti Emergency Plan",
+          title: "SafeSphere Emergency Plan",
           text: markdown,
         });
         return;

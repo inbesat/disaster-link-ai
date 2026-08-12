@@ -18,7 +18,7 @@ const baseRequest = (overrides: Partial<AlertVoiceRequest> = {}): AlertVoiceRequ
 describe("buildAlertScript (Phase 26)", () => {
   it("prepends the emergency intro", () => {
     const script = buildAlertScript(baseRequest());
-    expect(script).toContain("emergency alert from DisasterLink AI");
+    expect(script).toContain("emergency alert from SafeSphere");
     expect(script).toContain("District Disaster Management Authority");
   });
 
@@ -62,7 +62,7 @@ describe("buildAlertScript (Phase 26)", () => {
 
   it("orders the segments: intro → severity → core → actions", () => {
     const script = buildAlertScript(baseRequest());
-    const introAt = script.indexOf("DisasterLink AI");
+    const introAt = script.indexOf("SafeSphere");
     const severityAt = script.indexOf("critical emergency");
     const coreAt = script.indexOf("Heavy rainfall has caused");
     const actionsAt = script.indexOf("Move to higher ground");

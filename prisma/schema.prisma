@@ -1,4 +1,4 @@
-// Prisma schema for the Disaster Response Intelligence Platform
+// Prisma schema for the SafeSphere Platform
 // Mirrors supabase/migrations/0001_initial_schema.sql exactly.
 
 generator client {
@@ -99,9 +99,62 @@ model DisasterEvent {
   emergencyDocuments  EmergencyDocument[]
   emergencyPlans      EmergencyPlan[]
   capAlerts           CapAlert[]
+  fmApprovalRequests  FmApprovalRequest[]
 
   @@index([district]) // RLS scoping + district dashboards
   @@map("disaster_events")
+}
+
+// ---------------------------------------------------------------------
+// alert_rules_fm (Phase 7) — per-district FM broadcast automation rules.
+// Evaluated by lib/broadcast/auto-trigger.ts when a prediction escalates:
+// district 'all' = every district, disaster_type 'all' = every hazard.
+// ---------------------------------------------------------------------
+model AlertRuleFm {
+  id                   String   @id @default(uuid()) @db.Uuid
+  district             String // district name or 'all'
+  disasterType         String   @map("disaster_type") // flood | cyclone | earthquake | heatwave | all
+  triggerSeverity      String   @map("trigger_severity") // warning | critical
+  autoBroadcast        Boolean  @default(false) @map("auto_broadcast")
+  targetLanguages      String[] @default(["hi", "en"]) @map("target_languages")
+  fmRadiusKm           Int      @default(50) @map("fm_radius_km")
+  rdsEnabled           Boolean  @default(true) @map("rds_enabled")
+  ivrFallbackEnabled   Boolean  @default(true) @map("ivr_fallback_enabled")
+  isActive             Boolean  @default(true) @map("is_active")
+  createdBy            String?  @map("created_by") @db.Uuid
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([district, disasterType])
+  @@map("alert_rules_fm")
+}
+
+// ---------------------------------------------------------------------
+// fm_approval_requests (Phase 7) — human-in-the-loop broadcast queue.
+// Created when a rule has auto_broadcast=false (or the broadcast rate
+// limit is hit); auto-approves after auto_approve_after_seconds.
+// ---------------------------------------------------------------------
+model FmApprovalRequest {
+  id                      String         @id @default(uuid()) @db.Uuid
+  disasterEventId         String?        @map("disaster_event_id") @db.Uuid
+  disasterEvent           DisasterEvent? @relation(fields: [disasterEventId], references: [id], onDelete: SetNull)
+  district                String
+  disasterType            String         @map("disaster_type")
+  severity                String // warning | critical
+  message                 String // AI voice-preview script
+  rdsText                 String         @map("rds_text")
+  stationsCount           Int            @default(0) @map("stations_count")
+  status                  String         @default("pending") // pending | approved | rejected
+  autoApproveAfterSeconds Int            @default(180) @map("auto_approve_after_seconds")
+  decidedBy               String?        @map("decided_by") @db.Uuid
+  decidedAt               DateTime?      @map("decided_at") @db.Timestamptz
+  capAlertId              String?        @map("cap_alert_id")
+  createdAt               DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt               DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([status, createdAt])
+  @@index([disasterEventId])
+  @@map("fm_approval_requests")
 }
 
 // ---------------------------------------------------------------------
@@ -612,6 +665,9 @@ model FmBroadcastLog {
   broadcastTime  DateTime? @map("broadcast_time") @db.Timestamptz
   retryCount     Int       @default(0) @map("retry_count")
   testMode       Boolean   @default(false) @map("test_mode")
+  // Phase 5 · IVR fallback — the Twilio CallSid for the control-room call,
+  // matched by the /api/webhooks/twilio/call-status callback.
+  externalRef    String?   @map("external_ref")
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
 
   @@index([capAlertId])
@@ -655,6 +711,7 @@ model CapAlert {
   disasterEventId  String?   @map("disaster_event_id") @db.Uuid
   disasterEvent    DisasterEvent? @relation(fields: [disasterEventId], references: [id], onDelete: SetNull)
   capXml           String    @map("cap_xml")
+  capHash          String?   @map("cap_hash") // Phase 8 · SHA-256 tamper-proofing digest
   audioUrl         String?   @map("audio_url")
   language         String?
   severity         String?

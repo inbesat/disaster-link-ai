@@ -416,7 +416,7 @@ export default function AiPlannerPage() {
             <span className="relative flex h-2.5 w-2.5 rounded-full bg-red-500 shadow-[0_0_10px_2px_rgba(239,68,68,0.6)]" />
             <div>
               <h1 className="text-sm font-semibold text-slate-100">
-                Bharat Shakti Emergency AI
+                SafeSphere Emergency AI
               </h1>
               <p className="text-[11px] text-slate-500">
                 Tactical 48-hour evacuation planner

@@ -1,6 +1,6 @@
 # Model Card — Flood Risk Classifier (XGBoost)
 
-**Project:** Disaster Response Intelligence Platform
+**Project:** SafeSphere Platform
 **Model:** Gradient-boosted decision tree (`XGBoost` classifier)
 **Task:** 4-class flood risk classification
 **Served by:** FastAPI microservice (`ml_service/api.py`)

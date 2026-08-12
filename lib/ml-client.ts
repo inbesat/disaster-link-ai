@@ -5,6 +5,7 @@
 // ---------------------------------------------------------------------
 
 import { prisma } from "@/server/prisma";
+import { nearestDistrict } from "@/lib/data-ingestion/fetcher";
 
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL ?? "http://127.0.0.1:8000";
 const REQUEST_TIMEOUT_MS = 3000;
@@ -168,7 +169,78 @@ async function maybeTriggerAlert(lat: number, lng: number, riskLevel: RiskLabel)
         message: `Flood risk escalated to ${riskLevel} at (${lat.toFixed(4)}, ${lng.toFixed(4)}). Responders should prepare.`,
       },
     });
+
+    // Phase 7 · FM broadcast automation: the prediction pipeline now feeds
+    // the FM rules engine (auto-dispatch or admin approval) exactly when a
+    // prediction escalates into an action band. Fire-and-forget so the
+    // prediction response is never delayed by the broadcast pipeline.
+    const place = nearestDistrict(lat, lng);
+    void triggerFmBroadcast({
+      district: place.name,
+      riskLevel,
+    }).catch((error) => {
+      console.warn("[ml-client] FM broadcast automation failed:", error);
+    });
   } catch (error) {
     console.warn("Failed to log flood alert:", error);
+  }
+}
+
+/**
+ * Phase 7 · FM broadcast automation hook.
+ *
+ * Find-or-create the active flood disaster event for the escalated
+ * district, then evaluate the alert_rules_fm rules via evaluateAutoTrigger:
+ *   - auto_broadcast rule → CAP alert generated + Phase 4 dispatch starts;
+ *   - manual rule (or rate-limited) → a pending approval lands in the admin
+ *     Broadcast Approval Queue for sign-off.
+ * Never throws — broadcast failures must not break the prediction path.
+ */
+async function triggerFmBroadcast(opts: {
+  district: string;
+  riskLevel: RiskLabel;
+}): Promise<void> {
+  try {
+    // `contains` so the resolver's "Patna" reuses seeded events like
+    // "Patna (Ganga)" instead of creating a duplicate active event.
+    const event =
+      (await prisma.disasterEvent.findFirst({
+        where: {
+          type: "flood",
+          district: { contains: opts.district },
+          status: "active",
+        },
+        orderBy: { createdAt: "desc" },
+      })) ??
+      (await prisma.disasterEvent.create({
+        data: {
+          name: `Flood risk — ${opts.district}`,
+          type: "flood",
+          status: "active",
+          district: opts.district,
+          startedAt: new Date(),
+        },
+      }));
+
+    // Lazy import — the FM chain pulls in Twilio + TTS providers. Loading
+    // it only when an escalation fires keeps the hot prediction path light
+    // (same convention as lib/demo/reset-scenario.ts) and means a failure
+    // in that chain can never break prediction responses.
+    const { evaluateAutoTrigger } = await import("@/lib/broadcast/auto-trigger");
+
+    const result = await evaluateAutoTrigger({
+      disasterEventId: event.id,
+      riskLevel: opts.riskLevel,
+      district: opts.district,
+      disasterType: "flood",
+    });
+    if (result.mode !== "none") {
+      console.log(
+        `[ml-client] FM broadcast automation — ${opts.district}: ${result.mode}`,
+        result,
+      );
+    }
+  } catch (error) {
+    console.warn("[ml-client] FM broadcast automation failed:", error);
   }
 }

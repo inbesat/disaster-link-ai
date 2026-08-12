@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Shield, Menu, X, ArrowRight, LogIn, Download } from "lucide-react";
+import { Menu, X, ArrowRight, LogIn, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Logo from "@/components/ui/Logo";
+import LanguageSelector from "@/components/ui/LanguageSelector";
 
 const NAV_LINKS = [
   { label: "Platform", href: "#platform" },
@@ -63,11 +65,9 @@ export default function Navbar() {
       >
         {/* Logo */}
         <a href="#" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#F97316] flex items-center justify-center shadow-md transition-transform duration-200 group-hover:scale-105">
-            <Shield size={18} className="text-white" />
-          </div>
+          <Logo className="h-9 w-9 transition-transform duration-200 group-hover:scale-105" />
           <span className="text-white font-bold text-lg tracking-tight">
-            DisasterLink AI
+            SafeSphere
           </span>
         </a>
 
@@ -90,6 +90,7 @@ export default function Navbar() {
 
         {/* Desktop CTAs */}
         <div className="hidden lg:flex gap-3 items-center">
+          <LanguageSelector />
           <a
             href="/access"
             className="flex items-center gap-2 border border-white/20 text-white rounded-full px-5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
@@ -160,6 +161,9 @@ export default function Navbar() {
               </motion.a>
             ))}
             <div className="flex flex-col gap-3 mt-4 px-2">
+              <div className="flex justify-start">
+                <LanguageSelector />
+              </div>
               <a
                 href="/access"
                 onClick={closeMobile}

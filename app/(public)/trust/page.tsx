@@ -13,9 +13,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Trust & Security Center | Disaster Response Intelligence",
+  title: "Trust & Security Center | SafeSphere",
   description:
-    "How the Disaster Response Intelligence Platform protects citizen data — encryption, anonymized crowdsourcing, and strict district-level access control.",
+    "How the SafeSphere Platform protects citizen data — encryption, anonymized crowdsourcing, and strict district-level access control.",
 };
 
 const SECTIONS = [
@@ -108,7 +108,7 @@ export default function TrustPage() {
           <div className="flex items-center gap-2.5">
             <span className="h-3 w-3 animate-pulse-ring rounded-full bg-severity-green-500" />
             <span className="font-bold tracking-tight text-foreground">
-              Disaster Response Intelligence
+              SafeSphere
             </span>
           </div>
           <Link
@@ -197,7 +197,7 @@ export default function TrustPage() {
       {/* Footer */}
       <footer className="border-t border-border py-6">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-6 text-xs text-slate-500">
-          <span>Disaster Response Intelligence Platform · Bharat Shakti Hackathon</span>
+          <span>SafeSphere Platform · Bharat Shakti Hackathon</span>
           <span>
             Emergency contact: District Control Room{" "}
             <a href="tel:1070" className="font-semibold text-severity-red-400">

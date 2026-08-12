@@ -12,7 +12,7 @@ import type { Metadata, Viewport } from "next";
 // ---------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: "Bharat Shakti — Lite",
+  title: "SafeSphere — Lite",
   description:
     "Offline-friendly disaster status for basic phones: district risk, nearest shelter and emergency numbers.",
 };

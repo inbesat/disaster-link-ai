@@ -1,4 +1,4 @@
-# 🚨 Disaster Response Intelligence Platform
+# 🚨 SafeSphere Platform
 
 **AI-powered flood prediction, emergency planning, and resource allocation — built for the Bharat Shakti Hackathon (Track: AI for Society — Problem Statement 3).**
 

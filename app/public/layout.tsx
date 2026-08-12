@@ -9,8 +9,9 @@ import EmergencyModeBanner from "@/components/public/sos/EmergencyModeBanner";
 import LocationTracker from "@/components/public/sos/LocationTracker";
 import SafetyNudge from "@/components/public/sos/SafetyNudge";
 import ShakeToSOSHost from "@/components/public/sos/ShakeToSOSHost";
-import MitronChat from "@/components/public/MitronChat";
+import NovaChat from "@/components/public/NovaChat";
 import PwaInstallPrompt from "@/components/pwa/PwaInstallPrompt";
+import PublicLanguageFab from "@/components/public/PublicLanguageFab";
 import { BandwidthProvider } from "@/lib/contexts/BandwidthContext";
 
 // ---------------------------------------------------------------------
@@ -48,6 +49,12 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
           <PublicSidebar />
           <div className="min-w-0 flex-1">{children}</div>
         </div>
+
+        {/* Mobile-only language picker — floats above the BottomNav so the
+            switch is reachable from every /public page (<md). Desktop uses
+            the PublicSidebar footer selector. */}
+        <PublicLanguageFab />
+
         <PublicAlertHost />
 
         {/* Phase 13 · Step 3 — install banner: appears above the BottomNav
@@ -73,13 +80,13 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
           desktop). Renders nothing; only opens the SOS modal. */}
       <ShakeToSOSHost />
 
-      {/* Phase 1 · Step 1 — the "Mitron" AI companion: 56px violet FAB +
+      {/* Phase 1 · Step 1 — the "Nova" AI companion: 56px violet FAB +
           draggable 60%→100% bottom sheet with the voice-first composer.
           Hidden in low-bandwidth mode (it streams AI tokens — Phase 13 ·
-          Step 2). Replaces the earlier Sahayak shell; SahayakChat remains
+          Step 2). Replaces the earlier Nova shell; NovaChat remains
           in the codebase for reference. */}
       <BandwidthGate>
-        <MitronChat />
+        <NovaChat />
       </BandwidthGate>
       </BandwidthProvider>
     </SOSProvider>

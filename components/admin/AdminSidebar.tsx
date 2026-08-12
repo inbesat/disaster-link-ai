@@ -13,11 +13,16 @@ import {
   BarChart3,
   Radio,
   Volume2,
+  PhoneCall,
+  History,
   Menu,
   X,
-  ShieldCheck,
+  LogOut,
 } from "lucide-react";
 import BackButton from "@/components/ui/BackButton";
+import Logo from "@/components/ui/Logo";
+import LanguageSelector from "@/components/ui/LanguageSelector";
+import { signOutAction } from "@/app/actions/auth";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -26,6 +31,8 @@ const NAV_ITEMS = [
   { href: "/bulk-ops", label: "Bulk Operations", icon: ListChecks },
   { href: "/fm-stations", label: "FM Stations", icon: Radio },
   { href: "/tts-preview", label: "Voice Preview", icon: Volume2 },
+  { href: "/broadcast-monitor", label: "Broadcast Monitor", icon: PhoneCall },
+  { href: "/broadcast-history", label: "Broadcast History", icon: History },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/audit-logs", label: "Audit Logs", icon: ScrollText },
   { href: "/health", label: "System Health", icon: Activity },
@@ -38,8 +45,8 @@ function SidebarContent() {
     <>
       <div className="flex h-14 items-center justify-between gap-2.5 border-b border-[#1c2740] px-5">
         <div className="flex items-center gap-2.5">
-          <ShieldCheck className="h-4 w-4 text-amber-400" />
-          <span className="eoc-label text-amber-400/90">DRIP / ADMIN</span>
+          <Logo className="h-7 w-7 shrink-0" />
+          <span className="eoc-label text-amber-400/90">SAFESPHERE / ADMIN</span>
         </div>
         <BackButton />
       </div>
@@ -71,6 +78,16 @@ function SidebarContent() {
         <p className="mt-1 text-xs text-slate-400">
           Full system control · restricted access
         </p>
+        {/* Sign out — server action ends the session + cookie ride. */}
+        <form action={signOutAction} className="mt-4">
+          <button
+            type="submit"
+            className="flex w-full items-center justify-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-3 py-2 text-sm font-medium text-slate-300 transition hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400"
+          >
+            <LogOut className="h-4 w-4" aria-hidden />
+            Sign Out
+          </button>
+        </form>
       </div>
     </>
   );
@@ -101,13 +118,14 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
             </button>
           )}
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-300">
-            <ShieldCheck className="h-4 w-4 text-amber-400" aria-hidden />
-            <span className="hidden sm:inline">DRIP / Admin Console</span>
+            <Logo className="h-6 w-6 shrink-0" />
+            <span className="hidden sm:inline">SafeSphere / Admin Console</span>
             <span className="sm:hidden">Admin</span>
           </div>
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
+          <LanguageSelector />
           <span className="hidden items-center gap-1 rounded border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-widest text-red-400 sm:inline-flex">
             Elevated Access
           </span>

@@ -18,7 +18,7 @@ import LiveActivityFeed from "@/components/dashboard/LiveActivityFeed";
 import BroadcastMessage from "@/components/dashboard/BroadcastMessage";
 
 export const metadata: Metadata = {
-  title: "Command Center | Disaster Response",
+  title: "Command Center | SafeSphere",
 };
 
 export default function CommandCenterPage() {

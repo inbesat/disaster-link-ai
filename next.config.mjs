@@ -5,14 +5,21 @@
 // the /~offline page for offline navigations (fallbacks.document). The
 // web-push + offline-shell handlers live in worker/index.js and are
 // bundled into the generated worker via customWorkerDir (they no-op when
-// workbox is present, so there is no respondWith conflict). Fully disabled
-// in development; registration is done client-side in production
-// (components/pwa/ServiceWorkerRegister.tsx).
+// workbox is present, so there is no respondWith conflict).
+//
+// The wrapper is applied ONLY outside development. Skipping it in dev
+// means next-pwa never loads, so it stops printing its misleading
+// "[PWA] PWA support is disabled" notice (twice per compile — node +
+// edge) and adds zero webpack overhead during `next dev`. The service
+// worker is still built on `next build` and registered client-side in
+// production (components/pwa/ServiceWorkerRegister.tsx).
 import withPWAInit from "next-pwa";
+
+const isDev = process.env.NODE_ENV === "development";
 
 const withPWA = withPWAInit({
   dest: "public",
-  disable: process.env.NODE_ENV === "development",
+  disable: false,
   register: false,
   customWorkerDir: "worker",
   fallbacks: { document: "/~offline" },
@@ -76,7 +83,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:; frame-ancestors 'none';",
+              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:; frame-ancestors 'none';",
           },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
@@ -95,4 +102,7 @@ const nextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+// Skip the PWA plugin entirely in dev (fast cold starts, no misleading
+// "[PWA] PWA support is disabled" log). Production keeps the service
+// worker as before.
+export default isDev ? nextConfig : withPWA(nextConfig);

@@ -9,8 +9,8 @@
 //                       (width/opacity transition, so collapse animates)
 // ---------------------------------------------------------------------
 
-import { Activity } from "lucide-react";
 import StatusDot from "@/components/ui/StatusDot";
+import Logo from "@/components/ui/Logo";
 
 type SidebarHeaderProps = {
   /** Sidebar expansion state — hides the brand text when false. */
@@ -23,9 +23,9 @@ export function SidebarHeader({ expanded, className = "" }: SidebarHeaderProps) 
     <div
       className={`flex h-16 shrink-0 items-center gap-3 border-b border-subtle px-3 ${className}`}
     >
-      {/* Logo tile + pulsing live-status dot */}
-      <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-primary/15 text-accent-primary shadow-glow-blue">
-        <Activity className="h-5 w-5" aria-hidden />
+      {/* Brand mark + pulsing live-status dot */}
+      <span className="relative flex h-10 w-10 shrink-0 items-center justify-center">
+        <Logo className="h-9 w-9" />
         <span
           className="absolute -right-0.5 -top-0.5 rounded-full bg-secondary p-[2px]"
           aria-hidden
@@ -41,7 +41,7 @@ export function SidebarHeader({ expanded, className = "" }: SidebarHeaderProps) 
         }`}
       >
         <p className="whitespace-nowrap text-sm font-bold tracking-widest text-primary">
-          DRIP
+          SafeSphere
         </p>
         <p className="whitespace-nowrap text-[0.625rem] font-medium uppercase tracking-widest text-muted">
           Command Center

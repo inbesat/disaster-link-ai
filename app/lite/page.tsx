@@ -131,7 +131,7 @@ export default function LitePage() {
             color: "#6b7280",
           }}
         >
-          Bharat Shakti · District Disaster Management · Updated{" "}
+          SafeSphere · District Disaster Management · Updated{" "}
           {new Date().toLocaleDateString("en-IN", {
             day: "2-digit",
             month: "short",

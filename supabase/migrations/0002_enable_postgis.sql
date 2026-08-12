@@ -1,6 +1,6 @@
 -- =====================================================================
 -- 0002_enable_postgis.sql
--- Adds PostGIS geospatial capability to the Disaster Response schema.
+-- Adds PostGIS geospatial capability to the SafeSphere schema.
 -- NOTE: migration 0001 already creates these columns/indexes. Every
 -- statement below is idempotent (IF NOT EXISTS), so running this on an
 -- up-to-date database is a safe no-op and it also works standalone.

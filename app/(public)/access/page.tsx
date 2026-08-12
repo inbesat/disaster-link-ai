@@ -38,7 +38,7 @@ export default function ChooseAccessPage() {
             <ShieldCheck className="h-4.5 w-4.5 text-white" aria-hidden="true" />
           </span>
           <span className="text-sm font-bold tracking-tight text-white">
-            DisasterLink AI
+            SafeSphere
           </span>
         </Link>
         <Link

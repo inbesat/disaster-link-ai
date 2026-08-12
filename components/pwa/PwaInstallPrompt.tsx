@@ -50,7 +50,7 @@ export default function PwaInstallPrompt() {
                 <Download aria-hidden="true" className="h-4 w-4 text-[#FDBA74]" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-white">Install Bharat Shakti</p>
+                <p className="text-sm font-bold text-white">Install SafeSphere</p>
                 <p className="truncate text-[11px] text-[var(--dl-text-muted)]">
                   Alerts &amp; shelters keep working even offline.
                 </p>

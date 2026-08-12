@@ -69,7 +69,7 @@ export function whatsappShelterReply(): string {
 export function whatsappHelpReply(): string {
   const s = getLiteStatus();
   return [
-    "*Bharat Shakti Help*",
+    "*SafeSphere Help*",
     `Nearest shelter: ${s.shelter.name} (${s.shelterDistanceKm} km)`,
     `📍 Open in Maps: ${mapsLink(s.shelter.lat, s.shelter.lng)}`,
     "",
@@ -80,7 +80,7 @@ export function whatsappHelpReply(): string {
 /** Fallback menu for unknown commands. */
 export function whatsappMenuReply(): string {
   return [
-    "*Bharat Shakti*",
+    "*SafeSphere*",
     "Reply *STATUS* for current flood risk in your area.",
     "Reply *SHELTER* for the 3 nearest shelters.",
     "Reply *ROUTE* for an evacuation route.",
@@ -97,7 +97,7 @@ export function whatsappMenuReply(): string {
 export function whatsappStatusReply(): string {
   const s = getLiteStatus();
   return [
-    "*Bharat Shakti Status*",
+    "*SafeSphere Status*",
     `${s.district} is under *${s.riskSmsWord}*.`,
     `Nearest shelter: ${s.shelter.name} (${s.shelterDistanceKm} km).`,
     "",

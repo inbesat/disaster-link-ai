@@ -78,7 +78,7 @@ export default function PwaUpdateBanner() {
                 className="h-4 w-4 shrink-0 animate-spin text-[var(--dl-blue-light)] [animation-duration:3s]"
               />
               <p className="min-w-0 flex-1 truncate text-xs font-semibold text-white">
-                A new version of Bharat Shakti is ready
+                A new version of SafeSphere is ready
               </p>
               <button
                 type="button"

@@ -153,7 +153,7 @@ export default function PublicDashboardPage() {
           <SafetyOverview />
         </section>
 
-        {/* Phase 6 · Step 8 — Sahayak's rotating safety tips (one every
+        {/* Phase 6 · Step 8 — Nova's rotating safety tips (one every
             5s, pauses on hover). Proactive advice between chats. Hidden in
             low-bandwidth mode (Phase 13 · Step 2). */}
         <section className="mt-8">

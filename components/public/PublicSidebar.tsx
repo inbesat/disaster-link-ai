@@ -18,8 +18,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BellRing, Home, Map, Settings, ShieldCheck, Siren, type LucideIcon } from "lucide-react";
+import { BellRing, Home, Map, Settings, Siren, LogOut, type LucideIcon } from "lucide-react";
 import { useSOS } from "@/components/public/sos/SOSContext";
+import Logo from "@/components/ui/Logo";
+import LanguageSelector from "@/components/ui/LanguageSelector";
+import { exitGuestMode } from "@/app/actions/auth";
 
 type NavItem = {
   label: string;
@@ -58,18 +61,16 @@ export default function PublicSidebar() {
 
   return (
     <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-white/10 bg-[#0a0f1a] p-4 md:flex">
-      {/* App title / logo — desktop layout polish. */}
+      {/* App logo / title — desktop layout polish. */}
       <Link
         href="/public/dashboard"
         className="mb-8 flex items-center gap-3 px-2"
-        aria-label="Bharat Shakti home"
+        aria-label="SafeSphere home"
       >
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F97316]/15 text-[var(--dl-orange)]">
-          <ShieldCheck className="h-6 w-6" strokeWidth={2} />
-        </span>
+        <Logo className="h-10 w-10 shrink-0" />
         <span className="flex flex-col">
           <span className="text-base font-bold leading-tight text-white">
-            Bharat Shakti
+            SafeSphere
           </span>
           <span className="text-xs text-[var(--dl-text-muted)]">
             Citizen Safety Portal
@@ -128,6 +129,20 @@ export default function PublicSidebar() {
           Emergency
         </p>
         <p className="mt-1 text-lg font-bold text-[var(--dl-orange)]">112</p>
+      </div>
+
+      {/* Language + sign-out — same pubic design language as the nav. */}
+      <div className="mt-4 flex flex-col gap-2">
+        <LanguageSelector />
+        <form action={exitGuestMode}>
+          <button
+            type="submit"
+            className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-[var(--dl-text-muted)] transition-colors duration-150 hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-300 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--dl-orange)]"
+          >
+            <LogOut className="h-4 w-4 shrink-0" strokeWidth={2} />
+            Sign Out
+          </button>
+        </form>
       </div>
     </aside>
   );

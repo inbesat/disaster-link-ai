@@ -5,7 +5,7 @@ import ConflictResolver from "@/components/dashboard/ConflictResolver";
 import Translated from "@/components/ui/Translated";
 
 export const metadata: Metadata = {
-  title: "Shelter Management | Disaster Response",
+  title: "Shelter Management | SafeSphere",
 };
 
 export const dynamic = "force-dynamic";

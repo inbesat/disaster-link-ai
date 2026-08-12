@@ -53,7 +53,7 @@ export default function Accessibility() {
               Built for every citizen, every device, every connection
             </h2>
             <p className="text-[#5B6B84] mt-4 leading-relaxed">
-              DisasterLink AI ensures no citizen is excluded from life-saving information
+              SafeSphere ensures no citizen is excluded from life-saving information
               — regardless of language, ability, device, or connectivity.
             </p>
 

@@ -7,10 +7,17 @@
 //   2. Find the FM stations whose coverage reaches the disaster zone
 //      (Phase 1 geospatial lookup; district-centroid fallback).
 //   3. Reuse the generated CAP XML + voiced MP3 (Phases 2–3).
-//   4. Pick the best strategy per station (cap_api → rds → ftp → email).
+//   4. Walk the digital channel chain per station (cap_api → rds → ftp →
+//      email), then escalate to a single IVR control-room call (Phase 5)
+//      when the whole digital chain fails — AIR stations always escalate.
 //   5. Dispatch every station in parallel (Promise.allSettled).
 //   6. Log each attempt to fm_broadcast_logs.
-//   7. Retry failed stations (max 3 attempts, 2-minute backoff).
+//   7. Retry failed attempts (max 3, 2-minute backoff).
+//
+// Phase 5's fourth trigger — "no response from the station within 3
+// minutes" (a station that accepted but never confirmed) — needs a
+// background sweep job; the in-band triggers (digital chain failure, AIR
+// guarantee) are handled here.
 //
 // When `testMode` is set, the dispatcher refuses real outbound calls and
 // records deterministic "dry-run" results so a safety check can be
@@ -18,19 +25,16 @@
 // ---------------------------------------------------------------------
 
 import { prisma } from "@/server/prisma";
-import type {
-  CapAlert,
-  DisasterEvent,
-  FmStation,
-  Prisma,
-} from "@prisma/client";
+import type { CapAlert, DisasterEvent, FmStation, Prisma } from "@prisma/client";
 import { findStationsInRadius } from "@/lib/fm/find-stations";
+import { MOCK_FM_STATIONS } from "@/lib/fm/mock-stations";
 import { CapApiStrategy } from "@/lib/broadcast/strategies/cap-api";
 import { RdsPushStrategy } from "@/lib/broadcast/strategies/rds-push";
 import { FtpDropStrategy } from "@/lib/broadcast/strategies/ftp-drop";
 import { EmailStudioStrategy } from "@/lib/broadcast/strategies/email-studio";
-import { buildRdsText } from "@/lib/broadcast/rds-text";
-import { selectBestStrategy } from "@/lib/broadcast/strategy-selector";
+import { IvrCallStrategy } from "@/lib/broadcast/strategies/ivr-call";
+import { buildEmergencyRdsText, mapCapSeverity } from "@/lib/broadcast/rds-encoder";
+import { selectAllStrategies } from "@/lib/broadcast/strategy-selector";
 import type {
   DispatchContext,
   DispatchResult,
@@ -61,6 +65,14 @@ const DISTRICT_CENTROIDS: Record<string, [number, number]> = {
   mumbai: [72.88, 19.08],
   kolkata: [88.36, 22.57],
 };
+
+/** Internal shape for one station's finished dispatch (parallel loop). */
+interface StationAttempt {
+  station: FmStation;
+  /** Null when no attempt was made (unsupported channel / zero maxAttempts). */
+  last: DispatchResult | null;
+  attempt: number;
+}
 
 /** A single station's dispatch attempt result (for the route response). */
 export interface StationDispatchResult {
@@ -139,25 +151,64 @@ export async function dispatchToStations(
     capAlertId: capAlert.id,
   };
 
-  // 5–7. Dispatch in parallel, retry failed ones.
-  for (const station of stations) {
-    const strategy = selectBestStrategy(station, strategies);
-    if (!strategy) continue;
+  // 5–7. Dispatch every station in parallel (Promise.allSettled). Each
+  // station's own retry loop still runs (maxAttempts / retryDelayMs), but
+  // all stations progress concurrently — no one slow FTP link stalls the
+  // rest of the broadcast. The report preserves station order.
+  const attempts = await Promise.allSettled(
+    stations.map(async (station): Promise<StationAttempt | null> => {
+      // 1. Every supported digital channel in priority order
+      //    (cap_api → rds → ftp → email) — each with its own retry budget,
+      //    so a failed CAP API falls through to RDS, FTP, then email.
+      const digital = selectAllStrategies(station, strategies).filter(
+        (s) => s.name !== "ivr",
+      );
+      const ivr = strategies.find((s) => s.name === "ivr");
+      const canIvr = Boolean(ivr && ivr.supports(station));
 
-    let last: DispatchResult | null = null;
-    let attempt = 0;
-    while (attempt < maxAttempts) {
-      attempt += 1;
-      last = await dispatchAttempt(station, strategy, context, {
-        testMode,
-        attempt,
-      });
-      if (last.ok) break;
-      if (attempt < maxAttempts) {
-        await delay(retryDelayMs);
+      // No digital channel and no IVR path (no phone, not AIR) — nothing
+      // to do for this station.
+      if (digital.length === 0 && !canIvr) return null;
+
+      let last: DispatchResult | null = null;
+      let attempt = 0;
+
+      for (const channel of digital) {
+        while (attempt < maxAttempts) {
+          attempt += 1;
+          last = await dispatchAttempt(station, channel, context, {
+            testMode,
+            attempt,
+          });
+          if (last.ok) break;
+          if (attempt < maxAttempts) {
+            await delay(retryDelayMs);
+          }
+        }
+        if (last && last.ok) break;
       }
-    }
-    if (!last) continue;
+
+      // 2. IVR escalation (Phase 5): the digital chain failed (or no
+      //    digital channel exists) and the station can be called — a
+      //    control-room call is placed once. AIR stations always escalate;
+      //    the call-status webhook tracks the call to completion.
+      if (ivr && ivr.supports(station) && !last?.ok) {
+        const escalated = await dispatchAttempt(station, ivr, context, {
+          testMode,
+          attempt: 1,
+        });
+        attempt += 1;
+        last = escalated;
+      }
+
+      return { station, last, attempt };
+    }),
+  );
+
+  for (const settled of attempts) {
+    if (settled.status === "rejected" || !settled.value) continue;
+    const { station, last, attempt } = settled.value;
+    if (!last) continue; // no attempt made — nothing to report
 
     const stationResult: StationDispatchResult = {
       stationId: station.id,
@@ -198,10 +249,7 @@ async function dispatchAttempt(
 }
 
 /** Deterministic result for testMode (no outbound calls). */
-function dryRunResult(
-  strategy: FMDispatchStrategy,
-  _station: FmStation,
-): DispatchResult {
+function dryRunResult(strategy: FMDispatchStrategy, _station: FmStation): DispatchResult {
   const detail = describeChannel(strategy);
   return {
     ok: true,
@@ -245,6 +293,7 @@ async function writeLog(
         broadcastTime: result.broadcastTime ? new Date(result.broadcastTime) : null,
         retryCount: opts.retryCount,
         testMode: opts.testMode,
+        externalRef: result.externalRef ?? null,
       },
     });
   } catch (error) {
@@ -254,9 +303,21 @@ async function writeLog(
 
 /** Resolve station coverage for the event (district centroid fallback). */
 async function findCoveringStations(event: DisasterEvent): Promise<FmStation[]> {
-  const stations = await prisma.fmStation.findMany({
-    where: { isActive: true },
-  });
+  let stations: FmStation[];
+  try {
+    stations = await prisma.fmStation.findMany({
+      where: { isActive: true },
+    });
+  } catch (error) {
+    // DB unreachable (migrations not pushed / offline) — dispatch against
+    // the seeded demo list so the end-to-end pipeline can still be
+    // rehearsed (same fallback as /api/fm/stations + /api/fm/coverage).
+    console.error(
+      "[broadcast] Failed to load FM stations — using demo list:",
+      error,
+    );
+    stations = MOCK_FM_STATIONS as unknown as FmStation[];
+  }
 
   // Prefer the district string when we can't read the PostGIS epicenter.
   const districtKey = (event.district ?? "").trim().toLowerCase();
@@ -281,8 +342,11 @@ async function buildDispatchContext(
 ): Promise<DispatchContext> {
   const { headline, instruction, script } = parseCap(capAlert.capXml);
 
-  const rdsText = buildRdsText({
-    event: event.type || "Emergency",
+  // Phase 6: severity-tuned RDS templates for known disaster types (falls
+  // back to the generic text builder otherwise).
+  const rdsText = buildEmergencyRdsText({
+    severity: mapCapSeverity(capAlert.severity),
+    disasterType: event.type,
     district: event.district ?? "",
     headline,
     instruction,
@@ -337,6 +401,7 @@ export function defaultStrategies(): FMDispatchStrategy[] {
     new RdsPushStrategy(),
     new FtpDropStrategy(),
     new EmailStudioStrategy(),
+    new IvrCallStrategy(),
   ];
 }
 
@@ -359,6 +424,7 @@ export function serializeBroadcastLog(
     responseBody: row.responseBody,
     broadcastTime: row.broadcastTime?.toISOString() ?? null,
     retryCount: row.retryCount,
+    externalRef: row.externalRef,
     createdAt: row.createdAt.toISOString(),
   };
 }

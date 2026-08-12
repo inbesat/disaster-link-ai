@@ -2,7 +2,7 @@
 // lib/emergency-intent.ts — Phase 1 · Step 2 · emergency intent detection.
 //
 // Pure detector: does a citizen's message (typed or a voice transcript)
-// carry an emergency intent? MitronChat intercepts every input with this
+// carry an emergency intent? NovaChat intercepts every input with this
 // BEFORE it reaches the reply path — if true, the chat flips to Emergency
 // Mode and the SOS flow fires instead of a normal answer.
 //

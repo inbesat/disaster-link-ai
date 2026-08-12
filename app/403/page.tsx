@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Access Denied | Disaster Response",
+  title: "Access Denied | SafeSphere",
 };
 
 export default function ForbiddenPage() {

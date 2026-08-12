@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 
 const faqs = [
   {
-    q: "How does DisasterLink AI reach citizens without internet or smartphones?",
+    q: "How does SafeSphere reach citizens without internet or smartphones?",
     a: "We use 9 redundant communication channels including FM radio broadcasts, automated voice calls (IVR), SMS, police vehicle PA systems, village panchayat speakers, and religious institution PA networks. Even citizens with basic feature phones or no phone at all receive warnings through community broadcast systems.",
   },
   {
@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: "Can local government bodies integrate their own systems?",
-    a: "Yes. DisasterLink AI provides open APIs and integration guides for state and district-level systems. We support NDMA data formats, state SOPs, and can connect to existing emergency management software through our standardized data exchange protocols.",
+    a: "Yes. SafeSphere provides open APIs and integration guides for state and district-level systems. We support NDMA data formats, state SOPs, and can connect to existing emergency management software through our standardized data exchange protocols.",
   },
   {
     q: "How is misinformation handled during a crisis?",
@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     q: "Is this platform live, or a prototype?",
-    a: "DisasterLink AI is currently in advanced demonstration stage, built for the Smart India Hackathon. All data shown on this page is simulated for demonstration purposes. The platform architecture is designed for production deployment with government agencies.",
+    a: "SafeSphere is currently in advanced demonstration stage, built for the Smart India Hackathon. All data shown on this page is simulated for demonstration purposes. The platform architecture is designed for production deployment with government agencies.",
   },
 ];
 

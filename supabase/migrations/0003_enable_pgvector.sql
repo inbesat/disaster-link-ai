@@ -1,6 +1,6 @@
 -- =====================================================================
 -- 0003_enable_pgvector.sql
--- Adds pgvector + RAG document storage to the Disaster Response schema.
+-- Adds pgvector + RAG document storage to the SafeSphere schema.
 -- Emergency response plans are stored here with doc_type = 'plan'.
 -- NOTE: statements are idempotent (IF NOT EXISTS) so this migration is
 -- safe whether or not 0001 has already been applied.

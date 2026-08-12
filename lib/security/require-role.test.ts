@@ -120,7 +120,7 @@ describe("Supabase mode (env configured)", () => {
     expect(result).toMatchObject({ ok: false, status: 403 });
   });
 
-  it("rejects when the user has no profile row (no cookie fallback)", async () => {
+  it("rejects a signed-in user with no profile row — the cookie never overrides a real session", async () => {
     getUserMock.mockResolvedValue({ data: { user: { id: "u1" } }, error: null });
     maybeSingleMock.mockResolvedValue({ data: null, error: null });
     cookieStore.set("role", "field_responder");
@@ -128,10 +128,14 @@ describe("Supabase mode (env configured)", () => {
     expect(result.ok).toBe(false);
   });
 
-  it("rejects when there is no session at all (no cookie fallback)", async () => {
+  it("admits the demo cookie session when no Supabase user is signed in", async () => {
+    // govDemoLogin / govLogin write only cookies; the middleware and admin
+    // layout accept that session, so the API guard must too.
     getUserMock.mockResolvedValue({ data: { user: null }, error: null });
     cookieStore.set("role", "super_admin");
-    expect((await requireRole(GOV_ROLES)).ok).toBe(false);
+    expect(await requireRole(GOV_ROLES)).toEqual({ ok: true, role: "super_admin" });
+    cookieStore.set("role", "district_admin");
+    expect(await requireRole(GOV_ROLES)).toEqual({ ok: true, role: "district_admin" });
   });
 
   it("401s an unauthenticated caller with no cookie", async () => {

@@ -6,7 +6,7 @@
 //
 // Proactive advice even when the citizen isn't actively chatting. A
 // small, visually distinct card for the Public Dashboard that features
-// the Sahayak avatar and rotates through bite-sized safety tips every
+// the Nova avatar and rotates through bite-sized safety tips every
 // 5 seconds:
 //
 //   • The tip text cross-fades through Framer's AnimatePresence while a
@@ -65,14 +65,14 @@ export function SafetyTipsFeed() {
       onBlurCapture={() => setPaused(false)}
       className="relative overflow-hidden rounded-[var(--dl-radius-sm)] border border-[#34d399]/25 bg-gradient-to-br from-[#12314a]/90 to-[#0a1d30]/90 p-4 shadow-[0_8px_28px_rgba(0,0,0,0.35)]"
     >
-      {/* Soft green ambient glow — Sahayak's calm signature. */}
+      {/* Soft green ambient glow — Nova's calm signature. */}
       <span
         aria-hidden
         className="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-[#16a34a]/15 blur-2xl"
       />
 
       <div className="relative flex items-center gap-3">
-        {/* Sahayak avatar — the owl/robot companion. */}
+        {/* Nova avatar — the owl/robot companion. */}
         <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#1e4a39] ring-1 ring-[#dcf8c6]/30 shadow-[0_2px_14px_rgba(16,185,129,0.35)]">
           <Bot className="h-6 w-6 text-[#dcf8c6]" strokeWidth={2.1} aria-hidden />
           <span

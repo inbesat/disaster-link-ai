@@ -63,7 +63,7 @@ export default function DemoPresentation() {
           <div className="leading-tight">
             <p className="text-lg font-black tracking-tight">DRIP — Live Demo</p>
             <p className="text-xs text-slate-400">
-              Disaster Response Intelligence Platform
+              SafeSphere Platform
             </p>
           </div>
         </div>

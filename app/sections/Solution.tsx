@@ -35,7 +35,7 @@ export default function Solution() {
               eyebrow="Our Solution"
               eyebrowVariant="blue"
               title="One AI platform connecting prediction, broadcast, and rescue"
-              subtitle="DisasterLink AI unifies satellite intelligence, weather APIs, IoT sensors, and government networks into a single AI-powered command center — delivering verified alerts through 9 redundant channels."
+              subtitle="SafeSphere unifies satellite intelligence, weather APIs, IoT sensors, and government networks into a single AI-powered command center — delivering verified alerts through 9 redundant channels."
               center={false}
             />
 
