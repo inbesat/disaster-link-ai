@@ -47,8 +47,11 @@ next-env.d.ts
 __pycache__/
 *.pyc
 .venv/
+ml_service/venv/
 ml_service/*.log
 ml_service/*.pid
+ml_service/real_extracted_data.csv
+ml_service/synthetic_backup.csv
 
 # playwright e2e
 /test-results/

@@ -157,7 +157,7 @@ export async function POST(req: Request) {
   }
 
   // Input validation
-  let messages: Array<{ role?: string; content?: string }>;
+  let messages: Array<{ role?: string; content?: string }>; // eslint-disable-line @typescript-eslint/no-explicit-any
   let currentDistrict: string | undefined;
   let provider: string | undefined;
   try {
@@ -293,7 +293,7 @@ export async function POST(req: Request) {
   const result = streamText({
     model,
     system,
-    messages,
+    messages: messages as any,
     // AI SDK v7 defaults to stopWhen: isStepCount(1) — ONE model invocation
     // — so tool roundtrips never happen and the chat returns empty after the
     // first tool call. Allow up to 6 steps (tool calls + final summary); the
