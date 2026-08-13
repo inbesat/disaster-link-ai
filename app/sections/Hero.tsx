@@ -162,23 +162,23 @@ export default function Hero() {
           </Reveal>
 
           <Reveal delay={0.3}>
-            <div className="flex flex-wrap gap-4 mt-8">
+            <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap mt-8">
               <a
                 href="#platform"
-                className="btn btn-primary rounded-full px-8 py-3.5 text-base font-semibold normal-case font-sans items-center gap-2 bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] border-0 text-white shadow-[0_12px_30px_-10px_rgba(37,99,235,0.55)] hover:shadow-[0_20px_60px_-20px_rgba(37,99,235,0.6)] hover:-translate-y-0.5 transition-all"
+                className="btn btn-primary rounded-full px-8 py-3.5 text-base font-semibold normal-case font-sans items-center gap-2 bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] border-0 text-white shadow-[0_12px_30px_-10px_rgba(37,99,235,0.55)] hover:shadow-[0_20px_60px_-20px_rgba(37,99,235,0.6)] hover:-translate-y-0.5 transition-all w-full sm:w-auto"
               >
                 Explore Platform <ArrowRight size={18} aria-hidden="true" />
               </a>
               <a
                 href="#contact"
-                className="btn btn-ghost rounded-full border border-white/25 text-white px-8 py-3.5 text-base hover:bg-white/10 hover:border-white/40 normal-case font-sans transition-all"
+                className="btn btn-ghost rounded-full border border-white/25 text-white px-8 py-3.5 text-base hover:bg-white/10 hover:border-white/40 normal-case font-sans transition-all w-full sm:w-auto"
               >
                 Request Demo
               </a>
               <a
                 href="/apk/SafeSphere.apk"
-                download
-                className="btn btn-ghost rounded-full border border-emerald-400/50 text-emerald-300 px-8 py-3.5 text-base hover:bg-emerald-400/10 hover:border-emerald-400/80 normal-case font-sans transition-all"
+                download="SafeSphere.apk"
+                className="btn btn-ghost rounded-full border border-emerald-400/50 text-emerald-300 px-8 py-3.5 text-base hover:bg-emerald-400/10 hover:border-emerald-400/80 normal-case font-sans transition-all w-full sm:w-auto"
               >
                 <Download size={18} aria-hidden="true" />
                 Get Android App

@@ -1139,3 +1139,32 @@ body {
 .goog-te-gadget img {
   display: none !important;
 }
+
+/* --- GOOGLE TRANSLATE CUSTOM DARK THEME --- */
+/* Hide the Google branding and top banner */
+.goog-te-gadget { color: transparent !important; font-size: 0px !important; }
+.goog-te-gadget .goog-te-combo { margin: 0 !important; }
+.goog-logo-link { display: none !important; }
+.goog-te-banner-frame.skiptranslate { display: none !important; }
+body { top: 0px !important; }
+
+/* Style the dropdown box to look like our dark outline buttons */
+.goog-te-combo {
+    background-color: transparent !important;
+    color: #f1f5f9 !important; /* text-slate-100 */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 9999px !important; /* rounded-full */
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+    font-family: inherit !important;
+    outline: none !important;
+    cursor: pointer !important;
+    appearance: none !important;
+}
+
+/* Style the dropdown options (when clicked) */
+.goog-te-combo option {
+    background-color: #0f172a !important; /* slate-900 */
+    color: #f1f5f9 !important;
+    padding: 8px !important;
+}

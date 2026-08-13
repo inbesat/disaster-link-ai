@@ -61,9 +61,9 @@ export default function Solution() {
             <div className="relative rounded-[22px] overflow-hidden h-[500px] bg-[#0B1F3A]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://images.unsplash.com/photo-1584285405429-136bf988bfe0?w=800&q=80"
+                src="https://images.unsplash.com/photo-1618477388954-7852f32655cb?auto=format&fit=crop&q=80&w=1000"
                 alt="Emergency Command Center"
-                className="w-full h-full object-cover opacity-60"
+                className="w-full h-full object-cover rounded-2xl opacity-60"
               />
               <div className="absolute bottom-6 left-6 right-6 bg-[rgba(11,31,58,0.75)] backdrop-blur-[10px] rounded-[14px] p-4 flex items-center gap-3">
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />

@@ -21,6 +21,7 @@ import SeverityBadge from "@/components/ui/SeverityBadge";
 import NavbarAvatar from "@/components/NavbarAvatar";
 import NotificationCenter from "@/components/dashboard/NotificationCenter";
 import LiveClock from "@/components/dashboard/LiveClock";
+import LanguageTranslator from "@/components/ui/LanguageTranslator";
 
 /** Districts the Command Center can switch between (mirrors DEFAULT_DISTRICTS). */
 export const DASHBOARD_DISTRICTS = ["Patna", "Ernakulam", "Purba Champaran"] as const;
@@ -155,9 +156,12 @@ export function DashboardHeader({
         <LiveClock />
       </div>
 
-      {/* Right — flood badge, notification bell, avatar + role chip */}
-      <div className="ml-auto flex items-center gap-2.5">
-        <span className="hidden sm:block">
+        {/* Right — flood badge, Google Translate, notification bell,
+            avatar + role chip */}
+        <div className="ml-auto flex items-center gap-2.5">
+          <LanguageTranslator />
+
+          <span className="hidden sm:block">
           <SeverityBadge variant={floodSeverity} size="sm" />
         </span>
         {/* Icon-only badge on the smallest screens so it never truncates */}

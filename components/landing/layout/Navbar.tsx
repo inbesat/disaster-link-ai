@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Menu, X, ArrowRight, LogIn, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "@/components/ui/Logo";
+import LanguageTranslator from "@/components/ui/LanguageTranslator";
 
 const NAV_LINKS = [
   { label: "Platform", href: "#platform" },
@@ -88,11 +89,11 @@ export default function Navbar() {
         </div>
 
         {/* Desktop CTAs */}
-        <div className="hidden lg:flex gap-3 items-center">
+        <div className="hidden lg:flex flex-wrap items-center gap-2 sm:gap-4">
           {/* Google Translate widget host — layout.tsx injects the real
               dropdown here and auto-translates the whole page on select.
-              Dark-themed via .translate-widget-container in globals.css. */}
-          <div id="google_translate_element" className="translate-widget-container" />
+              Dark-themed via the GOOGLE TRANSLATE block in globals.css. */}
+          <LanguageTranslator />
           <a
             href="/access"
             className="flex items-center gap-2 border border-white/20 text-white rounded-full px-5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
@@ -110,7 +111,7 @@ export default function Navbar() {
               the solid Request Demo CTA without competing with it. */}
           <a
             href="/apk/SafeSphere.apk"
-            download
+            download="SafeSphere.apk"
             className="flex items-center gap-2 border border-white/20 text-white rounded-full px-5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
           >
             <Download size={14} aria-hidden="true" />
@@ -180,7 +181,7 @@ export default function Navbar() {
               </a>
               <a
                 href="/apk/SafeSphere.apk"
-                download
+                download="SafeSphere.apk"
                 onClick={closeMobile}
                 className="flex items-center justify-center gap-2 border border-white/20 text-white rounded-full w-full py-2.5 text-sm font-medium hover:bg-white/10 transition-all"
               >
