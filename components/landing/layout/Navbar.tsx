@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Menu, X, ArrowRight, LogIn, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "@/components/ui/Logo";
-import LanguageSelector from "@/components/ui/LanguageSelector";
 
 const NAV_LINKS = [
   { label: "Platform", href: "#platform" },
@@ -90,7 +89,10 @@ export default function Navbar() {
 
         {/* Desktop CTAs */}
         <div className="hidden lg:flex gap-3 items-center">
-          <LanguageSelector />
+          {/* Google Translate widget host — layout.tsx injects the real
+              dropdown here and auto-translates the whole page on select.
+              Dark-themed via .translate-widget-container in globals.css. */}
+          <div id="google_translate_element" className="translate-widget-container" />
           <a
             href="/access"
             className="flex items-center gap-2 border border-white/20 text-white rounded-full px-5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
@@ -161,9 +163,6 @@ export default function Navbar() {
               </motion.a>
             ))}
             <div className="flex flex-col gap-3 mt-4 px-2">
-              <div className="flex justify-start">
-                <LanguageSelector />
-              </div>
               <a
                 href="/access"
                 onClick={closeMobile}

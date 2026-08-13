@@ -57,7 +57,7 @@ export interface WebLLMProviderOptions {
   /**
    * Lazy engine loader override (tests / prewired WebLLM). Defaults to the
    * real dynamic import of @mlc-ai/web-llm and degrades to null when the
-   * package is missing (WebLLM is not installed in this repo yet).
+   * package is missing or the dynamic import is blocked.
    */
   loadEngine?: (
     modelId: string,
@@ -244,8 +244,8 @@ function hasChat(engine: WebLlmEngineLike): engine is WebLlmEngineLike {
 }
 
 /**
- * Lazy importer — unresolved optional dependency degrades to null so a
- * missing @mlc-ai/web-llm package never breaks the client build or cloud.
+ * Defensive lazy importer — a blocked or missing @mlc-ai/web-llm module
+ * degrades to null so the client build and cloud path never break.
  */
 const defaultLoadEngine: NonNullable<WebLLMProviderOptions["loadEngine"]> = (modelId, onProgress) =>
   import("@mlc-ai/web-llm").then(

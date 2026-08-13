@@ -45,6 +45,10 @@ export interface AIResponse {
   durationMs: number;
   /** True when text is an error/offline notice rather than an answer. */
   error?: boolean;
+  /** 0..1 — how confident the model was (Phase 9 confidence scorer). */
+  confidence?: number;
+  /** Which implementation produced the text (e.g. "rule-based"). */
+  source?: string;
 }
 
 /**

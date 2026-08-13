@@ -15,7 +15,8 @@ export type DataType =
   | "weather"
   | "profiles" // user's district profile
   | "maps" // user's state map tiles
-  | "knowledge"; // RAG context chunks
+  | "knowledge" // RAG context chunks
+  | "shelters"; // shelter capacity / locations (48h window)
 
 /** All supported dist types for guards + UI dtype labels. */
 export const DATA_TYPES: readonly DataType[] = [
@@ -27,6 +28,7 @@ export const DATA_TYPES: readonly DataType[] = [
   "profiles",
   "maps",
   "knowledge",
+  "shelters",
 ];
 
 export function isDataType(value: unknown): value is DataType {

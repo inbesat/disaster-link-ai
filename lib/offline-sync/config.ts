@@ -104,6 +104,22 @@ async function fetchResources(options: {
   }));
 }
 
+/** Fetches shelter capacity/location rows for the 48h window (daily). */
+async function fetchShelters(options: {
+  district: string;
+  signal?: AbortSignal;
+}): Promise<Array<{ id: string; district: string }>> {
+  const payload = await fetchJson<{ shelters?: Array<{ id?: unknown; district?: unknown }> }>(
+    `/api/public/shelters`,
+    options.signal,
+  );
+  return rowsFrom(payload, "shelters").map((row) => ({
+    id: String(row.id ?? `${options.district}:${Math.random().toString(36).slice(2, 7)}`),
+    district: String(row.district ?? options.district),
+    data: row,
+  }));
+}
+
 /** Fetches weather for the district (needs a representative coordinate). */
 const DISTRICT_COORDS: Record<string, { lat: number; lng: number }> = {
   Patna: { lat: 25.5941, lng: 85.1376 },
@@ -231,6 +247,15 @@ export const DATA_SOURCE_CONFIGS: Array<DataSourceConfig<unknown>> = [
     ttlHours: 48,
     priority: "normal",
     fetch: fetchResources as DataSourceConfig["fetch"],
+  },
+  {
+    type: "shelters",
+    sizeBytes: 600_000,
+    expectedRows: 150,
+    refreshHours: 24,
+    ttlHours: 48,
+    priority: "normal",
+    fetch: fetchShelters as DataSourceConfig["fetch"],
   },
   {
     type: "knowledge",

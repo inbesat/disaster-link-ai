@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Inter, JetBrains_Mono, Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import ToastViewport from "@/components/ui/Toast";
@@ -18,6 +19,9 @@ import ShortcutModal from "@/components/ui/ShortcutModal";
 import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
 import PwaUpdateBanner from "@/components/pwa/PwaUpdateBanner";
 import ThemeProvider from "@/components/providers/ThemeProvider";
+import BackgroundSyncInit from "@/components/offline/BackgroundSyncInit";
+import NetworkStatusWidget from "@/components/offline/NetworkStatusWidget";
+import StoragePressureCard from "@/components/offline/StoragePressureCard";
 import { HighContrastProvider } from "@/lib/contexts/HighContrastContext";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { MapSettingsProvider } from "@/lib/settings/MapSettingsContext";
@@ -166,6 +170,18 @@ export default function RootLayout({
         {/* Phase 13 · Step 1 — PWA service worker (production only). */}
         <ServiceWorkerRegister />
 
+        {/* Phase 7 — invisible background sync: one-shot + periodic sync
+            registration, and the SW sync-tick relay into IndexedDB. */}
+        <BackgroundSyncInit />
+
+        {/* Phase 7 · Step 5 — floating Network Status widget (bottom-right):
+            green/orange/red connectivity pill + expandable sync log. */}
+        <NetworkStatusWidget />
+
+        {/* Phase 9 — storage pressure warning (top-center, renders nothing
+            while usage is healthy). Offers one-tap space freeing. */}
+        <StoragePressureCard />
+
         {/* Phase 13 · Step 3 — new-version banner ("Reload" once a fresh
             build takes over). Renders nothing until then. */}
         <PwaUpdateBanner />
@@ -175,6 +191,29 @@ export default function RootLayout({
         <ShortcutModal />
 
         <ToastViewport />
+
+        {/* Instant app-wide translation (Google Translate widget). The
+            placeholder div lives in the landing Navbar
+            (components/landing/layout/Navbar.tsx); these two scripts inject
+            the real working dropdown there and, on selection, auto-translate
+            the entire DOM — every page of the app, no manual dictionary
+            needed. Inline layout keeps it a compact dropdown, not the
+            full-screen banner variant. */}
+        <Script id="google-translate-init" strategy="afterInteractive">
+          {`
+            function googleTranslateElementInit() {
+              new window.google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'hi,bn,te,mr,ta,ur,gu,kn,ml,en', // Major Indian languages + English
+                layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+              }, 'google_translate_element');
+            }
+          `}
+        </Script>
+        <Script
+          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

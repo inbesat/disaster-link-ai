@@ -43,6 +43,16 @@ model User {
   verificationIdUrl String?  @map("verification_id_url") // gov ID/verification document (Phase 1)
   isGuest           Boolean  @default(false) @map("is_guest") // guest/demo session flag (Phase 1)
   isApproved        Boolean  @default(true) @map("is_approved") // gov account approval gate (Phase 1)
+  // Verified NGO Donation — NGOs self-identify during onboarding so they
+  // can later upload donation QR codes. is_ngo flips the account onto the
+  // NGO track; ngo_verification_status ('pending' | 'verified' | 'rejected')
+  // gates the QR upload and is managed by admins; the QR + description feed
+  // the public donation page once verified.
+  isNgo                 Boolean  @default(false) @map("is_ngo")
+  ngoRegNumber          String?  @map("ngo_reg_number")
+  ngoVerificationStatus String   @default("pending") @map("ngo_verification_status")
+  donationQrUrl         String?  @map("donation_qr_url")
+  ngoDescription        String?  @map("ngo_description")
   // Phase 13 · Step 4 — SMS fallback status. Citizens with no internet text
   // "SAFE" to the Twilio webhook; the status is persisted here so family
   // members and responders can see it (mirrors the in-app drip:i-am-safe

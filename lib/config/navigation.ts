@@ -22,6 +22,7 @@
 
 import {
   Bot,
+  Heart,
   LayoutDashboard,
   Map,
   PackageOpen,
@@ -123,6 +124,13 @@ export const NAVIGATION_ROUTES: NavRoute[] = [
     icon: PackageOpen,
     section: "resources",
     allowedRoles: ["district_admin", "super_admin"],
+  },
+  {
+    label: "NGO Portal",
+    href: "/ngo-portal",
+    icon: Heart,
+    section: "resources",
+    allowedRoles: ["field_responder", "district_admin", "super_admin"],
   },
   // ----------------------------------------------------- INTELLIGENCE ----
   {

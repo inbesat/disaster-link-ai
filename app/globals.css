@@ -1064,3 +1064,78 @@ html.high-contrast [class*="border-white/"] {
 .alert-target-map .mapbox-gl-draw_trash {
   background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23ffffff'%3E%3Cpath d='M10,3.4 c-0.8,0-1.5,0.5-1.8,1.2H5l-1,1v1h12v-1l-1-1h-3.2C11.5,3.9,10.8,3.4,10,3.4z M5,8v7c0,1,1,2,2,2h6c1,0,2-1,2-2V8h-2v5.5h-1.5V8h-3 v5.5H7V8H5z'/%3E%3C/svg%3E");
 }
+
+/* =====================================================================
+   GOOGLE TRANSLATE WIDGET — dark theme (landing Navbar)
+   ---------------------------------------------------------------------
+   layout.tsx injects TranslateElement into #google_translate_element
+   (components/landing/layout/Navbar.tsx). Google's widget ships a white
+   <select>, a top banner and a hover tooltip; these overrides re-theme
+   the dropdown to the SafeSphere navy palette and strip the banner +
+   tooltip chrome so only the compact select shows in the navbar.
+   ===================================================================== */
+/* Hide the full-width top banner Google injects above the page. */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+/* Google shifts <body> down by 39px for that banner — reset so the
+   fixed navbar and hero stay put. */
+body {
+  top: 0 !important;
+}
+
+/* The hover tooltip that pops up over translated words. */
+#goog-gt-tt,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+/* Widget host — inline-block so it sits in the navbar flex row. */
+.translate-widget-container {
+  display: inline-block;
+}
+
+/* The native <select> Google injects — dark pill matching the navbar. */
+#google_translate_element select.goog-te-combo {
+  background-color: #0f172a;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.45rem 2rem 0.45rem 0.9rem;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+#google_translate_element select.goog-te-combo:hover {
+  border-color: rgba(91, 141, 246, 0.6);
+}
+
+#google_translate_element select.goog-te-combo:focus {
+  border-color: #5b8df6;
+}
+
+/* Dropdown listbox (Firefox paints it with the select's own colors). */
+#google_translate_element select.goog-te-combo option {
+  background-color: #0f172a;
+  color: #ffffff;
+}
+
+/* The "Powered by Google" gadget text + logo — hide the chrome and dim
+   any stray label so only the select is visible. font-size: 0 on the
+   wrapper hides the "Select Language" span while the select (explicit
+   font-size above) stays crisp. */
+.goog-te-gadget {
+  font-size: 0 !important;
+  color: transparent !important;
+}
+
+.goog-te-gadget .goog-logo-link,
+.goog-te-gadget img {
+  display: none !important;
+}

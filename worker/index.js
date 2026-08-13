@@ -111,8 +111,79 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-// --- Web Push (VAPID receiver) -------------------------------------------
+// --- Web Push (VAPID receiver) + offline queue ---------------------------
 // Register hook in lib/alerts/web-push.ts #registerServiceWorker.
+//
+// Phase 7 · push notification queue: when a push arrives while the device
+// is offline (or no window client is visible to catch it live), the payload
+// is parked in a dedicated Cache API store instead of being dropped. The
+// next background-sync tick (or an explicit "flush" message from the page)
+// replays every queued notification — so alerts sent during a blackout are
+// still surfaced the moment connectivity returns.
+const PUSH_QUEUE_CACHE = "disasterlink-push-queue-v1";
+
+/** True when the SW believes the network is reachable right now. */
+function swOnline() {
+  return typeof navigator !== "undefined" ? navigator.onLine : true;
+}
+
+/** Parks one push payload for later replay (resolves true if queued). */
+async function enqueuePushPayload(payload, title, options) {
+  try {
+    const cache = await caches.open(PUSH_QUEUE_CACHE);
+    const id = `push-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    await cache.put(new Request(`/${id}`), new Response(JSON.stringify({ payload, title, options })));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Replays every queued notification and clears the queue. */
+async function flushPushQueue() {
+  let cache;
+  try {
+    cache = await caches.open(PUSH_QUEUE_CACHE);
+  } catch {
+    return;
+  }
+  const requests = await cache.keys();
+  if (requests.length === 0) return;
+  const shows = requests.map(async (request) => {
+    const response = await cache.match(request);
+    if (!response) return;
+    let entry;
+    try {
+      entry = await response.json();
+    } catch {
+      entry = {};
+    }
+    const payload = entry.payload || {};
+    const title = String(entry.title || payload.title || "Disaster Alert");
+    const options = {
+      body: String(entry.options?.body || payload.body || "You have a new disaster alert."),
+      icon: String(entry.options?.icon || payload.icon || "/icons/icon-192.png"),
+      badge: String(entry.options?.badge || payload.badge || "/icons/icon-192.png"),
+      tag: String(entry.options?.tag || payload.tag || "disaster-alert"),
+      renotify: entry.options?.renotify === true ? true : false,
+      data: { url: String(entry.options?.data?.url || payload.url || "/command-center") },
+    };
+    await self.registration.showNotification(title, options);
+  });
+  await Promise.all(shows);
+  await cache.delete(PUSH_QUEUE_CACHE);
+}
+
+function buildPushOptions(payload) {
+  return {
+    body: String(payload.body ?? "You have a new disaster alert."),
+    icon: String(payload.icon ?? "/icons/icon-192.png"),
+    badge: String(payload.badge ?? "/icons/icon-192.png"),
+    tag: String(payload.tag ?? "disaster-alert"),
+    renotify: payload.renotify === true ? true : false,
+    data: { url: String(payload.url || "/command-center") },
+  };
+}
 
 self.addEventListener("push", (event) => {
   let payload = {};
@@ -123,16 +194,20 @@ self.addEventListener("push", (event) => {
   }
 
   const title = String(payload.title ?? "Disaster Alert");
-  const options = {
-    body: String(payload.body ?? "You have a new disaster alert."),
-    icon: String(payload.icon ?? "/icons/icon-192.png"),
-    badge: String(payload.badge ?? "/icons/icon-192.png"),
-    tag: String(payload.tag ?? "disaster-alert"),
-    renotify: payload.renotify === true ? true : false,
-    data: { url: String(payload.url || "/command-center") },
-  };
+  const options = buildPushOptions(payload);
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  // Offline (or no visible client) → queue for replay on the next sync tick.
+  if (!swOnline()) {
+    event.waitUntil(enqueuePushPayload(payload, title, options));
+    return;
+  }
+
+  // Online → try to show immediately, but park on failure so nothing drops.
+  event.waitUntil(
+    self.registration.showNotification(title, options).catch(() =>
+      enqueuePushPayload(payload, title, options).then(() => undefined),
+    ),
+  );
 });
 
 self.addEventListener("notificationclick", (event) => {
@@ -165,6 +240,9 @@ self.addEventListener("notificationclick", (event) => {
 const SYNC_TAG = "disasterlink-sync";
 const SYNC_MSG = "drip:sync:request";
 
+// One-shot background sync tags registered from the page (Phase 7).
+const BG_SYNC_TAGS = ["sync-predictions", "sync-alerts"];
+
 function relaySyncRequest() {
   self.clients
     .matchAll({ type: "window", includeUncontrolled: true })
@@ -174,15 +252,30 @@ function relaySyncRequest() {
     .catch(() => {});
 }
 
+// Every sync tick — one-shot, periodic or message nudge — also replays any
+// notifications queued during the last outage (push offline queue).
+function handleSyncTick() {
+  relaySyncRequest();
+  return flushPushQueue();
+}
+
+// One-shot Background Sync ('sync' event) — the browser retried a queued
+// registration now that connectivity returned. Sync the matching dataset(s)
+// via the page engine and flush the push queue.
+self.addEventListener("sync", (event) => {
+  if (!BG_SYNC_TAGS.includes(event.tag)) return;
+  event.waitUntil(handleSyncTick());
+});
+
 // Periodic Background Sync — browser woke us to sync offline data.
 self.addEventListener("periodicsync", (event) => {
   if (event.tag !== SYNC_TAG) return;
-  event.waitUntil(Promise.resolve(relaySyncRequest()));
+  event.waitUntil(Promise.resolve(handleSyncTick()));
 });
 
 // In-page "Sync Now" nudge → relay to all open clients.
 self.addEventListener("message", (event) => {
   const data = event.data && typeof event.data === "object" ? event.data : {};
   if (data.type !== SYNC_MSG) return;
-  relaySyncRequest();
+  event.waitUntil(Promise.resolve(handleSyncTick()));
 });

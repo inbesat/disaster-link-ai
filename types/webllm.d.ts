@@ -1,10 +1,10 @@
 // ---------------------------------------------------------------------
 // types/webllm.d.ts — Offline-First Architecture · Phase 1
-// Ambient typings for the OPTIONAL @mlc-ai/web-llm dependency used by
-// lib/ai-bridge/local-provider.ts. WebLLM is not installed in this repo
-// (Phase 2 wires the real 4-bit Gemma download/warm-up), so these loose
-// typings keep the bridge type-checking while the package is absent.
-// The runtime only ever touches these shapes after the lazy import().
+// Ambient typings for the @mlc-ai/web-llm dependency (installed: ^0.2.84)
+// used by lib/ai-bridge/local-provider.ts and webllm-provider.ts. These
+// loose typings pin a minimal, stable engine surface independent of the
+// upstream package's own type drift — the runtime only ever touches
+// these shapes after the lazy import() in webllm-provider.ts.
 // ---------------------------------------------------------------------
 
 declare module "@mlc-ai/web-llm" {

@@ -19,22 +19,39 @@ import type { AIProvider, AIResponse, ChatContext, ProviderStatus } from "./type
 import { CloudAIProvider } from "./cloud-provider";
 import { LocalGemmaProvider } from "./local-provider";
 import { ConnectivityMonitor, getConnectivityMonitor } from "./connectivity";
+import { RuleBasedFallback } from "./rule-based-fallback";
+import { guardLocalResponse, scoreResponseConfidence } from "./confidence";
 
 export interface AIBridgeOptions {
   cloud?: AIProvider;
   local?: AIProvider;
   monitor?: ConnectivityMonitor;
+  /**
+   * Phase 9 resilience: when neither cloud nor local can answer (device too
+   * weak for Gemma, model not downloaded), step down to a rule-based
+   * emergency responder instead of a dead-end notice.
+   */
+  fallback?: AIProvider | null;
+  /**
+   * Phase 9 confidence scoring: when true, low-confidence local output is
+   * replaced with the guided general-advice reply (spec threshold 0.6).
+   */
+  guardConfidence?: boolean;
 }
 
 export class AIBridge {
   private cloud: AIProvider;
   private local: AIProvider;
   private monitor: ConnectivityMonitor;
+  private readonly fallback: AIProvider | null;
+  private readonly guardConfidence: boolean;
 
   constructor(options: AIBridgeOptions = {}) {
     this.cloud = options.cloud ?? new CloudAIProvider();
     this.local = options.local ?? new LocalGemmaProvider();
     this.monitor = options.monitor ?? getConnectivityMonitor();
+    this.fallback = options.fallback ?? null;
+    this.guardConfidence = options.guardConfidence ?? false;
   }
 
   /** Combined readiness — the status the UI badge should display. */
@@ -60,7 +77,23 @@ export class AIBridge {
       return localRes ?? res;
     }
     const localRes = await this.tryLocal(prompt, context);
-    return localRes ?? this.offlineReply();
+    if (localRes) return localRes;
+    return this.ruleFallback(prompt, context);
+  }
+
+  /** Phase 9: rule-based emergency answers when no model path is available. */
+  private async ruleFallback(
+    prompt: string,
+    context: ChatContext,
+  ): Promise<AIResponse> {
+    if (!this.fallback) return this.offlineReply();
+    try {
+      const res = await this.fallback.generateResponse(prompt, context);
+      if (res.error) return this.offlineReply();
+      return res;
+    } catch {
+      return this.offlineReply();
+    }
   }
 
   /** Runs the local model when ready; returns null so callers keep cloud err. */
@@ -73,7 +106,20 @@ export class AIBridge {
     }
     if (this.local.getStatus() === "local-ready") {
       const res = await this.local.generateResponse(prompt, context);
-      return res.error ? null : res;
+      if (res.error) return null;
+      if (!this.guardConfidence) return res;
+      // Phase 9: score local output; replace garbage with guided advice.
+      const score = res.confidence ?? scoreResponseConfidence(res.text);
+      const guarded = guardLocalResponse(res.text, score);
+      if (guarded.text !== res.text) {
+        return {
+          ...res,
+          text: guarded.text,
+          confidence: guarded.score,
+          source: "confidence-guard",
+        };
+      }
+      return { ...res, confidence: guarded.score, source: res.source ?? "local" };
     }
     return null;
   }
@@ -100,6 +146,11 @@ export class AIBridge {
 let sharedBridge: AIBridge | null = null;
 
 export function getAIBridge(): AIBridge {
-  if (!sharedBridge) sharedBridge = new AIBridge();
+  if (!sharedBridge) {
+    sharedBridge = new AIBridge({
+      fallback: new RuleBasedFallback(),
+      guardConfidence: true,
+    });
+  }
   return sharedBridge;
 }

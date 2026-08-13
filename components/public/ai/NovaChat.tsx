@@ -27,7 +27,7 @@
 // mic lets scared, wet-handed or low-literacy users speak instead of type.
 // ---------------------------------------------------------------------
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   AnimatePresence,
   animate,
@@ -44,6 +44,7 @@ import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useTranslation } from "@/lib/i18n/LanguageContext";
 import { matchOfflineFaq } from "@/lib/mock-data/offline-faq";
 import { writeSafeStatus } from "@/lib/mock-data/public-alerts";
+import { routeChatQuery } from "@/lib/ai/AIBridge";
 import ChatMessage from "./ChatMessage";
 import DocumentScanner from "./DocumentScanner";
 import QuickPrompts from "./QuickPrompts";
@@ -77,8 +78,26 @@ type ChatEntry = {
   content?: string;
   /** Structured UI response (Step 5) — checklist / route / action card. */
   card?: ResponseCardData;
+  /** Which engine produced this reply — drives the bubble badge. */
+  source?: "cloud" | "local";
   timestamp: string;
 };
+
+/** District used to scope the offline cache + cloud chat (demo default). */
+const CHAT_DISTRICT = "Patna";
+
+/** Pill above AI bubbles — orange when the local model answered, green cloud. */
+function SourceBadge({ source }: { source: "cloud" | "local" }): ReactNode {
+  return source === "local" ? (
+    <span className="inline-flex items-center gap-1 rounded-full bg-[#F97316]/20 px-2 py-0.5 text-[0.625rem] font-bold text-[#FDBA74] ring-1 ring-[#F97316]/30">
+      ⚡ Offline AI Mode
+    </span>
+  ) : (
+    <span className="inline-flex items-center gap-1 rounded-full bg-[#16a34a]/20 px-2 py-0.5 text-[0.625rem] font-bold text-[#86efac] ring-1 ring-[#16a34a]/30">
+      ☁️ Live Data
+    </span>
+  );
+}
 
 export function NovaChat() {
   const { t, language } = useTranslation();
@@ -223,10 +242,33 @@ export function NovaChat() {
     settle(snapToPx(next === "expanded" ? SNAP_EXPANDED : SNAP_COLLAPSED));
   };
 
+  // Answers a prompt through the AI Bridge (cloud ↔ local). Offline, a
+  // matched FAQ pair answers instantly; everything else routes through
+  // routeChatQuery — cloud /api/chat when online, WebLLM + the 48h Dexie
+  // cache when offline — which reports the engine used for the badge.
+  const getAnswer = async (
+    trimmed: string,
+  ): Promise<{ text: string; source: "cloud" | "local" }> => {
+    if (!online) {
+      const match = matchOfflineFaq(trimmed);
+      if (match) {
+        return {
+          text: `📖 ${t(`offline_q_${match.id}`)}\n\n${t(`offline_a_${match.id}`)}`,
+          source: "local",
+        };
+      }
+    }
+    try {
+      return await routeChatQuery(trimmed, CHAT_DISTRICT);
+    } catch {
+      return { text: t("nova_reply"), source: "local" };
+    }
+  };
+
   // Shared send path — used by the composer, the quick prompts (which pass
-  // their own intent-specific reply — text OR a structured card) and future
-  // channels. While OFFLINE the AI call is intercepted: the query is run
-  // against the local FAQ first, the generic offline fallback second.
+  // their own intent-specific structured card) and future channels. Free
+  // text routes through the AI Bridge; structured cards keep their canned
+  // shortcut (they're UI, not prose).
   const sendPrompt = (text: string, reply?: string | ResponseCardData) => {
     const trimmed = text.trim();
     if (!trimmed || typing) return;
@@ -237,32 +279,35 @@ export function NovaChat() {
     setDraft("");
     setTyping(true);
 
-    let answer: string | ResponseCardData | undefined = reply;
-    if (!online && answer === undefined) {
-      const match = matchOfflineFaq(trimmed);
-      if (match) {
-        // Local Q&A pair — show the matched question + the local answer.
-        answer = `📖 ${t(`offline_q_${match.id}`)}\n\n${t(`offline_a_${match.id}`)}`;
-      } else {
-        answer = t("offline_fallback");
-      }
+    // Structured quick-prompt cards (checklist / route / action).
+    if (reply !== undefined && typeof reply === "object") {
+      window.setTimeout(() => {
+        setTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          { id: `a-${Date.now()}`, role: "ai", card: reply, timestamp: nowTime() },
+        ]);
+      }, TYPING_MS);
+      return;
     }
 
-    window.setTimeout(() => {
+    // Real AI: keep the typing dots breathing while the bridge answers.
+    void Promise.all([
+      getAnswer(trimmed),
+      new Promise((resolve) => setTimeout(resolve, TYPING_MS)),
+    ]).then(([answer]) => {
       setTyping(false);
       setMessages((prev) => [
         ...prev,
         {
           id: `a-${Date.now()}`,
           role: "ai",
-          // Inline the type check so TS narrows `answer` correctly.
-          ...(typeof answer === "object"
-            ? { card: answer }
-            : { content: answer ?? t("nova_reply") }),
+          content: answer.text,
+          source: answer.source,
           timestamp: nowTime(),
         },
       ]);
-    }, TYPING_MS);
+    });
   };
 
   // Phase 6 · Step 5 — the action card's one-tap "I am safe": persist the
@@ -447,7 +492,16 @@ export function NovaChat() {
                       }
                     />
                   ) : (
-                    <ChatMessage key={m.id} role={m.role} timestamp={m.timestamp}>
+                    <ChatMessage
+                      key={m.id}
+                      role={m.role}
+                      timestamp={m.timestamp}
+                      badge={
+                        m.role === "ai" && m.source ? (
+                          <SourceBadge source={m.source} />
+                        ) : undefined
+                      }
+                    >
                       {m.content}
                     </ChatMessage>
                   ),

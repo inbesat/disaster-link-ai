@@ -88,7 +88,7 @@ function MetricRing({
         transition: "box-shadow 1.4s ease",
       }}
     >
-      <div className="relative w-[120px] h-[120px] flex items-center justify-center">
+      <div className="relative w-[128px] h-[128px] sm:w-[152px] sm:h-[152px] flex items-center justify-center">
         <svg viewBox="0 0 120 120" className="w-full h-full transform -rotate-90">
           {/* Track ring */}
           <circle
@@ -116,7 +116,7 @@ function MetricRing({
             }}
           />
         </svg>
-        <div className="absolute text-2xl font-bold text-white tabular-nums">
+        <div className="absolute text-2xl sm:text-3xl font-bold text-white tabular-nums">
           {count}%
         </div>
       </div>

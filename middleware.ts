@@ -24,6 +24,7 @@ const PROTECTED_PATHS = [
   "/shelters",
   "/evacuations",
   "/ai-planner",
+  "/ngo-portal",
   "/settings",
 ];
 
@@ -372,6 +373,7 @@ export const config = {
     "/shelters",
     "/evacuations",
     "/ai-planner",
+    "/ngo-portal/:path*",
     "/settings/:path*",
     // Phase 15 · Step 4 — the sandbox write-lockdown must cover EVERY API
     // route (a sandbox user could otherwise POST straight past the page

@@ -14,6 +14,7 @@ import {
 } from "@/lib/validations/user";
 import { LOCALE_OPTIONS } from "@/lib/i18n/locales";
 import DataExportButton from "@/components/security/DataExportButton";
+import Toggle from "@/components/settings/Toggle";
 
 let supabase: ReturnType<typeof createClient> | null = null;
 
@@ -31,6 +32,8 @@ export default function ProfileSetupPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ProfileSetupInput>({
     resolver: zodResolver(profileSetupSchema),
@@ -38,8 +41,14 @@ export default function ProfileSetupPage() {
       role: "field_responder",
       organization: "NGO",
       preferredLanguage: "en",
+      isNgo: false,
     },
   });
+
+  // Reveals the NGO registration fields — off by default so citizens sail
+  // through onboarding; NGOs flip it to identify themselves for the
+  // Verified NGO Donation track.
+  const isNgo = watch("isNgo");
 
   useEffect(() => {
     async function guard() {
@@ -88,6 +97,12 @@ export default function ProfileSetupPage() {
         emergency_contact: data.emergencyContact,
         assigned_district: data.assignedDistrict,
         preferred_language: data.preferredLanguage,
+        // Verified NGO Donation — persist the NGO track only when the
+        // toggle is ON; otherwise keep the columns null. Verification
+        // status defaults to 'pending' in the DB until an admin reviews.
+        is_ngo: data.isNgo,
+        ngo_reg_number: data.isNgo ? (data.ngoRegNumber ?? null) : null,
+        ngo_description: data.isNgo ? (data.ngoDescription ?? null) : null,
         ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
       })
       .eq("id", user.id);
@@ -265,6 +280,65 @@ export default function ProfileSetupPage() {
               Your interface language — emergency SMS alerts will be sent in
               this language.
             </p>
+          </div>
+
+          {/* Verified NGO Donation — onboarding identity toggle. */}
+          <div className="border-t border-border pt-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-foreground">
+                  Register as an NGO / Relief Organization
+                </p>
+                <p className="mt-0.5 text-xs text-slate-500">
+                  Verified NGOs can later upload donation QR codes to receive
+                  funds. Your registration is reviewed by an admin before
+                  verification.
+                </p>
+              </div>
+              <Toggle
+                checked={isNgo}
+                onChange={(next) =>
+                  setValue("isNgo", next, { shouldValidate: true })
+                }
+                label="Register as an NGO / Relief Organization"
+              />
+            </div>
+
+            {isNgo && (
+              <div className="mt-5 space-y-5">
+                <div>
+                  <label htmlFor="ngoRegNumber" className={labelClass}>
+                    NGO Registration Number
+                  </label>
+                  <input
+                    id="ngoRegNumber"
+                    type="text"
+                    {...register("ngoRegNumber")}
+                    placeholder="e.g. NGO/2024/DR/001142"
+                    className={inputClass}
+                  />
+                  {errors.ngoRegNumber && (
+                    <p className={errorClass}>{errors.ngoRegNumber.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="ngoDescription" className={labelClass}>
+                    Brief Description of Relief Work
+                  </label>
+                  <textarea
+                    id="ngoDescription"
+                    {...register("ngoDescription")}
+                    rows={3}
+                    placeholder="e.g. Flood rescue, shelter operations, and distribution of relief kits across Bihar."
+                    className={inputClass}
+                  />
+                  {errors.ngoDescription && (
+                    <p className={errorClass}>{errors.ngoDescription.message}</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {error && (

@@ -102,21 +102,47 @@ export const preferredLanguageSchema = z.enum(PREFERRED_LANGUAGES);
 // ---------------------------------------------------------------------
 // Profile setup — validated on first sign-in / onboarding
 // ---------------------------------------------------------------------
-export const profileSetupSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters long"),
-  organization: organizationSchema,
-  role: userRoleSchema,
-  phone: indianPhoneSchema,
-  emergencyContact: z.object({
-    name: z.string().min(1, "Emergency contact name is required"),
+export const profileSetupSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters long"),
+    organization: organizationSchema,
+    role: userRoleSchema,
     phone: indianPhoneSchema,
-  }),
-  assignedDistrict: z.string().min(1, "Assigned district is required"),
-  // Required (not `.default()`): the profile form always submits an explicit
-  // value, and keeping it required keeps react-hook-form's input/output
-  // types in sync.
-  preferredLanguage: preferredLanguageSchema,
-});
+    emergencyContact: z.object({
+      name: z.string().min(1, "Emergency contact name is required"),
+      phone: indianPhoneSchema,
+    }),
+    assignedDistrict: z.string().min(1, "Assigned district is required"),
+    // Required (not `.default()`): the profile form always submits an explicit
+    // value, and keeping it required keeps react-hook-form's input/output
+    // types in sync.
+    preferredLanguage: preferredLanguageSchema,
+    // Verified NGO Donation — the onboarding toggle flips isNgo; the two
+    // text fields below are only required (see superRefine) when the toggle
+    // is ON, so regular citizens can ignore them entirely. Required (not
+    // `.default()`) so react-hook-form's input/output types stay in sync —
+    // the form always supplies a value via defaultValues + setValue.
+    isNgo: z.boolean(),
+    ngoRegNumber: z.string().optional(),
+    ngoDescription: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.isNgo) return;
+    if (!data.ngoRegNumber || data.ngoRegNumber.trim().length < 3) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["ngoRegNumber"],
+        message: "Enter the NGO registration number (at least 3 characters)",
+      });
+    }
+    if (!data.ngoDescription || data.ngoDescription.trim().length < 10) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["ngoDescription"],
+        message: "Briefly describe your relief work (at least 10 characters)",
+      });
+    }
+  });
 
 export type ProfileSetupInput = z.infer<typeof profileSetupSchema>;
 export type ProfileSetupErrors = z.inferFormattedError<typeof profileSetupSchema>;

@@ -4,10 +4,11 @@
 // components/public/BottomNav.tsx — Phase 2 · Step 1 · Citizen app bottom
 // navigation.
 //
-// Sticky 5-item bar pinned to the bottom of the mobile-first citizen app:
-// Home (active on the dashboard) · Alerts · Map · Settings · SOS. Centered
-// to the same max-w-md column as the dashboard shell (mx-auto), with
-// safe-area padding for notched phones (pb-[env(safe-area-inset-bottom)]).
+// Sticky 6-item bar pinned to the bottom of the mobile-first citizen app:
+// Home (active on the dashboard) · Alerts · Map · Donate · Settings · SOS.
+// Centered to the same max-w-md column as the dashboard shell (mx-auto),
+// with safe-area padding for notched phones
+// (pb-[env(safe-area-inset-bottom)]).
 //
 // Active state auto-derives from the current route (same isPathActive
 // convention as the gov SidebarNavItem), so the Home tab lights up on the
@@ -24,7 +25,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BellRing, Home, Map, Settings, Siren, type LucideIcon } from "lucide-react";
+import {
+  BellRing,
+  HeartHandshake,
+  Home,
+  Map,
+  Settings,
+  Siren,
+  type LucideIcon,
+} from "lucide-react";
 import { useSOS } from "@/components/public/sos/SOSContext";
 
 type NavItem = {
@@ -50,6 +59,12 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/public/dashboard", icon: Home },
   { label: "Alerts", href: "/public/alerts", icon: BellRing, hideDuringEmergency: true },
   { label: "Map", href: "/public/map", icon: Map },
+  {
+    label: "Donate",
+    href: "/public/donations",
+    icon: HeartHandshake,
+    hideDuringEmergency: true,
+  },
   {
     label: "Settings",
     href: "/public/settings",

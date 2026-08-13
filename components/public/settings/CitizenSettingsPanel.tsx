@@ -22,7 +22,10 @@ import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import {
   Bell,
+  Bot,
+  CheckCircle2,
   ChevronDown,
+  DownloadCloud,
   HeartPulse,
   History,
   Loader2,
@@ -42,6 +45,7 @@ import { useTranslation } from "@/lib/i18n/LanguageContext";
 import { LOCALE_OPTIONS } from "@/lib/i18n/locales";
 import { useBandwidth } from "@/lib/contexts/BandwidthContext";
 import { useHighContrast } from "@/lib/contexts/HighContrastContext";
+import { getLocalLLMProvider } from "@/lib/ai/LocalLLMProvider";
 import { showToast } from "@/components/ui/Toast";
 import BottomNav from "@/components/public/BottomNav";
 import PwaInstallCard from "@/components/pwa/PwaInstallCard";
@@ -184,6 +188,39 @@ export default function CitizenSettingsPanel({
   const [notif, setNotif] = useState<NotifPrefs>(DEFAULT_NOTIF);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+
+  // Offline AI model download state — 0..1 while streaming, null when idle.
+  const [modelProgress, setModelProgress] = useState<number | null>(null);
+  const [modelReady, setModelReady] = useState(false);
+  const [modelError, setModelError] = useState<string | null>(null);
+
+  async function handleDownloadModel() {
+    if (modelProgress !== null || modelReady) return;
+    setModelError(null);
+    setModelProgress(0);
+    try {
+      const ok = await getLocalLLMProvider().initializeModel((p) =>
+        setModelProgress(p),
+      );
+      if (ok) {
+        setModelReady(true);
+        setModelProgress(null);
+        showToast("success", {
+          id: "offline-ai-ready",
+          title: "Local AI ready",
+          description: "Nova can now answer without internet.",
+        });
+      } else {
+        setModelProgress(null);
+        setModelError(
+          "The download couldn't start — WebLLM isn't available on this device or browser. Connect to the internet and try again.",
+        );
+      }
+    } catch {
+      setModelProgress(null);
+      setModelError("The download couldn't start. Please try again.");
+    }
+  }
 
   // Hydrate from localStorage on mount (server snapshot = defaults so SSR
   // HTML and the first client paint agree — no hydration mismatch).
@@ -605,6 +642,85 @@ export default function CitizenSettingsPanel({
                 />
               </Link>
             </div>
+          </SettingsSection>
+
+          {/* Section 5 · Offline AI Safety Model */}
+          <SettingsSection
+            icon={Bot}
+            title="Offline AI Safety Model"
+            caption="Download the small safety model so Nova keeps answering during a network blackout — it runs entirely on this device."
+          >
+            {modelReady ? (
+              <div className="flex items-start gap-3 rounded-[var(--dl-radius-sm)] border border-[#16a34a]/40 bg-[#16a34a]/10 p-4">
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#16a34a]/15 text-[#86efac]">
+                  <CheckCircle2 aria-hidden="true" className="h-5 w-5" strokeWidth={1.5} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-[#86efac]">Local AI Ready ✅</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-[var(--dl-text-muted)]">
+                    Nova can answer offline — safety questions work with no
+                    internet at all.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => void handleDownloadModel()}
+                  disabled={modelProgress !== null}
+                  className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[var(--dl-orange)] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#EA5B0C] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {modelProgress !== null ? (
+                    <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <DownloadCloud aria-hidden="true" className="h-4 w-4" />
+                  )}
+                  {modelProgress !== null
+                    ? "Downloading…"
+                    : "Download Local AI (~1.3GB)"}
+                </button>
+
+                {/* Live download progress from the initializeModel callback. */}
+                {modelProgress !== null && (
+                  <div className="mt-3">
+                    <div
+                      role="progressbar"
+                      aria-valuenow={Math.round(modelProgress * 100)}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label="AI model download progress"
+                      className="h-2.5 w-full overflow-hidden rounded-full bg-white/10"
+                    >
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-[#F97316] to-[#16a34a] transition-[width] duration-200"
+                        style={{ width: `${Math.round(modelProgress * 100)}%` }}
+                      />
+                    </div>
+                    <p className="mt-1.5 text-right font-mono text-[0.6875rem] text-[var(--dl-text-muted)]">
+                      {Math.round(modelProgress * 100)}% downloaded
+                    </p>
+                  </div>
+                )}
+
+                {modelError && (
+                  <p
+                    role="alert"
+                    className="mt-3 flex items-start gap-2 rounded-[var(--dl-radius-sm)] border border-severity-red-500/30 bg-severity-red-500/10 px-3 py-2.5 text-[0.75rem] font-medium text-severity-red-300"
+                  >
+                    <ShieldAlert aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
+                    {modelError}
+                  </p>
+                )}
+              </>
+            )}
+
+            {!modelReady && modelProgress === null && !modelError && (
+              <p className="mt-3 text-[0.6875rem] leading-relaxed text-[var(--dl-text-muted)]">
+                ~1.3GB · downloads once into your browser · requires WebGPU or a
+                modern browser.
+              </p>
+            )}
           </SettingsSection>
 
           {error && (

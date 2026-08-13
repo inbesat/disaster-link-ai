@@ -5,8 +5,8 @@
 // citizen portal.
 //
 // Mirrors the mobile BottomNav (components/public/BottomNav) exactly:
-// the same five items — Home · Alerts · Map · Settings · SOS — with the
-// same lucide icons, the same isPathActive route convention, the same
+// the same six items — Home · Alerts · Map · Donate · Settings · SOS —
+// with the same lucide icons, the same isPathActive route convention, the same
 // Emergency Mode lockdown (Alerts/Settings drop out while an SOS is
 // active), and the SOS item as a global modal trigger (useSOS().open())
 // instead of a route.
@@ -18,7 +18,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BellRing, Home, Map, Settings, Siren, LogOut, type LucideIcon } from "lucide-react";
+import {
+  BellRing,
+  HeartHandshake,
+  Home,
+  LogOut,
+  Map,
+  Settings,
+  Siren,
+  type LucideIcon,
+} from "lucide-react";
 import { useSOS } from "@/components/public/sos/SOSContext";
 import Logo from "@/components/ui/Logo";
 import LanguageSelector from "@/components/ui/LanguageSelector";
@@ -36,6 +45,12 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/public/dashboard", icon: Home },
   { label: "Alerts", href: "/public/alerts", icon: BellRing, hideDuringEmergency: true },
   { label: "Map", href: "/public/map", icon: Map },
+  {
+    label: "Donate",
+    href: "/public/donations",
+    icon: HeartHandshake,
+    hideDuringEmergency: true,
+  },
   {
     label: "Settings",
     href: "/public/settings",

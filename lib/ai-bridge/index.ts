@@ -21,6 +21,19 @@ export type {
   ConnectivityListener,
 } from "./connectivity";
 export { estimateTokens } from "./estimate-tokens";
+export {
+  RuleBasedFallback,
+  RULE_RESPONSES,
+  RULE_FALLBACK_RESPONSE,
+} from "./rule-based-fallback";
+export type { RuleEntry } from "./rule-based-fallback";
+export {
+  scoreResponseConfidence,
+  guardLocalResponse,
+  isLowConfidence,
+  LOW_CONFIDENCE_THRESHOLD,
+  LOW_CONFIDENCE_REPLY,
+} from "./confidence";
 export type {
   AIProvider,
   AIResponse,

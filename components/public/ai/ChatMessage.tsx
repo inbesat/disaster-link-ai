@@ -39,11 +39,13 @@ type ChatMessageProps = {
   children: ReactNode;
   /** Display timestamp, e.g. "10:24 AM" — rendered under the bubble. */
   timestamp?: string;
+  /** Optional pill rendered above an AI bubble (e.g. "⚡ Offline AI Mode"). */
+  badge?: ReactNode;
 };
 
 type Feedback = "up" | "down" | null;
 
-export function ChatMessage({ role, children, timestamp }: ChatMessageProps) {
+export function ChatMessage({ role, children, timestamp, badge }: ChatMessageProps) {
   const { t } = useTranslation();
   const isAI = role === "ai";
 
@@ -89,6 +91,8 @@ export function ChatMessage({ role, children, timestamp }: ChatMessageProps) {
       )}
 
       <div className={`flex max-w-[82%] flex-col ${isAI ? "items-start" : "items-end"}`}>
+        {/* Source badge (AI only) — e.g. "⚡ Offline AI Mode" / "☁️ Live Data". */}
+        {isAI && badge && <div className="mb-1">{badge}</div>}
         <div
           className={`px-3.5 py-2.5 shadow-[0_2px_12px_rgba(0,0,0,0.25)] ${
             isAI

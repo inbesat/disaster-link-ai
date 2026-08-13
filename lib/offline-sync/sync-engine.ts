@@ -237,6 +237,40 @@ export class OfflineSyncEngine {
     return this.fullSync();
   }
 
+  /**
+   * Syncs every dataset for ONE district (priority-ordered, like fullSync).
+   * Convenience surface for lib/offline/syncEngine.ts#syncOfflineData —
+   * refreshes the full 48h cache for a single district instead of the
+   * whole configured set.
+   */
+  async syncDistrict(district: string): Promise<{ synced: number; failed: number }> {
+    const db = this.getDb();
+    if (!db) return { synced: 0, failed: 0 };
+    const byPriority = (a: DataSourceConfig, b: DataSourceConfig) =>
+      PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+    const ordered = [...this.sources].sort(byPriority);
+
+    let synced = 0;
+    let failed = 0;
+    let index = 0;
+    while (index < ordered.length) {
+      const band = ordered[index].priority;
+      const bandSources = ordered.filter((s) => s.priority === band);
+      index += bandSources.length;
+
+      const results = await Promise.allSettled(
+        bandSources.map((source) => this.syncDataset(db, source, district)),
+      );
+      for (const result of results) {
+        if (result.status === "fulfilled" && result.value) synced += 1;
+        else failed += 1;
+      }
+    }
+
+    emitSyncEvent(SYNC_EVENT_UPDATED, { type: "all", district });
+    return { synced, failed };
+  }
+
   /** Syncs a single dataset type across all configured districts. */
   async syncType(type: DataType): Promise<{ synced: number; failed: number }> {
     const db = this.getDb();

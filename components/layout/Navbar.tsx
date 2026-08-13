@@ -85,8 +85,8 @@ export default function Navbar() {
         {/* Left: brand */}
         <div className="navbar-start w-auto">
           <a href="#hero" className="flex items-center gap-3 group">
-            <Logo className="h-8 w-8 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
-            <span className="hidden sm:block text-white font-bold text-lg tracking-tight font-[family-name:var(--font-display)]">
+            <Logo className="w-12 h-12 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
+            <span className="hidden sm:block text-white font-bold text-2xl tracking-tight font-[family-name:var(--font-display)]">
               SafeSphere{" "}
               <span className="bg-gradient-to-r from-[#5B8DF6] to-[#F97316] bg-clip-text text-transparent">
                 AI

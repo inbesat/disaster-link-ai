@@ -36,6 +36,7 @@ export class DisasterLinkDB extends Dexie {
   profiles!: EntityTable<OfflineRecord, "id">;
   maps!: EntityTable<OfflineRecord, "id">;
   knowledge!: EntityTable<OfflineRecord, "id">;
+  shelters!: EntityTable<OfflineRecord, "id">;
   metadata!: EntityTable<MetaRow, "key">;
   chatHistory!: EntityTable<ChatMessage, "id">;
   mapTiles!: EntityTable<MapTile, "id">;
@@ -68,6 +69,25 @@ export class DisasterLinkDB extends Dexie {
       profiles: "id, district",
       maps: "id, district",
       knowledge: "id, district",
+      metadata: "key",
+      chatHistory: "id, sessionId, timestamp, role",
+      mapTiles: "id, x, y, z, lastAccessedAt, expiresAt",
+      gemmaModel: "id, chunkIndex, totalChunks, downloadedAt",
+    });
+    // Verified NGO Donation / shelter ops — the shelters dataset joins the
+    // offline window. Version 3 re-declares the COMPLETE schema (Dexie drops
+    // any table missing from the newest version), so every earlier table is
+    // listed again alongside the new `shelters` one.
+    this.version(3).stores({
+      predictions: "id, district",
+      alerts: "id, district",
+      routes: "id, district",
+      resources: "id, district",
+      weather: "id, district",
+      profiles: "id, district",
+      maps: "id, district",
+      knowledge: "id, district",
+      shelters: "id, district",
       metadata: "key",
       chatHistory: "id, sessionId, timestamp, role",
       mapTiles: "id, x, y, z, lastAccessedAt, expiresAt",

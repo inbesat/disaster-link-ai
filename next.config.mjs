@@ -23,6 +23,45 @@ const withPWA = withPWAInit({
   register: false,
   customWorkerDir: "worker",
   fallbacks: { document: "/~offline" },
+  // Phase 7 · Step 1 — sw.js cache strategies. Workbox owns these routes in
+  // the generated public/sw.js:
+  //   • API calls — network-first, with a short timeout so slow/absent
+  //     backend fails fast into the offline cache (or the page's IndexedDB
+  //     fallback, which the offline-sync engine owns).
+  //   • Static assets — cache-first (never blocked by the network).
+  //   • Map tiles + icons — cache-first with a larger timeout.
+  runtimeCaching: [
+    {
+      urlPattern: ({ url }) => url.origin === self.location.origin && url.pathname.startsWith("/api/"),
+      handler: "NetworkFirst",
+      method: "GET",
+      options: {
+        cacheName: "disasterlink-api-v1",
+        networkTimeoutSeconds: 4,
+        expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 },
+      },
+    },
+    {
+      urlPattern: ({ url }) =>
+        url.origin === self.location.origin && /\.(png|jpg|jpeg|svg|webp|css|js|woff2?)$/.test(url.pathname),
+      handler: "CacheFirst",
+      method: "GET",
+      options: {
+        cacheName: "disasterlink-static-v1",
+        expiration: { maxEntries: 300, maxAgeSeconds: 30 * 24 * 60 * 60 },
+      },
+    },
+    {
+      urlPattern: ({ url }) =>
+        url.origin === self.location.origin && /\.(png|jpe?g)$/.test(url.pathname) && url.pathname.includes("tile"),
+      handler: "CacheFirst",
+      method: "GET",
+      options: {
+        cacheName: "disasterlink-tiles-v1",
+        expiration: { maxEntries: 800, maxAgeSeconds: 7 * 24 * 60 * 60 },
+      },
+    },
+  ],
 });
 
 // Phase 24 · CORS lockdown.
