@@ -5,6 +5,7 @@ import { prisma } from "@/server/prisma";
 import { detectSpam } from "@/lib/data-ingestion/spam-filter";
 import { anonymizePII, sanitizeInput } from "@/lib/security/sanitize";
 import { checkSpamPatrol } from "@/lib/security/spam-check";
+import { rateLimit } from "@/lib/security/rate-limit";
 
 // ---------------------------------------------------------------------
 // app/actions/reports.ts
@@ -32,6 +33,8 @@ export type SubmitReportResult = {
 };
 
 const REPORT_TYPES = ["flooding", "road_blocked", "shelter_needed", "rescue"] as const;
+const MAX_TEXT_LENGTH = 2000;
+const MAX_IMAGE_URL_LENGTH = 1000;
 
 /**
  * Persist a citizen ground-truth report. Sanitises inputs, defaults source to
@@ -42,6 +45,17 @@ const REPORT_TYPES = ["flooding", "road_blocked", "shelter_needed", "rescue"] as
 export async function submitCitizenReport(
   input: CitizenReportInput,
 ): Promise<SubmitReportResult> {
+  // Rate limit: max 5 reports per IP per 10 minutes
+  const clientKey = `report:${input.lat}:${input.lng}`;
+  const budget = rateLimit(clientKey, 5, 10 * 60 * 1000);
+  if (!budget.success) {
+    return {
+      ok: false,
+      id: "",
+      message: "Too many reports from your location. Please wait before submitting again.",
+    };
+  }
+
   const reportType = REPORT_TYPES.includes(input.reportType as never)
     ? input.reportType
     : "flooding";

@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret || secret.startsWith("<")) {
     return NextResponse.json(
-      { error: "CRON_SECRET not configured — ingestion disabled." },
+      { error: "Service not configured." },
       { status: 503 },
     );
   }

@@ -42,6 +42,7 @@ export default function ProfileSetupPage() {
       organization: "NGO",
       preferredLanguage: "en",
       isNgo: false,
+      isPwd: false,
     },
   });
 
@@ -49,6 +50,10 @@ export default function ProfileSetupPage() {
   // through onboarding; NGOs flip it to identify themselves for the
   // Verified NGO Donation track.
   const isNgo = watch("isNgo");
+
+  // Reveals the PWD mobility details — off by default; toggled ON by
+  // citizens who need priority rescue (Persons with Disabilities).
+  const isPwd = watch("isPwd");
 
   useEffect(() => {
     async function guard() {
@@ -103,6 +108,11 @@ export default function ProfileSetupPage() {
         is_ngo: data.isNgo,
         ngo_reg_number: data.isNgo ? (data.ngoRegNumber ?? null) : null,
         ngo_description: data.isNgo ? (data.ngoDescription ?? null) : null,
+        // PWD (Persons with Disabilities) — persist the PWD track only when
+        // the toggle is ON; otherwise keep the columns null/false. This
+        // ensures PWD users get priority rescue when they hit the SOS button.
+        is_pwd: data.isPwd,
+        pwd_details: data.isPwd ? (data.pwdDetails ?? null) : null,
         ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
       })
       .eq("id", user.id);
@@ -280,6 +290,50 @@ export default function ProfileSetupPage() {
               Your interface language — emergency SMS alerts will be sent in
               this language.
             </p>
+          </div>
+
+          {/* PWD (Persons with Disabilities) — priority rescue toggle. */}
+          <div className="border-t border-border pt-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-foreground">
+                  Person with Disability (PWD) / Mobility Impaired
+                </p>
+                <p className="mt-0.5 text-xs text-slate-500">
+                  Toggle ON if you or someone in your household requires priority
+                  rescue. Your SOS requests will jump to the top of the queue.
+                </p>
+              </div>
+              <Toggle
+                checked={isPwd}
+                onChange={(next) =>
+                  setValue("isPwd", next, { shouldValidate: true })
+                }
+                label="I am a Person with Disability (PWD) / Mobility Impaired"
+              />
+            </div>
+
+            {isPwd && (
+              <div className="mt-5">
+                <label htmlFor="pwdDetails" className={labelClass}>
+                  Please specify mobility/accessibility needs
+                </label>
+                <input
+                  id="pwdDetails"
+                  type="text"
+                  {...register("pwdDetails")}
+                  placeholder="e.g. Wheelchair user, visually impaired, bedridden"
+                  className={inputClass}
+                />
+                <p className="mt-1 text-xs text-slate-500">
+                  This information helps rescue teams prepare the right equipment
+                  (e.g., boat with ramp, physical lifting assistance).
+                </p>
+                {errors.pwdDetails && (
+                  <p className={errorClass}>{errors.pwdDetails.message}</p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Verified NGO Donation — onboarding identity toggle. */}

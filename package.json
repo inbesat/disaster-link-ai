@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
+    "dev:webpack": "next dev",
     "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
@@ -25,6 +26,9 @@
   "dependencies": {
     "@ai-sdk/openai": "^4.0.33",
     "@ai-sdk/react": "^4.0.58",
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
     "@hookform/resolvers": "^5.7.1",
     "@langchain/core": "^1.2.5",
     "@langchain/langgraph": "^1.4.9",
@@ -75,6 +79,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/typography": "^0.5.20",
     "@types/mapbox__mapbox-gl-draw": "^1.4.9",

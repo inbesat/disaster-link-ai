@@ -2,8 +2,14 @@
 
 import { cookies } from "next/headers";
 import { SIMULATION_COOKIE } from "@/lib/admin/simulation";
+import { requireRole } from "@/lib/security/require-role";
+
+const ADMIN_ROLES = ["super_admin", "district_admin"] as const;
 
 export async function enableSimulationMode() {
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) throw new Error("Unauthorized: admin access required.");
+
   cookies().set(SIMULATION_COOKIE, "true", {
     httpOnly: true,
     sameSite: "lax",
@@ -14,6 +20,9 @@ export async function enableSimulationMode() {
 }
 
 export async function disableSimulationMode() {
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) throw new Error("Unauthorized: admin access required.");
+
   cookies().delete(SIMULATION_COOKIE);
 }
 

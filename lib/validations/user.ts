@@ -125,22 +125,39 @@ export const profileSetupSchema = z
     isNgo: z.boolean(),
     ngoRegNumber: z.string().optional(),
     ngoDescription: z.string().optional(),
+    // PWD (Persons with Disabilities) — the onboarding toggle flips isPwd;
+    // pwdDetails is only required when the toggle is ON, so regular citizens
+    // can ignore it entirely.
+    isPwd: z.boolean(),
+    pwdDetails: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if (!data.isNgo) return;
-    if (!data.ngoRegNumber || data.ngoRegNumber.trim().length < 3) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["ngoRegNumber"],
-        message: "Enter the NGO registration number (at least 3 characters)",
-      });
+    // NGO validation
+    if (data.isNgo) {
+      if (!data.ngoRegNumber || data.ngoRegNumber.trim().length < 3) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["ngoRegNumber"],
+          message: "Enter the NGO registration number (at least 3 characters)",
+        });
+      }
+      if (!data.ngoDescription || data.ngoDescription.trim().length < 10) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["ngoDescription"],
+          message: "Briefly describe your relief work (at least 10 characters)",
+        });
+      }
     }
-    if (!data.ngoDescription || data.ngoDescription.trim().length < 10) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["ngoDescription"],
-        message: "Briefly describe your relief work (at least 10 characters)",
-      });
+    // PWD validation — require mobility details when PWD toggle is ON
+    if (data.isPwd) {
+      if (!data.pwdDetails || data.pwdDetails.trim().length < 3) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["pwdDetails"],
+          message: "Please specify your mobility/accessibility needs (at least 3 characters)",
+        });
+      }
     }
   });
 

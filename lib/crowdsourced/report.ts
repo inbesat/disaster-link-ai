@@ -20,6 +20,11 @@ export type GroundReport = {
   summary: string;
   image_url?: string | null;
   created_at?: string;
+  // PWD (Persons with Disabilities) — priority rescue flag. When true the
+  // report jumps to the top of the triage queue. pwd_details stores the
+  // specific mobility/accessibility need (e.g. "Wheelchair user").
+  is_pwd?: boolean;
+  pwd_details?: string | null;
 };
 
 export const GROUND_REPORT_TYPES: Array<{

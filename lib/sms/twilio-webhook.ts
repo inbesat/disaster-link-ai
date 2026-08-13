@@ -47,7 +47,11 @@ export function verifyTwilioSignature(
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   if (!authToken) {
     warnNoTokenOnce();
-    return { ok: true, reason: "no-token-configured" };
+    // In production, fail closed when no token is configured
+    if (process.env.NODE_ENV === "production") {
+      return { ok: false, reason: "no-token-configured-production" };
+    }
+    return { ok: true, reason: "no-token-configured-dev" };
   }
   const signature = request.headers.get("x-twilio-signature");
   if (!signature) return { ok: false, reason: "missing-signature" };

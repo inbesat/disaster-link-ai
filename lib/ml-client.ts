@@ -8,6 +8,7 @@ import { prisma } from "@/server/prisma";
 import { nearestDistrict } from "@/lib/data-ingestion/fetcher";
 
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL ?? "http://127.0.0.1:8000";
+const ML_API_KEY = process.env.ML_API_KEY ?? "";
 const REQUEST_TIMEOUT_MS = 3000;
 
 // Numeric class (0-3) -> UI-facing risk label.
@@ -85,9 +86,14 @@ export async function getFloodPrediction(
   options: FloodPredictionOptions = {},
 ): Promise<FloodPredictionResult> {
   try {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (ML_API_KEY) {
+      headers["Authorization"] = `Bearer ${ML_API_KEY}`;
+    }
+
     const response = await fetch(`${ML_SERVICE_URL}/predict`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(buildPayload(rainfall, elevation, options)),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       cache: "no-store",

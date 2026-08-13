@@ -80,13 +80,13 @@ const allowedOrigin =
 const isWildcard = allowedOrigin === "*";
 
 const nextConfig = {
-  // FIXME: re-enable after hackathon
+  // Re-enable TypeScript checking (fixes bugs before deploy)
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
-  // FIXME: re-enable after hackathon
+  // Re-enable ESLint checking (catches security issues)
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
 
   async headers() {
@@ -116,13 +116,27 @@ const nextConfig = {
         ],
       },
       {
+        // APK download — force browser download with the Android MIME type
+        // instead of trying to render/parse the binary.
+        source: "/apk/:path*",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/vnd.android.package-archive",
+          },
+          { key: "Content-Disposition", value: "attachment" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Cache-Control", value: "public, max-age=300" },
+        ],
+      },
+      {
         source: "/:path*",
         headers: [
           // Security headers for all pages
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:; frame-ancestors 'none';",
+              "default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
           },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },

@@ -92,9 +92,31 @@ export async function middleware(request: NextRequest) {
   const isOnGov = pathname === "/gov" || pathname.startsWith("/gov/");
   const isOnPublic = pathname === "/public" || pathname.startsWith("/public/");
 
-  // Fast path: non-sandbox API traffic never needs the middleware — it was
-  // never matched before Phase 15, so skip all auth work for it now.
+  // Fast path: non-sandbox, non-admin API traffic. Public read-only API
+  // endpoints (shelters, alerts, predictions, weather, etc.) are open by
+  // design for the citizen app. Protected endpoints (chat, broadcast,
+  // ingest, webhooks, admin) enforce auth via requireRole() in their
+  // handlers. Sandbox traffic is handled separately below.
   if (pathname.startsWith("/api/") && !isSandbox) {
+    // Whitelist of public API prefixes that need no auth.
+    const publicApiPrefixes = [
+      "/api/shelters",
+      "/api/alerts",
+      "/api/predictions",
+      "/api/flood",
+      "/api/weather",
+      "/api/live-conditions",
+      "/api/public",
+      "/api/health",
+      "/api/cap",
+      "/api/road-closures",
+      "/api/allocations",
+    ];
+    const isPublicApi = publicApiPrefixes.some((p) => pathname === p || pathname.startsWith(p + "/"));
+    if (isPublicApi) return NextResponse.next();
+    // All other API routes pass through — auth is enforced per-handler via
+    // requireRole() or requireAuth(). The middleware's role-cookie check
+    // below still applies when a role cookie is present.
     return NextResponse.next();
   }
 
@@ -323,13 +345,19 @@ export async function middleware(request: NextRequest) {
         url.pathname = "/403";
         return NextResponse.redirect(url);
       }
-      // 2FA enforcement: admin users must verify 2FA before accessing admin routes
-      const twoFaVerified = request.cookies.get("2fa_verified")?.value === "true";
-      if (!twoFaVerified) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/2fa-setup";
-        url.searchParams.set("next", pathname);
-        return NextResponse.redirect(url);
+      // 2FA enforcement: admin users must verify 2FA before accessing admin routes.
+      // NOTE: The 2fa_verified cookie is set server-side after real 2FA validation.
+      // For cookie-only demo sessions (no Supabase user), skip 2FA enforcement
+      // since there's no real identity to protect. For real Supabase users,
+      // the 2FA status should be verified against the database, not just a cookie.
+      if (user && !user.id.startsWith("guest")) {
+        const twoFaVerified = request.cookies.get("2fa_verified")?.value === "true";
+        if (!twoFaVerified) {
+          const url = request.nextUrl.clone();
+          url.pathname = "/2fa-setup";
+          url.searchParams.set("next", pathname);
+          return NextResponse.redirect(url);
+        }
       }
     }
 

@@ -1,0 +1,41 @@
+Here's a categorized list of datasets/databases you can actually pull from to train models — split by what they're good for.
+
+**1. Real-time & historical government data (best for rainfall, river levels, flood events)**
+- data.gov.in flood datasets: https://www.data.gov.in/keywords/Flood
+- data.gov.in rainfall catalogue (CWC + IMD + NRSC gridded data): https://www.data.gov.in/catalog/rainfall
+- data.gov.in all-India rainfall (sub-division wise, monthly): https://www.data.gov.in/catalog/rainfall-india
+- IMD hydromet / Customised Rainfall Information System (CRIS): https://mausam.imd.gov.in/imd_latest/contents/hydrological-services.php
+- CWC real-time flood forecasting portal (AFF): https://aff.india-water.gov.in/
+- India-WRIS (Water Resources Information System — 130+ GIS layers, free downloads): https://cwc.gov.in/en/water-resources-information-system-wris and https://indiawris.gov.in
+
+**2. Satellite/geospatial (for CV models — flood extent, land use, terrain)**
+- Bhuvan (ISRO geoportal, disaster services + free imagery download): https://bhuvan.nrsc.gov.in/ and disaster module: https://bhuvan-app1.nrsc.gov.in/disaster/disaster.php
+- Bhuvan Spatial Flood Early Warning System: https://bhuvan-app1.nrsc.gov.in/fews/
+- Bhuvan National Flood Vulnerability Assessment System: https://bhuvan-app1.nrsc.gov.in/nfvas/
+- NDEM (National Database for Emergency Management — historical disaster data + hazard tools): https://ndem.nrsc.gov.in/
+- NASA POWER (rainfall/temperature via satellite, no key needed): https://power.larc.nasa.gov/
+- Sentinel Hub (Sentinel-1 SAR + Sentinel-2 optical): https://www.sentinel-hub.com/
+- Google Earth Engine (pre-loaded flood-mapping datasets): https://earthengine.google.com/
+
+**3. Ready-made ML/training datasets (fastest to actually plug into a model)**
+- Kaggle — Indian Disaster Dataset (1900s–present, all disaster types, human/economic impact): https://www.kaggle.com/datasets/victoraesthete/indian-disaster-dataset
+- Kaggle — Flood Risk in India (rainfall, elevation, river discharge, socio-economic, historical flood label): https://www.kaggle.com/datasets/s3programmer/flood-risk-in-india
+- Kaggle — Cyclone/Wildfire/Flood/Earthquake Database: https://www.kaggle.com/datasets/rupakroy/cyclone-wildfire-flood-earthquake-database
+- Kaggle — Disaster Images Dataset (for image classification): https://www.kaggle.com/datasets/varpit94/disaster-images-dataset
+- Kaggle general search for "Flood": https://www.kaggle.com/datasets?search=Flood
+- India Flood Inventory (IIT-Delhi Hydrosense Lab — digitized IMD flood records 1985–2016, geospatial, built specifically for ML/research use): referenced via https://india.mongabay.com/2021/11/freely-available-geospatial-dataset-to-make-flood-research-easier/ (article links to the actual dataset repository)
+
+**4. Global disaster databases (good for pretraining / cross-validating on more data than India alone has)**
+- EM-DAT (the standard global disaster database — deaths, damage, dates, by country including India): https://www.emdat.be/
+- GLOFAS — Global Flood Awareness System (river discharge, flood forecasts, India coverage): https://www.globalfloods.eu/
+- ReliefWeb (UN OCHA — disaster reports, situation updates, India-filterable): https://reliefweb.int/updates?advanced-search=%28C118%29
+- Humanitarian Data Exchange (HDX) — India-specific: https://data.humdata.org/group/ind
+- Google Research Flood Hydrology Framework (open-sourced LSTM model + training pipeline, not just a dataset — you can literally fine-tune this on Indian river data): https://github.com/google-research/flood-hydrology
+
+**5. Institutional/official reporting (for ground-truth labels, not bulk training data, but useful to validate model output against real events)**
+- NDMA: https://ndma.gov.in/
+- NIDM: https://nidm.gov.in/
+- CWC: https://cwc.gov.in/
+- IMD: https://mausam.imd.gov.in/
+
+A practical note for your hackathon timeline: the **Kaggle Flood Risk in India dataset** + the **IIT-Delhi India Flood Inventory** are your fastest path to a trainable tabular model since they're already cleaned and India-specific. **Bhuvan + Sentinel Hub** are your path if you want a CV/satellite-image angle instead. **India-WRIS + CWC's AFF portal** are what you'd hit for live/real-time ingestion once the model is built, not for training data itself.

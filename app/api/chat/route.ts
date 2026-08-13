@@ -104,7 +104,8 @@ SECURITY / ROLE GUARDRAILS:
 type AccessContext = { role: string; district: string };
 
 function defaultCommandContext(): AccessContext {
-  return { role: "District Commander", district: "Patna" };
+  // Guests get minimal viewer access, NOT commander — prevents privilege escalation
+  return { role: "viewer", district: "Patna" };
 }
 
 async function resolveAccessContext(): Promise<AccessContext> {
@@ -155,7 +156,21 @@ export async function POST(req: Request) {
     );
   }
 
-  const { messages, currentDistrict, provider } = await req.json();
+  // Input validation
+  let messages: Array<{ role?: string; content?: string }>;
+  let currentDistrict: string | undefined;
+  let provider: string | undefined;
+  try {
+    const body = await req.json();
+    messages = Array.isArray(body.messages) ? body.messages : [];
+    currentDistrict = typeof body.currentDistrict === "string" ? body.currentDistrict : undefined;
+    provider = typeof body.provider === "string" ? body.provider : undefined;
+    if (messages.length === 0) {
+      return NextResponse.json({ error: "No messages provided." }, { status: 400 });
+    }
+  } catch {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
   const { role, district } = await resolveAccessContext();
 
   // Settings · AI provider preference (non-secret selection only — operator

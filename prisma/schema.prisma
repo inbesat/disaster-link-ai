@@ -60,6 +60,11 @@ model User {
   //   npx prisma migrate dev --name add_safety_status
   safetyStatus      String    @default("unknown") @map("safety_status")
   lastSafeAt        DateTime? @map("last_safe_at")
+  // PWD (Persons with Disabilities) — priority rescue flag. When true the
+  // user's SOS requests jump to the top of the triage queue. pwd_details
+  // stores the specific mobility/accessibility need (e.g. "Wheelchair user").
+  isPwd             Boolean  @default(false) @map("is_pwd")
+  pwdDetails        String?  @map("pwd_details")
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz
 

@@ -30,9 +30,9 @@ const OFFLINE_CACHE = "bharat-shakti-shell-v1";
 const OFFLINE_SHELL = [
   "/~offline",
   "/manifest.json",
-  "/icons/icon.svg",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
+  "/icons/icon-512-maskable.png",
 ];
 
 // Defined only inside the next-pwa-generated worker (DefinePlugin).

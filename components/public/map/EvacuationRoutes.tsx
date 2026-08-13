@@ -30,12 +30,17 @@ import { ROUTE_HAZARD_COLORS, type RouteSafetyClassification } from "@/lib/map/r
 const BASE_DASH = [0.5, 1.75] as const;
 const FLOODED_LAYER_ID = "citizen-route-flooded";
 
+/** PWD accessible route — bright blue (distinct from green safe route). */
+const PWD_ROUTE_COLOR = "#3b82f6"; // bright blue
+
 type EvacuationRoutesProps = {
   /** Pre-computed per-segment safety grading (null → draw nothing). */
   classification: RouteSafetyClassification | null;
+  /** PWD mode — render route in bright blue and show accessibility badge. */
+  isPwd?: boolean;
 };
 
-export default function EvacuationRoutes({ classification }: EvacuationRoutesProps) {
+export default function EvacuationRoutes({ classification, isPwd = false }: EvacuationRoutesProps) {
   const { current: map } = useMap();
   const reduceMotion = useReducedMotion();
 
@@ -89,26 +94,26 @@ export default function EvacuationRoutes({ classification }: EvacuationRoutesPro
           "line-width": 9,
         }}
       />
-      {/* Safe — solid green, the path to follow. */}
+      {/* Safe — solid green (or bright blue for PWD), the path to follow. */}
       <Layer
         id="citizen-route-safe"
         type="line"
         filter={safeFilter}
         layout={{ "line-cap": "round", "line-join": "round" }}
         paint={{
-          "line-color": ROUTE_HAZARD_COLORS.safe,
-          "line-width": 6,
+          "line-color": isPwd ? PWD_ROUTE_COLOR : ROUTE_HAZARD_COLORS.safe,
+          "line-width": isPwd ? 7 : 6,
         }}
       />
-      {/* Watch — amber, near danger but passable. */}
+      {/* Watch — amber (or lighter blue for PWD), near danger but passable. */}
       <Layer
         id="citizen-route-watch"
         type="line"
         filter={watchFilter}
         layout={{ "line-cap": "round", "line-join": "round" }}
         paint={{
-          "line-color": ROUTE_HAZARD_COLORS.watch,
-          "line-width": 6,
+          "line-color": isPwd ? "#60a5fa" : ROUTE_HAZARD_COLORS.watch,
+          "line-width": isPwd ? 7 : 6,
         }}
       />
       {/* Flooded — red, dashed, animated away from danger. */}

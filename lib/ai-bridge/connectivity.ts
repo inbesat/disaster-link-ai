@@ -37,7 +37,7 @@ export interface ConnectivitySnapshot {
 export type ConnectivityListener = (snapshot: ConnectivitySnapshot) => void;
 
 function browserIsOnline(): boolean {
-  return typeof navigator === "undefined" ? true : navigator.onLine;
+  return typeof navigator === "undefined" ? true : navigator.onLine === true;
 }
 
 /**
@@ -77,6 +77,12 @@ export class ConnectivityMonitor {
   private bound = false;
   private timer: ReturnType<typeof setInterval> | null = null;
   private readonly probe: BackendProbe;
+  /**
+   * Demo-mode override. `null` = follow the real browser network; a boolean
+   * forces the reported browser state so the "Simulate Offline" scenario can
+   * be demonstrated without touching `navigator.onLine` (read-only).
+   */
+  private simulatedNetwork: boolean | null = null;
 
   constructor(probe?: BackendProbe) {
     this.probe = probe ?? pingBackend;
@@ -84,8 +90,28 @@ export class ConnectivityMonitor {
 
   /** Coalesces the raw browser network event into listener notifications. */
   private handleNetworkChange = (): void => {
-    this.update({ browserOnline: browserIsOnline() });
+    this.update({ browserOnline: this.effectiveBrowserOnline() });
   };
+
+  private effectiveBrowserOnline(): boolean {
+    if (this.simulatedNetwork !== null) return this.simulatedNetwork;
+    return browserIsOnline();
+  }
+
+  /**
+   * Demo-mode override for the reported browser network. `null` restores the
+   * real `navigator.onLine`; `false` force-drops the whole app offline even
+   * though the device still has a connection.
+   */
+  setSimulatedNetwork(online: boolean | null): void {
+    this.simulatedNetwork = online;
+    this.handleNetworkChange();
+  }
+
+  /** Current simulated state — `null` when following the real network. */
+  getSimulatedNetwork(): boolean | null {
+    return this.simulatedNetwork;
+  }
 
   private update(partial: Partial<ConnectivitySnapshot>): void {
     const next = {

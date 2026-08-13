@@ -11,31 +11,73 @@
   "theme_color": "#0a0f1a",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["utilities", "weather", "health"],
+  "categories": [
+    "utilities",
+    "weather",
+    "health"
+  ],
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "../icons/icon-192.png",
+      "type": "image/png",
       "sizes": "192x192",
-      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.png",
-      "sizes": "512x512",
+      "src": "../icons/icon-512.png",
       "type": "image/png",
+      "sizes": "512x512",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.png",
-      "sizes": "512x512",
+      "src": "../icons/icon-192-maskable.png",
       "type": "image/png",
+      "sizes": "192x192",
       "purpose": "maskable"
     },
     {
-      "src": "/icons/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "src": "../icons/icon-512-maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Emergency Alerts",
+      "short_name": "Alerts",
+      "description": "Latest disaster alerts and warnings",
+      "url": "/public/alerts",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Nearby Shelters",
+      "short_name": "Shelters",
+      "description": "Find the nearest safe shelter",
+      "url": "/public/shelters",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "SOS",
+      "short_name": "SOS",
+      "description": "Send an emergency SOS with your location",
+      "url": "/public/sos",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

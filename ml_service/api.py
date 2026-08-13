@@ -10,6 +10,8 @@ Run from ml_service/ with:
 import os
 import sys
 import asyncio
+import hashlib
+import hmac
 from contextlib import asynccontextmanager
 
 # Python 3.14 Windows fix: the default Proactor loop crashes accepts with
@@ -18,7 +20,7 @@ if sys.platform == "win32" and hasattr(asyncio, "WindowsSelectorEventLoopPolicy"
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 import joblib
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -33,6 +35,23 @@ FEATURE_ORDER = [
 ]
 RISK_LABELS = ["Low", "Medium", "High", "Critical"]
 
+# API key for authentication (set ML_API_KEY in environment)
+ML_API_KEY = os.environ.get("ML_API_KEY", "")
+
+
+def verify_api_key(authorization: str = Header(default="")):
+    """Verify Bearer token for API authentication."""
+    if not ML_API_KEY:
+        # No key configured — allow in dev, reject in production
+        if os.environ.get("ENVIRONMENT", "development") == "production":
+            raise HTTPException(status_code=401, detail="ML_API_KEY not configured")
+        return
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
+    token = authorization[7:]
+    if not hmac.compare_digest(token, ML_API_KEY):
+        raise HTTPException(status_code=401, detail="Invalid API key")
+
 
 class FloodFeatures(BaseModel):
     cumulative_rainfall_72h: float = Field(
@@ -46,6 +65,16 @@ class FloodFeatures(BaseModel):
     )
     elevation_m: float = Field(ge=0, description="Terrain elevation (m)")
 
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "cumulative_rainfall_72h": 120.5,
+                "river_level_trend": 0.8,
+                "soil_saturation_index": 0.65,
+                "elevation_m": 45.0,
+            }
+        }
+
 
 class PredictionResponse(BaseModel):
     predicted_risk_class: int
@@ -54,9 +83,32 @@ class PredictionResponse(BaseModel):
     probabilities: list[float]
 
 
+def _load_model():
+    """Load the XGBoost model with integrity verification."""
+    if not os.path.exists(MODEL_PATH):
+        raise RuntimeError(f"Model file not found: {MODEL_PATH}")
+
+    # Basic file size sanity check (model should be > 1KB, < 100MB)
+    file_size = os.path.getsize(MODEL_PATH)
+    if file_size < 1024:
+        raise RuntimeError(f"Model file suspiciously small: {file_size} bytes")
+    if file_size > 100 * 1024 * 1024:
+        raise RuntimeError(f"Model file suspiciously large: {file_size} bytes")
+
+    # Load with joblib (safe for legitimate .pkl files from scikit-learn/xgboost)
+    # In production, use a signed model or checksum verification.
+    model = joblib.load(MODEL_PATH)
+
+    # Verify it has the expected predict_proba method
+    if not hasattr(model, "predict_proba"):
+        raise RuntimeError("Loaded model does not have predict_proba method")
+
+    return model
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app.state.model = joblib.load(MODEL_PATH)
+    app.state.model = _load_model()
     yield
 
 
@@ -67,13 +119,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Allow the Next.js frontend to call this locally during the demo.
+# Restrict CORS to Next.js backend only
+ALLOWED_ORIGINS = os.environ.get("ML_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 
@@ -83,13 +136,23 @@ def health():
 
 
 @app.post("/predict", response_model=PredictionResponse)
-def predict(features: FloodFeatures):
-    row = [[getattr(features, field) for field in FEATURE_ORDER]]
-    proba = app.state.model.predict_proba(row)[0]
-    class_idx = int(proba.argmax())
-    return PredictionResponse(
-        predicted_risk_class=class_idx,
-        risk_level=RISK_LABELS[class_idx],
-        confidence_score=float(proba[class_idx]),
-        probabilities=[float(p) for p in proba],
-    )
+def predict(features: FloodFeatures, _auth: None = Depends(verify_api_key)):
+    try:
+        if not hasattr(app.state, "model"):
+            raise HTTPException(status_code=503, detail="Model not loaded")
+        row = [[getattr(features, field) for field in FEATURE_ORDER]]
+        proba = app.state.model.predict_proba(row)[0]
+        class_idx = int(proba.argmax())
+        return PredictionResponse(
+            predicted_risk_class=class_idx,
+            risk_level=RISK_LABELS[class_idx],
+            confidence_score=float(proba[class_idx]),
+            probabilities=[float(p) for p in proba],
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Prediction failed: {str(e)[:200]}",
+        )

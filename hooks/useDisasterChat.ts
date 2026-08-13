@@ -20,9 +20,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getAIBridge } from "@/lib/ai-bridge/ai-bridge";
-import type { ChatMessage, BridgeMode } from "@/lib/ai-bridge/types";
+import type { AIProvider, ChatContext, ChatMessage, BridgeMode } from "@/lib/ai-bridge/types";
 import { getOfflineDb } from "@/lib/offline-sync/db";
-import { WebLLMProvider } from "@/lib/ai-bridge/webllm-provider";
+import { WorkerLLMProvider } from "@/lib/ai-bridge/worker-provider";
 
 export type ChatAIMode = "cloud" | "local" | "fallback";
 
@@ -37,6 +37,14 @@ export interface DisasterChatMessage {
   streaming?: boolean;
 }
 
+/** A local provider with streaming, as the chat uses for offline replies. */
+export interface ChatLocalProvider extends AIProvider {
+  streamResponse(
+    prompt: string,
+    context: ChatContext,
+  ): AsyncGenerator<{ text: string; done: boolean; mode: "local" | "error" }>;
+}
+
 interface DisasterChatOptions {
   /** District scoping sent to the cloud planner + offline context builder. */
   district?: string;
@@ -44,8 +52,8 @@ interface DisasterChatOptions {
   sessionId?: string;
   /** Persist turns to IndexedDB (default true). */
   persist?: boolean;
-  /** Local model provider override (tests / demo). */
-  localProvider?: WebLLMProvider;
+  /** Local model provider override (tests / demo). Defaults to the Web Worker. */
+  localProvider?: ChatLocalProvider;
 }
 
 const DEFAULT_SESSION = "main";
@@ -61,7 +69,7 @@ export function useDisasterChat(options: DisasterChatOptions = {}) {
   const district = options.district;
   const sessionId = options.sessionId ?? DEFAULT_SESSION;
   const persist = options.persist ?? true;
-  const localProviderRef = useRef<WebLLMProvider | null>(options.localProvider ?? null);
+  const localProviderRef = useRef<ChatLocalProvider | null>(options.localProvider ?? null);
 
   const [messages, setMessages] = useState<DisasterChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,8 +78,11 @@ export function useDisasterChat(options: DisasterChatOptions = {}) {
   const messagesRef = useRef<DisasterChatMessage[]>([]);
   messagesRef.current = messages;
 
-  const localProvider = (): WebLLMProvider => {
-    if (!localProviderRef.current) localProviderRef.current = new WebLLMProvider();
+  const localProvider = (): ChatLocalProvider => {
+    // Phase 10 · default local inference runs on a Web Worker so token
+    // generation never blocks the UI; it degrades to the main-thread
+    // WebLLMProvider when Workers are unavailable.
+    if (!localProviderRef.current) localProviderRef.current = new WorkerLLMProvider();
     return localProviderRef.current;
   };
 

@@ -25,6 +25,8 @@ export type AllocationDemand = {
   affectedPopulation?: number;
   severityRisk?: number; // 0..1
   accessibilityFactor?: number; // 0..1 (1 = fully reachable)
+  isPwd?: boolean; // PWD priority flag — massive multiplier when true
+  pwdDetails?: string; // e.g. "Wheelchair user"
 };
 
 export type ProposedAllocation = {
@@ -46,18 +48,22 @@ export type ProposedAllocation = {
 const POPULATION_WEIGHT = 30;
 const SEVERITY_WEIGHT = 45;
 const ACCESS_PENALTY_WEIGHT = 10;
+const PWD_MULTIPLIER = 3.0; // PWD users get 3× priority boost
 
 /**
  * Priority score heavily weighted toward large affected populations and high
  * severity. Population enters on a log scale (so a 100k vs 200k area doesn't
  * double the score) while severity scales linearly and dominates the outcome.
  * A poor accessibility factor reduces the score, deprioritizing zones that
- * can't be reached right now. Range ≈ 0–100.
+ * can't be reached right now. PWD flag applies a 3× multiplier so disability
+ * rescue requests jump to the top of the queue. Range ≈ 0–100 (up to 300 with
+ * PWD multiplier).
  */
 export function calculatePriorityScore(
   affectedPopulation: number,
   severityRisk: number,
   accessibilityFactor: number,
+  isPwd: boolean = false,
 ): number {
   const populationComponent =
     Math.log10(Math.max(affectedPopulation, 0) + 1) * POPULATION_WEIGHT;
@@ -65,7 +71,8 @@ export function calculatePriorityScore(
   const accessPenalty =
     (1 - Math.max(0, Math.min(1, accessibilityFactor))) * ACCESS_PENALTY_WEIGHT;
 
-  return Math.max(0, populationComponent + severityComponent - accessPenalty);
+  const baseScore = Math.max(0, populationComponent + severityComponent - accessPenalty);
+  return isPwd ? baseScore * PWD_MULTIPLIER : baseScore;
 }
 
 /** Rough ETA: convoy travel time at ~40 km/h + 30 min loading buffer. */
@@ -104,6 +111,7 @@ export async function runGreedyAllocation(
         d.affectedPopulation ?? 0,
         d.severityRisk ?? 0,
         d.accessibilityFactor ?? 1,
+        d.isPwd ?? false,
       ),
     }))
     .sort((a, b) => b.priorityScore - a.priorityScore);

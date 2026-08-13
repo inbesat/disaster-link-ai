@@ -18,6 +18,7 @@ import {
   Waves,
   CloudLightning,
   HeartPulse,
+  Download,
 } from "lucide-react";
 import TiltCard from "@/components/landing/ui/TiltCard";
 
@@ -173,6 +174,14 @@ export default function Hero() {
                 className="btn btn-ghost rounded-full border border-white/25 text-white px-8 py-3.5 text-base hover:bg-white/10 hover:border-white/40 normal-case font-sans transition-all"
               >
                 Request Demo
+              </a>
+              <a
+                href="/apk/SafeSphere.apk"
+                download
+                className="btn btn-ghost rounded-full border border-emerald-400/50 text-emerald-300 px-8 py-3.5 text-base hover:bg-emerald-400/10 hover:border-emerald-400/80 normal-case font-sans transition-all"
+              >
+                <Download size={18} aria-hidden="true" />
+                Get Android App
               </a>
             </div>
           </Reveal>

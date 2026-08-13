@@ -80,21 +80,33 @@ type ChatEntry = {
   card?: ResponseCardData;
   /** Which engine produced this reply — drives the bubble badge. */
   source?: "cloud" | "local";
+  /** 3-state engine — cloud / local-gemma / offline logic engine. */
+  engineUsed?: "cloud" | "local-gemma" | "local-fallback";
   timestamp: string;
 };
 
 /** District used to scope the offline cache + cloud chat (demo default). */
 const CHAT_DISTRICT = "Patna";
 
-/** Pill above AI bubbles — orange when the local model answered, green cloud. */
-function SourceBadge({ source }: { source: "cloud" | "local" }): ReactNode {
-  return source === "local" ? (
+/** Pill above AI bubbles — green cloud, purple local LLM, orange fallback. */
+function SourceBadge({ engineUsed }: { engineUsed: "cloud" | "local-gemma" | "local-fallback" }): ReactNode {
+  if (engineUsed === "cloud") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-[#16a34a]/20 px-2 py-0.5 text-[0.625rem] font-bold text-[#86efac] ring-1 ring-[#16a34a]/30">
+        ☁️ Cloud AI
+      </span>
+    );
+  }
+  if (engineUsed === "local-gemma") {
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/20 px-2 py-0.5 text-[0.625rem] font-bold text-purple-300 ring-1 ring-purple-500/30">
+        🧠 Local LLM
+      </span>
+    );
+  }
+  return (
     <span className="inline-flex items-center gap-1 rounded-full bg-[#F97316]/20 px-2 py-0.5 text-[0.625rem] font-bold text-[#FDBA74] ring-1 ring-[#F97316]/30">
-      ⚡ Offline AI Mode
-    </span>
-  ) : (
-    <span className="inline-flex items-center gap-1 rounded-full bg-[#16a34a]/20 px-2 py-0.5 text-[0.625rem] font-bold text-[#86efac] ring-1 ring-[#16a34a]/30">
-      ☁️ Live Data
+      ⚡ Offline Logic Engine
     </span>
   );
 }
@@ -248,20 +260,21 @@ export function NovaChat() {
   // cache when offline — which reports the engine used for the badge.
   const getAnswer = async (
     trimmed: string,
-  ): Promise<{ text: string; source: "cloud" | "local" }> => {
+  ): Promise<{ text: string; source: "cloud" | "local"; engineUsed: "cloud" | "local-gemma" | "local-fallback" }> => {
     if (!online) {
       const match = matchOfflineFaq(trimmed);
       if (match) {
         return {
           text: `📖 ${t(`offline_q_${match.id}`)}\n\n${t(`offline_a_${match.id}`)}`,
           source: "local",
+          engineUsed: "local-fallback",
         };
       }
     }
     try {
       return await routeChatQuery(trimmed, CHAT_DISTRICT);
     } catch {
-      return { text: t("nova_reply"), source: "local" };
+      return { text: t("nova_reply"), source: "local", engineUsed: "local-fallback" };
     }
   };
 
@@ -304,6 +317,7 @@ export function NovaChat() {
           role: "ai",
           content: answer.text,
           source: answer.source,
+          engineUsed: answer.engineUsed,
           timestamp: nowTime(),
         },
       ]);
@@ -497,8 +511,8 @@ export function NovaChat() {
                       role={m.role}
                       timestamp={m.timestamp}
                       badge={
-                        m.role === "ai" && m.source ? (
-                          <SourceBadge source={m.source} />
+                        m.role === "ai" && m.engineUsed ? (
+                          <SourceBadge engineUsed={m.engineUsed} />
                         ) : undefined
                       }
                     >

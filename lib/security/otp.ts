@@ -21,6 +21,9 @@ type OtpEntry = { phone: string; expiresAt: number };
 // a production build would back this with a KV store).
 const otpStore = new Map<string, OtpEntry>();
 
+// Mutex map to prevent race conditions on concurrent OTP verification
+const verifyingCodes = new Set<string>();
+
 /** Cryptographically-random digits — never Math.random for OTP material. */
 export function generateOtp(length = 6): string {
   let code = "";
@@ -42,6 +45,9 @@ export function issueOtp(code: string, phone: string): void {
 /**
  * Verify + consume a code in one step (single-use).
  *
+ * ATOMIC: uses a Set-based lock to prevent race conditions where two
+ * concurrent requests both consume the same OTP code.
+ *
  * Returns the phone number on success — the entry is removed so a code
  * can never be redeemed twice. Returns null for unknown, malformed or
  * expired codes; expired entries are pruned as a side effect so the
@@ -50,18 +56,32 @@ export function issueOtp(code: string, phone: string): void {
 export function consumeOtp(code: string): string | null {
   const token = (code ?? "").trim().replace(/\D/g, "");
   if (!/^\d{6}$/.test(token)) return null;
+
+  // Prevent concurrent verification of the same code
+  if (verifyingCodes.has(token)) return null;
+
   const entry = otpStore.get(token);
   if (!entry || entry.expiresAt < Date.now()) {
     if (entry) otpStore.delete(token);
     return null;
   }
+
+  // Atomically consume: mark as verifying, delete from store
+  verifyingCodes.add(token);
   otpStore.delete(token);
+
+  // Release the lock after a short delay (allows same code to be
+  // retried after the lock is released if needed, but prevents
+  // concurrent consumption)
+  setTimeout(() => verifyingCodes.delete(token), 1000);
+
   return entry.phone;
 }
 
 /** Test/teardown helper — clears all issued codes. */
 export function resetOtpStore(): void {
   otpStore.clear();
+  verifyingCodes.clear();
 }
 
 /** Number of live codes (test introspection). */

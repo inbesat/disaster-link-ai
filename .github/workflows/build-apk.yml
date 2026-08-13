@@ -1,0 +1,83 @@
+name: Build Android APK
+
+# Builds the SafeSphere debug APK (Capacitor WebView wrapper) and commits it
+# to public/apk/SafeSphere.apk so the website serves it for direct download.
+#
+# Triggered:
+#   • manually via "Run workflow" (after changing the production domain in
+#     capacitor.config.ts) — recommended way to rebuild
+#   • automatically on push to main (ignoring public/apk, so this workflow
+#     never loops on its own auto-commit)
+#
+# The auto-commit message uses [skip ci] so GitHub does not re-trigger this
+# workflow, and `paths-ignore` guards against the public/apk change too.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'public/apk/**'
+
+jobs:
+  build-apk:
+    name: Build debug APK
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Android SDK platform + build-tools (API 36)
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" || true
+          sdkmanager --update || true
+
+      - name: Sync Capacitor (web assets + config into android/)
+        run: npx cap sync android
+
+      - name: Build debug APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SafeSphere-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Commit APK to public/apk for website download
+        run: |
+          mkdir -p public/apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk public/apk/SafeSphere.apk
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/apk/SafeSphere.apk
+          if git diff --cached --quiet; then
+            echo "No APK changes to commit"
+          else
+            git commit -m "chore(apk): update SafeSphere debug APK [skip ci]"
+            git push
+          fi

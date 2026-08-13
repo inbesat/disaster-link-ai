@@ -30,10 +30,12 @@ import {
   ArrowUpRight,
   ExternalLink,
   Flag,
+  Sun,
   X,
 } from "lucide-react";
 import type { CitizenShelter } from "@/lib/map/citizen-shelters";
 import { buildCitizenNavigation, type NavArrow } from "@/lib/map/citizen-navigation";
+import { useWakeLock } from "@/hooks/useWakeLock";
 
 /** Arrow key → icon. `arrived` renders a flag instead of a turn arrow. */
 const ARROW_ICONS: Record<NavArrow, typeof ArrowUp> = {
@@ -67,6 +69,14 @@ export default function TurnByTurnNav({ shelter, origin, onExit }: TurnByTurnNav
   );
   const reduceMotion = useReducedMotion();
   const [stepIndex, setStepIndex] = useState(0);
+  // Phase 11 · keep the screen on while the citizen is navigating.
+  const { active: screenOn, request: holdScreen, release: releaseScreen } = useWakeLock();
+
+  // Acquire the wake lock for the whole guidance session, release on exit.
+  useEffect(() => {
+    void holdScreen();
+    return () => void releaseScreen();
+  }, [holdScreen, releaseScreen]);
 
   const step = nav.steps[stepIndex];
   const isArrived = step.arrow === "arrived";
@@ -203,6 +213,14 @@ export default function TurnByTurnNav({ shelter, origin, onExit }: TurnByTurnNav
             Open in Maps
           </a>
         </div>
+
+        {/* Phase 11 · screen held on during guidance (wake lock) */}
+        {screenOn && (
+          <p className="mt-2 flex items-center gap-1.5 text-[0.6875rem] font-semibold text-severity-green-400">
+            <Sun aria-hidden="true" className="h-3 w-3" />
+            Screen stays on while you navigate
+          </p>
+        )}
       </motion.section>
     </div>
   );

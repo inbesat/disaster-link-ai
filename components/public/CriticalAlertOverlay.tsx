@@ -29,6 +29,7 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { MapPin, PhoneCall, Square, Volume2, X } from "lucide-react";
 import { triggerCriticalHaptic } from "@/hooks/useHaptics";
 import { stopSpeaking, useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { announceAlert } from "@/lib/audio/alert-announcer";
 import { formatCountdown } from "@/lib/alerts/countdown";
 
 /** Default countdown — 4 hours to flood, per the spec ("04:00:00"). */
@@ -69,6 +70,18 @@ export function CriticalAlertOverlay({
   useEffect(() => {
     if (open) triggerCriticalHaptic();
   }, [open]);
+
+  // Phase 11 · Native TTS fallback — auto-announce the evacuation copy on
+  // open. Walks TTS → pre-recorded clip → vibration so a voice always fires,
+  // even on devices without speechSynthesis.
+  useEffect(() => {
+    if (!open) return;
+    void announceAlert({
+      text: `Evacuate now. Flood expected in ${formatCountdown(countdownSeconds)}. Move to higher ground immediately.`,
+      lang: undefined,
+      alertType: "flood",
+    });
+  }, [open, countdownSeconds]);
 
   // Never leave speech running once the takeover closes.
   useEffect(() => {

@@ -10,6 +10,7 @@ import DemoHotkeysHost from "@/components/demo/DemoHotkeysHost";
 import DemoIndicators from "@/components/demo/DemoIndicators";
 import ScenarioSelector from "@/components/demo/ScenarioSelector";
 import ActionTriggersPanel from "@/components/demo/ActionTriggersPanel";
+import DemoMode from "@/components/demo/DemoMode";
 import ConversionBanner from "@/components/demo/ConversionBanner";
 import ImpactMetrics from "@/components/demo/ImpactMetrics";
 import LiveDemoQR from "@/components/demo/LiveDemoQR";
@@ -114,6 +115,11 @@ export default function RootLayout({
             demo mode. */}
         {demoMode && <ActionTriggersPanel mode={demoIndicatorMode} />}
         {demoMode && <ConversionBanner mode={demoIndicatorMode} />}
+
+        {/* Phase 12 · Step 2 — Demo Mode: floating Demo Controls panel
+            (left edge) + diagonal watermark, toggled from settings. Renders
+            nothing unless the "Demo Mode" toggle is on. */}
+        <DemoMode />
 
         {/* SimulationToggle — bottom-LEFT so it never collides with the
             fixed elements that own the bottom-right corner: the emergency

@@ -34,6 +34,12 @@ export {
   LOW_CONFIDENCE_THRESHOLD,
   LOW_CONFIDENCE_REPLY,
 } from "./confidence";
+export { WorkerLLMProvider } from "./worker-provider";
+export type {
+  WorkerRequest,
+  WorkerResponse,
+  WorkerLLMProviderOptions,
+} from "./worker-provider";
 export type {
   AIProvider,
   AIResponse,

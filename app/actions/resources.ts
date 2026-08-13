@@ -195,18 +195,35 @@ export type NewResourceRequest = {
  */
 export async function submitResourceRequest(
   input: NewResourceRequest,
-): Promise<{ ok: boolean; id: string }> {
+): Promise<{ ok: boolean; id: string; error?: string }> {
+  // Validate input
+  if (!input.category || typeof input.category !== "string") {
+    return { ok: false, id: "", error: "Category is required." };
+  }
+  if (typeof input.quantity !== "number" || !Number.isFinite(input.quantity) || input.quantity < 0) {
+    return { ok: false, id: "", error: "Invalid quantity." };
+  }
+  if (!input.urgency || !["low", "medium", "high", "critical"].includes(input.urgency)) {
+    return { ok: false, id: "", error: "Invalid urgency level." };
+  }
+  if (typeof input.lat !== "number" || !Number.isFinite(input.lat) || input.lat < -90 || input.lat > 90) {
+    return { ok: false, id: "", error: "Invalid latitude." };
+  }
+  if (typeof input.lng !== "number" || !Number.isFinite(input.lng) || input.lng < -180 || input.lng > 180) {
+    return { ok: false, id: "", error: "Invalid longitude." };
+  }
+
   try {
     const created = await prisma.resourceRequest.create({
       data: {
         requestedBy: "Field Responder",
         category: input.category,
-        quantityNeeded: input.quantity,
+        quantityNeeded: Math.floor(input.quantity),
         urgency: input.urgency,
         lat: input.lat,
         lng: input.lng,
         status: "pending",
-        notes: input.notes ?? "",
+        notes: input.notes ? String(input.notes).slice(0, 2000) : "",
       },
     });
     revalidatePath("/dispatch");
@@ -333,19 +350,54 @@ export type UpdateResourceInput = NewResourceInput & { id: string };
 
 const MOCK_COORDINATES = { lat: 25.61, lng: 85.14 }; // Patna centre fallback.
 
+const VALID_CATEGORIES = ["boat", "medical", "water", "food", "personnel", "power", "shelter", "communication", "other"];
+const VALID_STATUSES = ["available", "deployed", "maintenance", "retired"];
+const MAX_NAME_LENGTH = 200;
+const MAX_RESOURCE_QUANTITY = 1000000;
+
+function validateResourceInput(input: NewResourceInput): string | null {
+  if (!input.name || typeof input.name !== "string" || input.name.trim().length === 0) {
+    return "Resource name is required.";
+  }
+  if (input.name.length > MAX_NAME_LENGTH) {
+    return `Resource name must be under ${MAX_NAME_LENGTH} characters.`;
+  }
+  if (!input.category || !VALID_CATEGORIES.includes(input.category)) {
+    return `Invalid category. Must be one of: ${VALID_CATEGORIES.join(", ")}`;
+  }
+  if (typeof input.quantity !== "number" || !Number.isFinite(input.quantity) || input.quantity < 0 || input.quantity > MAX_RESOURCE_QUANTITY) {
+    return `Quantity must be between 0 and ${MAX_RESOURCE_QUANTITY}.`;
+  }
+  if (input.lat !== undefined && (typeof input.lat !== "number" || !Number.isFinite(input.lat) || input.lat < -90 || input.lat > 90)) {
+    return "Invalid latitude value.";
+  }
+  if (input.lng !== undefined && (typeof input.lng !== "number" || !Number.isFinite(input.lng) || input.lng < -180 || input.lng > 180)) {
+    return "Invalid longitude value.";
+  }
+  if (input.status && !VALID_STATUSES.includes(input.status)) {
+    return `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}`;
+  }
+  return null;
+}
+
 /**
  * Create a single resource. Falls back to a mock id on DB failure so the Add
  * Resource form always "succeeds" during a demo without a live database.
  */
 export async function addResource(
   input: NewResourceInput,
-): Promise<{ ok: boolean; id: string }> {
+): Promise<{ ok: boolean; id: string; error?: string }> {
+  const validationError = validateResourceInput(input);
+  if (validationError) {
+    return { ok: false, id: "", error: validationError };
+  }
+
   try {
     const created = await prisma.resource.create({
       data: {
-        name: input.name,
+        name: input.name.trim(),
         category: input.category,
-        quantity: Math.max(0, input.quantity || 0),
+        quantity: Math.max(0, Math.floor(input.quantity)),
         unit: input.unit || null,
         status: input.status || "available",
         lat: input.lat ?? MOCK_COORDINATES.lat,
@@ -366,13 +418,19 @@ export async function addResource(
  * UI can surface it, but still reports success when the row is a mock.
  */
 export async function updateResource(input: UpdateResourceInput): Promise<boolean> {
+  const validationError = validateResourceInput(input);
+  if (validationError) {
+    console.warn("[resources] updateResource validation failed:", validationError);
+    return false;
+  }
+
   try {
     await prisma.resource.update({
       where: { id: input.id },
       data: {
-        name: input.name,
+        name: input.name.trim(),
         category: input.category,
-        quantity: Math.max(0, input.quantity || 0),
+        quantity: Math.max(0, Math.floor(input.quantity)),
         unit: input.unit || undefined,
         status: input.status || undefined,
         lat: input.lat ?? MOCK_COORDINATES.lat,

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SafeSphere</string>
+    <string name="title_activity_main">SafeSphere</string>
+    <string name="package_name">com.safesphere.app</string>
+    <string name="custom_url_scheme">com.safesphere.app</string>
+</resources>

@@ -29,6 +29,8 @@ const MOCK_REPORTS: GroundReport[] = [
     people_count: 0,
     locations: ["Kankarbagh"],
     summary: "Flooding at Kankarbagh",
+    is_pwd: false,
+    pwd_details: null,
   },
   {
     id: "r2",
@@ -44,6 +46,8 @@ const MOCK_REPORTS: GroundReport[] = [
     people_count: 12,
     locations: ["Bailey Road"],
     summary: "Road blocked with trapped people",
+    is_pwd: false,
+    pwd_details: null,
   },
   {
     id: "r3",
@@ -59,6 +63,8 @@ const MOCK_REPORTS: GroundReport[] = [
     people_count: 5,
     locations: ["Rajendra Nagar"],
     summary: "Shelter needed, family on terrace",
+    is_pwd: true,
+    pwd_details: "Wheelchair user — needs boat with ramp",
   },
   {
     id: "r4",
@@ -74,6 +80,8 @@ const MOCK_REPORTS: GroundReport[] = [
     people_count: 5,
     locations: ["Danapur"],
     summary: "Rescue required at Danapur bridge",
+    is_pwd: true,
+    pwd_details: "Visually impaired elderly person",
   },
 ];
 
@@ -208,7 +216,11 @@ export default function TriagePage() {
             return (
               <article
                 key={report.id}
-                className="eoc-panel flex flex-col gap-4 p-5 transition hover:border-accent/60"
+                className={`eoc-panel flex flex-col gap-4 p-5 transition hover:border-accent/60 ${
+                  report.is_pwd
+                    ? "ring-2 ring-blue-500 animate-pulse border-blue-500/50"
+                    : ""
+                }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2">
@@ -254,7 +266,33 @@ export default function TriagePage() {
                       ⚠ {report.people_count} trapped
                     </span>
                   )}
+                  {/* PWD Priority Badge — highly visible blue wheelchair badge */}
+                  {report.is_pwd && (
+                    <>
+                      <span className="rounded-full bg-blue-600/20 px-2.5 py-1 text-xs font-bold text-blue-400 border border-blue-500/30">
+                        ♿ PWD PRIORITY
+                      </span>
+                      <span className="rounded-full bg-blue-600/10 px-2.5 py-1 text-xs font-medium text-blue-300 border border-blue-500/20">
+                        Requires Accessible Rescue
+                      </span>
+                    </>
+                  )}
                 </div>
+
+                {/* PWD Details — mobility/accessibility needs for rescue teams */}
+                {report.is_pwd && report.pwd_details && (
+                  <div className="rounded-md bg-blue-500/10 border border-blue-500/20 px-3 py-2">
+                    <p className="text-xs font-semibold text-blue-400 mb-1">
+                      ♿ Accessibility Requirements:
+                    </p>
+                    <p className="text-sm text-blue-200">
+                      {report.pwd_details}
+                    </p>
+                    <p className="mt-1 text-xs text-blue-300/70 italic">
+                      Requires Accessible Rescue (e.g., Boat with ramp / physical lifting assistance)
+                    </p>
+                  </div>
+                )}
 
                 <div className="mt-auto grid grid-cols-1 gap-2 sm:grid-cols-3">
                   <button

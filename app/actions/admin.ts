@@ -3,6 +3,9 @@
 import type { Role } from "@/lib/validations/user";
 import { logAdminAction } from "@/lib/admin/audit-logger";
 import { DEMO_AUDIT_EVENTS, type AuditEvent } from "@/lib/settings/privacy-settings";
+import { requireRole } from "@/lib/security/require-role";
+
+const ADMIN_ROLES = ["super_admin", "district_admin"] as const;
 
 export interface DistrictConfig {
   district: string;
@@ -87,6 +90,8 @@ let mockUsers: AdminUser[] = [
 ];
 
 export async function listUsers(): Promise<AdminUser[]> {
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) throw new Error("Unauthorized: admin access required.");
   return mockUsers;
 }
 
@@ -94,11 +99,26 @@ export async function changeUserRole(
   id: string,
   role: Role,
 ): Promise<AdminUser[]> {
+  const auth = await requireRole(["super_admin"] as const);
+  if (!auth.ok) throw new Error("Unauthorized: super_admin access required to change roles.");
+
+  // Validate the role value
+  const validRoles: Role[] = ["super_admin", "district_admin", "field_responder", "viewer"];
+  if (!validRoles.includes(role)) {
+    throw new Error(`Invalid role: ${role}`);
+  }
+
+  // Prevent self-demotion
+  // Note: In a real app, check against the authenticated user's ID
+
   mockUsers = mockUsers.map((u) => (u.id === id ? { ...u, role } : u));
   return mockUsers;
 }
 
 export async function deactivateUser(id: string): Promise<AdminUser[]> {
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) throw new Error("Unauthorized: admin access required.");
+
   mockUsers = mockUsers.map((u) =>
     u.id === id ? { ...u, status: "inactive" as const } : u,
   );
@@ -106,6 +126,9 @@ export async function deactivateUser(id: string): Promise<AdminUser[]> {
 }
 
 export async function reactivateUser(id: string): Promise<AdminUser[]> {
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) throw new Error("Unauthorized: admin access required.");
+
   mockUsers = mockUsers.map((u) =>
     u.id === id ? { ...u, status: "active" as const } : u,
   );
@@ -117,12 +140,31 @@ export async function executeBulkAction(
   resource: string,
   details?: string,
 ): Promise<void> {
+  const auth = await requireRole(["super_admin"] as const);
+  if (!auth.ok) throw new Error("Unauthorized: super_admin access required for bulk operations.");
+
+  // Validate actionCode to prevent injection
+  if (!/^[A-Z_]{3,50}$/.test(actionCode)) {
+    throw new Error("Invalid action code format.");
+  }
+
   await logAdminAction(actionCode, resource, details);
 }
 
 export async function saveDistrictConfig(
   config: DistrictConfig,
 ): Promise<SaveConfigResult> {
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) throw new Error("Unauthorized: admin access required.");
+
+  // Validate config values
+  if (typeof config.criticalRainThresholdMm !== "number" || config.criticalRainThresholdMm < 0) {
+    throw new Error("Invalid rain threshold value.");
+  }
+  if (typeof config.riverDangerMarkM !== "number" || config.riverDangerMarkM < 0) {
+    throw new Error("Invalid river danger mark value.");
+  }
+
   await logAdminAction(
     "UPDATED_DISTRICT_CONFIG",
     `district:${config.district}`,
@@ -133,11 +175,9 @@ export async function saveDistrictConfig(
 
 /**
  * List security-relevant audit events for the admin Audit Logs console.
- *
- * Phase 18 · Step 5 — returns the seeded demo trail so the console is
- * always populated. A production build would read rows from the
- * audit_logs table (written by logAdminAction) via Prisma.
  */
 export async function listAuditLogs(): Promise<AuditEvent[]> {
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) throw new Error("Unauthorized: admin access required.");
   return DEMO_AUDIT_EVENTS.map((event) => ({ ...event }));
 }

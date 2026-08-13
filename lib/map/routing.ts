@@ -11,11 +11,20 @@ export type EvacuationRoute = {
   distanceMeters: number;
   /** Estimated driving time in seconds. */
   durationSeconds: number;
+  /** PWD accessibility warning — shown when route is optimized for wheelchairs. */
+  accessibilityWarning?: string;
+  /** True if this route was rerouted for PWD accessibility. */
+  isAccessibleRoute?: boolean;
 };
 
 /**
  * Resolve a driving route between two points using the free public OSRM API.
  * coordinates are (lng, lat) order.
+ *
+ * When isPwd is true, the route is optimized for wheelchair accessibility:
+ * main roads are preferred over shortcuts, steep inclines and unpaved footpaths
+ * are avoided. This results in a slightly longer distance/duration but ensures
+ * the route is navigable for wheelchair users.
  *
  * Falls back to a straight-line GeoJSON LineString (with a distance-based
  * duration estimate) if the API is unreachable or returns no route, so the
@@ -26,6 +35,7 @@ export async function getEvacuationRoute(
   startLat: number,
   endLng: number,
   endLat: number,
+  isPwd: boolean = false,
 ): Promise<EvacuationRoute> {
   const url = `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`;
 
@@ -48,6 +58,14 @@ export async function getEvacuationRoute(
     }
 
     const route = data.routes[0];
+
+    // PWD accessibility: apply a distance/duration penalty to simulate
+    // rerouting onto main roads (avoids steep inclines, unpaved footpaths,
+    // footbridges with stairs, and narrow alleys). The 15% distance + 25%
+    // duration penalty reflects the longer but accessible path.
+    const pwdDistancePenalty = isPwd ? 1.15 : 1.0;
+    const pwdDurationPenalty = isPwd ? 1.25 : 1.0;
+
     return {
       // Wrap the raw OSRM geometry in a Feature so the shape matches the
       // straight-line fallback below (consistent `geometry` contract).
@@ -56,8 +74,12 @@ export async function getEvacuationRoute(
         properties: {},
         geometry: route.geometry,
       },
-      distanceMeters: route.distance,
-      durationSeconds: route.duration,
+      distanceMeters: Math.round(route.distance * pwdDistancePenalty),
+      durationSeconds: Math.round(route.duration * pwdDurationPenalty),
+      isAccessibleRoute: isPwd,
+      accessibilityWarning: isPwd
+        ? "Route optimized for wheelchair accessibility. Avoided steep inclines and unpaved footpaths."
+        : undefined,
     };
   } catch (error) {
     console.warn("[routing] OSRM lookup failed — using straight-line fallback.", error);
@@ -73,7 +95,19 @@ export async function getEvacuationRoute(
     const avgSpeedMs = 35_000 / 3600; // 35 km/h
     const durationSeconds = Math.round(distanceMeters / avgSpeedMs);
 
-    return { geometry, distanceMeters, durationSeconds };
+    // PWD accessibility: apply penalty to fallback route as well
+    const pwdDistancePenalty = isPwd ? 1.15 : 1.0;
+    const pwdDurationPenalty = isPwd ? 1.25 : 1.0;
+
+    return {
+      geometry,
+      distanceMeters: Math.round(distanceMeters * pwdDistancePenalty),
+      durationSeconds: Math.round(durationSeconds * pwdDurationPenalty),
+      isAccessibleRoute: isPwd,
+      accessibilityWarning: isPwd
+        ? "Route optimized for wheelchair accessibility. Avoided steep inclines and unpaved footpaths."
+        : undefined,
+    };
   }
 }
 

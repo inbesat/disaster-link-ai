@@ -81,13 +81,15 @@ export async function registerSyncJobs(): Promise<Record<BgSyncKey | "periodic",
   return { predictions, alerts, periodic };
 }
 
-/** True when the browser supports Periodic Background Sync. */
+/**
+ * True when the browser supports Periodic Background Sync. The API is a
+ * `PeriodicSyncManager` exposed on `window` (Chromium) and on each
+ * ServiceWorkerRegistration — NOT on `navigator.serviceWorker` — so the
+ * synchronous gate checks the window constructor.
+ */
 export function supportsPeriodicSync(): boolean {
-  if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return false;
-  const container = navigator.serviceWorker as unknown as {
-    periodicSync?: { register: (tag: string, opts: { minInterval: number }) => Promise<void> };
-  };
-  return "periodicSync" in container;
+  if (typeof window === "undefined" || !("serviceWorker" in navigator)) return false;
+  return "PeriodicSyncManager" in window;
 }
 
 /**
@@ -106,6 +108,26 @@ export async function requestPeriodicSync(
     };
     if (!syncApi.periodicSync) return false;
     await syncApi.periodicSync.register(SYNC_TAG, { minInterval: minIntervalMs });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Phase 11 · background-fetch config — unregisters the periodic sync tag
+ * (e.g. when the citizen turns "auto-refresh offline data" off). Resolves
+ * false when unsupported or nothing was registered.
+ */
+export async function unregisterPeriodicSync(): Promise<boolean> {
+  if (!supportsPeriodicSync()) return false;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const syncApi = reg as unknown as {
+      periodicSync?: { unregister: (tag: string) => Promise<void> };
+    };
+    if (!syncApi.periodicSync?.unregister) return false;
+    await syncApi.periodicSync.unregister(SYNC_TAG);
     return true;
   } catch {
     return false;

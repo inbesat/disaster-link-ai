@@ -4,6 +4,9 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/server/prisma";
 import { extractTextFromPDF, chunkText } from "@/lib/rag/chunker";
 import { generateEmbeddings } from "@/lib/rag/embeddings";
+import { requireRole } from "@/lib/security/require-role";
+
+const ADMIN_ROLES = ["super_admin", "district_admin"] as const;
 
 // ---------------------------------------------------------------------
 // app/actions/documents.ts
@@ -51,6 +54,20 @@ const DEFAULT_DOCUMENT_TYPE = "procedure";
 export async function ingestDocument(
   formData: FormData,
 ): Promise<IngestDocumentResult> {
+  // Authorization check - only admins can ingest documents
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) {
+    return {
+      ok: false,
+      ingested: 0,
+      chunks: 0,
+      title: "",
+      district: null,
+      documentType: DEFAULT_DOCUMENT_TYPE,
+      message: "Unauthorized: admin access required.",
+    };
+  }
+
   const file = formData.get("file") as File | null;
   const title = String(formData.get("title") ?? "Untitled document").trim();
   const districtRaw = formData.get("district");
@@ -63,6 +80,17 @@ export async function ingestDocument(
 
   if (!file) {
     return { ok: false, ingested: 0, chunks: 0, title, district, documentType, message: "No file provided." };
+  }
+
+  // Validate file type
+  if (file.type !== "application/pdf") {
+    return { ok: false, ingested: 0, chunks: 0, title, district, documentType, message: "Only PDF files are supported." };
+  }
+
+  // Validate file size (max 50MB)
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
+  if (file.size > MAX_FILE_SIZE) {
+    return { ok: false, ingested: 0, chunks: 0, title, district, documentType, message: "File too large. Maximum size is 50MB." };
   }
 
   // 1) Extract + chunk. Any empty result short-circuits cleanly.

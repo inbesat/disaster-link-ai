@@ -26,6 +26,7 @@ import {
   CheckCircle2,
   ChevronDown,
   DownloadCloud,
+  FlaskConical,
   HeartPulse,
   History,
   Loader2,
@@ -46,6 +47,11 @@ import { LOCALE_OPTIONS } from "@/lib/i18n/locales";
 import { useBandwidth } from "@/lib/contexts/BandwidthContext";
 import { useHighContrast } from "@/lib/contexts/HighContrastContext";
 import { getLocalLLMProvider } from "@/lib/ai/LocalLLMProvider";
+import {
+  checkHardwareCapability,
+  type HardwareCapability,
+} from "@/lib/ai/AIBridge";
+import { isDemoModeEnabled, setDemoModeEnabled } from "@/lib/demo/scenarios";
 import { showToast } from "@/components/ui/Toast";
 import BottomNav from "@/components/public/BottomNav";
 import PwaInstallCard from "@/components/pwa/PwaInstallCard";
@@ -193,6 +199,18 @@ export default function CitizenSettingsPanel({
   const [modelProgress, setModelProgress] = useState<number | null>(null);
   const [modelReady, setModelReady] = useState(false);
   const [modelError, setModelError] = useState<string | null>(null);
+
+  // Device Capability Check — gates the ~1.3GB download on WebGPU + RAM.
+  const [capability, setCapability] = useState<HardwareCapability | null>(null);
+  useEffect(() => {
+    setCapability(checkHardwareCapability());
+  }, []);
+
+  // Phase 12 · Demo Mode toggle — hydrates from localStorage (never SSR).
+  const [demoMode, setDemoMode] = useState(false);
+  useEffect(() => {
+    setDemoMode(isDemoModeEnabled());
+  }, []);
 
   async function handleDownloadModel() {
     if (modelProgress !== null || modelReady) return;
@@ -650,6 +668,34 @@ export default function CitizenSettingsPanel({
             title="Offline AI Safety Model"
             caption="Download the small safety model so Nova keeps answering during a network blackout — it runs entirely on this device."
           >
+            {/* Device Capability Check — gates the ~1.3GB download on WebGPU + RAM. */}
+            {capability && (
+              <div className="mb-4 rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-4">
+                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-[var(--dl-text-muted)]">
+                  Device Capability Check
+                </p>
+                <div className="mt-2 space-y-1.5 text-xs font-semibold">
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/80">WebGPU Supported</span>
+                    <span className={capability.webgpu ? "text-[#86efac]" : "text-severity-red-300"}>
+                      {capability.webgpu ? "Yes ✅" : "No ❌"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-white/80">RAM &gt; 4GB</span>
+                    <span className={capability.memoryGb >= 4 ? "text-[#86efac]" : "text-severity-red-300"}>
+                      {capability.memoryGb >= 4 ? "Yes ✅" : "No ❌"}
+                    </span>
+                  </div>
+                </div>
+                {!capability.supported && (
+                  <p className="mt-2 text-[0.6875rem] leading-relaxed text-[var(--dl-text-muted)]">
+                    Your device uses the Lightweight Offline Logic Engine to
+                    save memory — safety answers still work offline.
+                  </p>
+                )}
+              </div>
+            )}
             {modelReady ? (
               <div className="flex items-start gap-3 rounded-[var(--dl-radius-sm)] border border-[#16a34a]/40 bg-[#16a34a]/10 p-4">
                 <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#16a34a]/15 text-[#86efac]">
@@ -668,7 +714,7 @@ export default function CitizenSettingsPanel({
                 <button
                   type="button"
                   onClick={() => void handleDownloadModel()}
-                  disabled={modelProgress !== null}
+                  disabled={modelProgress !== null || (capability !== null && !capability.supported)}
                   className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[var(--dl-orange)] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#EA5B0C] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {modelProgress !== null ? (
@@ -717,10 +763,38 @@ export default function CitizenSettingsPanel({
 
             {!modelReady && modelProgress === null && !modelError && (
               <p className="mt-3 text-[0.6875rem] leading-relaxed text-[var(--dl-text-muted)]">
-                ~1.3GB · downloads once into your browser · requires WebGPU or a
-                modern browser.
+                {capability && !capability.supported
+                  ? "Your device uses the Lightweight Offline Logic Engine to save memory — safety answers still work offline."
+                  : "~1.3GB · downloads once into your browser · requires WebGPU or a modern browser."}
               </p>
             )}
+          </SettingsSection>
+
+          {/* Phase 12 · Step 2 — Demo Mode toggle for the live pitch. */}
+          <SettingsSection
+            icon={FlaskConical}
+            title="Testing & Demo"
+            caption="Pitch-day extras — rehearse the offline, low-battery and model-failure scenarios judges love to ask about."
+          >
+            <div className="divide-y divide-white/5 rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5">
+              <ToggleRow
+                label="Demo Mode"
+                caption="Shows the floating red 'Demo' tab + DEMO MODE watermark app-wide."
+                checked={demoMode}
+                tone="red"
+                onChange={(next) => {
+                  setDemoModeEnabled(next);
+                  setDemoMode(next);
+                  showToast(next ? "success" : "info", {
+                    id: "demo-mode-toggle",
+                    title: next ? "🖥️ Demo Mode ON" : "Demo Mode OFF",
+                    description: next
+                      ? "Look for the red 'Demo' tab on the left edge."
+                      : "Demo controls hidden until re-enabled.",
+                  });
+                }}
+              />
+            </div>
           </SettingsSection>
 
           {error && (
