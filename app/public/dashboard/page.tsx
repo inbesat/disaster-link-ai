@@ -8,7 +8,6 @@ import {
   Settings,
   Siren,
 } from "lucide-react";
-import GuestModeBanner from "@/components/GuestModeBanner";
 import AITeaser from "@/components/public/AITeaser";
 import BandwidthGate from "@/components/public/BandwidthGate";
 import BatterySaverBanner from "@/components/public/BatterySaverBanner";
@@ -93,8 +92,8 @@ export default function PublicDashboardPage() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_80%_-10%,rgba(37,99,235,0.22),transparent),radial-gradient(ellipse_45%_40%_at_0%_110%,rgba(249,115,22,0.14),transparent)]"
       />
 
-      {/* Guest mode banner (persistent while guest_mode=true) */}
-      <GuestModeBanner />
+      {/* Guest mode banner (persistent while guest_mode=true) — mounted
+          in app/public/layout.tsx. */}
 
       {/* Phase 1 · Step 10 — sticky amber strip while offline. */}
       <PublicOfflineBanner />

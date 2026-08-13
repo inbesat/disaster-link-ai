@@ -21,7 +21,6 @@ import {
   HeartHandshake,
   Settings,
 } from "lucide-react";
-import GuestModeBanner from "@/components/GuestModeBanner";
 import PublicOfflineBanner from "@/components/public/PublicOfflineBanner";
 import BottomNav from "@/components/public/BottomNav";
 
@@ -150,7 +149,7 @@ export default function DonationsPage() {
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_80%_-10%,rgba(37,99,235,0.22),transparent),radial-gradient(ellipse_45%_40%_at_0%_110%,rgba(16,185,129,0.12),transparent)]"
         />
 
-        <GuestModeBanner />
+        {/* Guest mode banner mounted in app/public/layout.tsx */}
         <PublicOfflineBanner />
 
         {/* Content column — full width on phones, max-w-7xl on desktop.

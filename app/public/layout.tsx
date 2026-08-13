@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { cookies } from "next/headers";
+import GuestModeBanner from "@/components/GuestModeBanner";
 import PreviewModeBanner from "@/components/gov/PreviewModeBanner";
 import PublicAlertHost from "@/components/public/PublicAlertHost";
 import BandwidthGate from "@/components/public/BandwidthGate";
@@ -35,12 +37,15 @@ import { BandwidthProvider } from "@/lib/contexts/BandwidthContext";
 // live GPS is being shared.
 // ---------------------------------------------------------------------
 export default function PublicLayout({ children }: { children: ReactNode }) {
+  const isGuest = cookies().get("guest_mode")?.value === "true";
+
   return (
     <SOSProvider>
       {/* Phase 13 · Step 2 — extreme low-bandwidth flag for every /public
           page (maps/images/AI hidden while active). */}
       <BandwidthProvider>
         <PreviewModeBanner />
+        <GuestModeBanner isGuest={isGuest} />
         {/* Desktop layout: sticky left sidebar + content on the right.
             Mobile preserves the bottom nav (BottomNav is md:hidden inside
             each page). PublicSidebar is hidden md:flex — it renders only

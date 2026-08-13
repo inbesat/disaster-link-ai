@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { AlertTriangle, LogOut, UserPlus } from "lucide-react";
 import { exitGuestMode } from "@/app/actions/auth";
@@ -9,11 +8,11 @@ import { exitGuestMode } from "@/app/actions/auth";
 // (guest_mode=true cookie, set by enableGuestMode for rapid browse-only
 // access). Nudges the guest to sign up for personalized alerts and family
 // contacts; the Exit action clears the guest session and returns home.
-// Server component: reads the cookie directly, so it renders server-side
-// and never flashes in/out on the client.
+// The guest_mode flag is read from the cookie by the parent server
+// component (app/public/layout.tsx) and passed in, since this component
+// ships interactive elements and therefore must stay a Client Component.
 // ---------------------------------------------------------------------
-export default function GuestModeBanner() {
-  const isGuest = cookies().get("guest_mode")?.value === "true";
+export default function GuestModeBanner({ isGuest }: { isGuest: boolean }) {
   if (!isGuest) return null;
 
   return (
