@@ -8,6 +8,9 @@
 //   1. Web Push notifications (VAPID receiver).
 //   2. Offline shell — precaches /~offline + icons and serves navigations
 //      network-first with the offline fallback page.
+//   3. Offline-First sync (Phase 2) — relays a periodic background-sync
+//      event (or an in-page "sync now" message) out to every open client,
+//      which runs the IndexedDB offline sync engine.
 //
 // Workbox coexistence: inside the generated worker, next-pwa's
 // DefinePlugin replaces the `__PWA_SW__` token with a string at build time
@@ -151,4 +154,35 @@ self.addEventListener("notificationclick", (event) => {
         if (self.clients.openWindow) return self.clients.openWindow(targetUrl);
       }),
   );
+});
+
+// --- Offline-First sync (Phase 2) ---------------------------------------
+// The engine itself (Dexie + fetchers) runs in the page; the SW only
+// nudges open clients to run a sync. Covers:
+//   • Periodic Background Sync ('periodicsync' event with our tag).
+//   • An explicit in-page nudge via postMessage({ type: "drip:sync:request" })
+//     (the page uses it for "Sync Now" while backgrounded).
+const SYNC_TAG = "disasterlink-sync";
+const SYNC_MSG = "drip:sync:request";
+
+function relaySyncRequest() {
+  self.clients
+    .matchAll({ type: "window", includeUncontrolled: true })
+    .then((clients) => {
+      for (const client of clients) client.postMessage({ type: SYNC_MSG });
+    })
+    .catch(() => {});
+}
+
+// Periodic Background Sync — browser woke us to sync offline data.
+self.addEventListener("periodicsync", (event) => {
+  if (event.tag !== SYNC_TAG) return;
+  event.waitUntil(Promise.resolve(relaySyncRequest()));
+});
+
+// In-page "Sync Now" nudge → relay to all open clients.
+self.addEventListener("message", (event) => {
+  const data = event.data && typeof event.data === "object" ? event.data : {};
+  if (data.type !== SYNC_MSG) return;
+  relaySyncRequest();
 });

@@ -1,16 +1,14 @@
 import Link from "next/link";
-import { ArrowLeft, Bot, Sparkles } from "lucide-react";
+import { ArrowLeft, Bot } from "lucide-react";
 import BottomNav from "@/components/public/BottomNav";
+import ChatInterface from "@/components/ai/ChatInterface";
 
 // ---------------------------------------------------------------------
-// app/public/ai/page.tsx — Phase 2 · Step 9 · AI Safety Assistant
-// placeholder.
+// app/public/ai/page.tsx — Phase 2 · Step 9 · AI Safety Assistant,
+// powered by the Phase 5/6 dual-mode chat (cloud ↔ offline Gemma).
 //
 // The AITeaser pills on /public/dashboard deep-link here with ?q=<prompt>.
-// This is the placeholder route the roadmap calls for: it shows the
-// picked-up prompt so the deep link visibly works end-to-end, and the
-// full chat experience lands here later (the teaser needs zero changes —
-// it already passes the prompt through as a query param).
+// The picked-up prompt surfaces as a hint chip above the composer.
 // ---------------------------------------------------------------------
 
 export default function PublicAiPage({
@@ -45,37 +43,21 @@ export default function PublicAiPage({
             <div>
               <h1 className="text-sm font-bold text-white">AI Safety Assistant</h1>
               <p className="eoc-label text-[var(--dl-text-muted)]">
-                POWERED BY DRIP AI
+                DUAL-MODE · CLOUD + OFFLINE
               </p>
             </div>
           </div>
         </header>
 
-        {/* Placeholder body */}
-        <section className="mt-10 flex flex-1 flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
-            <Sparkles aria-hidden="true" className="h-6 w-6 text-[#FDBA74]" />
-          </span>
-          <h2 className="mt-4 text-lg font-bold text-white">
-            The AI Safety Assistant is coming soon
-          </h2>
-          <p className="mt-2 max-w-xs text-sm leading-relaxed text-[var(--dl-text-muted)]">
-            Ask about evacuation routes, shelter capacity, and what to pack
-            for your area — answered in your language.
+        {prompt && (
+          <p className="mt-4 rounded-[var(--dl-radius-sm)] border border-[#F97316]/40 bg-[#F97316]/10 px-4 py-2.5 text-sm font-semibold text-[#FDBA74]">
+            You asked: &ldquo;{prompt}&rdquo;
           </p>
+        )}
 
-          {prompt ? (
-            <p className="mt-6 w-full rounded-[var(--dl-radius-sm)] border border-[#F97316]/40 bg-[#F97316]/10 px-4 py-3 text-sm font-semibold text-[#FDBA74]">
-              Your prompt: &ldquo;{prompt}&rdquo;
-            </p>
-          ) : (
-            <Link
-              href="/public/dashboard"
-              className="mt-6 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-[var(--dl-orange)]/60 hover:bg-[var(--dl-orange)]/10"
-            >
-              Back to dashboard
-            </Link>
-          )}
+        {/* Dual-mode chat */}
+        <section className="mt-4 flex h-[calc(100vh-200px)] flex-col rounded-2xl border border-white/10 bg-white/5 p-2 backdrop-blur">
+          <ChatInterface district="Patna" />
         </section>
       </div>
 
