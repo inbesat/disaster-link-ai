@@ -3,6 +3,8 @@
 import { cookies } from "next/headers";
 import { prisma } from "@/server/prisma";
 import { createClient } from "@/lib/supabase/server";
+import { requireSession } from "@/lib/security/require-role";
+import { sanitizeInput } from "@/lib/security/sanitize";
 import {
   processPredictionAlerts,
   type ProcessPredictionAlertResult,
@@ -25,12 +27,19 @@ export type SimulateAlertResult =
 /**
  * Demo-mode simulator: bypasses the ML model and directly runs the alert
  * engine to fabricate a critical alert for a chosen district. `force: true`
- * skips the 6-hour dedup so judges can trigger it repeatedly. Works for
- * guests too.
+ * skips the 6-hour dedup so judges can trigger it repeatedly.
+ *
+ * Security: this can fan out REAL SMS via Twilio and write alert-log rows,
+ * so only a signed-in session (guest / role cookie / Supabase user) may call
+ * it. Upgrade to requireRole(GOV_ROLES) when real auth is wired up.
  */
 export async function simulateCriticalAlert(
   input: SimulateCriticalAlertInput,
 ): Promise<SimulateAlertResult> {
+  const auth = await requireSession();
+  if (!auth.ok) {
+    return { ok: false, error: "Not authenticated." };
+  }
   try {
     if (!input.district) {
       return { ok: false, error: "A district is required." };
@@ -38,13 +47,13 @@ export async function simulateCriticalAlert(
 
     const result = await processPredictionAlerts(
       {
-        district: input.district,
+        district: sanitizeInput(input.district).slice(0, 200),
         lat: input.lat,
         lng: input.lng,
         riskLevel: "Critical",
         disasterType: "flood",
         predictedTime: new Date(),
-        evacuationZones: `${input.district} low-lying areas near the riverbank`,
+        evacuationZones: `${sanitizeInput(input.district).slice(0, 200)} low-lying areas near the riverbank`,
       },
       { force: true },
     );
@@ -58,9 +67,9 @@ export async function simulateCriticalAlert(
 
 /**
  * Marks an AlertLog row as acknowledged, recording who acknowledged it and
- * when. The acting user is resolved server-side from the active session
- * (the `userId` arg is only a fallback). Guests can acknowledge in demo mode
- * and are recorded as "Guest".
+ * when. The acting user is resolved SERVER-SIDE from the active session — the
+ * client can never forge who acknowledged an alert.
+ * Guests can acknowledge in demo mode and are recorded as "Guest".
  */
 export type AcknowledgeAlertResult =
   | { ok: true; acknowledgedAt: string; acknowledgedBy: string }
@@ -68,17 +77,16 @@ export type AcknowledgeAlertResult =
 
 export async function acknowledgeAlert(
   alertId: string,
-  userId?: string,
 ): Promise<AcknowledgeAlertResult> {
   try {
-    let actorId: string | null = userId ?? null;
+    let actorId: string | null = null;
     let actorName: string | null = null;
 
     const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    actorId = actorId ?? user?.id ?? null;
+    actorId = user?.id ?? null;
     actorName = user?.email ?? null;
 
     // Demo guests have no Supabase session — record them as "Guest".
@@ -141,8 +149,8 @@ export async function sendFeedback(input: {
         messageId: input.messageId,
         rating: input.rating,
         userId: actor.userId,
-        district: actor.district ?? input.district,
-        prompt: input.prompt,
+        district: actor.district ?? (input.district ? sanitizeInput(input.district).slice(0, 200) : null),
+        prompt: input.prompt ? sanitizeInput(input.prompt).slice(0, 4000) : null,
       },
     });
     return { ok: true };

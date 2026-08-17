@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bell, Check, Clock, Filter, Mail, MessageSquare, Smartphone } from "lucide-react";
 
 type NotificationRecord = {
@@ -11,9 +11,12 @@ type NotificationRecord = {
   message: string;
   channels: string[];
   status: "delivered" | "read" | "failed";
-  sentAt: string;
+  minutesAgo: number;
 };
 
+// Relative timestamps (not absolute ISO strings): the client computes the
+// displayed "Xm ago" from a mounted clock, so the server and client render
+// the same HTML and there is no hydration mismatch.
 const MOCK_HISTORY: NotificationRecord[] = [
   {
     id: "nh-1",
@@ -23,7 +26,7 @@ const MOCK_HISTORY: NotificationRecord[] = [
     message: "Brahmaputra at Kamrup is 0.9m above danger mark. Evacuate low-lying wards.",
     channels: ["push", "sms", "in_app"],
     status: "delivered",
-    sentAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+    minutesAgo: 30,
   },
   {
     id: "nh-2",
@@ -33,7 +36,7 @@ const MOCK_HISTORY: NotificationRecord[] = [
     message: "Immediate evacuation required. Proceed to Central Community Hall via NH-31.",
     channels: ["push", "in_app"],
     status: "read",
-    sentAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+    minutesAgo: 120,
   },
   {
     id: "nh-3",
@@ -43,7 +46,7 @@ const MOCK_HISTORY: NotificationRecord[] = [
     message: "4 NDRF Rescue Boats dispatched to Rajendra Nagar flood zone. ETA 1.5 hrs.",
     channels: ["in_app"],
     status: "delivered",
-    sentAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
+    minutesAgo: 300,
   },
   {
     id: "nh-4",
@@ -53,7 +56,7 @@ const MOCK_HISTORY: NotificationRecord[] = [
     message: "Waterlogging expected in low-lying areas. Stay alert.",
     channels: ["push", "in_app"],
     status: "delivered",
-    sentAt: new Date(Date.now() - 1000 * 60 * 60 * 8).toISOString(),
+    minutesAgo: 480,
   },
   {
     id: "nh-5",
@@ -63,7 +66,7 @@ const MOCK_HISTORY: NotificationRecord[] = [
     message: "Your daily summary of 12 notifications is ready to view.",
     channels: ["in_app"],
     status: "read",
-    sentAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+    minutesAgo: 1440,
   },
 ];
 
@@ -86,11 +89,9 @@ const STATUS_STYLES: Record<string, string> = {
   failed: "text-red-400",
 };
 
-function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
+function timeAgo(minutesAgo: number): string {
+  if (minutesAgo < 60) return `${minutesAgo}m ago`;
+  const hrs = Math.floor(minutesAgo / 60);
   if (hrs < 24) return `${hrs}h ago`;
   return `${Math.floor(hrs / 24)}d ago`;
 }
@@ -98,6 +99,13 @@ function timeAgo(iso: string): string {
 export default function NotificationHistoryPage() {
   const [filter, setFilter] = useState<"all" | "critical" | "warning" | "info">("all");
   const [statusFilter, setStatusFilter] = useState<"all" | "delivered" | "read" | "failed">("all");
+  // `mounted` gates all time-dependent rendering: until the client hydrates,
+  // relative labels stay blank so server and client HTML always match.
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const filtered = MOCK_HISTORY.filter((n) => {
     if (filter !== "all" && n.severity !== filter) return false;
@@ -178,7 +186,7 @@ export default function NotificationHistoryPage() {
               <div className="flex shrink-0 flex-col items-end gap-1">
                 <span className="flex items-center gap-1 text-xs text-muted">
                   <Clock className="h-3 w-3" />
-                  {timeAgo(notification.sentAt)}
+                  {mounted ? timeAgo(notification.minutesAgo) : "—"}
                 </span>
                 <span className={`text-xs font-medium capitalize ${STATUS_STYLES[notification.status]}`}>
                   {notification.status === "read" ? (

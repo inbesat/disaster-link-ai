@@ -180,8 +180,6 @@ export default function StorageSettingsPage() {
     }
   };
 
-  const pctLabel = usagePct.toFixed(0);
-
   return (
     <div className="flex flex-col gap-6">
       <SettingsSection
@@ -376,10 +374,6 @@ export default function StorageSettingsPage() {
       </SettingsSection>
     </div>
   );
-}
-
-function estimateFromBreakdown(_usage: number): number {
-  return _usage;
 }
 
 /** Circular storage gauge rendered with SVG arcs. */

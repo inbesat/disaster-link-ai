@@ -107,7 +107,7 @@ export default function NotificationCenter() {
     );
     setUnreadCount((count) => Math.max(0, count - 1));
 
-    void acknowledgeAlert(id, undefined).then((result) => {
+    void acknowledgeAlert(id).then((result) => {
       if (!result.ok) {
         setAlerts(previous);
         setUnreadCount((count) => count + 1);
@@ -122,7 +122,7 @@ export default function NotificationCenter() {
         type="button"
         onClick={() => setOpen((current) => !current)}
         aria-label="Notifications"
-        className="relative rounded-md border border-border bg-surface-elevated p-2 text-foreground transition hover:border-accent hover:text-accent"
+        className="relative flex h-10 w-10 items-center justify-center rounded-md border border-border bg-surface-elevated p-2.5 text-foreground transition hover:border-accent hover:text-accent"
       >
         <BellIcon />
         {unreadCount > 0 && (
@@ -140,7 +140,7 @@ export default function NotificationCenter() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close"
-              className="rounded p-0.5 text-slate-400 transition hover:text-foreground"
+              className="flex h-10 w-10 items-center justify-center rounded-md p-2 text-slate-400 transition hover:text-foreground"
             >
               ✕
             </button>

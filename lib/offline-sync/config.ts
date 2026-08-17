@@ -27,7 +27,7 @@ async function fetchJson<T>(url: string, signal?: AbortSignal): Promise<T | null
 }
 
 /** Array of district names taken from any endpoint's list payload. */
-function rowsFrom<T>(
+function rowsFrom(
   payload: unknown,
   key: string,
 ): Array<{ id?: unknown; district?: unknown } & Record<string, unknown>> {

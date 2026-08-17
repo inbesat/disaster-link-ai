@@ -40,7 +40,7 @@ export function QuickActions() {
               description: "Broadcast dispatched to the EOC for review.",
             })
           }
-          className="flex h-9 w-full items-center gap-2 rounded-md bg-accent-danger/15 px-3 text-sm font-semibold text-accent-danger transition-colors duration-150 hover:bg-accent-danger/25 motion-reduce:transition-none"
+          className="flex h-11 w-full items-center gap-2 rounded-md bg-accent-danger/15 px-3 text-sm font-semibold text-accent-danger transition-colors duration-150 hover:bg-accent-danger/25 motion-reduce:transition-none"
         >
           <Siren className="h-4 w-4 shrink-0" aria-hidden />
           Send Alert
@@ -53,7 +53,7 @@ export function QuickActions() {
               description: "Planner started — generating response plan.",
             })
           }
-          className="flex h-9 w-full items-center gap-2 rounded-md bg-accent-primary/15 px-3 text-sm font-semibold text-accent-primary transition-colors duration-150 hover:bg-accent-primary/25 motion-reduce:transition-none"
+          className="flex h-11 w-full items-center gap-2 rounded-md bg-accent-primary/15 px-3 text-sm font-semibold text-accent-primary transition-colors duration-150 hover:bg-accent-primary/25 motion-reduce:transition-none"
         >
           <Zap className="h-4 w-4 shrink-0" aria-hidden />
           Run AI Plan

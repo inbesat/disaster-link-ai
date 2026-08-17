@@ -4,6 +4,24 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/server/prisma";
 import { PUBLIC_SHELTERS_CACHE_TAG } from "@/lib/cache-tags";
 import { sanitizeInput } from "@/lib/security/sanitize";
+import { requireSession } from "@/lib/security/require-role";
+
+// Server actions are directly invokable via a forged Next-Action POST — gate
+// every mutating action with requireSession() (admits the demo cookie
+// sessions the UI relies on; rejects fully anonymous callers).
+async function assertWriteAccess(): Promise<string | null> {
+  const auth = await requireSession();
+  return auth.ok ? null : auth.error;
+}
+
+/** Keep only safe http(s) image URLs — strip javascript:/data: vectors. */
+function sanitizeImageUrl(value: string | undefined): string | null {
+  if (!value) return null;
+  const cleaned = sanitizeInput(value).slice(0, 1000);
+  if (!cleaned) return null;
+  if (!/^https?:\/\//i.test(cleaned)) return null;
+  return cleaned;
+}
 
 export type ShelterFacilities = {
   water?: boolean;
@@ -67,6 +85,9 @@ export async function getShelters(district?: string) {
  * "full"; otherwise it opens. Revalidates the cache so the UI refreshes.
  */
 export async function addShelter(data: ShelterInput) {
+  const authError = await assertWriteAccess();
+  if (authError) throw new Error(authError);
+
   const validationError = validateShelterInput(data);
   if (validationError) {
     throw new Error(validationError);
@@ -87,7 +108,7 @@ export async function addShelter(data: ShelterInput) {
       status,
       contactPerson: data.contactPerson ? sanitizeInput(data.contactPerson) : null,
       phone: data.phone ? sanitizeInput(data.phone) : null,
-      imageUrl: data.imageUrl ?? null,
+      imageUrl: sanitizeImageUrl(data.imageUrl),
     },
   });
 
@@ -103,6 +124,9 @@ export async function addShelter(data: ShelterInput) {
  * up (a manually closed shelter is left as-is).
  */
 export async function updateOccupancy(shelterId: string, newOccupancy: number) {
+  const authError = await assertWriteAccess();
+  if (authError) throw new Error(authError);
+
   if (typeof newOccupancy !== "number" || !Number.isFinite(newOccupancy) || newOccupancy < 0) {
     throw new Error("Invalid occupancy value.");
   }

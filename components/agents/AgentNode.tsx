@@ -35,6 +35,12 @@ const NODE_THEMES: Record<
     glow: "shadow-glow-amber",
     text: "text-severity-amber-300",
   },
+  Validator: {
+    dot: "bg-severity-red-400",
+    border: "border-severity-red-400/60",
+    glow: "shadow-glow-red",
+    text: "text-severity-red-300",
+  },
   Communicator: {
     dot: "bg-severity-green-400",
     border: "border-severity-green-400/60",

@@ -2,6 +2,21 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/server/prisma";
+import { requireSession } from "@/lib/security/require-role";
+import { sanitizeInput } from "@/lib/security/sanitize";
+
+// ---------------------------------------------------------------------
+// Security: every mutating server action below is gated by requireSession().
+// Server actions are directly invokable via a forged Next-Action POST, so the
+// middleware alone cannot protect them. requireSession admits the demo cookie
+// sessions (guest_mode / role cookie / Supabase user) that the UI relies on
+// while rejecting fully anonymous callers. Swap to requireRole(GOV_ROLES)
+// when real auth is wired up.
+// ---------------------------------------------------------------------
+async function assertWriteAccess(): Promise<string | null> {
+  const auth = await requireSession();
+  return auth.ok ? null : auth.error;
+}
 
 // ---------------------------------------------------------------------
 // Types (mirror the Prisma models so the UI can use one shape everywhere).
@@ -196,6 +211,9 @@ export type NewResourceRequest = {
 export async function submitResourceRequest(
   input: NewResourceRequest,
 ): Promise<{ ok: boolean; id: string; error?: string }> {
+  const authError = await assertWriteAccess();
+  if (authError) return { ok: false, id: "", error: authError };
+
   // Validate input
   if (!input.category || typeof input.category !== "string") {
     return { ok: false, id: "", error: "Category is required." };
@@ -223,7 +241,9 @@ export async function submitResourceRequest(
         lat: input.lat,
         lng: input.lng,
         status: "pending",
-        notes: input.notes ? String(input.notes).slice(0, 2000) : "",
+        notes: input.notes
+          ? sanitizeInput(String(input.notes)).slice(0, 2000)
+          : "",
       },
     });
     revalidatePath("/dispatch");
@@ -249,12 +269,14 @@ export type CsvResourceRow = {
 export async function bulkImportResources(
   rows: CsvResourceRow[],
 ): Promise<{ ok: boolean; count: number }> {
+  const authError = await assertWriteAccess();
+  if (authError) return { ok: false, count: 0 };
   if (!rows.length) return { ok: false, count: 0 };
   try {
     await prisma.resource.createMany({
       data: rows.map((r) => ({
-        name: r.name,
-        category: r.category,
+        name: sanitizeInput(String(r.name ?? "")).slice(0, 200) || "Imported resource",
+        category: sanitizeInput(String(r.category ?? "other")).slice(0, 100),
         quantity: r.quantity,
         unit: null,
         lat: r.lat,
@@ -281,6 +303,8 @@ export async function approveRequest(
   requestId: string,
   resourceId: string,
 ): Promise<boolean> {
+  const authError = await assertWriteAccess();
+  if (authError) return false;
   try {
     const [req, source] = await Promise.all([
       prisma.resourceRequest.findUnique({ where: { id: requestId } }).catch(() => null),
@@ -387,6 +411,9 @@ function validateResourceInput(input: NewResourceInput): string | null {
 export async function addResource(
   input: NewResourceInput,
 ): Promise<{ ok: boolean; id: string; error?: string }> {
+  const authError = await assertWriteAccess();
+  if (authError) return { ok: false, id: "", error: authError };
+
   const validationError = validateResourceInput(input);
   if (validationError) {
     return { ok: false, id: "", error: validationError };
@@ -395,14 +422,14 @@ export async function addResource(
   try {
     const created = await prisma.resource.create({
       data: {
-        name: input.name.trim(),
+        name: sanitizeInput(input.name.trim()).slice(0, MAX_NAME_LENGTH),
         category: input.category,
         quantity: Math.max(0, Math.floor(input.quantity)),
-        unit: input.unit || null,
+        unit: input.unit ? sanitizeInput(input.unit).slice(0, 100) : null,
         status: input.status || "available",
         lat: input.lat ?? MOCK_COORDINATES.lat,
         lng: input.lng ?? MOCK_COORDINATES.lng,
-        depotName: input.depotName || null,
+        depotName: input.depotName ? sanitizeInput(input.depotName).slice(0, 200) : null,
       },
     });
     revalidatePath("/inventory");
@@ -418,6 +445,9 @@ export async function addResource(
  * UI can surface it, but still reports success when the row is a mock.
  */
 export async function updateResource(input: UpdateResourceInput): Promise<boolean> {
+  const authError = await assertWriteAccess();
+  if (authError) return false;
+
   const validationError = validateResourceInput(input);
   if (validationError) {
     console.warn("[resources] updateResource validation failed:", validationError);
@@ -428,14 +458,14 @@ export async function updateResource(input: UpdateResourceInput): Promise<boolea
     await prisma.resource.update({
       where: { id: input.id },
       data: {
-        name: input.name.trim(),
+        name: sanitizeInput(input.name.trim()).slice(0, MAX_NAME_LENGTH),
         category: input.category,
         quantity: Math.max(0, Math.floor(input.quantity)),
-        unit: input.unit || undefined,
+        unit: input.unit ? sanitizeInput(input.unit).slice(0, 100) : undefined,
         status: input.status || undefined,
         lat: input.lat ?? MOCK_COORDINATES.lat,
         lng: input.lng ?? MOCK_COORDINATES.lng,
-        depotName: input.depotName || undefined,
+        depotName: input.depotName ? sanitizeInput(input.depotName).slice(0, 200) : undefined,
       },
     });
     revalidatePath("/inventory");
@@ -450,6 +480,8 @@ export async function updateResource(input: UpdateResourceInput): Promise<boolea
  * Delete a single resource. Falls back to success if the id is a mock row.
  */
 export async function deleteResource(id: string): Promise<boolean> {
+  const authError = await assertWriteAccess();
+  if (authError) return false;
   try {
     await prisma.resource.delete({ where: { id } });
     revalidatePath("/inventory");
@@ -596,19 +628,21 @@ const MOVEMENT_ACTIONS = ["dispatched", "delivered", "returned", "adjusted"];
 export async function logResourceMovement(
   input: NewMovementInput,
 ): Promise<{ ok: boolean; id: string }> {
+  const authError = await assertWriteAccess();
+  if (authError) return { ok: false, id: "" };
   try {
     const created = await prisma.resourceMovement.create({
       data: {
         resourceId: null,
-        resourceName: input.resourceName,
+        resourceName: sanitizeInput(input.resourceName).slice(0, 200),
         // Sanitize: clamp unknown action strings to the known vocabulary.
         action: MOVEMENT_ACTIONS.includes(input.action) ? input.action : "adjusted",
-        fromLabel: input.fromLabel || null,
-        toLabel: input.toLabel,
+        fromLabel: input.fromLabel ? sanitizeInput(input.fromLabel).slice(0, 200) : null,
+        toLabel: sanitizeInput(input.toLabel).slice(0, 200),
         toLat: input.toLat,
         toLng: input.toLng,
         quantity: Math.max(0, input.quantity || 0),
-        note: input.note || null,
+        note: input.note ? sanitizeInput(input.note).slice(0, 2000) : null,
       },
     });
     revalidatePath("/inventory");

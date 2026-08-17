@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchSimilarDocuments } from "@/lib/rag/vector-search";
+import { requireRole } from "@/lib/security/require-role";
+import { GOV_ROLES } from "@/lib/validations/user";
+import { sanitizeInput } from "@/lib/security/sanitize";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +17,13 @@ const ragSearchLimiter = createRateLimiter(10, 60_000);
 // similarity scores so judges can see exactly what the AI would be grounded on.
 // ---------------------------------------------------------------------
 export async function POST(request: NextRequest) {
+  // Security: RAG retrieval exposes internal SOP / NDMA knowledge-base chunks
+  // — gov roles only. Anonymous and citizen callers are rejected.
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
+  }
+
   // Rate limit check
   const forwarded = request.headers.get("x-forwarded-for");
   const ip = forwarded ? forwarded.split(",")[0].trim() : "anonymous";
@@ -32,7 +42,7 @@ export async function POST(request: NextRequest) {
     body = {};
   }
 
-  const query = (body.query ?? "").toString().trim();
+  const query = sanitizeInput((body.query ?? "").toString().trim()).slice(0, 500);
   if (!query) {
     return NextResponse.json({ ok: false, error: "Query is required." }, { status: 400 });
   }

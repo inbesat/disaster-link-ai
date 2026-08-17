@@ -188,8 +188,9 @@ export default function AllocationList({
           </p>
         </header>
 
-        <table className="mt-4 w-full border-collapse text-xs">
-          <thead>
+        <div className="overflow-x-auto">
+          <table className="mt-4 w-full border-collapse text-xs">
+            <thead>
             <tr className="border-b-2 border-black text-left uppercase">
               <th className="py-1.5 pr-2 font-bold">#</th>
               <th className="py-1.5 pr-2 font-bold">Resource</th>
@@ -226,7 +227,8 @@ export default function AllocationList({
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
 
         <footer className="mt-6 border-t-2 border-black pt-3 text-xs">
           <p className="font-bold">DRIVER INSTRUCTIONS</p>

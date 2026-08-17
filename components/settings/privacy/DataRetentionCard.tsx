@@ -17,7 +17,7 @@
 //   • Persists through lib/settings/privacy-settings.ts.
 // ---------------------------------------------------------------------
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { AlertTriangle, Database, Eraser } from "lucide-react";
 import type { RetentionPolicy } from "@/lib/settings/privacy-settings";
@@ -124,6 +124,14 @@ export default function DataRetentionCard({
 }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [purging, setPurging] = useState(false);
+  // `scheduleLabel` renders a date computed from `new Date()` — computing it
+  // before hydration would let Node ICU locale output and a client-side
+  // midnight rollover diverge from the server HTML. Gate it on mount.
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const totalDeletable = useMemo(
     () =>
@@ -212,7 +220,7 @@ export default function DataRetentionCard({
                     : "Automated cleanup is active"}
                 </p>
                 <span className="rounded-full border border-[#2c3f6d] bg-[#1c2740] px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-300">
-                  {scheduleLabel(policy, retention[policy.key])}
+                  {mounted ? scheduleLabel(policy, retention[policy.key]) : "—"}
                 </span>
               </div>
             </div>

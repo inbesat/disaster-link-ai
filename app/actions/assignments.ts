@@ -1,5 +1,7 @@
 "use server";
 
+import { requireSession } from "@/lib/security/require-role";
+
 export type AssignmentStatus = "Not Started" | "En Route" | "Completed";
 export type TaskPriority = "CRITICAL" | "HIGH" | "ROUTINE";
 
@@ -77,6 +79,10 @@ export async function updateAssignmentStatus(
   id: string,
   status: AssignmentStatus,
 ): Promise<FieldAssignment> {
+  // Server actions are directly invokable via a forged Next-Action POST —
+  // only a signed-in session may mutate assignment state.
+  const auth = await requireSession();
+  if (!auth.ok) throw new Error(auth.error);
   const found = MOCK_TASKS.find((t) => t.id === id);
   if (!found) throw new Error("Assignment not found.");
   found.status = status;

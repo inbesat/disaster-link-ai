@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { Menu, X, ArrowRight, LogIn, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "@/components/ui/Logo";
@@ -107,16 +108,16 @@ export default function Navbar() {
           >
             Explore Platform
           </a>
-          {/* Android APK download — outline (secondary) so it sits next to
-              the solid Request Demo CTA without competing with it. */}
-          <a
-            href="/apk/SafeSphere.apk"
-            download="SafeSphere.apk"
+          {/* App download — outline (secondary) so it sits next to
+              the solid Request Demo CTA without competing with it. Routes to
+              the /download hub so users pick their platform. */}
+          <Link
+            href="/download"
             className="flex items-center gap-2 border border-white/20 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
           >
             <Download size={14} aria-hidden="true" />
-            Download APK
-          </a>
+            Download App
+          </Link>
           <a
             href="#contact"
             className="bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
@@ -179,15 +180,14 @@ export default function Navbar() {
               >
                 Explore Platform
               </a>
-              <a
-                href="/apk/SafeSphere.apk"
-                download="SafeSphere.apk"
+              <Link
+                href="/download"
                 onClick={closeMobile}
                 className="flex items-center justify-center gap-2 border border-white/20 text-white rounded-full w-full py-2.5 text-sm font-medium hover:bg-white/10 transition-all"
               >
                 <Download size={14} aria-hidden="true" />
-                Download APK
-              </a>
+                Download App
+              </Link>
               <a
                 href="#contact"
                 onClick={closeMobile}

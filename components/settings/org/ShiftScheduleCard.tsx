@@ -118,7 +118,7 @@ export default function ShiftScheduleCard() {
       )}
 
       {/* Shift table */}
-      <div className="mt-5 overflow-hidden rounded-md border border-[#1c2740]">
+      <div className="mt-5 overflow-x-auto rounded-md border border-[#1c2740]">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-[#1c2740] bg-surface-muted/40 text-[10px] font-bold uppercase tracking-widest text-slate-500">

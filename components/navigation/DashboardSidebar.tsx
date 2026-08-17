@@ -165,7 +165,7 @@ function SignOutButton({ guest }: { guest: boolean }) {
           type="submit"
           aria-label={collapsed ? label : undefined}
           title={collapsed ? label : undefined}
-          className={`flex h-10 w-full items-center gap-3 rounded-md border-l-2 border-transparent px-3 text-sm text-muted transition-colors duration-150 motion-reduce:transition-none hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] ${
+          className={`flex h-11 w-full items-center gap-3 rounded-md border-l-2 border-transparent px-3 text-sm text-muted transition-colors duration-150 motion-reduce:transition-none hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] ${
             collapsed ? "justify-center px-0" : ""
           }`}
         >

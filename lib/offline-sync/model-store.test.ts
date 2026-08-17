@@ -28,7 +28,6 @@ function streamingFetch(body: Uint8Array, { supportRange = true } = {}) {
     const start = supportRange && rangeHeader ? Number(rangeHeader.match(/^bytes=(\d+)-/)?.[1] ?? 0) : 0;
     const slice = body.slice(start);
     let offset = 0;
-    const encoder = new TextEncoder();
     const stream = new ReadableStream<Uint8Array>({
       async pull(controller) {
         if (init.signal?.aborted) {

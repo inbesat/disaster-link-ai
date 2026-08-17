@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Loader2, Play, ChevronRight, Siren } from "lucide-react";
 import toast from "react-hot-toast";
 import AgentNode, {
   type AgentNodeProps,
 } from "@/components/agents/AgentNode";
 import DecisionLog from "@/components/agents/DecisionLog";
+import AgentReplayTimeline from "@/components/agents/AgentReplayTimeline";
 import ApprovalCheckpoint, {
   type ProposedAllocation,
 } from "@/components/agents/ApprovalCheckpoint";
 import AgentConfigPanel, {
+  AGENT_DIRECTIVES_STORAGE_KEY,
   type AgentDirectives,
 } from "@/components/agents/AgentConfigPanel";
 import {
@@ -19,16 +21,19 @@ import {
 } from "@/lib/agents/nodes/intelligence-nodes";
 import {
   ALLOCATOR_DELAY_MS,
+  VALIDATOR_DELAY_MS,
   COMMUNICATOR_DELAY_MS,
 } from "@/lib/agents/nodes/action-nodes";
 
 type AgentStatus = AgentNodeProps["status"];
 
-// The four agents in pipeline order, with attributes for the flow chart.
+// The five agents in pipeline order, with attributes for the flow chart.
+// Predict → Plan → Allocate → Validate, then Communicate after human approval.
 const WORKFLOW = [
   { name: "Predictor", role: "Risk Assessment", delay: PREDICTOR_DELAY_MS },
   { name: "Planner", role: "48h Evacuation Plan", delay: PLANNER_DELAY_MS },
   { name: "Allocator", role: "Resource Allocation", delay: ALLOCATOR_DELAY_MS },
+  { name: "Validator", role: "Conflict & Capacity Check", delay: VALIDATOR_DELAY_MS },
   { name: "Communicator", role: "SMS / Siren Fan-out", delay: COMMUNICATOR_DELAY_MS },
 ] as const;
 
@@ -56,12 +61,37 @@ export default function AgentOrchestrationPage() {
   const [riskLevel, setRiskLevel] = useState("HIGH");
   const [allocations, setAllocations] = useState<ProposedAllocation[]>([]);
   const [conflict, setConflict] = useState<string | null>(null);
-  const [directives, setDirectives] = useState<AgentDirectives>({
-    predictorSensitivity: 75,
-    hoardingLimitPercent: 100,
+  const [directives, setDirectives] = useState<AgentDirectives>(() => {
+    // Restore the last saved agent directives (B9) so the config panel and
+    // the orchestration request agree after a refresh.
+    if (typeof window !== "undefined") {
+      try {
+        const raw = window.localStorage.getItem(AGENT_DIRECTIVES_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw) as Partial<AgentDirectives>;
+          return {
+            predictorSensitivity: Number(parsed.predictorSensitivity) || 75,
+            hoardingLimitPercent: Number(parsed.hoardingLimitPercent) || 100,
+          };
+        }
+      } catch {
+        // Corrupt storage — fall through to defaults.
+      }
+    }
+    return { predictorSensitivity: 75, hoardingLimitPercent: 100 };
   });
+  // Phase 16 · B3 — a fresh CRITICAL alert auto-starts the planner. These
+  // refs let the polling watcher read live values from its stable closure.
+  const busyRef = useRef(false);
+  const pendingRef = useRef(false);
+  const directivesRef = useRef(directives);
+  directivesRef.current = directives;
+  const handledAlertIds = useRef<Set<string>>(new Set());
+  const [autoTriggered, setAutoTriggered] = useState(false);
+  const [autoTriggerDistrict, setAutoTriggerDistrict] = useState<string | null>(null);
 
   function resetState() {
+    pendingRef.current = false;
     setResolved(false);
     setNeedsApproval(false);
     setAuthorizing(false);
@@ -79,6 +109,7 @@ export default function AgentOrchestrationPage() {
     }
 
     setRunning(true);
+    busyRef.current = true;
     resetState();
 
     try {
@@ -87,14 +118,17 @@ export default function AgentOrchestrationPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           incidentDetails: details.trim(),
+          // Inventory is deliberately generous so a default run reaches the
+          // human approval checkpoint; conflicts are reserved for forced
+          // scenarios (a full shelter, or a low hoarding limit).
           availableInventory: {
-            "NDRF Rescue Boats": 20,
+            "NDRF Rescue Boats": 120,
             "Medical First-Aid Kits": 500,
             "Bottled Water Pallets": 300,
             "Transport Buses": 40,
           },
-          predictorSensitivity: directives.predictorSensitivity,
-          hoardingLimitPercent: directives.hoardingLimitPercent,
+          predictorSensitivity: directivesRef.current.predictorSensitivity,
+          hoardingLimitPercent: directivesRef.current.hoardingLimitPercent,
         }),
       });
       const payload = (await res.json()) as {
@@ -112,9 +146,9 @@ export default function AgentOrchestrationPage() {
       if (!payload.ok) throw new Error("Orchestration failed");
 
       // Replay agents light-up in order with realistic delays (Predictor →
-      // Planner → Allocator). If the Allocator reported a conflict, the
+      // Planner → Allocator → Validator). If a conflict is reported, the
       // pipeline halts there and a manual command override is requested.
-      const steps = WORKFLOW.slice(0, 3);
+      const steps = WORKFLOW.slice(0, 4);
       for (let i = 0; i < steps.length; i++) {
         setNodes((prev) => ({ ...prev, [steps[i].name]: "active" }));
         await sleep(600);
@@ -129,19 +163,23 @@ export default function AgentOrchestrationPage() {
 
       if (payload.finalState.status === "conflict") {
         setConflict(payload.finalState.conflict);
+        pendingRef.current = true;
         toast.error("Agent conflict detected — manual override required.");
       } else {
         setNeedsApproval(payload.requiresApproval);
+        pendingRef.current = payload.requiresApproval;
       }
     } catch {
       toast.error("Could not reach the orchestration engine.");
     } finally {
       setRunning(false);
+      busyRef.current = false;
     }
   }
 
   async function approve() {
     // Human-in-the-Loop: authorizing hands off to the Communicator agent.
+    pendingRef.current = false;
     setAuthorizing(true);
     setNeedsApproval(false);
     setNodes((prev) => ({ ...prev, Communicator: "active" }));
@@ -161,6 +199,7 @@ export default function AgentOrchestrationPage() {
   function overrideConflict() {
     // Manual Command Override: commander accepts the shortfall and forces
     // the pipeline to continue to the Communicator fan-out.
+    pendingRef.current = false;
     setConflict(null);
     setNeedsApproval(true);
     toast.success("Manual override accepted — proceed to approval.");
@@ -170,6 +209,65 @@ export default function AgentOrchestrationPage() {
     setIncident(LEVEL4_SCENARIO);
     void runOrchestration(LEVEL4_SCENARIO);
   }
+
+  // ---------------------------------------------------------------------
+  // Phase 16 · B3 — Live critical-prediction watch.
+  // Polls the AlertLog feed; when a FRESH critical alert lands (e.g. from the
+  // Command Centre's "Simulate Critical Alert"), the Planner auto-starts — no
+  // button press. Pre-existing alerts are seeded into `handledAlertIds` on
+  // the first poll so only new events trigger a run.
+  // ---------------------------------------------------------------------
+  useEffect(() => {
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout>;
+
+    async function poll() {
+      try {
+        const res = await fetch("/api/alerts?limit=10");
+        if (!res.ok) return;
+        const payload = (await res.json()) as {
+          alerts?: Array<{
+            id: string;
+            severity: string;
+            district?: string | null;
+            message?: string;
+            createdAt?: string;
+          }>;
+        };
+        for (const alert of payload.alerts ?? []) {
+          if (handledAlertIds.current.has(alert.id)) continue;
+          handledAlertIds.current.add(alert.id);
+          const ageMs = alert.createdAt
+            ? Date.now() - new Date(alert.createdAt).getTime()
+            : Infinity;
+          const isFresh = ageMs >= 0 && ageMs < 2 * 60 * 1000;
+          if (
+            alert.severity === "critical" &&
+            isFresh &&
+            !busyRef.current &&
+            !pendingRef.current
+          ) {
+            const district = alert.district ?? "your district";
+            setAutoTriggered(true);
+            setAutoTriggerDistrict(district);
+            await runOrchestration(
+              `${district}: ${alert.message ?? "Critical flood risk detected — immediate evacuation planning required."}`,
+            );
+          }
+        }
+      } catch {
+        // Polling is best-effort — never break the page.
+      }
+      if (!cancelled) timer = setTimeout(poll, 8000);
+    }
+
+    void poll();
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -181,8 +279,8 @@ export default function AgentOrchestrationPage() {
             Autonomous Response Orchestration
           </h1>
           <p className="mt-1 text-sm text-slate-400">
-            Predict → Plan → Allocate → Communicate. Watch specialized agents
-            reason about an incident end-to-end.
+            Predict → Plan → Allocate → Validate → Communicate. Watch
+            specialized agents reason about an incident end-to-end.
           </p>
         </div>
 
@@ -230,6 +328,38 @@ export default function AgentOrchestrationPage() {
           placeholder="Describe the detected incident…"
         />
       </div>
+
+      {/* Live critical-prediction watch (B3) — a fresh critical alert
+          auto-starts the planner without any button press. */}
+      <div className="mb-6 flex flex-wrap items-center gap-3 rounded-eoc border border-border bg-surface px-4 py-3">
+        <span className="relative flex h-2.5 w-2.5 shrink-0">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-severity-red-400 opacity-75" />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-severity-red-500" />
+        </span>
+        <p className="text-xs font-bold uppercase tracking-widest text-slate-300">
+          Live Critical-Prediction Watch · ON
+        </p>
+        <p className="text-[11px] text-slate-500">
+          Trigger a critical alert (Command Centre → Simulate Critical Alert)
+          and the Planner Agent starts automatically — no button press.
+        </p>
+      </div>
+
+      {autoTriggered && (
+        <div className="mb-6 flex items-center gap-3 rounded-eoc border-2 border-severity-amber-500/60 bg-severity-amber-500/10 px-4 py-3 shadow-glow-amber">
+          <Siren className="h-5 w-5 shrink-0 text-severity-amber-300" aria-hidden />
+          <div>
+            <p className="text-sm font-black uppercase tracking-wider text-severity-amber-300">
+              Critical prediction detected in {autoTriggerDistrict ?? "your district"} —
+              Planner Agent auto-started
+            </p>
+            <p className="text-xs text-slate-400">
+              The pipeline began automatically. Approve or reject at the
+              checkpoint below.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Workflow flow-chart */}
@@ -302,6 +432,12 @@ export default function AgentOrchestrationPage() {
       <div className="mt-6">
         <p className="eoc-label mb-2 text-slate-400">CHAIN OF REASONING</p>
         <DecisionLog logs={logs} />
+      </div>
+
+      {/* Replay timeline (B8) — scrub through the simulated response
+          step-by-step with the play / pause / reset controls. */}
+      <div className="mt-6">
+        <AgentReplayTimeline />
       </div>
     </div>
   );

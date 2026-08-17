@@ -79,7 +79,7 @@ export default function LanguageSelector() {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label="Select language"
-        className="flex items-center gap-2 rounded-md border border-border bg-surface-elevated/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-glow-accent backdrop-blur transition hover:border-accent hover:text-accent"
+        className="flex min-h-[44px] items-center gap-2 rounded-md border border-border bg-surface-elevated/95 px-3 py-2 text-xs font-medium text-foreground shadow-glow-accent backdrop-blur transition hover:border-accent hover:text-accent"
       >
         <Globe className="h-4 w-4" aria-hidden />
         <span className="whitespace-nowrap">{activeLabel}</span>

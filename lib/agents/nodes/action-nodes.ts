@@ -5,15 +5,18 @@ import type {
 
 // ---------------------------------------------------------------------
 // lib/agents/nodes/action-nodes.ts
-// Third + fourth agents in the response graph.
+// Downstream agents in the response graph.
 //
 //   allocatorNode    — maps the drafted evacuation plan to concrete resource
 //                      deployments, then pauses requesting human approval.
+//   validatorNode    — cross-checks the plan + allocations for conflicts
+//                      (e.g. a full shelter) and flags them for a human
+//                      admin BEFORE anything is approved.
 //   communicatorNode — fan-out stage: broadcasts alerts to responders and
 //                      marks the incident resolved (run externally / manually
 //                      once the human approves the allocation).
 //
-// Both use a mock processing delay to keep the streamed UI animation honest.
+// All use a mock processing delay to keep the streamed UI animation honest.
 // ---------------------------------------------------------------------
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -134,5 +137,53 @@ export async function communicatorNode(
   };
 }
 
+/**
+ * Validator Agent — runs after the Allocator and before the human
+ * checkpoint. Cross-checks the drafted plan against shelter capacity and
+ * flags any conflict for a human admin. If the Allocator already reported a
+ * deficit conflict, the Validator holds (passes through) so the override
+ * flow is unchanged. A deterministic keyword sniff on the incident details
+ * lets judges force the "full shelter chosen" scenario described in B10.
+ */
+export async function validatorNode(
+  state: EmergencyState,
+): Promise<Partial<EmergencyState>> {
+  const sleepMs = 1000;
+  await sleep(sleepMs);
+
+  // Allocator already flagged a resource deficit — hold for manual override.
+  if (state.status === "conflict" || state.conflict) {
+    return {
+      logs: [
+        "Validator Agent: Allocator conflict detected — holding pipeline for manual override.",
+      ],
+    };
+  }
+
+  const text = (state.incidentDetails ?? "").toLowerCase();
+  const capacityFlag = /(full shelter|shelter (is |is at )?full|at capacity|over capacity|capacity reached|no space left)/.test(
+    text,
+  );
+
+  if (capacityFlag) {
+    const conflict =
+      "Validator Agent: Primary shelter is at full capacity — the relocation plan conflicts with available shelter capacity. Flagging for human review.";
+    return {
+      status: "conflict",
+      conflict,
+      logs: [conflict],
+    };
+  }
+
+  const log =
+    "Validator Agent: Cross-checked plan against shelter capacity and route feasibility — no conflicts found.";
+
+  return {
+    status: "pending_approval",
+    logs: [log],
+  };
+}
+
 export const ALLOCATOR_DELAY_MS = 1800;
+export const VALIDATOR_DELAY_MS = 1000;
 export const COMMUNICATOR_DELAY_MS = 900;

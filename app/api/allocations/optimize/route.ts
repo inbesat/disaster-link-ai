@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
+import { requireRole } from "@/lib/security/require-role";
+import { GOV_ROLES } from "@/lib/validations/user";
 import {
   runGreedyAllocation,
   type AllocationCandidateResource,
@@ -163,6 +165,15 @@ function calculatePriorityScore(d: AllocationDemand): number {
 }
 
 export async function POST(request: Request) {
+  // Security: the optimizer PERSISTS allocation plans (and can create stand-in
+  // disaster events). Only gov roles may mutate operational allocations — an
+  // anonymous caller must never write to resource_allocations. Guests (no role
+  // cookie) are rejected too.
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
+  }
+
   let body: OptimizeBody = {};
   try {
     body = (await request.json()) as OptimizeBody;

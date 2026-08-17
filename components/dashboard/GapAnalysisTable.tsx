@@ -26,6 +26,7 @@ export default function GapAnalysisTable() {
         </span>
       </div>
 
+      <div className="overflow-x-auto">
       <table className="w-full text-left text-xs">
         <thead className="border-b border-border bg-surface-muted/60 text-[10px] uppercase tracking-wider text-slate-400">
           <tr>
@@ -73,6 +74,7 @@ export default function GapAnalysisTable() {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

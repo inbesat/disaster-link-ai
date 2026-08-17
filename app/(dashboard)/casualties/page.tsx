@@ -7,7 +7,6 @@ import {
   MapPin,
   Clock,
   AlertTriangle,
-  CheckCircle2,
   Activity,
   Filter,
   Search,

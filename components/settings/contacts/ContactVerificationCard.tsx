@@ -86,7 +86,7 @@ export default function ContactVerificationCard() {
       {/* Results table */}
       <div
         aria-live="polite"
-        className="mt-5 overflow-hidden rounded-md border border-[#1c2740]"
+        className="mt-5 overflow-x-auto rounded-md border border-[#1c2740]"
       >
         <table className="w-full text-left text-sm">
           <thead className="border-b border-[#1c2740] bg-[#0a0f1d] text-[10px] uppercase tracking-[0.14em] text-slate-500">

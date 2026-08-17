@@ -105,6 +105,10 @@ const nextConfig = {
           },
           // Cache preflight responses for a day to cut redundant OPTIONS calls.
           { key: "Access-Control-Max-Age", value: "86400" },
+          // Caches must vary on Origin when CORS headers depend on the
+          // request's Origin — otherwise a shared cache can replay one
+          // origin's ACAO to another.
+          { key: "Vary", value: "Origin" },
           // Only send the credentials flag for a concrete origin (never "*").
           ...(isWildcard
             ? []
@@ -113,6 +117,11 @@ const nextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          // No Content-Security-Policy is emitted here on purpose: the app
+          // loads Google Translate, WebLLM (CDN wasm/workers), and MapLibre
+          // tile origins at runtime, so a strict CSP would break those
+          // integrations. XSS is mitigated at the data layer via
+          // lib/security/sanitize.ts + React's default escaping instead.
         ],
       },
       {

@@ -1,6 +1,13 @@
 // ---------------------------------------------------------------------
-// lib/alerts/web-push.ts
-// Web Push (VAPID) utilities for browser notifications.
+// lib/alerts/web-push.ts — SERVER-ONLY. VAPID signing + delivery utilities
+// for Web Push (browser) notifications.
+//
+// IMPORTANT: this module reads VAPID_PRIVATE_KEY (a server secret). It must
+// NEVER be imported from a "use client" component or any client-reachable
+// file — the private key reference would then be inlined into the client
+// bundle. Browser-side service-worker registration lives in
+// components/pwa/ServiceWorkerRegister.tsx (which only uses the public
+// NEXT_PUBLIC_VAPID_PUBLIC_KEY).
 //
 // Env contract:
 //   NEXT_PUBLIC_VAPID_PUBLIC_KEY  - public key (exposed to the browser)
@@ -83,22 +90,5 @@ export async function sendWebPush(
       ok: false,
       error: error instanceof Error ? error.message : String(error),
     };
-  }
-}
-
-/**
- * Registers / syncs the service worker in the browser. Call this from a
- * client component after a user grants Notification permission.
- */
-export async function registerServiceWorker(): Promise<boolean> {
-  if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
-    return false;
-  }
-  try {
-    await navigator.serviceWorker.register("/sw.js");
-    return true;
-  } catch (error) {
-    console.error("[web-push] service worker registration failed:", error);
-    return false;
   }
 }

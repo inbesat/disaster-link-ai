@@ -5,6 +5,7 @@ import { prisma } from "@/server/prisma";
 import { extractTextFromPDF, chunkText } from "@/lib/rag/chunker";
 import { generateEmbeddings } from "@/lib/rag/embeddings";
 import { requireRole } from "@/lib/security/require-role";
+import { sanitizeInput } from "@/lib/security/sanitize";
 
 const ADMIN_ROLES = ["super_admin", "district_admin"] as const;
 
@@ -69,13 +70,15 @@ export async function ingestDocument(
   }
 
   const file = formData.get("file") as File | null;
-  const title = String(formData.get("title") ?? "Untitled document").trim();
+  const title = sanitizeInput(String(formData.get("title") ?? "Untitled document")).trim().slice(0, 300);
   const districtRaw = formData.get("district");
-  const district = districtRaw && String(districtRaw).trim().length ? String(districtRaw).trim() : null;
+  const district = districtRaw && String(districtRaw).trim().length
+    ? sanitizeInput(String(districtRaw)).trim().slice(0, 200)
+    : null;
   const documentTypeRaw = formData.get("document_type");
   const documentType =
     documentTypeRaw && String(documentTypeRaw).trim()
-      ? String(documentTypeRaw).trim()
+      ? sanitizeInput(String(documentTypeRaw)).trim().slice(0, 100)
       : DEFAULT_DOCUMENT_TYPE;
 
   if (!file) {
@@ -137,7 +140,7 @@ export async function ingestDocument(
         VALUES (
           ${title},
           ${documentType},
-          ${chunkTextValue},
+          ${sanitizeInput(chunkTextValue).slice(0, 8000)},
           ${versionedMetadata}::jsonb,
           (${`[${embedding.join(",")}]`})::vector(1536),
           ${sourceKey},

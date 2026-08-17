@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { Phone, Send, MessageCircle, Wrench } from "lucide-react";
-import { parseCitizenReport } from "@/lib/ai/groq-parser";
 import type { GroundReport } from "@/lib/crowdsourced/report";
 
 // ---------------------------------------------------------------------
 // components/dashboard/WebhookSimulator.tsx (Phase 17 Step 10)
 // A "Dev Tools" phone UI that simulates an incoming WhatsApp SOS. On submit it:
 //   1. shows an "Incoming SMS Received" toast,
-//   2. passes the text through the Groq NLP parser (Phase 17 Step 3),
+//   2. passes the text through the server-side Groq NLP parser
+//      (POST /api/ingest/parse — the browser never imports groq-parser, which
+//      reads GROQ_API_KEY / GROQ_MODEL from env and would leak into the
+//      client bundle),
 //   3. builds an UNVERIFIED GroundReport and calls `onNewReport` so the
 //      DisasterMap drops a new pulsing "?" marker.
 // ---------------------------------------------------------------------
@@ -49,8 +51,18 @@ export default function WebhookSimulator({
     pushToast("Incoming SMS Received 📱");
 
     try {
-      // Pass the text straight through the Groq fast NLP parser.
-      const parsed = await parseCitizenReport(message);
+      // Route the text through the server-side Groq NLP parser — the client
+      // bundle must never import the LLM client (GROQ_API_KEY lives server-side).
+      const res = await fetch("/api/ingest/parse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: message }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error ?? "Parse failed");
+      }
+      const parsed = data.parsed;
 
       const report: GroundReport = {
         id: `sms-${Date.now()}`,

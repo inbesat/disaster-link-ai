@@ -74,7 +74,7 @@ export function DashboardTopBar({
         <div className="flex items-center gap-2.5">
           {guest ? (
             <span
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-accent/40 bg-surface-elevated text-accent"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-accent/40 bg-surface-elevated text-accent"
               aria-hidden="true"
             >
               <GuestAvatarIcon />
@@ -111,7 +111,7 @@ export function DashboardTopBar({
           href="/settings/profile"
           aria-label="Open settings"
           title="Settings"
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface-elevated text-muted transition hover:border-accent hover:text-accent"
+          className="flex h-10 w-10 items-center justify-center rounded-md border border-border bg-surface-elevated text-muted transition hover:border-accent hover:text-accent"
         >
           <Settings className="h-4 w-4" aria-hidden />
         </Link>
@@ -129,7 +129,7 @@ export function DashboardTopBar({
           onClick={onOpenMobile}
           aria-label="Open navigation drawer"
           aria-haspopup="dialog"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface-elevated text-foreground transition hover:border-accent hover:text-accent md:hidden"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border bg-surface-elevated text-foreground transition hover:border-accent hover:text-accent md:hidden"
         >
           <Menu className="h-5 w-5" aria-hidden />
         </button>
@@ -140,7 +140,7 @@ export function DashboardTopBar({
         >
           <button
             type="submit"
-            className="rounded-md border border-border bg-surface-elevated px-3 py-1.5 text-xs font-medium text-primary transition hover:border-accent hover:text-accent"
+            className="min-h-[44px] rounded-md border border-border bg-surface-elevated px-3 py-2 text-xs font-medium text-primary transition hover:border-accent hover:text-accent"
           >
             <Translated k={guest ? "exit_demo" : "sign_out"} />
           </button>

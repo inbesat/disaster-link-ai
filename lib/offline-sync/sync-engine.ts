@@ -28,7 +28,6 @@ import type {
   OfflineRecord,
   SyncStatus,
   SyncStatusEntry,
-  SyncPriority,
 } from "./types";
 import { getConnectivityMonitor, type ConnectivityMonitor } from "@/lib/ai-bridge/connectivity";
 

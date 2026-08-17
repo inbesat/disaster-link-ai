@@ -49,7 +49,7 @@ function DrawerContent({
         type="button"
         onClick={onClose}
         aria-label="Close info panel"
-        className="absolute right-0 top-0 flex h-7 w-7 items-center justify-center rounded-md border border-border text-muted transition hover:border-accent hover:text-accent"
+        className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-md border border-border text-muted transition hover:border-accent hover:text-accent"
       >
         <X className="h-4 w-4" aria-hidden />
       </button>
@@ -89,21 +89,21 @@ function DrawerContent({
       <div className="mt-4 flex gap-2">
         <button
           type="button"
-          className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md bg-accent-primary text-sm font-semibold text-white shadow-glow-blue transition hover:opacity-90 hover:shadow-none"
+          className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-md bg-accent-primary px-3 text-sm font-semibold text-white shadow-glow-blue transition hover:opacity-90 hover:shadow-none"
         >
           <MapPin className="h-4 w-4" aria-hidden />
           Navigate
         </button>
         <button
           type="button"
-          className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md border border-border bg-surface-elevated text-sm font-medium text-slate-200 transition hover:border-accent hover:text-accent"
+          className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-md border border-border bg-surface-elevated px-3 text-sm font-medium text-slate-200 transition hover:border-accent hover:text-accent"
         >
           <Pencil className="h-4 w-4" aria-hidden />
           Edit
         </button>
         <button
           type="button"
-          className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md border border-border bg-surface-elevated text-sm font-medium text-slate-200 transition hover:border-accent hover:text-accent"
+          className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-md border border-border bg-surface-elevated px-3 text-sm font-medium text-slate-200 transition hover:border-accent hover:text-accent"
         >
           <Phone className="h-4 w-4" aria-hidden />
           Contact

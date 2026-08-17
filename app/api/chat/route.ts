@@ -1,4 +1,4 @@
-import { isStepCount, streamText, type LanguageModel, type Tool } from "ai";
+import { isStepCount, streamText, type LanguageModel, type ModelMessage, type Tool } from "ai";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import {
@@ -293,7 +293,7 @@ export async function POST(req: Request) {
   const result = streamText({
     model,
     system,
-    messages: messages as any,
+    messages: messages as ModelMessage[],
     // AI SDK v7 defaults to stopWhen: isStepCount(1) — ONE model invocation
     // — so tool roundtrips never happen and the chat returns empty after the
     // first tool call. Allow up to 6 steps (tool calls + final summary); the

@@ -96,3 +96,36 @@ export async function requireRole(
     return deny(false);
   }
 }
+
+/**
+ * requireSession() — weaker sibling of requireRole(): admits ANY signed-in
+ * identity (guest_mode cookie, role cookie, or Supabase user) so citizen-facing
+ * endpoints (SOS, missing-person reports, chat, social-ingest parse) keep
+ * working for demo guests while still blocking fully anonymous callers from
+ * mutating data. Role-based endpoints must keep using requireRole() instead.
+ */
+export async function requireSession(): Promise<RequireRoleResult> {
+  const cookieStore = await cookies();
+  const roleCookie = cookieStore.get("role")?.value ?? "";
+  const isGuest = cookieStore.get("guest_mode")?.value === "true";
+
+  if (isGuest || roleCookie !== "") return { ok: true, role: roleCookie || "guest" };
+
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return deny(false);
+  }
+
+  try {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return user ? { ok: true, role: user.id } : deny(false);
+  } catch (error) {
+    console.error("[requireSession] Supabase lookup failed; denying access.", error);
+    return deny(false);
+  }
+}

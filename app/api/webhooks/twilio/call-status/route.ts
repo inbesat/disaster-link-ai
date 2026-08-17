@@ -24,7 +24,7 @@ const FINAL_OK = new Set(["completed"]);
 const FINAL_FAIL = new Set(["busy", "failed", "no-answer", "canceled"]);
 
 /** Map a Twilio call status onto an fm_broadcast_log status. */
-export function mapCallStatus(status: string): "delivered" | "failed" | "retrying" {
+function mapCallStatus(status: string): "delivered" | "failed" | "retrying" {
   if (FINAL_OK.has(status)) return "delivered";
   if (FINAL_FAIL.has(status)) return "failed";
   return "retrying"; // initiated / ringing / answered / in-progress

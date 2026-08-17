@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { notifyAllSubscribers } from "@/server/services/push-notifier";
+import { requireRole } from "@/lib/security/require-role";
+import { GOV_ROLES } from "@/lib/validations/user";
 
 export const runtime = "nodejs";
 
@@ -15,6 +17,13 @@ const PUSHABLE_PRIORITIES = ["CRITICAL", "HIGH"] as const;
  *   { title: string, priority: "CRITICAL" | "HIGH" | "ROUTINE", location?: string }
  */
 export async function POST(request: NextRequest) {
+  // Security: this endpoint broadcasts Web Push to every subscribed responder
+  // — an anonymous caller could spam all field staff with fake critical alerts.
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
+  }
+
   let body: { title?: unknown; priority?: unknown; location?: unknown };
   try {
     body = (await request.json()) as typeof body;

@@ -18,7 +18,6 @@
 
 import type { DisasterLinkDB } from "./db";
 import type { DataType } from "./types";
-import { DATA_TYPES } from "./types";
 import { configForType } from "./config";
 import { STORAGE_BUDGET_BYTES } from "./quota";
 

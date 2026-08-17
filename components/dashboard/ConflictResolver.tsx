@@ -120,7 +120,8 @@ export default function ConflictResolver() {
               and preserved fields only one side touched.
             </p>
 
-            <table className="mt-4 w-full text-sm">
+            <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-amber-400/30 text-left text-[10px] uppercase tracking-wider text-amber-300/80">
                   <th className="py-1 pr-2">Field</th>
@@ -152,6 +153,7 @@ export default function ConflictResolver() {
                 </tr>
               </tbody>
             </table>
+          </div>
 
             <p className="mt-3 inline-flex rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-300">
               {merged.conflicts.length > 0

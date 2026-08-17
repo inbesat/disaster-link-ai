@@ -163,7 +163,7 @@ export function SidebarNavItem({
     setOpen((o) => !o);
   };
 
-  const rowClassName = `relative flex h-10 items-center gap-3 rounded-md border-l-2 px-3 text-sm transition-colors duration-150 motion-reduce:transition-none ${
+  const rowClassName = `relative flex h-11 items-center gap-3 rounded-md border-l-2 px-3 text-sm transition-colors duration-150 motion-reduce:transition-none ${
     collapsed ? "justify-center px-0" : ""
   } ${
     isActive
@@ -244,7 +244,7 @@ export function SidebarNavItem({
                   <Link
                     href={sub.href}
                     aria-current={subActive ? "page" : undefined}
-                    className={`flex h-8 items-center gap-2 rounded-md border-l-2 pl-[42px] pr-2 text-[0.8125rem] transition-colors duration-150 motion-reduce:transition-none ${
+                    className={`flex min-h-[44px] items-center gap-2 rounded-md border-l-2 pl-[42px] pr-2 text-[0.8125rem] transition-colors duration-150 motion-reduce:transition-none ${
                       subActive
                         ? "border-accent-primary bg-accent-primary/10 text-primary"
                         : "border-transparent text-muted hover:bg-white/5 hover:text-foreground"

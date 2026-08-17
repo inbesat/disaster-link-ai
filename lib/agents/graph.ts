@@ -1,13 +1,13 @@
 import { StateGraph, START, END } from "@langchain/langgraph";
 import { EmergencyStateAnnotation } from "@/lib/agents/graph-state";
 import { predictorNode, plannerNode } from "@/lib/agents/nodes/intelligence-nodes";
-import { allocatorNode } from "@/lib/agents/nodes/action-nodes";
+import { allocatorNode, validatorNode } from "@/lib/agents/nodes/action-nodes";
 
 // ---------------------------------------------------------------------
 // lib/agents/graph.ts
 // Compiled multi-agent graph:
 //
-//   START → predictorNode → plannerNode → allocatorNode → END
+//   START → predictorNode → plannerNode → allocatorNode → validatorNode → END
 //
 // Stops at `pending_approval` (Human-in-the-Loop). The `communicatorNode` is
 // run externally after a commander approves. We avoid a checkpointer here and
@@ -20,10 +20,12 @@ export function buildGraph() {
     .addNode("predictor", predictorNode)
     .addNode("planner", plannerNode)
     .addNode("allocator", allocatorNode)
+    .addNode("validator", validatorNode)
     .addEdge(START, "predictor")
     .addEdge("predictor", "planner")
     .addEdge("planner", "allocator")
-    .addEdge("allocator", END);
+    .addEdge("allocator", "validator")
+    .addEdge("validator", END);
   return builder.compile();
 }
 

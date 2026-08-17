@@ -84,7 +84,7 @@ function buildInfluencedForecast(riskLevel: string, confidence: number): Forecas
 // ---------------------------------------------------------------------------
 // Risk badge colors
 // ---------------------------------------------------------------------------
-function riskBadge(risk: string, confidence: number): { color: string; bg: string; label: string } {
+function riskBadge(risk: string): { color: string; bg: string; label: string } {
   switch (risk) {
     case "Critical":
     case "Evacuate":
@@ -155,7 +155,7 @@ export function FloodPredictionChart({ useMock = false }: Props) {
     return () => { cancelled = true; };
   }, [useMock]);
 
-  const badge = prediction ? riskBadge(prediction.risk_level, prediction.confidence_score) : null;
+  const badge = prediction ? riskBadge(prediction.risk_level) : null;
 
   return (
     <Panel

@@ -238,7 +238,7 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
         <TimeSlider value={hoursAhead} onChange={setHoursAhead} />
 
         <section
-          className={`fixed inset-x-0 bottom-0 z-20 transition-transform duration-300 ease-in-out md:hidden ${
+          className={`fixed inset-x-0 bottom-0 z-40 transition-transform duration-300 ease-in-out md:hidden ${
             sheetOpen ? "translate-y-0" : "translate-y-[calc(100%_-_56px)]"
           }`}
         >
@@ -247,7 +247,7 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
               type="button"
               onClick={() => setSheetOpen((open) => !open)}
               aria-label={sheetOpen ? "Collapse panel" : "Expand panel"}
-              className="mx-auto mb-4 flex h-8 w-16 items-center justify-center rounded-full border border-border bg-surface-elevated"
+              className="mx-auto mb-4 flex h-10 w-16 items-center justify-center rounded-full border border-border bg-surface-elevated"
             >
               <span
                 className={`h-1 w-8 rounded-full bg-slate-400 transition-transform duration-300 ${

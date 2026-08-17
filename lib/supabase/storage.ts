@@ -79,6 +79,13 @@ export async function uploadDisasterImage(
 }
 
 /**
+ * Uploads a shelter photo to the `shelter-photos` bucket.
+ */
+export async function uploadShelterPhoto(file: File): Promise<string> {
+  return uploadToBucket("shelter-photos", "shelters", file, IMAGE_TYPES);
+}
+
+/**
  * Uploads an SOP document to the `document-files` bucket, namespaced by docId.
  */
 export async function uploadSOPDocument(

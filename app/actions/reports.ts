@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/server/prisma";
 import { detectSpam } from "@/lib/data-ingestion/spam-filter";
@@ -33,7 +34,6 @@ export type SubmitReportResult = {
 };
 
 const REPORT_TYPES = ["flooding", "road_blocked", "shelter_needed", "rescue"] as const;
-const MAX_TEXT_LENGTH = 2000;
 const MAX_IMAGE_URL_LENGTH = 1000;
 
 /**
@@ -45,8 +45,14 @@ const MAX_IMAGE_URL_LENGTH = 1000;
 export async function submitCitizenReport(
   input: CitizenReportInput,
 ): Promise<SubmitReportResult> {
-  // Rate limit: max 5 reports per IP per 10 minutes
-  const clientKey = `report:${input.lat}:${input.lng}`;
+  // Rate limit: max 5 reports per IP per 10 minutes. The key must be derived
+  // from the caller (IP header when available) — never from lat/lng, which an
+  // attacker can trivially vary to burn a fresh budget every request.
+  const forwarded = headers().get("x-forwarded-for");
+  const clientIp = forwarded ? forwarded.split(",")[0].trim() : "";
+  const clientKey = clientIp
+    ? `report:${clientIp}`
+    : `report:${Math.round(input.lat * 100)}:${Math.round(input.lng * 100)}`;
   const budget = rateLimit(clientKey, 5, 10 * 60 * 1000);
   if (!budget.success) {
     return {
@@ -65,7 +71,12 @@ export async function submitCitizenReport(
   const rawText = sanitizeInput(String(input.rawText ?? "").trim()).slice(0, 2000);
   const source =
     input.source === "social" || input.source === "sms" ? input.source : "app";
-  const imageUrl = input.imageUrl ? String(input.imageUrl).slice(0, 1000) : null;
+  // imageUrl: only plain http(s) URLs are accepted (data:/javascript: and SVG
+  // payloads are rejected as XSS defense-in-depth).
+  const imageUrl =
+    input.imageUrl && /^https?:\/\//i.test(String(input.imageUrl))
+      ? sanitizeInput(String(input.imageUrl)).slice(0, MAX_IMAGE_URL_LENGTH)
+      : null;
 
   if (!Number.isFinite(input.lat) || !Number.isFinite(input.lng)) {
     return {

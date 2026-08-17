@@ -34,7 +34,7 @@ export function MapHeader({
       {/* Back */}
       <Link
         href={backHref}
-        className="inline-flex shrink-0 items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-sm font-medium text-slate-200 transition hover:border-white/25 hover:bg-white/10 hover:text-white"
+        className="inline-flex shrink-0 items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-white/25 hover:bg-white/10 hover:text-white sm:min-h-[44px]"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden />
         <span className="hidden sm:inline">Back to Dashboard</span>
@@ -61,7 +61,7 @@ export function MapHeader({
           onClick={onToggleFullscreen}
           aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
           title={isFullscreen ? "Exit fullscreen (Esc)" : "Enter fullscreen"}
-          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/5 text-slate-200 transition hover:border-white/25 hover:bg-white/10 hover:text-white"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/5 text-slate-200 transition hover:border-white/25 hover:bg-white/10 hover:text-white"
         >
           {isFullscreen ? (
             <Minimize className="h-4 w-4" aria-hidden />

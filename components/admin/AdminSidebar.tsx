@@ -58,7 +58,7 @@ function SidebarContent() {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition ${
+              className={`flex min-h-[44px] items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition ${
                 active
                   ? "bg-amber-500/10 text-amber-300 shadow-[0_0_0_1px_rgba(245,158,11,0.25)]"
                   : "text-slate-400 hover:bg-[#1a2338] hover:text-slate-200"
@@ -82,7 +82,7 @@ function SidebarContent() {
         <form action={signOutAction} className="mt-4">
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-3 py-2 text-sm font-medium text-slate-300 transition hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400"
+            className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-3 py-2 text-sm font-medium text-slate-300 transition hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400"
           >
             <LogOut className="h-4 w-4" aria-hidden />
             Sign Out
@@ -110,7 +110,7 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex items-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-2.5 py-1.5 text-sm font-medium text-amber-300 transition hover:bg-[#1a2338] lg:hidden"
+              className="flex min-h-[44px] items-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-3 py-2 text-sm font-medium text-amber-300 transition hover:bg-[#1a2338] lg:hidden"
               aria-label="Open admin navigation"
             >
               <Menu className="h-4 w-4" />
@@ -145,7 +145,7 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="absolute right-3 top-3 z-10 rounded-md p-1.5 text-slate-400 transition hover:bg-[#1a2338] hover:text-slate-200"
+              className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-md p-2 text-slate-400 transition hover:bg-[#1a2338] hover:text-slate-200"
               aria-label="Close admin navigation"
             >
               <X className="h-5 w-5" />

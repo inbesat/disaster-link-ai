@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
+import { requireRole } from "@/lib/security/require-role";
+import { GOV_ROLES } from "@/lib/validations/user";
+import { sanitizeInput } from "@/lib/security/sanitize";
 import { demoWhere, resolveDemoScope } from "@/lib/demo/scope";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +28,13 @@ export async function GET() {
 
 /** Create a new road closure point placed by an admin on the map. */
 export async function POST(request: NextRequest) {
+  // Security: creating road-closure rows mutates the operational map layer.
+  // GET stays public (the citizen map draws the blockers); writes are gov-only.
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
+  }
+
   let body: { lat?: unknown; lng?: unknown; reason?: unknown };
   try {
     body = (await request.json()) as typeof body;
@@ -49,7 +59,10 @@ export async function POST(request: NextRequest) {
       data: {
         lat,
         lng,
-        reason: typeof body.reason === "string" ? body.reason : "Flooded road",
+        reason:
+          typeof body.reason === "string"
+            ? sanitizeInput(body.reason).slice(0, 500)
+            : "Flooded road",
         isActive: true,
         isDemo: scope.demo,
         sessionId: scope.demo ? scope.sessionId : null,

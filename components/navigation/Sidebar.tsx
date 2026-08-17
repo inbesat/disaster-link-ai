@@ -174,7 +174,7 @@ export function Sidebar({
           aria-label="Close navigation"
           tabIndex={-1}
           onClick={onCloseMobile}
-          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
         />
       )}
       <aside
@@ -182,7 +182,7 @@ export function Sidebar({
         aria-label="Command center navigation"
         className={`flex h-screen flex-col border-r border-subtle bg-secondary transition-all duration-300 motion-reduce:transition-none ${
           variant === "fixed"
-            ? `fixed inset-y-0 left-0 z-40 ${
+            ? `fixed inset-y-0 left-0 z-50 ${
                 drawerOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
               }`
             : "relative h-full"
