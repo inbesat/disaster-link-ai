@@ -30,13 +30,14 @@ export default function Problem() {
   ];
 
   return (
-    <section className="bg-white py-28">
+    <section className="bg-[#0a0f1a] py-28">
       <SectionHead
         eyebrow="The Problem"
         eyebrowVariant="orange"
         title="Disaster warnings still don't reach the people who need them most"
         subtitle="India's disaster management infrastructure remains fragmented — critical alerts are delayed, duplicated, or never delivered to the citizens who need them."
         center={true}
+        onNavy={true}
       />
 
       <div className="max-w-7xl mx-auto px-6 mt-16">
@@ -44,12 +45,12 @@ export default function Problem() {
           {problems.map((item, i) => (
             <ScrollReveal key={i} delay={i * 0.08}>
               <TiltCard maxTilt={7} perspective={1000} className="h-full rounded-[18px]">
-                <div className="bg-[#F8FAFC] border border-[#E7ECF3] rounded-[18px] p-7 hover:-translate-y-1.5 hover:border-[#F97316]/25 hover:shadow-[0_10px_40px_-12px_rgba(11,31,58,0.18)] transition-all duration-300 cursor-default group h-full">
+                <div className="bg-white/5 border border-slate-800 rounded-[18px] p-7 hover:-translate-y-1.5 hover:border-[#F97316]/30 hover:bg-white/[0.07] transition-all duration-300 cursor-default group h-full">
                   <div className="w-[52px] h-[52px] rounded-[14px] bg-[#F97316]/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                     <item.icon className="text-[#F97316] w-6 h-6" />
                   </div>
-                  <h3 className="text-lg font-bold text-[#0F1B2D] mb-2">{item.title}</h3>
-                  <p className="text-sm text-[#5B6B84] leading-relaxed">{item.desc}</p>
+                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
                 </div>
               </TiltCard>
             </ScrollReveal>

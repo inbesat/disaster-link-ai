@@ -27,7 +27,7 @@ const PILLARS = [
 
 export default function Solution() {
   return (
-    <section className="bg-[#F8FAFC] py-28">
+    <section className="bg-[#0f172a] py-28">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-16 items-center">
           <ScrollReveal>
@@ -37,6 +37,7 @@ export default function Solution() {
               title="One AI platform connecting prediction, broadcast, and rescue"
               subtitle="SafeSphere unifies satellite intelligence, weather APIs, IoT sensors, and government networks into a single AI-powered command center — delivering verified alerts through 9 redundant channels."
               center={false}
+              onNavy
             />
 
             <div className="mt-10 space-y-6">
@@ -47,10 +48,10 @@ export default function Solution() {
                       {pillar.num}
                     </div>
                     <div>
-                      <h4 className="text-base font-bold text-[var(--text-dark)]">
+                      <h4 className="text-base font-bold text-white">
                         {pillar.title}
                       </h4>
-                      <p className="text-sm text-[var(--text-muted)] mt-1 leading-relaxed">
+                      <p className="text-sm text-slate-400 mt-1 leading-relaxed">
                         {pillar.desc}
                       </p>
                     </div>
@@ -70,11 +71,11 @@ export default function Solution() {
               <div className="relative rounded-[22px] overflow-hidden h-[420px] md:h-[500px] bg-[#0B1F3A]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://images.unsplash.com/photo-1618477388954-7852f32655cb?auto=format&fit=crop&q=80&w=1000"
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop"
                   alt="Emergency Command Center"
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover rounded-2xl opacity-60"
+                  className="object-cover w-full h-full rounded-2xl opacity-90"
                 />
                 <div className="absolute bottom-6 left-6 right-6 bg-[rgba(11,31,58,0.75)] backdrop-blur-[10px] rounded-[14px] p-4 flex items-center gap-3">
                   <div className="relative flex h-2.5 w-2.5 shrink-0">

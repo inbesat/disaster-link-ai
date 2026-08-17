@@ -47,15 +47,15 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <section className="bg-white py-28">
+    <section className="bg-[#0a0f1a] py-28">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
         <ScrollReveal animation="fade-right">
           <div>
             <Eyebrow text="Get In Touch" variant="blue" />
-            <h2 className="text-4xl md:text-5xl font-bold text-[#0F1B2D] leading-tight mt-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mt-4">
               Request a demo for your district or agency
             </h2>
-            <p className="text-[#5B6B84] mt-4 leading-relaxed mb-10">
+            <p className="text-slate-400 mt-4 leading-relaxed mb-10">
               Whether you&apos;re a government body, rescue organization, or NGO — our
               team will set up a personalized demo for your region.
             </p>
@@ -77,27 +77,27 @@ export default function Contact() {
                       <Icon
                         className={`${
                           contact.color === "blue"
-                            ? "text-[#2563EB]"
+                            ? "text-[#5B8DF6]"
                             : contact.color === "orange"
                               ? "text-[#F97316]"
-                              : "text-emerald-500"
+                              : "text-emerald-400"
                         }`}
                         size={18}
                       />
                     </div>
                     <div>
-                      <h5 className="text-xs text-[#5B6B84] uppercase tracking-wider">
+                      <h5 className="text-xs text-slate-400 uppercase tracking-wider">
                         {contact.label}
                       </h5>
                       {contact.href ? (
                         <a
                           href={contact.href}
-                          className="text-[#0F1B2D] font-medium hover:text-[#2563EB]"
+                          className="text-white font-medium hover:text-[#5B8DF6]"
                         >
                           {contact.value}
                         </a>
                       ) : (
-                        <div className="text-[#0F1B2D] font-medium">{contact.value}</div>
+                        <div className="text-white font-medium">{contact.value}</div>
                       )}
                     </div>
                   </div>
@@ -108,9 +108,9 @@ export default function Contact() {
         </ScrollReveal>
 
         <ScrollReveal animation="fade-left" delay={0.2}>
-          <div className="bg-white border border-[#E7ECF3] rounded-[20px] p-8 shadow-[0_10px_40px_-12px_rgba(11,31,58,0.18)]">
+          <div className="bg-white/5 border border-slate-800 rounded-[20px] p-8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.6)]">
             {submitted ? (
-              <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-[14px] p-5 text-emerald-700 font-medium">
+              <div className="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 rounded-[14px] p-5 text-emerald-300 font-medium">
                 ✓ Thanks — our team will follow up shortly.
               </div>
             ) : (
@@ -122,56 +122,56 @@ export default function Contact() {
                 className="space-y-5"
               >
                 <div>
-                  <label className="text-sm font-medium text-[#0F1B2D] mb-1.5 block">
+                  <label className="text-sm font-medium text-slate-200 mb-1.5 block">
                     Full Name
                   </label>
                   <input
                     type="text"
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-[#E7ECF3] bg-[#F8FAFC] text-[#0F1B2D] text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-[#0F1B2D] mb-1.5 block">
+                  <label className="text-sm font-medium text-slate-200 mb-1.5 block">
                     Organization
                   </label>
                   <input
                     type="text"
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-[#E7ECF3] bg-[#F8FAFC] text-[#0F1B2D] text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-[#0F1B2D] mb-1.5 block">
+                  <label className="text-sm font-medium text-slate-200 mb-1.5 block">
                     Email
                   </label>
                   <input
                     type="email"
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-[#E7ECF3] bg-[#F8FAFC] text-[#0F1B2D] text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-[#0F1B2D] mb-1.5 block">
+                  <label className="text-sm font-medium text-slate-200 mb-1.5 block">
                     Phone
                   </label>
                   <input
                     type="tel"
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-[#E7ECF3] bg-[#F8FAFC] text-[#0F1B2D] text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-[#0F1B2D] mb-1.5 block">
+                  <label className="text-sm font-medium text-slate-200 mb-1.5 block">
                     Role
                   </label>
                   <select
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-[#E7ECF3] bg-[#F8FAFC] text-[#0F1B2D] text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all appearance-none"
+                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all appearance-none"
                   >
                     <option value=""></option>
                     <option value="Government">Government</option>
@@ -182,13 +182,13 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-[#0F1B2D] mb-1.5 block">
+                  <label className="text-sm font-medium text-slate-200 mb-1.5 block">
                     Message
                   </label>
                   <textarea
                     rows={4}
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-[#E7ECF3] bg-[#F8FAFC] text-[#0F1B2D] text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   ></textarea>
                 </div>
 

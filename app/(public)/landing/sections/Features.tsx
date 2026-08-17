@@ -101,13 +101,14 @@ export default function Features() {
   };
 
   return (
-    <section className="bg-white py-28" id="features">
+    <section className="bg-[#0a0f1a] py-28" id="features">
       <SectionHead
         eyebrow="AI Features"
         eyebrowVariant="blue"
         title="A complete AI toolkit for disaster resilience"
         subtitle="12 integrated AI modules working together to predict, prevent, respond, and recover."
         center={true}
+        onNavy={true}
       />
 
       <div className="max-w-7xl mx-auto px-6 mt-16">
@@ -121,7 +122,7 @@ export default function Features() {
                   perspective={1000}
                   className="h-full rounded-[18px]"
                 >
-                  <div className="bg-white border border-[#E7ECF3] rounded-[18px] p-7 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(37,99,235,0.25),0_20px_60px_-20px_rgba(37,99,235,0.45)] hover:border-[#2563EB]/30 transition-all duration-300 h-full">
+                  <div className="bg-white/5 border border-slate-800 rounded-[18px] p-7 relative overflow-hidden group hover:-translate-y-1 hover:border-[#2563EB]/30 hover:bg-white/[0.07] transition-all duration-300 h-full">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#2563EB]/5 to-[#F97316]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                     <div
@@ -131,11 +132,11 @@ export default function Features() {
                       {feature.emoji}
                     </div>
 
-                    <h3 className="text-lg font-bold text-[#0F1B2D] mb-2 relative z-10">
+                    <h3 className="text-lg font-bold text-white mb-2 relative z-10">
                       {feature.title}
                     </h3>
 
-                    <p className="text-sm text-[#5B6B84] leading-relaxed relative z-10">
+                    <p className="text-sm text-slate-400 leading-relaxed relative z-10">
                       {feature.desc}
                     </p>
                   </div>

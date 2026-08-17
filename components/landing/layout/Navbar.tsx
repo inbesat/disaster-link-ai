@@ -89,21 +89,21 @@ export default function Navbar() {
         </div>
 
         {/* Desktop CTAs */}
-        <div className="hidden lg:flex flex-wrap items-center gap-2 sm:gap-4">
+        <div className="hidden lg:flex flex-row items-center gap-2 md:gap-3 shrink-0 whitespace-nowrap">
           {/* Google Translate widget host — layout.tsx injects the real
               dropdown here and auto-translates the whole page on select.
               Dark-themed via the GOOGLE TRANSLATE block in globals.css. */}
           <LanguageTranslator />
           <a
             href="/access"
-            className="flex items-center gap-2 border border-white/20 text-white rounded-full px-5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+            className="flex items-center gap-2 border border-white/20 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
           >
             <LogIn size={14} aria-hidden="true" />
             Sign In
           </a>
           <a
             href="#platform"
-            className="border border-white/20 text-white rounded-full px-5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+            className="border border-white/20 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
           >
             Explore Platform
           </a>
@@ -112,14 +112,14 @@ export default function Navbar() {
           <a
             href="/apk/SafeSphere.apk"
             download="SafeSphere.apk"
-            className="flex items-center gap-2 border border-white/20 text-white rounded-full px-5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+            className="flex items-center gap-2 border border-white/20 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
           >
             <Download size={14} aria-hidden="true" />
             Download APK
           </a>
           <a
             href="#contact"
-            className="bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white rounded-full px-5 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
+            className="bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
           >
             Request Demo
             <ArrowRight size={14} />

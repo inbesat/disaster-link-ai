@@ -123,12 +123,13 @@ export default function Benefits() {
   const [activeTab, setActiveTab] = useState<keyof typeof benefitsData>("government");
 
   return (
-    <section id="benefits" className="bg-[#F8FAFC] py-28">
+    <section id="benefits" className="bg-[#0a0f1a] py-28">
       <SectionHead
         eyebrow="Who It's For"
         eyebrowVariant="blue"
         title="Built for everyone on the front line"
         center={true}
+        onNavy={true}
       />
 
       <div className="flex justify-center gap-2 mt-12 flex-wrap">
@@ -139,7 +140,7 @@ export default function Benefits() {
             className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
               activeTab === tab.id
                 ? "bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white shadow-lg"
-                : "bg-white border border-[#E7ECF3] text-[#5B6B84] hover:text-[#0F1B2D]"
+                : "bg-white/5 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-600"
             }`}
           >
             {tab.label}
@@ -155,13 +156,13 @@ export default function Benefits() {
               <ScrollReveal key={i} animation="fade-up" delay={i * 0.1}>
                 <div className="flex items-start gap-4">
                   <div className="w-11 h-11 rounded-full bg-[#2563EB]/10 flex items-center justify-center shrink-0">
-                    <Icon className="text-[#2563EB]" size={20} />
+                    <Icon className="text-[#5B8DF6]" size={20} />
                   </div>
                   <div>
-                    <h5 className="text-base font-bold text-[#0F1B2D]">
+                    <h5 className="text-base font-bold text-white">
                       {benefit.title}
                     </h5>
-                    <p className="text-sm text-[#5B6B84] mt-1">{benefit.desc}</p>
+                    <p className="text-sm text-slate-400 mt-1">{benefit.desc}</p>
                   </div>
                 </div>
               </ScrollReveal>

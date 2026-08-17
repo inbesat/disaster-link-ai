@@ -187,15 +187,23 @@ export async function verifyOTP(code: string): Promise<{ ok: false; message: str
 export async function signOutAction() {
   const supabase = createClient();
   await supabase.auth.signOut();
-  // Drop the whole demo cookie session — not just guest_mode. The demo
-  // logins (govLogin / publicOtpLogin / enableGuestMode) authenticate via
-  // the `role` cookie alone, so the middleware would otherwise treat a
-  // "logged-out" official as still signed in.
+  // Drop the ENTIRE cookie session — not just guest_mode. The demo logins
+  // (govLogin / publicOtpLogin / enableGuestMode / govDemoLogin /
+  // publicDemoLogin) authenticate via the `role` cookie alone, so any
+  // leftover identity cookie makes the middleware treat a "logged-out"
+  // visitor as still signed in. That stale-role leak is exactly the
+  // role-contamination bug: a previous role=public cookie survives the
+  // logout and bounces a later /gov/* login straight back to the citizen
+  // dashboard. Clear every custom marker so the next login starts clean.
   cookies().delete(GUEST_COOKIE);
   cookies().delete("role");
   cookies().delete("view_as_public");
   cookies().delete("demo_mode");
-  redirect("/login");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
+  // Hard reset to the two-door landing so no stale app state is reused.
+  redirect("/");
 }
 
 // Bypass auth to demo the dashboard without a real Supabase login.
@@ -206,6 +214,10 @@ export async function setGuestMode() {
   // Guest browse mode is a separate identity — drop any citizen/gov session.
   cookies().delete("role");
   cookies().delete("view_as_public");
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
   setGuestCookie();
   redirect("/command-center");
 }
@@ -215,7 +227,12 @@ export async function clearGuestMode() {
   // Public guests also ride a role=public cookie — clear it so the exit is
   // a true logout (a stale public role cookie would pass the middleware).
   cookies().delete("role");
-  redirect("/login");
+  cookies().delete("view_as_public");
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
+  redirect("/");
 }
 
 // ---------------------------------------------------------------------
@@ -228,6 +245,10 @@ export async function clearGuestMode() {
 export async function enableGuestMode() {
   // One identity per browser: drop any gov preview session.
   cookies().delete("view_as_public");
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
   // 7-day public browse session.
   setSessionCookie("role", "public", 60 * 60 * 24 * 7);
   setGuestCookie();
@@ -242,6 +263,8 @@ export async function exitGuestMode() {
   cookies().delete("view_as_public");
   cookies().delete("demo_mode");
   cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
   redirect("/");
 }
 
@@ -267,10 +290,16 @@ export async function exitGuestMode() {
 // unlocks the Multi-District State-HQ overview at /gov/overview.
 // ---------------------------------------------------------------------
 export async function govLogin(role: "district_admin" | "super_admin" = "district_admin") {
-  // Clear any stale guest/citizen session so one browser holds one identity.
+  // Strict one-identity-per-browser: a gov login must NEVER inherit a
+  // previous citizen/guest/demo session. Blow away every stale marker so
+  // the middleware can't route this login back to /public/dashboard.
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
-  // 7-day gov session.
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
+  // 7-day gov session — explicitly overwrite `role` with the gov role.
   setSessionCookie("role", role, 60 * 60 * 24 * 7);
   redirect(role === "super_admin" ? "/gov/overview" : "/gov/dashboard");
 }
@@ -290,6 +319,8 @@ export async function govDemoLogin() {
   // One identity per browser: drop any guest/citizen session first.
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
   // Short demo-session marker + the full 7-day gov role cookie. Phase 2 ·
   // Step 8 — every demo login pins a fresh session UUID so demo DB rows are
   // owned by exactly one demo session and can never leak into real views.
@@ -313,6 +344,8 @@ export async function publicDemoLogin() {
   // One identity per browser: drop any guest/gov session first.
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
   // Short demo-session marker + the full 7-day public role cookie. Phase 2 ·
   // Step 8 — the fresh UUID scopes every demo DB row to this exact session.
   setSessionCookie("demo_mode", "true", 60 * 60 * 24);
@@ -332,6 +365,8 @@ export async function exitDemoMode() {
   cookies().delete("guest_mode");
   cookies().delete("role");
   cookies().delete("view_as_public");
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
   redirect("/demo");
 }
 
@@ -349,6 +384,8 @@ export async function clearDemoSession() {
   cookies().delete("guest_mode");
   cookies().delete("role");
   cookies().delete("view_as_public");
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
 }
 
 // ---------------------------------------------------------------------
@@ -372,10 +409,15 @@ export async function clearViewAsPublic() {
 
 export async function publicOtpLogin(phoneNumber: string) {
   const phone = (phoneNumber ?? "").trim().slice(0, 20);
-  // Clear any stale guest/gov session so one browser holds one identity.
+  // Strict one-identity-per-browser: a public login must NEVER inherit a
+  // previous gov/guest/demo session. Blow away every stale marker so the
+  // middleware can't route this login back to /gov/dashboard.
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
-  // 7-day citizen session.
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("sandbox");
+  // 7-day citizen session — explicitly overwrite `role` with "public".
   setSessionCookie("role", "public", 60 * 60 * 24 * 7);
   // Remember the number so the citizen onboarding step can prefill it.
   if (phone) {

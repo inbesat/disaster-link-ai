@@ -34,19 +34,20 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-white py-28">
+    <section id="how-it-works" className="bg-[#0f172a] py-28">
       <SectionHead
         eyebrow="How It Works"
         eyebrowVariant="blue"
         title="From detection to rescue in five steps"
         center={true}
+        onNavy={true}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto px-6 mt-16">
         {steps.map((step, i) => (
           <ScrollReveal key={i} delay={i * 0.08} animation="fade-up">
             <TiltCard maxTilt={8} perspective={1100} glare={false} className="h-full rounded-[18px]">
-              <div className="bg-white border border-[#E7ECF3] rounded-[18px] p-7 text-center hover:border-[#2563EB] hover:shadow-[0_0_0_1px_rgba(37,99,235,0.25),0_20px_60px_-20px_rgba(37,99,235,0.45)] hover:-translate-y-2 transition-all duration-300 group h-full">
+              <div className="bg-white/5 border border-slate-800 rounded-[18px] p-7 text-center hover:border-[#2563EB] hover:bg-white/[0.07] hover:-translate-y-2 transition-all duration-300 group h-full">
                 <div
                   className="text-6xl font-extrabold leading-none mb-4"
                   style={{
@@ -56,8 +57,8 @@ export default function HowItWorks() {
                 >
                   {step.num}
                 </div>
-                <h3 className="text-lg font-bold text-[#0F1B2D] mb-2">{step.title}</h3>
-                <p className="text-sm text-[#5B6B84] leading-relaxed">{step.desc}</p>
+                <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">{step.desc}</p>
               </div>
             </TiltCard>
           </ScrollReveal>

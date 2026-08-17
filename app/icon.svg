@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <!-- Outer shield -->
+  <path d="M12 2L20 5v6c0 5.2-3.4 9.4-8 11-4.6-1.6-8-5.8-8-11V5l8-3z" fill="#1e293b"/>
+  <!-- Shield inner ring (radar sweep base) -->
+  <path d="M12 4.2L18 6.6v4.4c0 4-2.6 7.4-6 8.8-3.4-1.4-6-4.8-6-8.8V6.6l6-2.4z" fill="#0f172a"/>
+  <!-- Radar rings -->
+  <circle cx="12" cy="11" r="4.4" stroke="#3b82f6" stroke-width="0.7" fill="none"/>
+  <circle cx="12" cy="11" r="2.8" stroke="#60a5fa" stroke-width="0.6" fill="none"/>
+  <!-- Radar sweep -->
+  <path d="M12 11L16.4 8.6A4.6 4.6 0 0 1 16.6 11Z" fill="#3b82f6" opacity="0.9"/>
+  <!-- Alert dot (pulse source / incident) -->
+  <circle cx="12" cy="11" r="1.2" fill="#ef4444"/>
+  <!-- Medical cross inside the target -->
+  <path d="M11.3 9.8h1.4v1.5h1.5v1.4h-1.5v1.5h-1.4v-1.5H9.8v-1.4h1.5V9.8z" fill="#ffffff"/>
+</svg>

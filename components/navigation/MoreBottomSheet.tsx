@@ -17,7 +17,6 @@
 // ---------------------------------------------------------------------
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -32,6 +31,7 @@ import {
   X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { signOutAction } from "@/app/actions/auth";
 
 type MoreSheetProps = {
   /** Mounts/unmounts the overlay (drives the enter/exit animation). */
@@ -55,7 +55,6 @@ const ITEMS: MoreItem[] = [
 ];
 
 export function MoreBottomSheet({ open, onClose }: MoreSheetProps) {
-  const router = useRouter();
 
   // Escape closes the sheet — matching the backdrop / handle behaviour.
   useEffect(() => {
@@ -67,10 +66,21 @@ export function MoreBottomSheet({ open, onClose }: MoreSheetProps) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     toast.success("Logged out — demo session ended.");
     onClose();
-    router.push("/login");
+    // MUST call the server action — a bare router.push("/login") leaves every
+    // role/guest cookie behind, so a later gov login gets bounced back to the
+    // public dashboard (role contamination). signOutAction() clears the whole
+    // cookie session and redirects server-side; the hard reload below resets
+    // any client-side state/cache so the next login starts clean.
+    try {
+      await signOutAction();
+    } catch {
+      // signOutAction redirects — swallowing the redirect so the hard reload
+      // below always runs and guarantees a clean client reset.
+    }
+    window.location.href = "/";
   };
 
   return (

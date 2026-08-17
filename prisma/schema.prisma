@@ -741,6 +741,70 @@ model CapAlert {
 }
 
 // ---------------------------------------------------------------------
+// missing_persons (Phase 14 · Missing Persons / Reunification Registry)
+// Citizens report missing family members; responders can mark as found.
+// ---------------------------------------------------------------------
+model MissingPerson {
+  id              String    @id @default(uuid()) @db.Uuid
+  name            String
+  age             Int?
+  gender          String?   // male | female | other
+  description     String?   // appearance, last known clothing, etc.
+  lastKnownArea   String?   @map("last_known_area")
+  lastSeenAt      DateTime? @map("last_seen_at") @db.Timestamptz
+  contactName     String    @map("contact_name")   // person reporting
+  contactPhone    String    @map("contact_phone")
+  contactRelation String?   @map("contact_relation") // parent | spouse | sibling | other
+  status          String    @default("missing") // missing | found | safe
+  reportedBy      String?   @map("reported_by") @db.Uuid
+  district        String?
+  lat             Float?
+  lng             Float?
+  imageUrl        String?   @map("image_url")
+  notes           String?
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  isDemo          Boolean   @default(false) @map("is_demo")
+  sessionId       String?   @map("session_id")
+
+  @@index([status])
+  @@index([district, status])
+  @@index([lastSeenAt])
+  @@map("missing_persons")
+}
+
+// ---------------------------------------------------------------------
+// casualty_records (Phase 15 · Casualty / Medical Tracking)
+// Medical teams log injuries and outcomes per disaster event.
+// ---------------------------------------------------------------------
+model CasualtyRecord {
+  id              String   @id @default(uuid()) @db.Uuid
+  name            String?
+  age             Int?
+  gender          String?  // male | female | other
+  injuryType      String   @map("injury_type") // injury | illness | fatality | missing
+  severity        String   @default("minor")   // minor | moderate | severe | critical
+  description     String?
+  locationName    String?  @map("location_name")
+  lat             Float?
+  lng             Float?
+  shelterId       String?  @map("shelter_id") @db.Uuid
+  reportedBy      String?  @map("reported_by") @db.Uuid
+  district        String?
+  status          String   @default("active")  // active | treated | discharged | deceased
+  treatedAt       DateTime? @map("treated_at") @db.Timestamptz
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  isDemo          Boolean   @default(false) @map("is_demo")
+  sessionId       String?   @map("session_id")
+
+  @@index([injuryType])
+  @@index([district, status])
+  @@index([severity])
+  @@map("casualty_records")
+}
+
+// ---------------------------------------------------------------------
 // audit_logs (Phase 18) — immutable trail of who did what. Written on
 // every privileged admin action (role change, deactivate, config save).
 // Writes are best-effort: failures are logged, never thrown.

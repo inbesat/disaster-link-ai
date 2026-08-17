@@ -32,6 +32,8 @@ import {
   Tent,
   TriangleAlert,
   Users,
+  UserX,
+  Stethoscope,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { Role } from "@/lib/validations/user";
@@ -116,6 +118,20 @@ export const NAVIGATION_ROUTES: NavRoute[] = [
     icon: Tent,
     section: "operations",
     allowedRoles: ["district_admin", "super_admin"],
+  },
+  {
+    label: "Missing Persons",
+    href: "/missing-persons",
+    icon: UserX,
+    section: "operations",
+    allowedRoles: ["field_responder", "district_admin", "super_admin"],
+  },
+  {
+    label: "Casualty Tracking",
+    href: "/casualties",
+    icon: Stethoscope,
+    section: "operations",
+    allowedRoles: ["field_responder", "district_admin", "super_admin"],
   },
   // -------------------------------------------------------- RESOURCES ----
   {
