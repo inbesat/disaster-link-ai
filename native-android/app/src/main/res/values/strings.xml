@@ -1,0 +1,114 @@
+<resources>
+    <string name="app_name">SafeSphere</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Auth -->
+    <string name="login">Sign In</string>
+    <string name="guest_continue">Continue as Guest</string>
+    <string name="gov_login">Government Login</string>
+    <string name="public_login">Citizen Login (OTP)</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="phone_hint">Phone Number</string>
+    <string name="otp_hint">6-digit OTP</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="verify_otp">Verify & Login</string>
+    <string name="demo_notice">Demo mode: any code works</string>
+
+    <!-- Roles -->
+    <string name="role_super_admin">Super Admin</string>
+    <string name="role_district_admin">District Admin</string>
+    <string name="role_field_responder">Field Responder</string>
+    <string name="role_viewer">Viewer</string>
+    <string name="role_public">Citizen</string>
+    <string name="role_guest">Guest</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_alerts">Alerts</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_sos">SOS</string>
+    <string name="nav_shelters">Shelters</string>
+    <string name="nav_family">Family</string>
+    <string name="nav_report">Report</string>
+    <string name="nav_ai_assistant">AI Assistant</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_logout">Logout</string>
+
+    <!-- Admin -->
+    <string name="nav_admin_dashboard">Admin Dashboard</string>
+    <string name="nav_user_mgmt">User Management</string>
+    <string name="nav_bulk_ops">Bulk Operations</string>
+    <string name="nav_analytics">Analytics</string>
+    <string name="nav_audit_logs">Audit Logs</string>
+    <string name="nav_system_health">System Health</string>
+    <string name="nav_district_config">District Config</string>
+
+    <!-- Gov -->
+    <string name="nav_command_center">Command Center</string>
+    <string name="nav_ai_planner">AI Planner</string>
+    <string name="nav_agent_orchestration">Agent Squad</string>
+    <string name="nav_evacuations">Evacuations</string>
+    <string name="nav_inventory">Inventory</string>
+    <string name="nav_shelters_mgmt">Shelters</string>
+    <string name="nav_triage">Triage</string>
+    <string name="nav_knowledge_base">Knowledge Base</string>
+
+    <!-- Field -->
+    <string name="nav_field_home">Field Home</string>
+    <string name="nav_shelter_update">Shelter Update</string>
+    <string name="nav_request_resources">Request Resources</string>
+    <string name="nav_field_map">Field Map</string>
+
+    <!-- Alerts -->
+    <string name="severity_critical">Critical</string>
+    <string name="severity_warning">Warning</string>
+    <string name="severity_info">Info</string>
+    <string name="acknowledge">Acknowledge</string>
+    <string name="unacknowledged">Unacknowledged</string>
+
+    <!-- SOS -->
+    <string name="sos_rescue">I Need Rescue</string>
+    <string name="sos_medical">Medical Emergency</string>
+    <string name="sos_location">Share Location</string>
+    <string name="sos_helpline">Call Helpline</string>
+    <string name="sos_safe">I Am Safe</string>
+    <string name="sos_countdown_3">3</string>
+    <string name="sos_countdown_2">2</string>
+    <string name="sos_countdown_1">1</string>
+    <string name="sos_confirm">Confirm</string>
+    <string name="sos_cancel">Cancel</string>
+
+    <!-- Status -->
+    <string name="status_active">Active</string>
+    <string name="status_inactive">Inactive</string>
+    <string name="status_open">Open</string>
+    <string name="status_full">Full</string>
+    <string name="status_closed">Closed</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_in_transit">In Transit</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_available">Available</string>
+    <string name="status_deployed">Deployed</string>
+    <string name="status_maintenance">Maintenance</string>
+
+    <!-- Offline -->
+    <string name="offline_mode">Offline Mode</string>
+    <string name="offline_banner">Using cached data. Verify conditions before proceeding.</string>
+    <string name="online_restored">Connection restored</string>
+
+    <!-- Common -->
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="export_csv">Export CSV</string>
+    <string name="loading">Loading…</string>
+    <string name="no_data">No data available</string>
+    <string name="error_generic">Something went wrong</string>
+    <string name="retry">Retry</string>
+</resources>

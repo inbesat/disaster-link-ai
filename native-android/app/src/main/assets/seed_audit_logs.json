@@ -1,0 +1,38 @@
+[
+  {
+    "id": "audit-1",
+    "action": "USER_ROLE_CHANGED",
+    "actor": "admin@gov.in",
+    "resource": "user-2",
+    "ip": "192.168.1.100",
+    "severity": "info",
+    "timestamp": "2024-01-15T10:05:00Z"
+  },
+  {
+    "id": "audit-2",
+    "action": "ALERT_SENT",
+    "actor": "admin@gov.in",
+    "resource": "alert-1",
+    "ip": "192.168.1.100",
+    "severity": "critical",
+    "timestamp": "2024-01-15T14:30:00Z"
+  },
+  {
+    "id": "audit-3",
+    "action": "SHELTER_STATUS_UPDATED",
+    "actor": "responder1@field.in",
+    "resource": "shelter-1",
+    "ip": "192.168.1.101",
+    "severity": "info",
+    "timestamp": "2024-01-15T11:00:00Z"
+  },
+  {
+    "id": "audit-4",
+    "action": "EVACUATION_STARTED",
+    "actor": "admin@gov.in",
+    "resource": "evac-1",
+    "ip": "192.168.1.100",
+    "severity": "warning",
+    "timestamp": "2024-01-15T10:30:00Z"
+  }
+]

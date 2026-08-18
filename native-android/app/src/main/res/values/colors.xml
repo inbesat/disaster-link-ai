@@ -1,0 +1,41 @@
+<resources>
+    <color name="colorPrimary">#0D9488</color>
+    <color name="colorPrimaryDark">#0F766E</color>
+    <color name="colorAccent">#F97316</color>
+
+    <!-- Status colors -->
+    <color name="colorCritical">#EF4444</color>
+    <color name="colorWarning">#F59E0B</color>
+    <color name="colorInfo">#3B82F6</color>
+    <color name="colorSuccess">#22C55E</color>
+
+    <!-- Background -->
+    <color name="bgPrimary">#0A0F1A</color>
+    <color name="bgSecondary">#0B1120</color>
+    <color name="bgTertiary">#131B30</color>
+    <color name="bgSurface">#1C2740</color>
+    <color name="bgSurfaceElevated">#2A3A5C</color>
+
+    <!-- Text -->
+    <color name="textPrimary">#F8FAFC</color>
+    <color name="textSecondary">#94A3B8</color>
+    <color name="textMuted">#64748B</color>
+    <color name="textOnPrimary">#0F172A</color>
+
+    <!-- Borders -->
+    <color name="borderSubtle">#1C2740</color>
+    <color name="borderStrong">#2A3A5C</color>
+
+    <!-- Role accents -->
+    <color name="accentAdmin">#A855F7</color>
+    <color name="accentField">#F97316</color>
+    <color name="accentCitizen">#06B6D4</color>
+    <color name="accentGuest">#64748B</color>
+
+    <!-- Charts -->
+    <color name="chartBlue">#38BDF8</color>
+    <color name="chartAmber">#F59E0B</color>
+    <color name="chartGreen">#34D399</color>
+    <color name="chartRed">#F87171</color>
+    <color name="chartPurple">#A78BFA</color>
+</resources>

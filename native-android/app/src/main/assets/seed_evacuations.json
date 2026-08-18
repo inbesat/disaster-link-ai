@@ -1,0 +1,50 @@
+[
+  {
+    "id": "evac-1",
+    "villageName": "Ganga Floodplain Village",
+    "shelterName": "Central Community Hall",
+    "evacuees": 150,
+    "routeDurationSec": 2400,
+    "status": "in_transit",
+    "busesNeeded": 4,
+    "boatsNeeded": 2,
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "evac-2",
+    "villageName": "Phaganpur Village",
+    "shelterName": "Riverside High School",
+    "evacuees": 280,
+    "routeDurationSec": 3900,
+    "status": "pending",
+    "busesNeeded": 7,
+    "boatsNeeded": 3,
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "evac-3",
+    "villageName": "Sonepur Riverside",
+    "shelterName": "District Hospital Annex",
+    "evacuees": 95,
+    "routeDurationSec": 1320,
+    "status": "in_transit",
+    "busesNeeded": 3,
+    "boatsNeeded": 1,
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "evac-4",
+    "villageName": "Digha Ghat Settlement",
+    "shelterName": "Central Community Hall",
+    "evacuees": 210,
+    "routeDurationSec": 900,
+    "status": "completed",
+    "busesNeeded": 5,
+    "boatsNeeded": 2,
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  }
+]

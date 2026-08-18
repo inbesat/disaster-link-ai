@@ -1,0 +1,111 @@
+<resources>
+    <!-- Base application theme -->
+    <style name="Theme.SafeSphere" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/textOnPrimary</item>
+        <item name="colorSecondary">@color/colorAccent</item>
+        <item name="colorSecondaryVariant">@color/colorAccent</item>
+        <item name="colorOnSecondary">@color/textOnPrimary</item>
+        <item name="android:colorBackground">@color/bgPrimary</item>
+        <item name="colorSurface">@color/bgSecondary</item>
+        <item name="colorOnSurface">@color/textPrimary</item>
+        <item name="android:statusBarColor">@color/bgPrimary</item>
+        <item name="android:navigationBarColor">@color/bgPrimary</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+
+    <style name="Theme.SafeSphere.NoActionBar" parent="Theme.SafeSphere">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.SafeSphere.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+    <style name="Theme.SafeSphere.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <!-- Button styles -->
+    <style name="Widget.SafeSphere.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.SafeSphere.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.SafeSphere.Button.Danger" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/colorCritical</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.SafeSphere.Button.Ghost" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
+    <!-- Card style -->
+    <style name="Widget.SafeSphere.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/bgSecondary</item>
+        <item name="strokeColor">@color/borderSubtle</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <!-- Chip style -->
+    <style name="Widget.SafeSphere.Chip" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="chipBackgroundColor">@color/bgSurface</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="chipStrokeColor">@color/borderSubtle</item>
+        <item name="chipStrokeWidth">1dp</item>
+    </style>
+
+    <style name="Widget.SafeSphere.Chip.Critical" parent="Widget.SafeSphere.Chip">
+        <item name="chipBackgroundColor">@color/colorCritical</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+    </style>
+
+    <style name="Widget.SafeSphere.Chip.Warning" parent="Widget.SafeSphere.Chip">
+        <item name="chipBackgroundColor">@color/colorWarning</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+    </style>
+
+    <style name="Widget.SafeSphere.Chip.Success" parent="Widget.SafeSphere.Chip">
+        <item name="chipBackgroundColor">@color/colorSuccess</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+    </style>
+
+    <style name="Widget.SafeSphere.Chip.Info" parent="Widget.SafeSphere.Chip">
+        <item name="chipBackgroundColor">@color/colorInfo</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+    </style>
+
+    <!-- Input field style -->
+    <style name="Widget.SafeSphere.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/bgSecondary</item>
+        <item name="boxStrokeColor">@color/borderSubtle</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@color/textMuted</item>
+        <item name="android:textColorHint">@color/textMuted</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="Widget.SafeSphere.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="titleTextColor">@color/textPrimary</item>
+        <item name="subtitleTextColor">@color/textSecondary</item>
+        <item name="navigationIconTint">@color/textPrimary</item>
+    </style>
+
+    <!-- Bottom Navigation -->
+    <style name="Widget.SafeSphere.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">@color/bgSecondary</item>
+        <item name="itemIconTint">@color/bottom_nav_selector</item>
+        <item name="itemTextColor">@color/bottom_nav_selector</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+</resources>

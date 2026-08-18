@@ -1,0 +1,26 @@
+[
+  {
+    "id": "fam-1",
+    "userId": "user-3",
+    "name": "Rahul Sharma",
+    "phone": "+91 98765 43213",
+    "relation": "Husband",
+    "lat": 25.5941,
+    "lng": 85.1376,
+    "status": "safe",
+    "lastSeen": "2024-01-15T14:00:00Z",
+    "createdAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "fam-2",
+    "userId": "user-3",
+    "name": "Anaya Sharma",
+    "phone": "+91 98765 43214",
+    "relation": "Daughter",
+    "lat": 25.5941,
+    "lng": 85.1376,
+    "status": "safe",
+    "lastSeen": "2024-01-15T14:00:00Z",
+    "createdAt": "2024-01-15T10:00:00Z"
+  }
+]

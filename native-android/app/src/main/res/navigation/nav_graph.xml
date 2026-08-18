@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dashboardFragment">
+
+    <!-- Citizen (Public) Flow -->
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.safesphere.nativeapp.ui.citizen.CitizenDashboardFragment"
+        android:label="@string/nav_dashboard"
+        tools:layout="@layout/fragment_citizen_dashboard">
+        <action
+            android:id="@+id/action_dashboard_to_alerts"
+            app:destination="@id/alertsFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_map"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_sos"
+            app:destination="@id/sosFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_shelters"
+            app:destination="@id/sheltersFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_family"
+            app:destination="@id/familyFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_report"
+            app:destination="@id/reportFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_ai"
+            app:destination="@id/aiAssistantFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/alertsFragment"
+        android:name="com.safesphere.nativeapp.ui.citizen.PublicAlertsFragment"
+        android:label="@string/nav_alerts"
+        tools:layout="@layout/fragment_public_alerts" />
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.safesphere.nativeapp.ui.citizen.PublicMapFragment"
+        android:label="@string/nav_map"
+        tools:layout="@layout/fragment_public_map" />
+
+    <fragment
+        android:id="@+id/sosFragment"
+        android:name="com.safesphere.nativeapp.ui.citizen.SosFragment"
+        android:label="@string/nav_sos"
+        tools:layout="@layout/fragment_sos" />
+
+    <fragment
+        android:id="@+id/sheltersFragment"
+        android:name="com.safesphere.nativeapp.ui.citizen.PublicSheltersFragment"
+        android:label="@string/nav_shelters"
+        tools:layout="@layout/fragment_public_shelters" />
+
+    <fragment
+        android:id="@+id/familyFragment"
+        android:name="com.safesphere.nativeapp.ui.citizen.FamilyCircleFragment"
+        android:label="@string/nav_family"
+        tools:layout="@layout/fragment_family_circle" />
+
+    <fragment
+        android:id="@+id/reportFragment"
+        android:name="com.safesphere.nativeapp.ui.citizen.ReportFragment"
+        android:label="@string/nav_report"
+        tools:layout="@layout/fragment_report" />
+
+    <fragment
+        android:id="@+id/aiAssistantFragment"
+        android:name="com.safesphere.nativeapp.ui.citizen.MitronChatFragment"
+        android:label="@string/nav_ai_assistant"
+        tools:layout="@layout/fragment_mitron_chat" />
+
+    <!-- Gov/Admin Flow (separate nav graph or conditional) -->
+    <fragment
+        android:id="@+id/govDashboardFragment"
+        android:name="com.safesphere.nativeapp.ui.gov.GovDashboardFragment"
+        android:label="@string/nav_dashboard"
+        tools:layout="@layout/fragment_gov_dashboard" />
+
+    <fragment
+        android:id="@+id/commandCenterFragment"
+        android:name="com.safesphere.nativeapp.ui.gov.CommandCenterFragment"
+        android:label="@string/nav_command_center"
+        tools:layout="@layout/fragment_command_center" />
+
+    <fragment
+        android:id="@+id/aiPlannerFragment"
+        android:name="com.safesphere.nativeapp.ui.gov.AiPlannerFragment"
+        android:label="@string/nav_ai_planner"
+        tools:layout="@layout/fragment_ai_planner" />
+
+    <fragment
+        android:id="@+id/agentOrchestrationFragment"
+        android:name="com.safesphere.nativeapp.ui.gov.AgentOrchestrationFragment"
+        android:label="@string/nav_agent_orchestration"
+        tools:layout="@layout/fragment_agent_orchestration" />
+
+    <fragment
+        android:id="@+id/evacuationsFragment"
+        android:name="com.safesphere.nativeapp.ui.gov.EvacuationsFragment"
+        android:label="@string/nav_evacuations"
+        tools:layout="@layout/fragment_evacuations" />
+
+    <fragment
+        android:id="@+id/inventoryFragment"
+        android:name="com.safesphere.nativeapp.ui.gov.InventoryFragment"
+        android:label="@string/nav_inventory"
+        tools:layout="@layout/fragment_inventory" />
+
+    <fragment
+        android:id="@+id/sheltersMgmtFragment"
+        android:name="com.safesphere.nativeapp.ui.gov.SheltersMgmtFragment"
+        android:label="@string/nav_shelters_mgmt"
+        tools:layout="@layout/fragment_shelters_mgmt" />
+
+    <fragment
+        android:id="@+id/triageFragment"
+        android:name="com.safesphere.nativeapp.ui.gov.TriageFragment"
+        android:label="@string/nav_triage"
+        tools:layout="@layout/fragment_triage" />
+
+    <fragment
+        android:id="@+id/knowledgeBaseFragment"
+        android:name="com.safesphere.nativeapp.ui.gov.KnowledgeBaseFragment"
+        android:label="@string/nav_knowledge_base"
+        tools:layout="@layout/fragment_knowledge_base" />
+
+    <!-- Admin Flow -->
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.safesphere.nativeapp.ui.admin.AdminDashboardFragment"
+        android:label="@string/nav_admin_dashboard"
+        tools:layout="@layout/fragment_admin_dashboard" />
+
+    <fragment
+        android:id="@+id/userManagementFragment"
+        android:name="com.safesphere.nativeapp.ui.admin.UserManagementFragment"
+        android:label="@string/nav_user_mgmt"
+        tools:layout="@layout/fragment_user_management" />
+
+    <fragment
+        android:id="@+id/bulkOperationsFragment"
+        android:name="com.safesphere.nativeapp.ui.admin.BulkOperationsFragment"
+        android:label="@string/nav_bulk_ops"
+        tools:layout="@layout/fragment_bulk_operations" />
+
+    <fragment
+        android:id="@+id/analyticsFragment"
+        android:name="com.safesphere.nativeapp.ui.admin.AnalyticsFragment"
+        android:label="@string/nav_analytics"
+        tools:layout="@layout/fragment_analytics" />
+
+    <fragment
+        android:id="@+id/auditLogsFragment"
+        android:name="com.safesphere.nativeapp.ui.admin.AuditLogsFragment"
+        android:label="@string/nav_audit_logs"
+        tools:layout="@layout/fragment_audit_logs" />
+
+    <fragment
+        android:id="@+id/systemHealthFragment"
+        android:name="com.safesphere.nativeapp.ui.admin.SystemHealthFragment"
+        android:label="@string/nav_system_health"
+        tools:layout="@layout/fragment_system_health" />
+
+    <fragment
+        android:id="@+id/districtConfigFragment"
+        android:name="com.safesphere.nativeapp.ui.admin.DistrictConfigFragment"
+        android:label="@string/nav_district_config"
+        tools:layout="@layout/fragment_district_config" />
+
+    <!-- Field Flow -->
+    <fragment
+        android:id="@+id/fieldHomeFragment"
+        android:name="com.safesphere.nativeapp.ui.field.FieldHomeFragment"
+        android:label="@string/nav_field_home"
+        tools:layout="@layout/fragment_field_home" />
+
+    <fragment
+        android:id="@+id/shelterUpdateFragment"
+        android:name="com.safesphere.nativeapp.ui.field.ShelterUpdateFragment"
+        android:label="@string/nav_shelter_update"
+        tools:layout="@layout/fragment_shelter_update" />
+
+    <fragment
+        android:id="@+id/requestResourcesFragment"
+        android:name="com.safesphere.nativeapp.ui.field.RequestResourcesFragment"
+        android:label="@string/nav_request_resources"
+        tools:layout="@layout/fragment_request_resources" />
+
+    <fragment
+        android:id="@+id/fieldMapFragment"
+        android:name="com.safesphere.nativeapp.ui.field.FieldMapFragment"
+        android:label="@string/nav_field_map"
+        tools:layout="@layout/fragment_field_map" />
+
+    <!-- Settings -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.safesphere.nativeapp.ui.settings.SettingsFragment"
+        android:label="@string/nav_settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <!-- Auth -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.safesphere.nativeapp.ui.auth.LoginFragment"
+        android:label="@string/login"
+        tools:layout="@layout/fragment_login" />
+
+    <fragment
+        android:id="@+id/govLoginFragment"
+        android:name="com.safesphere.nativeapp.ui.auth.GovLoginFragment"
+        android:label="@string/gov_login"
+        tools:layout="@layout/fragment_gov_login" />
+
+    <fragment
+        android:id="@+id/publicOtpFragment"
+        android:name="com.safesphere.nativeapp.ui.auth.PublicOtpFragment"
+        android:label="@string/public_login"
+        tools:layout="@layout/fragment_public_otp" />
+</navigation>
