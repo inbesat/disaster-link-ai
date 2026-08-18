@@ -575,10 +575,11 @@ keep working inside the app.
 
 ### How to download
 
-The **"Get Android App"** button on the landing page (and the **"Download
-APK"** link in the navbar) serves `/apk/SafeSphere.apk`. The APK is built and
-committed into `public/apk/` automatically by the
-`.github/workflows/build-apk.yml` workflow whenever it runs.
+The **"Download App"** button in the navbar and hero routes to the
+[**/download** hub](app/download/page.tsx), where the **Android** card links
+to `/safesphere.apk`. The APK is built and committed into `public/`
+automatically by the `.github/workflows/build-apk.yml` workflow whenever it
+runs.
 
 To install: download the APK on an Android phone and open it. Your phone will
 ask you to allow installing from unknown sources (the app is debug-signed and
@@ -597,11 +598,13 @@ npx cap sync android
 # 3. Build the debug APK
 cd android
 ./gradlew assembleDebug        # Windows: gradlew.bat assembleDebug
+# 4. Copy it where the site serves it
+copy app/build/outputs/apk/debug/app-debug.apk ..\public\safesphere.apk
 ```
 
 The workflow rebuilds automatically **on push to `main`** and can also be
 triggered manually from **Actions → Build Android APK → Run workflow** — the
-result is committed to `public/apk/SafeSphere.apk` and the site redeploys.
+result is committed to `public/safesphere.apk` and the site redeploys.
 
 ### Changing your production domain later
 
@@ -611,7 +614,7 @@ requires a rebuild:
 1. Edit `server.url` in `capacitor.config.ts`.
 2. Run the **Build Android APK** workflow (or `npx cap sync android` +
    `./gradlew assembleDebug` locally).
-3. Commit/push the new `public/apk/SafeSphere.apk` so the site serves it.
+3. Commit/push the new `public/safesphere.apk` so the site serves it.
 
 ---
 

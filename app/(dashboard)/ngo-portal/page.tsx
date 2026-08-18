@@ -12,6 +12,7 @@
 // ---------------------------------------------------------------------
 
 import { useRef, useState, type DragEvent } from "react";
+import Image from "next/image";
 import {
   BadgeCheck,
   HeartHandshake,
@@ -168,9 +169,11 @@ export default function NgoPortalPage() {
         {/* QR result */}
         {qrLive && (
           <div className="mt-5 flex flex-col items-center gap-3 rounded-eoc border border-severity-green-500/30 bg-severity-green-500/5 p-6">
-            <img
+            <Image
               src={MOCK_QR_URL}
               alt="Mock UPI donation QR code"
+              width={144}
+              height={144}
               className="h-36 w-36 rounded-lg bg-white p-2"
             />
             <p className="flex items-center gap-1.5 text-xs font-medium text-severity-green-400">

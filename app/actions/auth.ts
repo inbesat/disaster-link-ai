@@ -425,3 +425,85 @@ export async function publicOtpLogin(phoneNumber: string) {
   }
   redirect("/public/onboarding");
 }
+
+// ---------------------------------------------------------------------
+// Unified Login / Signup Server Actions (UI → Supabase Auth).
+//
+// These back the tabbed card on app/(auth)/login/page.tsx. All auth runs
+// server-side through the Supabase server client so the session cookies
+// are written by the action itself (lib/supabase/server.ts handles the
+// cookie round-trip). On failure the action redirects back to
+// /login?error=<message> where the card renders the message in a red
+// banner; on success the user lands on /public/dashboard.
+// ---------------------------------------------------------------------
+
+/** Create an account. Full name rides in options.data.full_name so the
+ *  `users` database trigger (handle_new_user) picks it up. */
+export async function signUpAction(formData: FormData) {
+  const fullName = String(formData.get("fullName") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+
+  if (fullName.length < 2) {
+    redirect(`/login?error=${encodeURIComponent("Please enter your full name.")}`);
+  }
+  if (password.length < 8) {
+    redirect(
+      `/login?error=${encodeURIComponent("Password must be at least 8 characters long.")}`,
+    );
+  }
+
+  let failure: string | null = null;
+  try {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName } },
+    });
+    failure = error?.message ?? null;
+  } catch (error) {
+    console.error("[auth] signUpAction failed:", error);
+    failure = "Could not create your account. Please try again.";
+  }
+
+  if (failure) {
+    redirect(`/login?error=${encodeURIComponent(failure)}`);
+  }
+
+  redirect("/public/dashboard");
+}
+
+/** Sign an existing user in with email + password. */
+export async function signInAction(formData: FormData) {
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+
+  if (!email || !password) {
+    redirect(`/login?error=${encodeURIComponent("Email and password are required.")}`);
+  }
+
+  let failure: string | null = null;
+  try {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    failure = error?.message ?? null;
+  } catch (error) {
+    console.error("[auth] signInAction failed:", error);
+    failure = "Could not sign you in. Please try again.";
+  }
+
+  if (failure) {
+    redirect(`/login?error=${encodeURIComponent(failure)}`);
+  }
+
+  redirect("/public/dashboard");
+}
+
+/** Continue as a temporary view-only guest. Sets guest_mode=true (plus
+ *  role=public so the middleware admits the citizen dashboard) and
+ *  redirects to /public/dashboard — the same session shape as the
+ *  landing page's one-tap guest flow. */
+export async function guestLoginAction() {
+  await enableGuestMode();
+}

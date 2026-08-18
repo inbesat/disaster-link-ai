@@ -14,6 +14,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   BadgeCheck,
   Check,
@@ -108,9 +109,11 @@ function NgoCard({ ngo }: { ngo: VerifiedNgo }) {
 
       {/* QR on white so any scanner reads it reliably */}
       <div className="mt-4 flex justify-center rounded-xl bg-white p-3 shadow-[0_4px_20px_-6px_rgba(0,0,0,0.5)]">
-        <img
+        <Image
           src={ngo.qrUrl}
           alt={`Donation QR code for ${ngo.name}`}
+          width={160}
+          height={160}
           className="h-36 w-36 sm:h-40 sm:w-40"
         />
       </div>

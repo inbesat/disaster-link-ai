@@ -867,6 +867,12 @@ html.high-contrast [class*="border-white/"] {
     0 0 0 1px rgba(249, 115, 22, 0.25), 0 20px 60px -20px rgba(249, 115, 22, 0.45);
 
   scroll-behavior: smooth;
+
+  /* Anchor links (#platform, #how-it-works, …) must land BELOW the fixed
+     top bars instead of scrolling underneath them: the floating landing pill
+     (~64px) and the app's sticky h-14 DashboardTopBar (+ gov SituationHeader
+     at top-14). 5rem clears both with a little breathing room. */
+  scroll-padding-top: 5rem;
 }
 
 /* Landing page keyframe animations */

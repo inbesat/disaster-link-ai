@@ -1,24 +1,19 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
-import {
-  ArrowRight,
-  Bell,
-  HeartHandshake,
-  MapPin,
-  Settings,
-  Siren,
-} from "lucide-react";
+import { ArrowRight, Bell, HeartHandshake, MapPin, Siren } from "lucide-react";
 import AITeaser from "@/components/public/AITeaser";
 import BandwidthGate from "@/components/public/BandwidthGate";
 import BatterySaverBanner from "@/components/public/BatterySaverBanner";
 import BottomNav from "@/components/public/BottomNav";
 import CenterDirectory from "@/components/public/CenterDirectory";
 import EmergencyDial from "@/components/public/EmergencyDial";
+import EvacuationLifelines from "@/components/public/lifelines/EvacuationLifelines";
 import FamilyStrip from "@/components/public/FamilyStrip";
 import NearbySheltersList from "@/components/public/NearbySheltersList";
 import OfflineRouteCacheSync from "@/components/public/OfflineRouteCacheSync";
 import PublicOfflineBanner from "@/components/public/PublicOfflineBanner";
 import PullToRefresh from "@/components/public/PullToRefresh";
+import PublicTransparencyPanel from "@/components/public/PublicTransparencyPanel";
+import PublicNavbar from "@/components/public/PublicNavbar";
 import SafetyOverview from "@/components/public/SafetyOverview";
 import SafetyTipsFeed from "@/components/public/ai/SafetyTipsFeed";
 import NearestHelpCard from "@/components/public/sos/NearestHelpCard";
@@ -80,9 +75,6 @@ const MODULES = [
 ];
 
 export default function PublicDashboardPage() {
-  const phone = cookies().get("citizen_phone")?.value ?? "";
-  const isGuest = cookies().get("guest_mode")?.value === "true";
-
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-[#0a0f1a]">
     <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)]">
@@ -101,7 +93,7 @@ export default function PublicDashboardPage() {
       {/* Responsive content column — max-w-7xl on desktop, full width on
           phones. Mobile bottom padding clears the fixed 72px BottomNav;
           md+ drops it (the nav is hidden there) for md:py-10. */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-6 pb-[calc(88px+env(safe-area-inset-bottom))] md:py-10">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-6 pb-[calc(88px+env(safe-area-inset-bottom))] lg:mr-[360px] md:py-10">
         {/* Phase 13 · Step 8 — yellow battery-saver banner while the
             device is under 20% (client island; renders nothing otherwise).
             Auto-refresh timers pause while it's visible. */}
@@ -113,43 +105,20 @@ export default function PublicDashboardPage() {
 
         {/* Pull-to-refresh wraps the entire dashboard content (Step 10) */}
         <PullToRefresh>
-        {/* Header */}
-        <header className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <span className="h-3 w-3 animate-pulse-ring rounded-full bg-severity-red-500" />
-            <span className="text-sm font-bold tracking-tight text-white">
-              Citizen Portal
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="eoc-label hidden text-[var(--dl-text-muted)] sm:block">
-              {isGuest
-                ? "GUEST MODE"
-                : phone
-                  ? `+91 ${phone.slice(-4).padStart(4, "•")}`
-                  : "NOT SIGNED IN"}
-            </span>
-            {/* Phase 13 · Step 2 — settings (low-bandwidth toggle lives there) */}
-            <Link
-              href="/public/settings"
-              aria-label="Settings"
-              className="flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/5 text-[var(--dl-text-muted)] transition hover:border-[var(--dl-orange)]/60 hover:text-white"
-            >
-              <Settings aria-hidden="true" className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/"
-              className="rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium transition hover:border-[var(--dl-blue)]/60 hover:text-white"
-            >
-              Home
-            </Link>
-          </div>
-        </header>
+        {/* Server navbar — identity-aware avatar dropdown (guest vs user) */}
+        <PublicNavbar />
 
         {/* Safety stack — live status (mock geo-fence) → hero card →
             contextual action → 3-day forecast (Phase 2 · Steps 2–5) */}
         <section className="mt-8">
           <SafetyOverview />
+        </section>
+
+        {/* Lifelines — "Find Nearest Safe Shelter" (geolocation → map
+            routing) + "WhatsApp Lifeline" (subscribe + wa.me SOS). Public
+            citizen actions only, no admin broadcast controls. */}
+        <section className="mt-8">
+          <EvacuationLifelines />
         </section>
 
         {/* Phase 6 · Step 8 — Nova's rotating safety tips (one every
@@ -238,6 +207,11 @@ export default function PublicDashboardPage() {
           mobile; hidden on md+ where the expanded content + module grid take
           over navigation (this page no longer rides the phone frame). */}
       <BottomNav className="md:hidden !max-w-none" />
+
+      {/* Public "Live Response Status" — read-only transparency panel.
+          Fixed right rail on desktop; toggleable slide-up sheet on mobile.
+          Contains no admin/action widgets. */}
+      <PublicTransparencyPanel />
     </main>
     </div>
   );

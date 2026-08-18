@@ -36,7 +36,11 @@ import type { CitizenMapView } from "@/lib/map/citizen-view";
 import { generateCitizenFloodZones } from "@/lib/map/citizen-flood-zones";
 import { classifyCitizenRoute, type RouteSafetyClassification } from "@/lib/map/route-safety";
 import { CITIZEN_ROAD_CLOSURES } from "@/lib/map/citizen-road-closures";
-import { CITIZEN_SHELTERS, type CitizenShelter } from "@/lib/map/citizen-shelters";
+import {
+  CITIZEN_SHELTERS,
+  shelterDistanceKm,
+  type CitizenShelter,
+} from "@/lib/map/citizen-shelters";
 import UserLocationDot from "./UserLocationDot";
 import FloodZones from "./FloodZones";
 import ShelterMarkers from "./ShelterMarkers";
@@ -53,11 +57,22 @@ import ReportPins, { type ReportPin } from "./ReportPins";
 const CARTO_DARK_STYLE =
   "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
-export default function PublicMap() {
+export type PublicMapRouteIntent = { lat: number; lng: number };
+
+export default function PublicMap({
+  routeIntent = null,
+}: {
+  routeIntent?: PublicMapRouteIntent | null;
+}) {
   const view = useMemo<CitizenMapView>(
     () => resolveCitizenMapView(readCitizenLocation()),
     [],
   );
+
+  // Handoff from the dashboard's "Find Nearest Safe Shelter": arrive with
+  // GPS coords and route from that live location (falls back to the saved
+  // citizen location when the param is absent or malformed).
+  const origin = routeIntent ?? view.center;
 
   // Which shelter's sheet + route is open (null = none).
   const [selectedShelterId, setSelectedShelterId] = useState<string | null>(null);
@@ -108,21 +123,21 @@ export default function PublicMap() {
       const id = `pin-${(pinIdRef.current += 1)}`;
       setPins((prev) => [
         ...prev,
-        { id, type, lat: view.center.lat, lng: view.center.lng },
+        { id, type, lat: origin.lat, lng: origin.lng },
       ]);
       const timer = window.setTimeout(() => {
         setPins((prev) => prev.filter((p) => p.id !== id));
       }, 12_000);
       pinTimersRef.current.push(timer);
     },
-    [view.center],
+    [origin],
   );
 
   // Binary danger zones — computed once, shared by the overlay and the
   // route renderer so both draw the exact same shapes.
   const zones = useMemo(
-    () => generateCitizenFloodZones(view.center.lat, view.center.lng),
-    [view],
+    () => generateCitizenFloodZones(origin.lat, origin.lng),
+    [origin],
   );
 
   // Phase 1 · Step 9 — one shared safety grading for the selected route,
@@ -134,14 +149,33 @@ export default function PublicMap() {
       : null;
     if (!shelter) return null;
     return classifyCitizenRoute(
-      view.center.lat,
-      view.center.lng,
+      origin.lat,
+      origin.lng,
       shelter.lat,
       shelter.lng,
       zones,
       CITIZEN_ROAD_CLOSURES,
     );
-  }, [selectedShelterId, view, zones]);
+  }, [selectedShelterId, origin, zones]);
+
+  // Dashboard "Find Nearest Safe Shelter" handoff: auto-open the closest
+  // shelter's route to the GPS point the citizen arrived from.
+  useEffect(() => {
+    if (!routeIntent) return;
+    let nearest: CitizenShelter | null = null;
+    let bestKm = Infinity;
+    for (const shelter of CITIZEN_SHELTERS) {
+      const km = shelterDistanceKm(shelter, routeIntent.lat, routeIntent.lng);
+      if (km < bestKm) {
+        bestKm = km;
+        nearest = shelter;
+      }
+    }
+    if (nearest) {
+      setSelectedShelterId(nearest.id);
+      setNavigating(false);
+    }
+  }, [routeIntent]);
 
   return (
     <div className="relative h-full w-full">
@@ -149,8 +183,8 @@ export default function PublicMap() {
         mapLib={maplibregl}
         mapStyle={CARTO_DARK_STYLE}
         initialViewState={{
-          latitude: view.center.lat,
-          longitude: view.center.lng,
+          latitude: origin.lat,
+          longitude: origin.lng,
           zoom: view.zoom,
         }}
         style={{ width: "100%", height: "100%" }}
@@ -166,7 +200,7 @@ export default function PublicMap() {
         <UserLocationDot />
         <FloodZones zones={zones} />
         <ShelterMarkers
-          origin={view.center}
+          origin={origin}
           selectedShelterId={selectedShelterId}
           onSelect={handleSelectShelter}
           navigating={navigating}
@@ -183,7 +217,7 @@ export default function PublicMap() {
         {/* Step 7 — barricade markers stay on top of the route lines. */}
         <RoadClosures />
         {/* Step 8 — family avatars (mounted only while the layer is on). */}
-        {familyVisible && <FamilyLayer origin={view.center} />}
+        {familyVisible && <FamilyLayer origin={origin} />}
         {/* Step 9 — temporary pins from the reporter FAB. */}
         <ReportPins pins={pins} />
       </Map>
@@ -194,7 +228,7 @@ export default function PublicMap() {
         {navigationShelter && (
           <TurnByTurnNav
             shelter={navigationShelter}
-            origin={view.center}
+            origin={origin}
             onExit={exitNavigation}
           />
         )}

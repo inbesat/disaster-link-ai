@@ -89,6 +89,19 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
+  // Remote image hosts the app renders via next/image (QR codes are generated
+  // on-demand by qrserver.com; donate flows embed them). Local + PWA assets
+  // need no config.
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "api.qrserver.com",
+        pathname: "/v1/create-qr-code/**",
+      },
+    ],
+  },
+
   async headers() {
     return [
       {
@@ -126,7 +139,20 @@ const nextConfig = {
       },
       {
         // APK download — force browser download with the Android MIME type
-        // instead of trying to render/parse the binary.
+        // instead of trying to render/parse the binary. Covers the new
+        // /safesphere.apk location (download hub) and the legacy /apk/ path.
+        source: "/safesphere.apk",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/vnd.android.package-archive",
+          },
+          { key: "Content-Disposition", value: "attachment" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Cache-Control", value: "public, max-age=300" },
+        ],
+      },
+      {
         source: "/apk/:path*",
         headers: [
           {

@@ -1,23 +1,24 @@
 name: Build Android APK
 
 # Builds the SafeSphere debug APK (Capacitor WebView wrapper) and commits it
-# to public/apk/SafeSphere.apk so the website serves it for direct download.
+# to public/safesphere.apk so the website serves it for direct download.
 #
 # Triggered:
 #   • manually via "Run workflow" (after changing the production domain in
 #     capacitor.config.ts) — recommended way to rebuild
-#   • automatically on push to main (ignoring public/apk, so this workflow
-#     never loops on its own auto-commit)
+#   • automatically on push to main (ignoring public/safesphere.apk, so this
+#     workflow never loops on its own auto-commit)
 #
 # The auto-commit message uses [skip ci] so GitHub does not re-trigger this
-# workflow, and `paths-ignore` guards against the public/apk change too.
+# workflow, and `paths-ignore` guards against the public/safesphere.apk change
+# too.
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths-ignore:
-      - 'public/apk/**'
+      - 'public/safesphere.apk'
 
 jobs:
   build-apk:
@@ -68,13 +69,12 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Commit APK to public/apk for website download
+      - name: Commit APK to public for website download
         run: |
-          mkdir -p public/apk
-          cp android/app/build/outputs/apk/debug/app-debug.apk public/apk/SafeSphere.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk public/safesphere.apk
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/apk/SafeSphere.apk
+          git add public/safesphere.apk
           if git diff --cached --quiet; then
             echo "No APK changes to commit"
           else

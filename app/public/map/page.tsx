@@ -13,10 +13,13 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { ArrowLeft, Map as MapIcon, WifiOff } from "lucide-react";
 import BottomNav from "@/components/public/BottomNav";
 import LowBandwidthShelterList from "@/components/public/lowbandwidth/LowBandwidthShelterList";
 import OfflineMapBadge from "@/components/public/map/OfflineMapBadge";
+import type { PublicMapRouteIntent } from "@/components/public/map/PublicMap";
 import { useBandwidth } from "@/lib/contexts/BandwidthContext";
 
 const PublicMap = dynamic(() => import("@/components/public/map/PublicMap"), {
@@ -32,6 +35,31 @@ const PublicMap = dynamic(() => import("@/components/public/map/PublicMap"), {
     </div>
   ),
 });
+
+/**
+ * Reads the dashboard "Find Nearest Safe Shelter" handoff params
+ * (?action=find-route&lat=&lng=) and forwards them to the map so it
+ * routes from the citizen's live GPS location. Wrapped in <Suspense>
+ * per Next.js requirements for useSearchParams.
+ */
+function MapWithRouteIntent() {
+  const searchParams = useSearchParams();
+  const action = searchParams.get("action");
+  const lat = searchParams.get("lat");
+  const lng = searchParams.get("lng");
+  const hasCoords =
+    lat !== null &&
+    lng !== null &&
+    Number.isFinite(Number(lat)) &&
+    Number.isFinite(Number(lng));
+
+  const routeIntent: PublicMapRouteIntent | null =
+    action === "find-route" && hasCoords
+      ? { lat: Number(lat), lng: Number(lng) }
+      : null;
+
+  return <PublicMap routeIntent={routeIntent} />;
+}
 
 export default function PublicMapPage() {
   // Phase 13 · Step 2 — in extreme low-bandwidth mode the heavy MapLibre
@@ -60,7 +88,20 @@ export default function PublicMapPage() {
         </div>
       ) : (
         <div className="absolute inset-0">
-          <PublicMap />
+          <Suspense
+            fallback={
+              <div className="flex h-full w-full items-center justify-center">
+                <div className="flex flex-col items-center gap-3">
+                  <span className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[var(--dl-orange)]" />
+                  <p className="text-sm text-[var(--dl-text-muted)]">
+                    Preparing your route&hellip;
+                  </p>
+                </div>
+              </div>
+            }
+          >
+            <MapWithRouteIntent />
+          </Suspense>
         </div>
       )}
 
