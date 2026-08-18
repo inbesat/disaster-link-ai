@@ -118,7 +118,7 @@ export default function PublicAlertsPage() {
   );
 
   return (
-    <main className="relative flex min-h-screen flex-col bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)]">
+    <main className="relative flex min-h-screen flex-col bg-[var(--dl-navy)] pb-[100px] text-[var(--dl-text-on-navy)]">
       {/* Ambient backdrop — same treatment as the citizen dashboard */}
       <div
         aria-hidden="true"

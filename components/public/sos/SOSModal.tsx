@@ -252,7 +252,7 @@ export default function SOSModal() {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[80]">
+        <div className="fixed inset-0 z-[9999]">
           {/* Deeply darkened backdrop — focus the user's attention */}
           <motion.div
             aria-hidden="true"

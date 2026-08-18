@@ -65,7 +65,7 @@ export function SafeStatusToggle() {
       aria-label={
         status === "safe" ? "You are marked safe" : "Mark myself as safe"
       }
-      className={`fixed bottom-[calc(88px+env(safe-area-inset-bottom))] right-4 z-40 flex items-center gap-2 rounded-full border-2 px-4 py-2.5 text-sm font-bold shadow-[var(--dl-shadow-soft)] transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400 ${
+      className={`fixed bottom-[calc(160px+env(safe-area-inset-bottom))] right-4 z-40 flex items-center gap-2 rounded-full border-2 px-4 py-2.5 text-sm font-bold shadow-[var(--dl-shadow-soft)] transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400 ${
         status === "safe"
           ? "border-severity-green-500 bg-severity-green-500 text-white"
           : "border-severity-green-500/60 bg-severity-green-500/10 text-severity-green-300 hover:bg-severity-green-500/20"

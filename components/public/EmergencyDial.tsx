@@ -2,9 +2,9 @@
 // components/public/EmergencyDial.tsx — Phase 2 · Step 8 · Emergency
 // Contacts Speed-Dial.
 //
-// One-tap access to help: a fixed-height horizontal row of four square
-// buttons — District Control Room (red), Police (100), Ambulance (108),
-// Fire (101). Each is a plain HTML <a href="tel:…"> so taps open the
+// One-tap access to help: a 2×2 grid of large square buttons —
+// District Control Room (red), Police (100), Ambulance (108), Fire (101).
+// Each is a plain HTML <a href="tel:…"> so taps open the
 // phone's native dialer on any device (server-safe — no JS required).
 //
 // Contrast is deliberately inverted against the dark dl-navy surface:
@@ -61,7 +61,7 @@ export function EmergencyDial() {
   return (
     <section aria-label="Emergency contacts speed dial">
       <p className="eoc-label text-[var(--dl-text-muted)]">EMERGENCY DIAL</p>
-      <div className="mt-3 grid grid-cols-4 gap-2.5">
+      <div className="mt-3 grid grid-cols-2 gap-4">
         {LINES.map((line) => {
           const Icon = line.icon;
           return (
@@ -69,7 +69,7 @@ export function EmergencyDial() {
               key={line.href}
               href={line.href}
               aria-label={`${line.fullLabel} — ${line.number}`}
-              className={`group flex aspect-square flex-col items-center justify-center gap-1 rounded-xl transition active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              className={`group flex min-h-[80px] flex-col items-center justify-center gap-1 rounded-xl transition active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 ${
                 line.primary
                   ? "bg-severity-red-600 text-white shadow-[0_0_24px_rgba(239,68,68,0.35)] hover:bg-severity-red-500 focus-visible:outline-severity-red-400"
                   : "bg-white text-[var(--dl-navy)] shadow-[var(--dl-shadow-soft)] hover:bg-gray-100 focus-visible:outline-[var(--dl-orange)]"

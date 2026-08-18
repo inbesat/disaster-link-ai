@@ -4,10 +4,12 @@
 //
 // Horizontally scrollable 3-day forecast (Today / Tomorrow / Day 3) with
 // the scrollbar hidden and cards snapping to the center of the viewport
-// (snap-x snap-mandatory + snap-center). Each card shows a weather icon,
-// temperature, rainfall prediction and a tiny severity risk badge —
-// reusing the roadmap SeverityBadge (color + icon + label, a11y-safe).
-// Mounted below the Action Card on the citizen dashboard.
+// (snap-x snap-mandatory + snap-center). Each card is a premium
+// iOS-widget-style surface — dark translucent slate (bg-[#1e293b]/60),
+// heavy background blur, aggressive rounded-3xl corners and a soft
+// inner top-highlight — showing a weather icon, temperature, rainfall
+// prediction and a tiny severity risk badge (reusing the roadmap
+// SeverityBadge). Mounted below the Action Card on the citizen dashboard.
 // ---------------------------------------------------------------------
 
 import { CloudRain, CloudSun, Sun, type LucideIcon } from "lucide-react";
@@ -75,7 +77,7 @@ export function WeatherCarousel() {
           return (
             <article
               key={day.day}
-              className="w-[78%] shrink-0 snap-center rounded-[var(--dl-radius)] border border-white/10 bg-white/5 p-4 backdrop-blur"
+              className="w-[78%] shrink-0 snap-center rounded-3xl border border-white/10 bg-[#1e293b]/60 p-4 shadow-[0_12px_36px_-8px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md"
             >
               {/* Day label + risk badge */}
               <div className="flex items-center justify-between gap-2">
@@ -90,12 +92,12 @@ export function WeatherCarousel() {
               <div className="mt-3 flex items-center justify-between">
                 <span
                   aria-hidden="true"
-                  className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 text-sky-300"
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-sky-300 shadow-[0_4px_20px_rgba(59,130,246,0.3)] ring-1 ring-white/10 backdrop-blur-md"
                 >
                   <Icon className="h-7 w-7" strokeWidth={1.5} />
                 </span>
                 <div className="text-right">
-                  <p className="text-3xl font-bold tabular-nums text-white">
+                  <p className="bg-gradient-to-b from-white to-white/60 bg-clip-text text-3xl font-bold tabular-nums text-transparent">
                     {day.temp}
                     <span className="text-lg text-[var(--dl-text-muted)]">°C</span>
                   </p>

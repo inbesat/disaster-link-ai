@@ -35,10 +35,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useSOS } from "@/components/public/sos/SOSContext";
+import { useTranslation, type TranslationKey } from "@/lib/i18n/LanguageContext";
 
 type NavItem = {
-  /** Accessible label for the tab. */
-  label: string;
+  /** i18n key for the accessible tab label. */
+  label: TranslationKey;
   /** Destination route. */
   href: string;
   /** Lucide icon for the tab. */
@@ -56,22 +57,22 @@ type NavItem = {
 // Emergency Mode the non-essential Alerts tab is hidden, locking the
 // citizen onto Home / Map / SOS.
 const NAV_ITEMS: NavItem[] = [
-  { label: "Home", href: "/public/dashboard", icon: Home },
-  { label: "Alerts", href: "/public/alerts", icon: BellRing, hideDuringEmergency: true },
-  { label: "Map", href: "/public/map", icon: Map },
+  { label: "nav_home", href: "/public/dashboard", icon: Home },
+  { label: "nav_alerts", href: "/public/alerts", icon: BellRing, hideDuringEmergency: true },
+  { label: "nav_map", href: "/public/map", icon: Map },
   {
-    label: "Donate",
+    label: "nav_donate",
     href: "/public/donations",
     icon: HeartHandshake,
     hideDuringEmergency: true,
   },
   {
-    label: "Settings",
+    label: "nav_settings",
     href: "/public/settings",
     icon: Settings,
     hideDuringEmergency: true,
   },
-  { label: "SOS", href: "/public/sos", icon: Siren, emergency: true },
+  { label: "nav_sos", href: "/public/sos", icon: Siren, emergency: true },
 ];
 
 /** Route match: exact for "/", segment-aware prefix otherwise. */
@@ -83,6 +84,7 @@ function isPathActive(pathname: string, href: string): boolean {
 export default function BottomNav({ className }: { className?: string }) {
   const pathname = usePathname();
   const { isOpen, open, emergency } = useSOS();
+  const { t } = useTranslation();
 
   // Phase 5 · Step 4 lockdown — drop non-essential tabs while an SOS is
   // active so the citizen stays pointed at Home / Map / SOS.
@@ -93,7 +95,7 @@ export default function BottomNav({ className }: { className?: string }) {
   return (
     <nav
       aria-label="Citizen navigation"
-      className={`fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-md border-t border-white/10 bg-[#0F2A4F]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg${
+      className={`fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md border-t border-white/10 bg-[#0F2A4F]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg${
         className ? ` ${className}` : ""
       }`}
     >
@@ -115,22 +117,30 @@ export default function BottomNav({ className }: { className?: string }) {
                 aria-label="Open emergency SOS menu"
                 className="group flex flex-col items-center justify-center gap-1 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--dl-orange)]"
               >
-                <span
-                  aria-hidden="true"
-                  className={`flex h-8 w-14 items-center justify-center rounded-full transition-colors duration-150 ${
-                    active
-                      ? "bg-[#F97316] text-white shadow-[0_0_16px_rgba(249,115,22,0.45)]"
-                      : "bg-[#F97316]/15 text-[var(--dl-orange-light)] group-hover:bg-[#F97316]/25"
-                  }`}
-                >
-                  <Icon className="h-5 w-5" strokeWidth={2} />
+                {/* SOS panic button — the ping layer behind the pill creates
+                    a heartbeat radar glow so it reads as the panic button. */}
+                <span className="relative">
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 animate-ping rounded-full bg-red-500/50"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className={`relative flex h-8 w-14 items-center justify-center rounded-full transition-colors duration-150 ${
+                      active
+                        ? "bg-[#F97316] text-white shadow-[0_0_16px_rgba(249,115,22,0.45)]"
+                        : "bg-[#F97316]/15 text-[var(--dl-orange-light)] group-hover:bg-[#F97316]/25"
+                    }`}
+                  >
+                    <Icon className="h-5 w-5" strokeWidth={2} />
+                  </span>
                 </span>
                 <span
                   className={`text-[0.625rem] font-semibold uppercase tracking-wider transition-colors duration-150 ${
                     active ? "text-[var(--dl-orange)]" : "text-[var(--dl-text-muted)]"
                   }`}
                 >
-                  {item.label}
+                  {t(item.label)}
                 </span>
               </button>
             );
@@ -159,7 +169,7 @@ export default function BottomNav({ className }: { className?: string }) {
                   active ? "text-[var(--dl-orange)]" : "text-[var(--dl-text-muted)]"
                 }`}
               >
-                {item.label}
+                {t(item.label)}
               </span>
             </Link>
           );

@@ -130,7 +130,7 @@ export default function EmergencyModeTrigger() {
     <>
       {/* Flashing red screen borders right after activation */}
       {flash && (
-        <div aria-hidden className="pointer-events-none fixed inset-0 z-[90]">
+        <div aria-hidden className="pointer-events-none fixed inset-0 z-[9999]">
           <div className="absolute inset-0 animate-pulse border-8 border-red-600/80" />
           <div className="absolute inset-4 animate-pulse border-4 border-red-500/50 [animation-delay:150ms]" />
           <div className="absolute inset-0 bg-red-600/[0.04]" />

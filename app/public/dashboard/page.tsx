@@ -17,6 +17,8 @@ import PublicNavbar from "@/components/public/PublicNavbar";
 import SafetyOverview from "@/components/public/SafetyOverview";
 import SafetyTipsFeed from "@/components/public/ai/SafetyTipsFeed";
 import NearestHelpCard from "@/components/public/sos/NearestHelpCard";
+import Translated from "@/components/ui/Translated";
+import type { TranslationKey } from "@/lib/i18n/LanguageContext";
 
 // ---------------------------------------------------------------------
 // app/public/dashboard/page.tsx — Phase 2 · Step 1 · Mobile-first
@@ -42,42 +44,49 @@ import NearestHelpCard from "@/components/public/sos/NearestHelpCard";
 const MODULES = [
   {
     icon: Siren,
-    title: "SOS Report",
-    description: "Report flooding, fire, or ground truth from your phone.",
+    titleKey: "module_sos_report" as const,
+    descriptionKey: "module_sos_report_desc" as const,
     href: "/public/report",
     accent: "text-red-300",
     ring: "group-hover:ring-red-400/40",
   },
   {
     icon: Bell,
-    title: "Live Alerts",
-    description: "Targeted warnings for your district, in your language.",
+    titleKey: "module_live_alerts" as const,
+    descriptionKey: "module_live_alerts_desc" as const,
     href: "/public/alerts",
     accent: "text-orange-300",
     ring: "group-hover:ring-orange-400/40",
   },
   {
     icon: MapPin,
-    title: "Nearby Shelters",
-    description: "Find the closest open shelter and a safe route to it.",
+    titleKey: "nearby_shelters" as const,
+    descriptionKey: "nearby_shelters_desc" as const,
     href: "/public/shelters",
     accent: "text-blue-300",
     ring: "group-hover:ring-blue-400/40",
   },
   {
     icon: HeartHandshake,
-    title: "Family Circle",
-    description: "One-tap SOS blasts to the contacts you added in setup.",
+    titleKey: "module_family_circle" as const,
+    descriptionKey: "module_family_circle_desc" as const,
     href: "/public/family",
     accent: "text-emerald-300",
     ring: "group-hover:ring-emerald-400/40",
   },
-];
+] satisfies {
+  icon: typeof Siren;
+  titleKey: TranslationKey;
+  descriptionKey: TranslationKey;
+  href: string;
+  accent: string;
+  ring: string;
+}[];
 
 export default function PublicDashboardPage() {
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-[#0a0f1a]">
-    <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)]">
+    <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-[100px] text-[var(--dl-text-on-navy)]">
       {/* Ambient backdrop */}
       <div
         aria-hidden="true"
@@ -163,12 +172,12 @@ export default function PublicDashboardPage() {
 
         {/* Module grid — stacks on phones, two-up on desktop */}
         <section className="mt-8 flex-1">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="grid grid-cols-2 gap-4">
             {MODULES.map((module) => (
               <Link
-                key={module.title}
+                key={module.href}
                 href={module.href}
-                className="group relative flex items-center gap-4 overflow-hidden rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-4 ring-1 ring-transparent backdrop-blur transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-blue)]"
+                className="group relative flex min-h-[80px] items-center gap-4 overflow-hidden rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-4 ring-1 ring-transparent backdrop-blur transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-blue)]"
               >
                 <span
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/10 transition group-hover:ring-2 ${module.ring}`}
@@ -177,14 +186,14 @@ export default function PublicDashboardPage() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <h2 className="flex items-center gap-1.5 text-base font-bold text-white">
-                    {module.title}
+                    <Translated k={module.titleKey} />
                     <ArrowRight
                       aria-hidden="true"
                       className="h-4 w-4 text-[var(--dl-text-muted)] transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[var(--dl-orange-light)]"
                     />
                   </h2>
                   <p className="mt-0.5 text-sm leading-relaxed text-[var(--dl-text-muted)]">
-                    {module.description}
+                    <Translated k={module.descriptionKey} />
                   </p>
                 </div>
               </Link>

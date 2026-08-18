@@ -63,7 +63,7 @@ export default function PublicTransparencyFrame({
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-label="Open live response status"
-        className="fixed bottom-[calc(84px+env(safe-area-inset-bottom))] right-4 z-40 flex items-center gap-2 rounded-full border border-white/10 bg-[#0f2a4f] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-1 ring-white/10 transition hover:border-[var(--dl-orange)]/60 active:scale-95 lg:hidden"
+        className="fixed bottom-[calc(160px+env(safe-area-inset-bottom))] right-4 z-40 flex items-center gap-2 rounded-full border border-white/10 bg-[#0f2a4f] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-1 ring-white/10 transition hover:border-[var(--dl-orange)]/60 active:scale-95 lg:hidden"
       >
         <Activity aria-hidden className="h-4 w-4 text-[var(--dl-orange)]" />
         Live Status

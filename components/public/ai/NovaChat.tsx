@@ -61,7 +61,7 @@ const CLOSE_ANIM_MS = 420;
 /** Canned reply delay — lets the typing dots breathe like a real chat. */
 const TYPING_MS = 1800;
 
-const spring = { type: "spring", stiffness: 320, damping: 34, mass: 0.9 } as const;
+const spring = { type: "spring", stiffness: 300, damping: 25 } as const;
 const none = { duration: 0 } as const;
 
 const nowTime = () =>
@@ -375,7 +375,7 @@ export function NovaChat() {
             transition={{ type: "spring", stiffness: 380, damping: 26 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.94 }}
-            className="fixed bottom-[calc(84px+env(safe-area-inset-bottom))] right-4 z-40 flex h-14 items-center gap-2 rounded-full bg-gradient-to-br from-[#16a34a] to-[#0d9488] pl-4 pr-5 text-white shadow-[0_10px_28px_rgba(16,185,129,0.4)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399] md:bottom-24"
+            className="fixed bottom-[calc(90px+env(safe-area-inset-bottom))] right-4 z-40 flex h-14 items-center gap-2 rounded-full bg-gradient-to-br from-[#16a34a] to-[#0d9488] pl-4 pr-5 text-white shadow-[0_10px_28px_rgba(16,185,129,0.4)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399] md:bottom-24"
           >
             <span className="relative flex h-6 w-6 items-center justify-center">
               <MessageCircle className="h-6 w-6" strokeWidth={2} aria-hidden />
@@ -536,14 +536,19 @@ export function NovaChat() {
                       >
                         <Bot className="h-[18px] w-[18px] text-[#dcf8c6]" strokeWidth={2.2} />
                       </span>
-                      <span className="flex items-center gap-1.5 rounded-2xl rounded-bl-[4px] bg-[#dcf8c6]/90 px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.25)]">
-                        {[0, 1, 2].map((i) => (
-                          <span
-                            key={i}
-                            className="h-2 w-2 animate-bounce rounded-full bg-[#1a2e1e]/50"
-                            style={{ animationDelay: `${i * 150}ms` }}
-                          />
-                        ))}
+                      <span className="flex items-center gap-2 rounded-2xl rounded-bl-[4px] bg-[#dcf8c6]/90 px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.25)]">
+                        <span className="text-[0.625rem] font-bold uppercase tracking-wider text-[#1a2e1e]/55">
+                          Typing…
+                        </span>
+                        <span className="flex items-center gap-1" aria-label="Nova is typing">
+                          {[0, 1, 2].map((i) => (
+                            <span
+                              key={i}
+                              className="h-2 w-2 animate-bounce rounded-full bg-[#1a2e1e]/50"
+                              style={{ animationDelay: `${i * 150}ms` }}
+                            />
+                          ))}
+                        </span>
                       </span>
                     </motion.div>
                   )}
