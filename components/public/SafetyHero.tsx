@@ -13,14 +13,13 @@
 //   PREPARE  → orange      · "PREPARE TO EVACUATE"
 //   EVACUATE → pulsing red · "EVACUATE NOW"
 //
-// Visual treatment is a living iOS-weather-style surface instead of a
-// flat tint: an animated radial-gradient "mesh" drifts behind the status
-// readout (status-specific hues), SAFE breathes slowly (soft emerald
-// pulse), EVACUATE reuses the `.animate-alert-pulse` keyframes, and the
-// status text sits in a frosted-glass panel (bg-white/10 + backdrop-blur
-// + white border) so it reads cleanly over the gradient. A soft colored
-// glow lifts the whole card off the dark dashboard. Every string renders
-// through useTranslation() so the card follows the active UI language.
+// Premium iOS-glass treatment: a deep status-tinted gradient (SAFE uses
+// the emerald→teal→navy mesh) under a frosted backdrop-blur shell with
+// white hairline border, a big soft colored shadow, and the massive
+// headline set in gradient-clipped text. SAFE breathes slowly (soft
+// emerald pulse); EVACUATE reuses `.animate-alert-pulse`. Every string
+// renders through useTranslation() so the card follows the active
+// UI language.
 // ---------------------------------------------------------------------
 
 import type { LucideIcon } from "lucide-react";
@@ -47,14 +46,14 @@ type StatusTheme = {
   /** i18n key for the supporting subline. */
   sublineKey: TranslationKey;
   icon: LucideIcon;
-  /** Animated radial-gradient "mesh" layered over the navy base. */
-  meshGradient: string;
-  /** Soft colored glow so the card pops off the dark dashboard. */
-  glowClass: string;
+  /** Deep status-tinted gradient over the navy base. */
+  gradientClass: string;
+  /** Big soft colored glow — pairs with the shell's shadow-2xl. */
+  glowShadow: string;
+  /** Gradient-clipped headline text. */
+  headlineGradient: string;
   /** Icon tile tint (frosted glass base + colored glyph). */
   tileClass: string;
-  /** Headline text color. */
-  headlineClass: string;
   /** The "STATUS" eyebrow label color. */
   labelClass: string;
   /** Gentle breathing overlay — SAFE gets a slow emerald pulse. */
@@ -68,15 +67,10 @@ const STATUS_THEMES: Record<SafetyStatus, StatusTheme> = {
     headlineKey: "safety_status_safe",
     sublineKey: "safety_status_safe_sub",
     icon: ShieldCheck,
-    meshGradient: [
-      "radial-gradient(at 18% 15%, rgba(16,185,129,0.55) 0px, transparent 55%)",
-      "radial-gradient(at 82% 8%, rgba(13,148,136,0.5) 0px, transparent 50%)",
-      "radial-gradient(at 65% 85%, rgba(34,211,238,0.4) 0px, transparent 55%)",
-      "radial-gradient(at 5% 90%, rgba(5,150,105,0.45) 0px, transparent 50%)",
-    ].join(", "),
-    glowClass: "shadow-[0_18px_60px_-12px_rgba(16,185,129,0.45)]",
+    gradientClass: "bg-gradient-to-br from-emerald-500/20 via-teal-900/40 to-[#0a0f1a]",
+    glowShadow: "shadow-emerald-500/10",
+    headlineGradient: "bg-gradient-to-r from-emerald-300 to-teal-200 bg-clip-text text-transparent",
     tileClass: "bg-white/10 text-severity-green-300 ring-1 ring-white/15",
-    headlineClass: "text-severity-green-300",
     labelClass: "text-severity-green-300/80",
     breathe: true,
   },
@@ -84,45 +78,30 @@ const STATUS_THEMES: Record<SafetyStatus, StatusTheme> = {
     headlineKey: "safety_status_watch",
     sublineKey: "safety_status_watch_sub",
     icon: Eye,
-    meshGradient: [
-      "radial-gradient(at 20% 15%, rgba(245,158,11,0.55) 0px, transparent 55%)",
-      "radial-gradient(at 80% 10%, rgba(217,119,6,0.5) 0px, transparent 50%)",
-      "radial-gradient(at 60% 85%, rgba(251,191,36,0.4) 0px, transparent 55%)",
-      "radial-gradient(at 8% 90%, rgba(234,88,12,0.4) 0px, transparent 50%)",
-    ].join(", "),
-    glowClass: "shadow-[0_18px_60px_-12px_rgba(245,158,11,0.4)]",
+    gradientClass: "bg-gradient-to-br from-amber-500/20 via-amber-900/40 to-[#0a0f1a]",
+    glowShadow: "shadow-amber-500/10",
+    headlineGradient: "bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent",
     tileClass: "bg-white/10 text-severity-amber-300 ring-1 ring-white/15",
-    headlineClass: "text-severity-amber-300",
     labelClass: "text-severity-amber-300/80",
   },
   PREPARE: {
     headlineKey: "safety_status_prepare",
     sublineKey: "safety_status_prepare_sub",
     icon: TriangleAlert,
-    meshGradient: [
-      "radial-gradient(at 18% 12%, rgba(249,115,22,0.55) 0px, transparent 55%)",
-      "radial-gradient(at 82% 10%, rgba(234,88,12,0.5) 0px, transparent 50%)",
-      "radial-gradient(at 65% 85%, rgba(251,146,60,0.4) 0px, transparent 55%)",
-      "radial-gradient(at 5% 92%, rgba(239,68,68,0.35) 0px, transparent 50%)",
-    ].join(", "),
-    glowClass: "shadow-[0_18px_60px_-12px_rgba(249,115,22,0.45)]",
+    gradientClass: "bg-gradient-to-br from-orange-500/20 via-orange-900/40 to-[#0a0f1a]",
+    glowShadow: "shadow-orange-500/10",
+    headlineGradient: "bg-gradient-to-r from-orange-300 to-amber-200 bg-clip-text text-transparent",
     tileClass: "bg-white/10 text-[#FDBA74] ring-1 ring-white/15",
-    headlineClass: "text-[#FDBA74]",
     labelClass: "text-[#FDBA74]/80",
   },
   EVACUATE: {
     headlineKey: "safety_status_evacuate",
     sublineKey: "safety_status_evacuate_sub",
     icon: Siren,
-    meshGradient: [
-      "radial-gradient(at 20% 15%, rgba(239,68,68,0.6) 0px, transparent 55%)",
-      "radial-gradient(at 80% 10%, rgba(220,38,38,0.55) 0px, transparent 50%)",
-      "radial-gradient(at 60% 85%, rgba(248,113,113,0.45) 0px, transparent 55%)",
-      "radial-gradient(at 8% 90%, rgba(153,27,27,0.5) 0px, transparent 50%)",
-    ].join(", "),
-    glowClass: "shadow-[0_18px_60px_-12px_rgba(239,68,68,0.55)]",
+    gradientClass: "bg-gradient-to-br from-red-500/25 via-red-900/45 to-[#0a0f1a]",
+    glowShadow: "shadow-red-500/15",
+    headlineGradient: "bg-gradient-to-r from-red-400 to-rose-300 bg-clip-text text-transparent",
     tileClass: "bg-white/10 text-severity-red-300 ring-1 ring-white/15",
-    headlineClass: "text-severity-red-300",
     labelClass: "text-severity-red-300/80",
     pulseClass: "animate-alert-pulse",
   },
@@ -141,19 +120,12 @@ export function SafetyHero({
     <section
       role="status"
       aria-label={`${t("safety_status_label")}: ${status}`}
-      className={`relative flex min-h-[48vh] flex-col justify-between overflow-hidden rounded-[var(--dl-radius)] border border-white/10 p-6 transition-colors duration-300 ${theme.glowClass} ${theme.pulseClass ?? ""}`}
+      className={`relative flex min-h-[48vh] flex-col justify-between overflow-hidden rounded-3xl border border-white/10 p-6 shadow-2xl backdrop-blur-2xl transition-all duration-300 ${theme.glowShadow} ${theme.pulseClass ?? ""}`}
     >
-      {/* Animated gradient mesh — drifts slowly behind the status text. */}
-      <div
-        aria-hidden="true"
-        className="sh-mesh pointer-events-none absolute inset-0 opacity-60"
-        style={{
-          backgroundImage: theme.meshGradient,
-          backgroundSize: "300% 300%",
-        }}
-      />
+      {/* Deep status-tinted gradient mesh */}
+      <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${theme.gradientClass}`} />
 
-      {/* Soft breathing emerald pulse for SAFE (status-specific). */}
+      {/* Soft breathing pulse for SAFE (status-specific). */}
       {theme.breathe && (
         <div
           aria-hidden="true"
@@ -184,10 +156,10 @@ export function SafetyHero({
         </span>
       </div>
 
-      {/* Massive status text — frosted-glass panel over the gradient mesh */}
+      {/* Massive status text — gradient-clipped headline in a frosted panel */}
       <div className="relative mt-8 rounded-2xl border border-white/20 bg-white/10 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.28)] backdrop-blur-xl">
         <h2
-          className={`text-balance text-4xl font-black leading-none tracking-tight sm:text-5xl ${theme.headlineClass}`}
+          className={`text-balance text-4xl font-black leading-none tracking-tight sm:text-5xl ${theme.headlineGradient}`}
         >
           {t(theme.headlineKey)}
         </h2>
@@ -210,13 +182,6 @@ export function SafetyHero({
       </div>
 
       <style>{`
-        .sh-mesh {
-          animation: sh-mesh-shift 14s ease-in-out infinite;
-        }
-        @keyframes sh-mesh-shift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
         .sh-breathe {
           animation: sh-breathe 4.5s ease-in-out infinite;
         }

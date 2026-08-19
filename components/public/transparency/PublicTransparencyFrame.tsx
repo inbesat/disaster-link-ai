@@ -4,15 +4,23 @@
 // components/public/transparency/PublicTransparencyFrame.tsx — client
 // shell for the public "Live Response Status" panel.
 //
-// Desktop (lg+): a fixed right rail that is always visible.
+// Desktop (lg+): a fixed right rail that slides in/out as a drawer
+// (transition-transform, closed by default via translate-x-full). A
+// floating toggle button rides the drawer's left edge — it slides to the
+// screen edge when the drawer is closed so it stays clickable. The
+// content area scrolls independently (overflow-y-auto pb-24) under a
+// pinned header.
+//
 // Mobile (< lg): a floating trigger button above the citizen BottomNav
-// opens a slide-up bottom sheet (max-h 80dvh) so the panel never blocks
-// the whole screen. The widget content is passed in as `children`
+// opens a slide-up bottom sheet (max-h 80dvh). Both surfaces share the
+// same context state (TransparencyPanelContext) so opening one syncs the
+// other. The widget content is passed in as `children`
 // (server-composed by PublicTransparencyPanel).
 // ---------------------------------------------------------------------
 
-import { useEffect, useState, type ReactNode } from "react";
-import { Activity, X } from "lucide-react";
+import { useEffect, type ReactNode } from "react";
+import { Activity, BarChart2, ChevronRight, X } from "lucide-react";
+import { useTransparencyPanel } from "./TransparencyPanelContext";
 
 type PublicTransparencyFrameProps = {
   title?: string;
@@ -25,17 +33,20 @@ export default function PublicTransparencyFrame({
   subtitle = "Read-only view of the district response",
   children,
 }: PublicTransparencyFrameProps) {
-  const [open, setOpen] = useState(false);
+  const { isOpen, setOpen } = useTransparencyPanel();
 
-  // Lock body scroll while the mobile sheet is up.
+  // Lock body scroll while the mobile sheet is up (< lg). The desktop
+  // drawer leaves the page scrollable behind it.
   useEffect(() => {
-    if (!open) return;
+    if (!isOpen) return;
+    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches)
+      return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = previous;
     };
-  }, [open]);
+  }, [isOpen]);
 
   const header = (
     <div className="min-w-0 flex-1">
@@ -49,13 +60,40 @@ export default function PublicTransparencyFrame({
 
   return (
     <>
-      {/* Desktop: fixed right rail (always visible ≥ lg) */}
-      <aside className="fixed inset-y-0 right-0 z-40 hidden w-[360px] overflow-y-auto border-l border-white/10 bg-[#0a0f1a]/95 p-4 backdrop-blur lg:block">
-        <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-3">
-          {header}
+      {/* Desktop: sliding drawer rail (lg+), closed by default. */}
+      <aside
+        aria-hidden={!isOpen}
+        className={`fixed top-0 right-0 z-40 hidden h-screen w-[360px] border-l border-white/10 bg-[#0a0f1a]/95 backdrop-blur-xl transition-transform duration-300 ease-in-out lg:block ${
+          isOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
+        }`}
+      >
+        <div className="flex h-full flex-col overflow-hidden">
+          {/* Pinned header */}
+          <div className="flex items-start justify-between gap-3 border-b border-white/10 px-4 pt-4 pb-3">
+            {header}
+          </div>
+          {/* Scrollable widget stack */}
+          <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24">{children}</div>
         </div>
-        <div className="mt-4">{children}</div>
       </aside>
+
+      {/* Desktop toggle — rides the drawer's left edge; slides to the
+          screen edge when closed so it stays reachable. */}
+      <button
+        type="button"
+        onClick={() => setOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-label={isOpen ? "Close live response panel" : "Open live response panel"}
+        className={`fixed top-1/2 z-50 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-l-xl border border-white/20 bg-white/10 shadow-lg backdrop-blur-md transition-all duration-300 hover:bg-white/20 lg:flex ${
+          isOpen ? "right-[360px]" : "right-0"
+        }`}
+      >
+        {isOpen ? (
+          <ChevronRight aria-hidden className="h-5 w-5 text-white" />
+        ) : (
+          <BarChart2 aria-hidden className="h-5 w-5 text-white" />
+        )}
+      </button>
 
       {/* Mobile: floating trigger above the bottom nav (< lg) */}
       <button
@@ -70,7 +108,7 @@ export default function PublicTransparencyFrame({
       </button>
 
       {/* Mobile: slide-up bottom sheet (< lg) */}
-      {open && (
+      {isOpen && (
         <div
           className="fixed inset-0 z-[70] lg:hidden"
           role="dialog"

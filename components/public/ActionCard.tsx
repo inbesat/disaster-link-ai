@@ -64,7 +64,7 @@ function SafeAction() {
       <button
         type="button"
         onClick={scrollToWeather}
-        className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-severity-green-500 px-5 py-3.5 text-base font-bold text-white transition hover:bg-severity-green-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-300"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3.5 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white/10 hover:shadow-lg hover:shadow-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-300"
       >
         <CloudSun aria-hidden="true" className="h-5 w-5" />
         View Weather Forecast
@@ -97,7 +97,7 @@ function WatchAction() {
       </button>
 
       {open && (
-        <ul className="mt-3 space-y-2 rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-4">
+        <ul className="mt-3 space-y-2 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
           {CHECKLIST.map((item) => (
             <li key={item} className="flex items-start gap-2.5 text-sm text-[var(--dl-text-on-navy)]">
               <span aria-hidden="true" className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-severity-amber-400" />
@@ -170,10 +170,10 @@ function ActionBody({
   return (
     <section
       aria-label={`What to do next — ${title}`}
-      className={`rounded-[var(--dl-radius)] border p-5 ${
+      className={`rounded-2xl border p-5 backdrop-blur-md transition-all duration-300 ${
         urgent
           ? "border-red-500/40 bg-red-500/10"
-          : "border-white/10 bg-white/5 backdrop-blur"
+          : "border-white/10 bg-white/5 hover:-translate-y-1 hover:bg-white/10 hover:shadow-lg hover:shadow-white/5"
       }`}
     >
       <div className="flex items-start gap-3">

@@ -4,9 +4,10 @@
 // components/public/AlertDemoTrigger.tsx — Phase 3 · Step 10 · Demo
 // Simulator (judge trigger).
 //
-// A small semi-transparent \"Dev Tools\" button fixed to the bottom-left
-// of every public page (mounted in app/public/layout.tsx). It opens a
-// tiny modal with the four judge triggers:
+// A small semi-transparent \"Dev Tools\" button pinned to the bottom-left
+// of every public page, just right of the desktop sidebar (fixed
+// bottom-4 left-[280px]; hidden on <md where there is no sidebar).
+// It opens a tiny modal with the four judge triggers:
 //
 //   • \"Simulate Official Alert\" — dispatches drip:citizen-demo-alert
 //     with a fresh official alert; the alerts page appends it to the feed.
@@ -109,7 +110,7 @@ export function AlertDemoTrigger() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open demo tools"
-        className="fixed bottom-[calc(88px+env(safe-area-inset-bottom))] left-4 z-50 flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[0.6875rem] font-bold uppercase tracking-wider text-white/70 backdrop-blur transition hover:border-[var(--dl-orange)]/50 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
+        className="fixed bottom-4 left-[280px] z-50 hidden items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[0.6875rem] font-bold uppercase tracking-wider text-white/70 backdrop-blur transition hover:border-[var(--dl-orange)]/50 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] md:flex"
       >
         <FlaskConical aria-hidden="true" className="h-3.5 w-3.5" />
         Dev Tools

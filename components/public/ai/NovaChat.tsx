@@ -375,7 +375,7 @@ export function NovaChat() {
             transition={{ type: "spring", stiffness: 380, damping: 26 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.94 }}
-            className="fixed bottom-[calc(90px+env(safe-area-inset-bottom))] right-4 z-40 flex h-14 items-center gap-2 rounded-full bg-gradient-to-br from-[#16a34a] to-[#0d9488] pl-4 pr-5 text-white shadow-[0_10px_28px_rgba(16,185,129,0.4)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399] md:bottom-24"
+            className="fixed bottom-[88px] right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-gradient-to-br from-[#16a34a] to-[#0d9488] pl-4 pr-5 text-white shadow-[0_10px_28px_rgba(16,185,129,0.4)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399]"
           >
             <span className="relative flex h-6 w-6 items-center justify-center">
               <MessageCircle className="h-6 w-6" strokeWidth={2} aria-hidden />

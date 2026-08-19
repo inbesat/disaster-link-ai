@@ -13,6 +13,8 @@ import OfflineRouteCacheSync from "@/components/public/OfflineRouteCacheSync";
 import PublicOfflineBanner from "@/components/public/PublicOfflineBanner";
 import PullToRefresh from "@/components/public/PullToRefresh";
 import PublicTransparencyPanel from "@/components/public/PublicTransparencyPanel";
+import PublicContentColumn from "@/components/public/transparency/PublicContentColumn";
+import { TransparencyPanelProvider } from "@/components/public/transparency/TransparencyPanelContext";
 import PublicNavbar from "@/components/public/PublicNavbar";
 import SafetyOverview from "@/components/public/SafetyOverview";
 import SafetyTipsFeed from "@/components/public/ai/SafetyTipsFeed";
@@ -86,7 +88,7 @@ const MODULES = [
 export default function PublicDashboardPage() {
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-[#0a0f1a]">
-    <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-[100px] text-[var(--dl-text-on-navy)]">
+    <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-40 text-[var(--dl-text-on-navy)]">
       {/* Ambient backdrop */}
       <div
         aria-hidden="true"
@@ -102,7 +104,8 @@ export default function PublicDashboardPage() {
       {/* Responsive content column — max-w-7xl on desktop, full width on
           phones. Mobile bottom padding clears the fixed 72px BottomNav;
           md+ drops it (the nav is hidden there) for md:py-10. */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pt-6 pb-[calc(88px+env(safe-area-inset-bottom))] lg:mr-[360px] md:py-10">
+      <TransparencyPanelProvider>
+        <PublicContentColumn>
         {/* Phase 13 · Step 8 — yellow battery-saver banner while the
             device is under 20% (client island; renders nothing otherwise).
             Auto-refresh timers pause while it's visible. */}
@@ -210,17 +213,18 @@ export default function PublicDashboardPage() {
           </BandwidthGate>
         </section>
         </PullToRefresh>
-      </div>
+        </PublicContentColumn>
 
-      {/* Citizen bottom nav — Home (active) · Alerts · Map · SOS. Full-width on
-          mobile; hidden on md+ where the expanded content + module grid take
-          over navigation (this page no longer rides the phone frame). */}
-      <BottomNav className="md:hidden !max-w-none" />
+        {/* Citizen bottom nav — Home (active) · Alerts · Map · SOS. Full-width on
+            mobile; hidden on md+ where the expanded content + module grid take
+            over navigation (this page no longer rides the phone frame). */}
+        <BottomNav className="md:hidden !max-w-none" />
 
       {/* Public "Live Response Status" — read-only transparency panel.
-          Fixed right rail on desktop; toggleable slide-up sheet on mobile.
-          Contains no admin/action widgets. */}
+          Fixed right rail on desktop (collapsible drawer); toggleable
+          slide-up sheet on mobile. Contains no admin/action widgets. */}
       <PublicTransparencyPanel />
+      </TransparencyPanelProvider>
     </main>
     </div>
   );

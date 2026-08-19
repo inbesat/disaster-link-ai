@@ -5,9 +5,9 @@
 // Horizontally scrollable 3-day forecast (Today / Tomorrow / Day 3) with
 // the scrollbar hidden and cards snapping to the center of the viewport
 // (snap-x snap-mandatory + snap-center). Each card is a premium
-// iOS-widget-style surface — dark translucent slate (bg-[#1e293b]/60),
-// heavy background blur, aggressive rounded-3xl corners and a soft
-// inner top-highlight — showing a weather icon, temperature, rainfall
+// iOS-widget-style glass surface — translucent white (bg-white/5),
+// heavy background blur, rounded-2xl corners, an inner top-highlight and
+// a soft hover lift — showing a weather icon, temperature, rainfall
 // prediction and a tiny severity risk badge (reusing the roadmap
 // SeverityBadge). Mounted below the Action Card on the citizen dashboard.
 // ---------------------------------------------------------------------
@@ -77,7 +77,7 @@ export function WeatherCarousel() {
           return (
             <article
               key={day.day}
-              className="w-[78%] shrink-0 snap-center rounded-3xl border border-white/10 bg-[#1e293b]/60 p-4 shadow-[0_12px_36px_-8px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md"
+              className="w-[78%] shrink-0 snap-center rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white/10 hover:shadow-lg hover:shadow-white/5"
             >
               {/* Day label + risk badge */}
               <div className="flex items-center justify-between gap-2">
