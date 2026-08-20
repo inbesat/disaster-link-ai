@@ -71,7 +71,7 @@ export default function RateLimitCard() {
   return (
     <section
       data-settings-key="integrations-rate-limit"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex flex-wrap items-center gap-3">
@@ -84,7 +84,7 @@ export default function RateLimitCard() {
             API Quotas &amp; Rate Limiting
           </h2>
         </div>
-        <span className="rounded-full border border-[#2c3f6d] bg-surface-muted/40 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-slate-400">
+        <span className="rounded-full border border-panel-borderHover bg-surface-muted/40 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-slate-400">
           Resets 1st of month
         </span>
       </div>
@@ -106,7 +106,7 @@ export default function RateLimitCard() {
           return (
             <div
               key={quota.id}
-              className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-4"
+              className="rounded-md border border-panel-border bg-surface-muted/40 p-4"
             >
               <div className="flex items-center gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#1c2740]">
@@ -168,7 +168,7 @@ export default function RateLimitCard() {
         className={`mt-4 flex flex-wrap items-center justify-between gap-4 rounded-md border p-4 transition-colors ${
           autoDisable
             ? "border-amber-400/40 bg-amber-500/[0.06]"
-            : "border-[#1c2740] bg-[#0a0f1d]"
+            : "border-panel-border bg-[#0a0f1d]"
         }`}
       >
         <div className="flex min-w-0 flex-1 items-start gap-3">

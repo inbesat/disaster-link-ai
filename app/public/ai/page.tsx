@@ -38,7 +38,7 @@ export default function PublicAiPage({
           </Link>
           <div className="flex items-center gap-2">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
-              <Bot aria-hidden="true" className="h-4 w-4 text-[#FDBA74]" />
+              <Bot aria-hidden="true" className="h-4 w-4 text-[var(--brand-orangeLight)]" />
             </span>
             <div>
               <h1 className="text-sm font-bold text-white">AI Safety Assistant</h1>
@@ -50,7 +50,7 @@ export default function PublicAiPage({
         </header>
 
         {prompt && (
-          <p className="mt-4 rounded-[var(--dl-radius-sm)] border border-[#F97316]/40 bg-[#F97316]/10 px-4 py-2.5 text-sm font-semibold text-[#FDBA74]">
+          <p className="mt-4 rounded-[var(--dl-radius-sm)] border border-[#F97316]/40 bg-[#F97316]/10 px-4 py-2.5 text-sm font-semibold text-[var(--brand-orangeLight)]">
             You asked: &ldquo;{prompt}&rdquo;
           </p>
         )}

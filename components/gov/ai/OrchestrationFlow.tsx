@@ -132,7 +132,7 @@ export function OrchestrationFlow() {
   const handleGenerate = startRun;
 
   return (
-    <section className="shrink-0 rounded-xl border border-accent-purple/30 bg-[#0d1526] p-3 shadow-[0_0_28px_rgba(168,85,247,0.15)]">
+    <section className="shrink-0 rounded-xl border border-accent-purple/30 bg-panel-deep p-3 shadow-[0_0_28px_rgba(168,85,247,0.15)]">
       {/* Pipeline header */}
       <div className="mb-2.5 flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">

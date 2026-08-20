@@ -104,7 +104,7 @@ export default function ProfileVisibilityCard() {
   return (
     <section
       data-settings-key="visibility"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-6"
+      className="rounded-eoc border border-panel-border bg-surface p-6"
     >
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-500/10">
@@ -134,7 +134,7 @@ export default function ProfileVisibilityCard() {
               aria-checked={active}
               onClick={() => handleVisibilityChange(option.value)}
               className={`relative rounded-md border-2 p-4 text-left transition ${
-                active ? option.accent : "border-[#1c2740] bg-surface-muted/40 hover:border-[#2c3f6d]"
+                active ? option.accent : "border-panel-border bg-surface-muted/40 hover:border-panel-borderHover"
               }`}
             >
               <div className="flex items-start justify-between gap-2">
@@ -143,7 +143,7 @@ export default function ProfileVisibilityCard() {
                 </div>
                 <span
                   className={`flex h-4 w-4 items-center justify-center rounded-full border-2 transition ${
-                    active ? option.radioAccent : "border-[#2c3f6d] bg-transparent"
+                    active ? option.radioAccent : "border-panel-borderHover bg-transparent"
                   }`}
                 >
                   {active && <span className="h-1.5 w-1.5 rounded-full bg-white/90" />}
@@ -165,7 +165,7 @@ export default function ProfileVisibilityCard() {
       </div>
 
       {/* Live GPS toggle — instant switch */}
-      <div className="mt-6 flex items-center justify-between gap-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-6 flex items-center justify-between gap-4 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-start gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-cyan-500/10">
             <LocateFixed className="h-4 w-4 text-cyan-300" aria-hidden />

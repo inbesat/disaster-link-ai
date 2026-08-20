@@ -177,7 +177,7 @@ export function PlanHistory() {
             role="dialog"
             aria-modal="true"
             aria-label="Plan history"
-            className="absolute inset-y-0 right-0 flex w-[85%] max-w-sm flex-col border-l border-white/10 bg-[#0d1526] shadow-2xl animate-in slide-in-from-right-2 duration-200"
+            className="absolute inset-y-0 right-0 flex w-[85%] max-w-sm flex-col border-l border-white/10 bg-panel-deep shadow-2xl animate-in slide-in-from-right-2 duration-200"
           >
             {/* Drawer header */}
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">

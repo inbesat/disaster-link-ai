@@ -108,7 +108,7 @@ export function MoreBottomSheet({ open, onClose }: MoreSheetProps) {
             role="dialog"
             aria-modal="true"
             aria-label="More options"
-            className="absolute inset-x-0 bottom-0 rounded-t-2xl border-t border-white/10 bg-[#0f172a] pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.45)]"
+            className="absolute inset-x-0 bottom-0 rounded-t-2xl border-t border-white/10 bg-secondary pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.45)]"
           >
             {/* Grab handle */}
             <div className="flex items-center justify-between px-5 pt-3">

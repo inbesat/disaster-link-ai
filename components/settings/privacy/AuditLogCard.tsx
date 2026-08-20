@@ -78,10 +78,10 @@ export default function AuditLogCard() {
   return (
     <section
       data-settings-key="privacy-audit-log"
-      className="overflow-hidden rounded-eoc border border-[#1c2740] bg-surface"
+      className="overflow-hidden rounded-eoc border border-panel-border bg-surface"
     >
       {/* Card header — compliance-tool masthead */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#1c2740] px-5 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-panel-border px-5 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
             <ScrollText className="h-5 w-5 text-emerald-300" aria-hidden />
@@ -103,7 +103,7 @@ export default function AuditLogCard() {
       </div>
 
       {/* Toolbar — search + status filter + record count */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-[#1c2740] bg-surface-muted/30 px-5 py-3">
+      <div className="flex flex-wrap items-center gap-3 border-b border-panel-border bg-surface-muted/30 px-5 py-3">
         <div className="relative min-w-0 flex-1 sm:max-w-sm">
           <Search
             className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
@@ -114,14 +114,14 @@ export default function AuditLogCard() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search action, actor, IP, device…"
-            className="w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] py-2 pl-9 pr-3 font-mono text-xs text-slate-100 outline-none placeholder:font-sans placeholder:text-slate-600 focus:border-emerald-400/60"
+            className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-3 font-mono text-xs text-slate-100 outline-none placeholder:font-sans placeholder:text-slate-600 focus:border-emerald-400/60"
           />
         </div>
 
         <div
           role="group"
           aria-label="Filter by status"
-          className="flex flex-wrap items-center gap-1 rounded-md border border-[#1c2740] bg-[#0a0f1d] p-1"
+          className="flex flex-wrap items-center gap-1 rounded-md border border-panel-border bg-[#0a0f1d] p-1"
         >
           {FILTER_OPTIONS.map((option) => (
             <button
@@ -140,7 +140,7 @@ export default function AuditLogCard() {
           ))}
         </div>
 
-        <span className="ml-auto rounded-full border border-[#1c2740] bg-[#0a0f1d] px-2.5 py-1 font-mono text-[11px] tabular-nums text-slate-400">
+        <span className="ml-auto rounded-full border border-panel-border bg-[#0a0f1d] px-2.5 py-1 font-mono text-[11px] tabular-nums text-slate-400">
           {events.length} / {DEMO_AUDIT_EVENTS.length} records
         </span>
       </div>
@@ -148,7 +148,7 @@ export default function AuditLogCard() {
       {/* Dense data table */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[760px] text-left text-sm">
-          <thead className="border-b border-[#1c2740] bg-[#0a0f1d] text-[10px] uppercase tracking-[0.14em] text-slate-500">
+          <thead className="border-b border-panel-border bg-[#0a0f1d] text-[10px] uppercase tracking-[0.14em] text-slate-500">
             <tr>
               <th className="px-5 py-2.5 font-bold">Timestamp</th>
               <th className="px-5 py-2.5 font-bold">Event Action</th>
@@ -156,7 +156,7 @@ export default function AuditLogCard() {
               <th className="px-5 py-2.5 text-right font-bold">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#151d31] font-mono text-[11px]">
+          <tbody className="divide-y divide-panel-divide font-mono text-[11px]">
             {events.map((event) => (
               <tr
                 key={event.id}
@@ -205,7 +205,7 @@ export default function AuditLogCard() {
       </div>
 
       {/* Compliance footer */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#1c2740] bg-surface-muted/30 px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-panel-border bg-surface-muted/30 px-5 py-3">
         <p className="text-[11px] text-slate-500">
           Trail is append-only — entries can be reviewed but never edited or
           deleted. Written by the server-side audit logger on every privileged

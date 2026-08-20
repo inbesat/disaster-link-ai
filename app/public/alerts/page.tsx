@@ -158,7 +158,7 @@ export default function PublicAlertsPage() {
             </Link>
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
-                <BellRing aria-hidden="true" className="h-4 w-4 text-[#FDBA74]" />
+                <BellRing aria-hidden="true" className="h-4 w-4 text-[var(--brand-orangeLight)]" />
               </span>
               <div>
                 <h1 className="text-base font-bold text-white">Alerts</h1>
@@ -202,7 +202,7 @@ export default function PublicAlertsPage() {
                   onClick={() => setFilter(key)}
                   className={`shrink-0 rounded-full border px-4 py-2 text-[0.8125rem] font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
                     active
-                      ? "border-[#F97316] bg-[#F97316]/20 text-[#FDBA74]"
+                      ? "border-[var(--brand-orange)] bg-[#F97316]/20 text-[var(--brand-orangeLight)]"
                       : "border-white/10 bg-white/5 text-[var(--dl-text-muted)] hover:border-white/25 hover:text-[var(--dl-text-on-navy)]"
                   }`}
                 >

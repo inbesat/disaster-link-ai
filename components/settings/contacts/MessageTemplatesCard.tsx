@@ -79,7 +79,7 @@ export default function MessageTemplatesCard() {
   return (
     <section
       data-settings-key="contacts-templates"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -101,7 +101,7 @@ export default function MessageTemplatesCard() {
       </p>
 
       {/* Variable pills — click or drag to insert */}
-      <div className="mt-4 rounded-md border border-[#1c2740] bg-[#0a0f1d] p-3">
+      <div className="mt-4 rounded-md border border-panel-border bg-[#0a0f1d] p-3">
         <p className="eoc-label flex items-center gap-1.5 text-slate-400">
           <Braces className="h-3 w-3" aria-hidden />
           INSERT VARIABLES
@@ -135,7 +135,7 @@ export default function MessageTemplatesCard() {
         {templates.map((template, index) => (
           <div
             key={template.id}
-            className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-3"
+            className="rounded-md border border-panel-border bg-surface-muted/40 p-3"
           >
             <p className="flex items-center gap-2 text-xs font-bold text-slate-200">
               <span aria-hidden>{template.emoji}</span>
@@ -157,7 +157,7 @@ export default function MessageTemplatesCard() {
               onDrop={(e) => handleDrop(e, index)}
               rows={2}
               aria-label={`${template.name} template text`}
-              className="mt-2 w-full resize-y rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2.5 text-[13px] leading-relaxed text-slate-100 outline-none transition focus:border-blue-400/60"
+              className="mt-2 w-full resize-y rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 text-[13px] leading-relaxed text-slate-100 outline-none transition focus:border-blue-400/60"
             />
           </div>
         ))}

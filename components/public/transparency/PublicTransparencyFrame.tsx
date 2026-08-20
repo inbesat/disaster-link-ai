@@ -20,7 +20,6 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Activity, BarChart2, X } from "lucide-react";
-import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 type PublicTransparencyFrameProps = {
   title?: string;
@@ -33,7 +32,6 @@ export default function PublicTransparencyFrame({
   subtitle = "Read-only view of the district response",
   children,
 }: PublicTransparencyFrameProps) {
-  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   // Lock body scroll on mobile while the drawer is open (< md).
@@ -78,7 +76,7 @@ export default function PublicTransparencyFrame({
       {/* ── Drawer panel — full-height sliding overlay ── */}
       <aside
         aria-hidden={!isOpen}
-        className={`fixed top-0 right-0 z-[70] h-[100dvh] w-full border-l border-white/10 bg-[#0a0f1a]/95 backdrop-blur-xl transition-transform duration-500 ease-out md:w-[400px] ${
+        className={`fixed top-0 right-0 z-[70] h-[100dvh] w-full border-l border-white/10 bg-[rgb(var(--bg-primary-rgb)/95)] backdrop-blur-xl transition-transform duration-500 ease-out md:w-[400px] ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -123,7 +121,7 @@ export default function PublicTransparencyFrame({
           onClick={() => setIsOpen(true)}
           aria-haspopup="dialog"
           aria-label="Open live response status"
-          className="fixed bottom-[calc(160px+env(safe-area-inset-bottom))] right-4 z-40 flex items-center gap-2 rounded-full border border-white/10 bg-[#0f2a4f] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-1 ring-white/10 transition hover:border-[var(--dl-orange)]/60 active:scale-95 md:hidden"
+          className="fixed bottom-[calc(160px+env(safe-area-inset-bottom))] right-4 z-40 flex items-center gap-2 rounded-full border border-white/10 bg-[var(--brand-navy2)] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-1 ring-white/10 transition hover:border-[var(--dl-orange)]/60 active:scale-95 md:hidden"
         >
           <Activity aria-hidden className="h-4 w-4 text-[var(--dl-orange)]" />
           Live Status

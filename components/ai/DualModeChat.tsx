@@ -57,7 +57,7 @@ export function DualModeChat({ district, stream = true }: DualModeChatProps) {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-subtle bg-[#0a0f1a]">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-subtle bg-primary">
       {/* Top bar */}
       <ModeBar aiMode={aiMode} onRetry={retry} />
 
@@ -85,8 +85,8 @@ export function DualModeChat({ district, stream = true }: DualModeChatProps) {
       <div
         className={`sticky bottom-0 border-t px-4 py-3 backdrop-blur ${
           aiMode !== "cloud"
-            ? "border-amber-500/30 bg-[#0a0f1a]/95"
-            : "border-border bg-[#0a0f1a]/95"
+            ? "border-amber-500/30 bg-[rgb(var(--bg-primary-rgb)/95)]"
+            : "border-border bg-[rgb(var(--bg-primary-rgb)/95)]"
         }`}
       >
         <div className="flex items-center gap-2">

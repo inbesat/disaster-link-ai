@@ -38,7 +38,7 @@ export default function SimulationToggle({ active }: { active: boolean }) {
       className={`flex items-center gap-3 rounded-md border px-3 py-2 ${
         active
           ? "border-yellow-400/60 bg-yellow-400/10 shadow-[0_0_0_1px_rgba(250,204,21,0.4),0_0_18px_rgba(250,204,21,0.2)]"
-          : "border-[#1c2740] bg-[#0b1120]"
+          : "border-panel-border bg-panel"
       }`}
     >
       <div className="leading-tight">
@@ -67,7 +67,7 @@ export default function SimulationToggle({ active }: { active: boolean }) {
             : "justify-start border-slate-600 bg-slate-800"
         }`}
       >
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#0b1120] text-yellow-300 shadow">
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-panel text-yellow-300 shadow">
           {active ? (
             <PlugZap className="h-3.5 w-3.5" />
           ) : (

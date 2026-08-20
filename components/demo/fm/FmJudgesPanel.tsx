@@ -82,7 +82,7 @@ export default function FmJudgesPanel({
   if (!snap) return null;
 
   return (
-    <div className="rounded-xl border border-[#1c2740] bg-[#0b1120] p-5">
+    <div className="rounded-xl border border-panel-border bg-panel p-5">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-300">
@@ -106,7 +106,7 @@ export default function FmJudgesPanel({
 
       {/* Animated counter */}
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <div className="rounded-lg border border-[#1c2740] bg-[#0a0f1a] p-3">
+        <div className="rounded-lg border border-panel-border bg-primary p-3">
           <p className="flex items-center gap-1.5 text-[0.625rem] uppercase tracking-wider text-slate-500">
             <RadioTower className="h-3 w-3" /> Stations reached
           </p>
@@ -115,7 +115,7 @@ export default function FmJudgesPanel({
             <span className="text-base text-slate-500"> / {stationCount}</span>
           </p>
         </div>
-        <div className="rounded-lg border border-[#1c2740] bg-[#0a0f1a] p-3">
+        <div className="rounded-lg border border-panel-border bg-primary p-3">
           <p className="flex items-center gap-1.5 text-[0.625rem] uppercase tracking-wider text-slate-500">
             <Users className="h-3 w-3" /> Citizens reached
           </p>
@@ -124,7 +124,7 @@ export default function FmJudgesPanel({
       </div>
 
       {/* Mini map with pulsing station dots */}
-      <div className="relative mt-4 h-[180px] overflow-hidden rounded-lg border border-[#1c2740]">
+      <div className="relative mt-4 h-[180px] overflow-hidden rounded-lg border border-panel-border">
         <MiniStationMap
           district={{ lat: snap.district.lat, lng: snap.district.lng }}
           stations={reachedStations}
@@ -133,7 +133,7 @@ export default function FmJudgesPanel({
       </div>
 
       {/* Waveform + demo audio */}
-      <div className="mt-4 rounded-lg border border-[#1c2740] bg-[#0a0f1a] p-3">
+      <div className="mt-4 rounded-lg border border-panel-border bg-primary p-3">
         <div className="mb-2 flex items-center justify-between">
           <p className="flex items-center gap-1.5 text-[0.625rem] uppercase tracking-wider text-slate-500">
             <AudioLines className="h-3 w-3" /> AI voice preview
@@ -179,7 +179,7 @@ export default function FmJudgesPanel({
         </p>
       </div>
 
-      <p className="mt-4 border-t border-[#1c2740] pt-3 text-[0.6875rem] leading-relaxed text-slate-500">
+      <p className="mt-4 border-t border-panel-border pt-3 text-[0.6875rem] leading-relaxed text-slate-500">
         Detection → broadcast in <span className="font-bold text-amber-300">~{snap.latencySeconds}s</span>.
         CAP feed + AI audio pushed to every station within seconds — even drivers with no
         smartphone see the alert on their car radio.

@@ -78,7 +78,7 @@ function MetricRing({
   return (
     <motion.div
       ref={ref}
-      className="bg-white/[0.04] border border-white/[0.08] rounded-[16px] p-5 flex flex-col items-center relative group hover:bg-white/[0.07] transition-all duration-300"
+      className="bg-white/[0.04] border border-white/[0.08] rounded-[var(--radius-xl5)] p-5 flex flex-col items-center relative group hover:bg-white/[0.07] transition-all duration-300"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -135,7 +135,7 @@ function StatusCards() {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
       {/* Earthquake Activity */}
       <motion.div
-        className="bg-white/[0.04] border border-white/[0.08] rounded-[14px] p-4 hover:bg-white/[0.07] transition-colors duration-200"
+        className="bg-white/[0.04] border border-white/[0.08] rounded-lg p-4 hover:bg-white/[0.07] transition-colors duration-200"
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -146,7 +146,7 @@ function StatusCards() {
         </div>
         <div className="bg-white/[0.08] rounded-full h-2.5 w-full overflow-hidden">
           <motion.div
-            className="bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] h-full rounded-full"
+            className="bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] h-full rounded-full"
             initial={{ width: 0 }}
             whileInView={{ width: "18%" }}
             viewport={{ once: true }}
@@ -162,7 +162,7 @@ function StatusCards() {
 
       {/* Avg Response Time */}
       <motion.div
-        className="bg-white/[0.04] border border-white/[0.08] rounded-[14px] p-4 hover:bg-white/[0.07] transition-colors duration-200"
+        className="bg-white/[0.04] border border-white/[0.08] rounded-lg p-4 hover:bg-white/[0.07] transition-colors duration-200"
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -179,7 +179,7 @@ function StatusCards() {
 
       {/* Satellite Updates */}
       <motion.div
-        className="bg-white/[0.04] border border-white/[0.08] rounded-[14px] p-4 hover:bg-white/[0.07] transition-colors duration-200"
+        className="bg-white/[0.04] border border-white/[0.08] rounded-lg p-4 hover:bg-white/[0.07] transition-colors duration-200"
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -199,7 +199,7 @@ function StatusCards() {
 
       {/* AI Prediction Confidence */}
       <motion.div
-        className="bg-white/[0.04] border border-white/[0.08] rounded-[14px] p-4 hover:bg-white/[0.07] transition-colors duration-200"
+        className="bg-white/[0.04] border border-white/[0.08] rounded-lg p-4 hover:bg-white/[0.07] transition-colors duration-200"
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -209,7 +209,7 @@ function StatusCards() {
           AI Prediction Confidence
         </div>
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-bold text-[#F97316]">96</span>
+          <span className="text-2xl font-bold text-[var(--orange)]">96</span>
           <span className="text-sm font-semibold text-[#F97316]/70">%</span>
         </div>
       </motion.div>
@@ -223,7 +223,7 @@ function StatusCards() {
 function FloodRiskChart() {
   return (
     <motion.div
-      className="mt-4 bg-white/[0.04] border border-white/[0.08] rounded-[16px] p-6"
+      className="mt-4 bg-white/[0.04] border border-white/[0.08] rounded-[var(--radius-xl5)] p-6"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -237,7 +237,7 @@ function FloodRiskChart() {
           </span>
         </div>
         <div className="flex items-center gap-2 text-[11px] text-white/40">
-          <span className="w-3 h-[2px] rounded-full bg-[#F97316]" />
+          <span className="w-3 h-[2px] rounded-full bg-[var(--orange)]" />
           Risk Index
         </div>
       </div>
@@ -323,7 +323,7 @@ export default function AIPredictionDashboard() {
       <div>
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#5B8DF6] flex items-center justify-center text-lg shadow-md">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--blue)] to-[var(--blue-light)] flex items-center justify-center text-lg shadow-md">
             🤖
           </div>
           <div>

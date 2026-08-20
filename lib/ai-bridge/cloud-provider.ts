@@ -73,6 +73,31 @@ async function readUIMessageText(res: Response): Promise<string> {
   return raw.trim();
 }
 
+/** Structured error payload from the shared /api/chat route. */
+interface ChatErrorBody {
+  error?: {
+    message?: string;
+    kind?: string;
+    stage?: string;
+    missingKeys?: string[];
+  };
+}
+
+function errorFromBody(res: Response, bodyText: string): string {
+  try {
+    const parsed = JSON.parse(bodyText) as ChatErrorBody;
+    const err = parsed.error;
+    if (err?.message) {
+      const head = err.kind === "not-configured" ? "AI provider not configured" : err.message;
+      const missing = err.missingKeys?.length ? ` Missing env keys: ${err.missingKeys.join(", ")}.` : "";
+      return `${head}.${missing}`;
+    }
+  } catch {
+    // not JSON — fall through
+  }
+  return `Cloud AI unavailable right now (HTTP ${res.status}). The queue will retry once you're back online.`;
+}
+
 function joinParts(parts: UiStreamPart[]): string {
   const errorPart = parts.find(isErrorPart);
   if (errorPart) return `[error] ${errorPart.error?.message ?? "upstream failure"}`;
@@ -118,8 +143,9 @@ export class CloudAIProvider implements AIProvider {
       });
 
       if (!res.ok) {
+        const bodyText = await res.clone().text();
         return {
-          text: `Cloud AI unavailable right now (HTTP ${res.status}). The queue will retry once you're back online.`,
+          text: errorFromBody(res, bodyText),
           mode: "error",
           durationMs: Date.now() - startedAt,
           error: true,

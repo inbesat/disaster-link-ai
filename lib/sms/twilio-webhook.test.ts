@@ -83,7 +83,7 @@ describe("verifyTwilioSignature", () => {
         fakeRequest("http://localhost:3000/api/webhooks/voice"),
         parseSmsForm(""),
       );
-      expect(check).toEqual({ ok: true, reason: "no-token-configured" });
+      expect(check).toEqual({ ok: true, reason: "no-token-configured-dev" });
     } finally {
       if (prev !== undefined) process.env.TWILIO_AUTH_TOKEN = prev;
     }

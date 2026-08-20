@@ -20,7 +20,7 @@ export default function SettingsPlaceholder({
   phase: string;
 }) {
   return (
-    <section className="rounded-eoc border border-[#1c2740] bg-surface p-6">
+    <section className="rounded-eoc border border-panel-border bg-surface p-6">
       <div className="flex items-start gap-4">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10">
           <Icon className="h-5 w-5 text-cyan-400" />
@@ -32,7 +32,7 @@ export default function SettingsPlaceholder({
         </div>
       </div>
 
-      <div className="mt-6 flex items-center gap-3 rounded-md border border-dashed border-[#2c3f6d] bg-surface-muted/40 px-4 py-3">
+      <div className="mt-6 flex items-center gap-3 rounded-md border border-dashed border-panel-borderHover bg-surface-muted/40 px-4 py-3">
         <span className="h-2 w-2 rounded-full bg-amber-400" />
         <p className="text-xs text-slate-500">
           This section is part of the Settings roadmap and will be built in a

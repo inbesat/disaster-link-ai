@@ -72,7 +72,7 @@ export default function QuietHoursCard({
   return (
     <section
       data-settings-key="quiet-hours"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -86,7 +86,7 @@ export default function QuietHoursCard({
       </div>
 
       {/* Master toggle */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-indigo-500/10">
@@ -132,7 +132,7 @@ export default function QuietHoursCard({
       {/* Time window — revealed only when enabled */}
       {dndEnabled && (
         <div className="mt-4 space-y-4">
-          <div className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+          <div className="rounded-md border border-panel-border bg-surface-muted/40 p-4">
             <p className="eoc-label flex items-center gap-2 text-slate-400">
               <AlarmClock className="h-3.5 w-3.5" aria-hidden />
               QUIET HOURS WINDOW
@@ -151,7 +151,7 @@ export default function QuietHoursCard({
                   type="time"
                   value={quietStart}
                   onChange={(e) => onQuietStartChange(e.target.value)}
-                  className="mt-1.5 w-full rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-400 [color-scheme:dark]"
+                  className="mt-1.5 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-400 [color-scheme:dark]"
                 />
               </div>
               <div>
@@ -166,7 +166,7 @@ export default function QuietHoursCard({
                   type="time"
                   value={quietEnd}
                   onChange={(e) => onQuietEndChange(e.target.value)}
-                  className="mt-1.5 w-full rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-400 [color-scheme:dark]"
+                  className="mt-1.5 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-400 [color-scheme:dark]"
                 />
               </div>
             </div>

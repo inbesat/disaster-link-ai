@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 import typography from "@tailwindcss/typography";
 import animate from "tailwindcss-animate";
 import daisyui from "daisyui";
+import { colors, shadows } from "./styles/tokens";
 
 const config: Config = {
   // ThemeProvider (next-themes) toggles the `dark` class on <html>.
@@ -16,25 +17,19 @@ const config: Config = {
     extend: {
       colors: {
         /* ---------------------------------------------------------------
-           ROADMAP DESIGN SYSTEM (UI/UX Phase 1 · Step 2)
-           Tailwind-generated utilities from these tokens:
-             bg-accent-danger / bg-accent-warning / bg-accent-success /
-             bg-accent-purple / bg-accent-primary (accent namespace)
-             bg-severity-critical / bg-severity-warning / bg-severity-watch /
-             bg-severity-safe (severity namespace)
-             shadow-modal / shadow-glow-blue (boxShadow)
-             rounded-sm/md/lg/xl (radius scale)
+           ROADMAP DESIGN SYSTEM — consumed directly from styles/tokens.ts.
+           All colors use the `rgb(var(--x-rgb) / <alpha-value>)` pattern so
+           opacity modifiers (bg-accent/10, border-severity-red-600/40, …)
+           actually generate — Tailwind v3 drops them for plain var() colors.
+           The --*-rgb channel variables live in app/globals.css and are kept
+           in sync with styles/tokens.ts (see scripts/check-tokens.mjs).
 
            NOTE: bg-primary / text-primary / text-secondary / text-muted /
            border-subtle / border-active cannot be expressed as Tailwind
            color names (a color named `bg` would generate `bg-bg-primary`),
            so those utilities are hand-written in app/globals.css under
-           `@layer utilities` — see the ROADMAP UTILITIES block there.
+           the ROADMAP UTILITIES block.
            --------------------------------------------------------------- */
-        /* All colors use the `rgb(var(--x-rgb) / <alpha-value>)` pattern so
-           opacity modifiers (bg-accent/10, border-severity-red-600/40, …)
-           actually generate — Tailwind v3 drops them for plain var() colors.
-           The --*-rgb channel variables live in app/globals.css. */
         border: {
           DEFAULT: "rgb(var(--border-rgb) / <alpha-value>)",
           strong: "rgb(var(--border-strong-rgb) / <alpha-value>)",
@@ -47,6 +42,7 @@ const config: Config = {
           warning: "rgb(var(--accent-warning-rgb) / <alpha-value>)",
           success: "rgb(var(--accent-success-rgb) / <alpha-value>)",
           purple: "rgb(var(--accent-purple-rgb) / <alpha-value>)",
+          sky: "rgb(var(--accent-rgb) / <alpha-value>)",
         },
         severity: {
           /* Legacy EOC severity scales (kept) */
@@ -79,6 +75,39 @@ const config: Config = {
           warning: "rgb(var(--severity-warning-rgb) / <alpha-value>)",
           watch: "rgb(var(--severity-watch-rgb) / <alpha-value>)",
           safe: "rgb(var(--severity-safe-rgb) / <alpha-value>)",
+        },
+
+        /* Admin / ops-console panel family — token-driven utilities.
+           bg-panel / bg-panel-deep / border-panel-border / … */
+        panel: {
+          DEFAULT: "rgb(var(--panel-rgb) / <alpha-value>)",
+          deep: "rgb(var(--panel-deep-rgb) / <alpha-value>)",
+          darker: "rgb(var(--panel-darker-rgb) / <alpha-value>)",
+          hover: "rgb(var(--panel-hover-rgb) / <alpha-value>)",
+          hoverAlt: "rgb(var(--panel-hover-alt-rgb) / <alpha-value>)",
+          border: "rgb(var(--panel-border-rgb) / <alpha-value>)",
+          borderStrong: "rgb(var(--panel-border-strong-rgb) / <alpha-value>)",
+          borderHover: "rgb(var(--panel-border-hover-rgb) / <alpha-value>)",
+          divide: "rgb(var(--panel-divide-rgb) / <alpha-value>)",
+          chip: "rgb(var(--panel-chip-rgb) / <alpha-value>)",
+        },
+
+        /* SafeSphere brand palette — global tokens for surfaces outside the
+           .landing-page scope (admin, demo, PWA, public citizen pages). */
+        brand: {
+          navy: "rgb(var(--brand-navy-rgb) / <alpha-value>)",
+          navy2: "rgb(var(--brand-navy-2-rgb) / <alpha-value>)",
+          navy3: "rgb(var(--brand-navy-3-rgb) / <alpha-value>)",
+          blue: "rgb(var(--brand-blue-rgb) / <alpha-value>)",
+          blueLight: "rgb(var(--brand-blue-light-rgb) / <alpha-value>)",
+          orange: "rgb(var(--brand-orange-rgb) / <alpha-value>)",
+          orangeLight: "rgb(var(--brand-orange-light-rgb) / <alpha-value>)",
+          white: "rgb(var(--brand-white-rgb) / <alpha-value>)",
+          gray: "rgb(var(--brand-gray-rgb) / <alpha-value>)",
+          gray2: "rgb(var(--brand-gray-2-rgb) / <alpha-value>)",
+          textDark: "rgb(var(--brand-text-dark-rgb) / <alpha-value>)",
+          textMuted: "rgb(var(--brand-text-muted-rgb) / <alpha-value>)",
+          textOnNavy: "rgb(var(--brand-text-on-navy-rgb) / <alpha-value>)",
         },
 
         /* shadcn/ui semantic tokens (aliased to roadmap vars) */
@@ -137,25 +166,25 @@ const config: Config = {
         ],
       },
       borderRadius: {
-        /* Roadmap radius scale — overrides Tailwind defaults */
+        /* Roadmap radius scale — overrides Tailwind defaults.
+           NOTE: 2xl/3xl/4xl keep the Tailwind defaults (16/24/32px) — the
+           landing display radii (22/26/12/16/20px) are exposed as the
+           --radius-xl2..xl6 CSS vars for arbitrary-value references. */
         sm: "var(--radius-sm)",
         md: "var(--radius-md)",
         lg: "var(--radius-lg)",
         xl: "var(--radius-xl)",
+        chat: "var(--radius-chat)",
         /* Legacy EOC radius (kept for old components) */
-        eoc: "0.625rem",
+        eoc: "var(--radius-eoc)",
       },
       boxShadow: {
         /* Legacy EOC glows (kept — signature ring+glow look) */
-        "glow-green":
-          "0 0 0 1px rgba(16, 185, 129, 0.4), 0 0 18px rgba(16, 185, 129, 0.25)",
-        "glow-amber":
-          "0 0 0 1px rgba(245, 158, 11, 0.4), 0 0 18px rgba(245, 158, 11, 0.25)",
-        "glow-red": "0 0 0 1px rgba(239, 68, 68, 0.4), 0 0 18px rgba(239, 68, 68, 0.25)",
-        "glow-purple":
-          "0 0 0 1px rgba(168, 85, 247, 0.4), 0 0 18px rgba(168, 85, 247, 0.25)",
-        "glow-accent":
-          "0 0 0 1px rgba(56, 189, 248, 0.4), 0 0 18px rgba(56, 189, 248, 0.25)",
+        "glow-green": shadows.glowLegacy.green,
+        "glow-amber": shadows.glowLegacy.amber,
+        "glow-red": shadows.glowLegacy.red,
+        "glow-purple": shadows.glowLegacy.purple,
+        "glow-accent": shadows.glowLegacy.sky,
         /* Roadmap shadows & glows */
         card: "var(--shadow-card)",
         modal: "var(--shadow-modal)",
@@ -199,26 +228,26 @@ const config: Config = {
     themes: [
       {
         safesphere: {
-          "primary": "#2563EB",
-          "primary-content": "#FFFFFF",
-          "secondary": "#F97316",
-          "secondary-content": "#FFFFFF",
-          "accent": "#5B8DF6",
-          "accent-content": "#FFFFFF",
-          "neutral": "#0B1F3A",
-          "neutral-content": "#C9D6EC",
-          "base-100": "#0B1F3A",
-          "base-200": "#0F2A4F",
-          "base-300": "#132F57",
-          "base-content": "#C9D6EC",
-          "info": "#5B8DF6",
-          "info-content": "#0B1F3A",
+          "primary": colors.landing.blue,
+          "primary-content": colors.landing.white,
+          "secondary": colors.landing.orange,
+          "secondary-content": colors.landing.white,
+          "accent": colors.landing.blueLight,
+          "accent-content": colors.landing.white,
+          "neutral": colors.landing.navy,
+          "neutral-content": colors.landing.textOnNavy,
+          "base-100": colors.landing.navy,
+          "base-200": colors.landing.navy2,
+          "base-300": colors.landing.navy3,
+          "base-content": colors.landing.textOnNavy,
+          "info": colors.landing.blueLight,
+          "info-content": colors.landing.navy,
           "success": "#22C55E",
-          "success-content": "#0B1F3A",
+          "success-content": colors.landing.navy,
           "warning": "#FACC15",
-          "warning-content": "#0B1F3A",
-          "error": "#EF4444",
-          "error-content": "#0B1F3A",
+          "warning-content": colors.landing.navy,
+          "error": colors.accent.danger,
+          "error-content": colors.landing.navy,
           "--rounded-box": "18px",
           "--rounded-btn": "9999px",
           "--rounded-badge": "9999px",

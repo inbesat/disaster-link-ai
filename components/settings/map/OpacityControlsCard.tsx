@@ -70,7 +70,7 @@ export default function OpacityControlsCard() {
   return (
     <section
       data-settings-key="map-opacity"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -94,7 +94,7 @@ export default function OpacityControlsCard() {
         className={`mt-5 flex items-center justify-between gap-4 rounded-md border p-4 transition ${
           hazards.highlightCriticalZonesOnly
             ? "border-rose-500/40 bg-rose-500/[0.08]"
-            : "border-[#1c2740] bg-surface-muted/40"
+            : "border-panel-border bg-surface-muted/40"
         }`}
       >
         <div className="flex items-start gap-3">
@@ -154,7 +154,7 @@ export default function OpacityControlsCard() {
               className={`rounded-md border p-4 transition ${
                 hazards.highlightCriticalZonesOnly && value > 0
                   ? "border-rose-500/30"
-                  : "border-[#1c2740] bg-surface-muted/40"
+                  : "border-panel-border bg-surface-muted/40"
               }`}
             >
               <div className="flex items-center justify-between gap-4">

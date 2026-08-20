@@ -95,7 +95,7 @@ export default function BottomNav({ className }: { className?: string }) {
   return (
     <nav
       aria-label="Citizen navigation"
-      className={`fixed bottom-0 w-full z-[40] mx-auto max-w-md bg-[#0a0f1a]/80 pb-[env(safe-area-inset-bottom)] backdrop-blur-2xl border-t border-white/10${
+      className={`fixed bottom-0 w-full z-[40] mx-auto max-w-md bg-[rgb(var(--bg-primary-rgb)/80)] pb-[env(safe-area-inset-bottom)] backdrop-blur-2xl border-t border-white/10${
         className ? ` ${className}` : ""
       }`}
     >
@@ -128,7 +128,7 @@ export default function BottomNav({ className }: { className?: string }) {
                     aria-hidden="true"
                     className={`relative flex h-8 w-14 items-center justify-center rounded-full transition-colors duration-150 ${
                       active
-                        ? "bg-[#F97316] text-white shadow-[0_0_16px_rgba(249,115,22,0.45)]"
+                        ? "bg-[var(--brand-orange)] text-white shadow-[0_0_16px_rgba(249,115,22,0.45)]"
                         : "bg-[#F97316]/15 text-[var(--dl-orange-light)] group-hover:bg-[#F97316]/25"
                     }`}
                   >

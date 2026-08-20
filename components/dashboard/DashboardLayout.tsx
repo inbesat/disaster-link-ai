@@ -77,7 +77,7 @@ export function DashboardLayout({
 
   return (
     <DashboardDistrictContext.Provider value={{ district, setDistrict }}>
-      <div className="flex min-h-screen flex-col bg-[#0a0f1a] text-foreground">
+      <div className="flex min-h-screen flex-col bg-primary text-foreground">
         <DashboardHeader
           currentDistrict={district}
           onDistrictChange={setDistrict}

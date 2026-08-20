@@ -166,7 +166,7 @@ export default function AvatarCropperModal({
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-md rounded-eoc border border-[#1c2740] bg-surface p-5 shadow-2xl">
+      <div className="relative w-full max-w-md rounded-eoc border border-panel-border bg-surface p-5 shadow-2xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Crop className="h-4 w-4 text-cyan-400" aria-hidden />
@@ -187,7 +187,7 @@ export default function AvatarCropperModal({
         {/* Square viewport */}
         <div
           ref={viewportRef}
-          className="relative mx-auto mt-4 select-none overflow-hidden rounded-md border border-[#2c3f6d] bg-surface-muted"
+          className="relative mx-auto mt-4 select-none overflow-hidden rounded-md border border-panel-borderHover bg-surface-muted"
           style={{ width: VIEWPORT, height: VIEWPORT, maxWidth: "100%" }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -252,7 +252,7 @@ export default function AvatarCropperModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-[#2c3f6d] px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted"
+            className="rounded-md border border-panel-borderHover px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted"
           >
             Cancel
           </button>

@@ -96,7 +96,7 @@ export default function SettingsSearchBar({
 
   return (
     <div ref={rootRef} className="relative z-30">
-      <div className="flex items-center gap-3 rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2.5 shadow-sm">
+      <div className="flex items-center gap-3 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 shadow-sm">
         <Search className="h-4 w-4 shrink-0 text-slate-500" aria-hidden />
         <input
           ref={inputRef}
@@ -115,7 +115,7 @@ export default function SettingsSearchBar({
           onFocus={() => setOpen(true)}
           className="w-full bg-transparent text-sm text-foreground placeholder:text-slate-500 focus:outline-none"
         />
-        <kbd className="hidden shrink-0 rounded-sm border border-[#2c3f6d] bg-surface-muted px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 sm:inline-block">
+        <kbd className="hidden shrink-0 rounded-sm border border-panel-borderHover bg-surface-muted px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 sm:inline-block">
           ⌘/Ctrl K
         </kbd>
       </div>
@@ -125,7 +125,7 @@ export default function SettingsSearchBar({
           id="settings-search-results"
           role="listbox"
           aria-label="Settings search results"
-          className="absolute inset-x-0 top-full mt-2 max-h-[60vh] overflow-y-auto rounded-eoc border border-[#1c2740] bg-surface-elevated/95 p-1.5 shadow-2xl backdrop-blur-xl"
+          className="absolute inset-x-0 top-full mt-2 max-h-[60vh] overflow-y-auto rounded-eoc border border-panel-border bg-surface-elevated/95 p-1.5 shadow-2xl backdrop-blur-xl"
         >
           {query.trim().length === 0 ? (
             <div className="flex items-center gap-2 px-3 py-4 text-xs text-slate-500">

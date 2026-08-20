@@ -49,6 +49,20 @@
     --radius-lg: 14px;
     --radius-xl: 18px;
 
+    /* Extended radius scale — the audit found arbitrary rounded-[Npx] values
+       (2/12/16/20/22/26) used verbatim across the admin/gov consoles.
+       Display radii are exposed as vars only (Tailwind's rounded-2xl/3xl/4xl
+       stay at their stock 16/24/32px so existing components don't shift). */
+    --radius-xl2: 22px;
+    --radius-xl3: 26px;
+    --radius-xl4: 12px;
+    --radius-xl5: 16px;
+    --radius-xl6: 20px;
+    --radius-micro: 2px;
+    --radius-eoc: 0.625rem;
+    --radius-chat: 4px;
+    --radius-pill: 9999px;
+
     /* Shadows & glows */
     --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
     --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
@@ -56,6 +70,49 @@
     --glow-red: 0 0 20px rgba(239, 68, 68, 0.3);
     --glow-amber: 0 0 20px rgba(245, 158, 11, 0.3);
     --glow-purple: 0 0 20px rgba(168, 85, 247, 0.28);
+
+    /* Floating elevation shadows — consolidated from the arbitrary
+       shadow-[...] values the audit found repeated verbatim (styles/tokens.ts
+       → shadows.floating). */
+    --shadow-float-sm: 0 2px 12px rgba(0, 0, 0, 0.25);
+    --shadow-float-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-float-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-float-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
+    --shadow-float-xxl: 0 20px 60px rgba(0, 0, 0, 0.6);
+    --shadow-float-sheet: 0 -12px 48px rgba(0, 0, 0, 0.6);
+
+    /* SafeSphere brand palette — global twins of the .landing-page scoped
+       --navy/--blue/--orange set (styles/tokens.ts → colors.brand). Landing
+       components keep using the scoped names so high-contrast can neutralize
+       them; every other surface uses these. */
+    --brand-navy: #0b1f3a;
+    --brand-navy-2: #0f2a4f;
+    --brand-navy-3: #132f57;
+    --brand-blue: #2563eb;
+    --brand-blue-light: #5b8df6;
+    --brand-orange: #f97316;
+    --brand-orange-light: #fdba74;
+    --brand-white: #ffffff;
+    --brand-gray: #f8fafc;
+    --brand-gray-2: #e7ecf3;
+    --brand-text-dark: #0f1b2d;
+    --brand-text-muted: #5b6b84;
+    --brand-text-on-navy: #c9d6ec;
+
+    /* Brand RGB channels — for opacity modifiers on brand utilities */
+    --brand-navy-rgb: 11 31 58;
+    --brand-navy-2-rgb: 15 42 79;
+    --brand-navy-3-rgb: 19 47 87;
+    --brand-blue-rgb: 37 99 235;
+    --brand-blue-light-rgb: 91 141 246;
+    --brand-orange-rgb: 249 115 22;
+    --brand-orange-light-rgb: 253 186 116;
+    --brand-white-rgb: 255 255 255;
+    --brand-gray-rgb: 248 250 252;
+    --brand-gray-2-rgb: 231 236 243;
+    --brand-text-dark-rgb: 15 27 45;
+    --brand-text-muted-rgb: 91 107 132;
+    --brand-text-on-navy-rgb: 201 214 236;
 
     /* Skeleton shimmer — dark slate scale (slate-800 base / slate-700
        shine). Feeds .skeleton-shimmer in @layer components. */
@@ -200,6 +257,31 @@
     --destructive-foreground-rgb: 255 255 255;
     --input-rgb: 30 48 86;
     --ring-rgb: 59 130 246;
+
+    /* Panel family — admin/ops-console dark surfaces (styles/tokens.ts →
+       colors.panel). Previously scattered hexes #0b1120 / #0d1526 / #1c2740
+       / #2c3f6d / #020617 / #131b30 / #1a2338 / #2a3a5c / #151d31 / #1a2740. */
+    --panel: #0b1120;
+    --panel-deep: #0d1526;
+    --panel-darker: #020617;
+    --panel-hover: #131b30;
+    --panel-hover-alt: #1a2338;
+    --panel-border: #1c2740;
+    --panel-border-strong: #2a3a5c;
+    --panel-border-hover: #2c3f6d;
+    --panel-divide: #151d31;
+    --panel-chip: #1a2740;
+
+    --panel-rgb: 11 17 32;
+    --panel-deep-rgb: 13 21 38;
+    --panel-darker-rgb: 2 6 23;
+    --panel-hover-rgb: 19 27 48;
+    --panel-hover-alt-rgb: 26 35 56;
+    --panel-border-rgb: 28 39 64;
+    --panel-border-strong-rgb: 42 58 92;
+    --panel-border-hover-rgb: 44 63 109;
+    --panel-divide-rgb: 21 29 49;
+    --panel-chip-rgb: 26 39 64;
   }
 
   /*

@@ -98,7 +98,7 @@ export default function DataExportCard() {
   return (
     <section
       data-settings-key="privacy-data-export"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -126,7 +126,7 @@ export default function DataExportCard() {
         {INCLUDED_RECORDS.map((record) => (
           <li
             key={record}
-            className="flex items-center gap-2 rounded-md border border-[#1c2740] bg-surface-muted/40 px-3 py-2 text-xs text-slate-300"
+            className="flex items-center gap-2 rounded-md border border-panel-border bg-surface-muted/40 px-3 py-2 text-xs text-slate-300"
           >
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400" />
             {record}

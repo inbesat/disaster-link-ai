@@ -121,7 +121,7 @@ export default function WeatherApiCard() {
   return (
     <section
       data-settings-key="integrations-weather"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -152,7 +152,7 @@ export default function WeatherApiCard() {
           return (
             <div
               key={provider.id}
-              className="flex flex-wrap items-center gap-3 rounded-md border border-[#1c2740] bg-surface-muted/40 p-3.5"
+              className="flex flex-wrap items-center gap-3 rounded-md border border-panel-border bg-surface-muted/40 p-3.5"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#1c2740]">
                 <ProviderIcon className="h-4 w-4 text-sky-300" aria-hidden />
@@ -181,7 +181,7 @@ export default function WeatherApiCard() {
                   aria-label={`${provider.shortName} API key`}
                   autoComplete="off"
                   spellCheck={false}
-                  className="w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-sky-400/60"
+                  className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-sky-400/60"
                 />
                 <button
                   type="button"
@@ -224,7 +224,7 @@ export default function WeatherApiCard() {
                     type="button"
                     onClick={() => testConnection(provider.id)}
                     disabled={state === "testing"}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-[#2c3f6d] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-sky-400/50 hover:bg-sky-500/10 hover:text-sky-200 disabled:cursor-wait disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-panel-borderHover px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-sky-400/50 hover:bg-sky-500/10 hover:text-sky-200 disabled:cursor-wait disabled:opacity-50"
                   >
                     {state === "testing" ? (
                       <>
@@ -243,7 +243,7 @@ export default function WeatherApiCard() {
       </div>
 
       {/* Priority failover */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-[#0a0f1d] p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-[#0a0f1d] p-4">
         <p className="eoc-label text-sky-300/80">PRIORITY FAILOVER</p>
         <p className="mt-1 text-xs text-slate-500">
           The first healthy source in this order wins the fetch — drag rows or
@@ -281,7 +281,7 @@ export default function WeatherApiCard() {
                     ? "border-sky-400/60 bg-sky-500/10 opacity-40"
                     : dropTarget
                       ? "border-t-2 border-t-sky-400 bg-sky-500/[0.06]"
-                      : "border-[#1c2740] bg-surface-muted/40 hover:border-sky-400/40"
+                      : "border-panel-border bg-surface-muted/40 hover:border-sky-400/40"
                 }`}
               >
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#1c2740] font-mono text-[10px] font-bold tabular-nums text-slate-300">

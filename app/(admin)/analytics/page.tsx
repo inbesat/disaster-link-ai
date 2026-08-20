@@ -147,8 +147,8 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg border border-[#1c2740] bg-[#0b1120]">
-      <div className="border-b border-[#1c2740] px-5 py-4">
+    <div className="rounded-lg border border-panel-border bg-panel">
+      <div className="border-b border-panel-border px-5 py-4">
         <h2 className="text-sm font-semibold text-foreground">{title}</h2>
         <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p>
       </div>

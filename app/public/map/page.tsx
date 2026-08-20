@@ -117,7 +117,7 @@ export default function PublicMapPage() {
           </Link>
           <div className="flex items-center gap-2.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
-              <MapIcon aria-hidden="true" className="h-4 w-4 text-[#FDBA74]" />
+              <MapIcon aria-hidden="true" className="h-4 w-4 text-[var(--brand-orangeLight)]" />
             </span>
             <div>
               <h1 className="text-base font-bold text-white">Map</h1>

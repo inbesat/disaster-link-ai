@@ -99,7 +99,7 @@ export default function DemoPresentation() {
               key={`pub-${stamp}-${ready}`}
               title="Citizen App"
               src="/public/dashboard"
-              className="h-full w-full rounded-[2.1rem] border border-white/10 bg-[#0B1F3A]"
+              className="h-full w-full rounded-[2.1rem] border border-white/10 bg-[var(--brand-navy)]"
             />
           </div>
         </section>
@@ -110,9 +110,9 @@ export default function DemoPresentation() {
             <Monitor className="h-4 w-4" aria-hidden />
             Gov Command Center
           </div>
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-2 border-white/15 bg-[#0a0f1a] shadow-[0_20px_80px_rgba(0,0,0,0.6)]">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border-2 border-white/15 bg-primary shadow-[0_20px_80px_rgba(0,0,0,0.6)]">
             {/* Faux browser chrome */}
-            <div className="flex items-center gap-3 border-b border-white/10 bg-[#0d1526] px-4 py-2.5">
+            <div className="flex items-center gap-3 border-b border-white/10 bg-panel-deep px-4 py-2.5">
               <div className="flex gap-1.5">
                 <span className="h-3 w-3 rounded-full bg-red-500/80" />
                 <span className="h-3 w-3 rounded-full bg-amber-400/80" />
@@ -126,7 +126,7 @@ export default function DemoPresentation() {
               key={`gov-${stamp}-${ready}`}
               title="Gov Command Center"
               src="/gov/dashboard"
-              className="min-h-0 flex-1 border-0 bg-[#0a0f1a]"
+              className="min-h-0 flex-1 border-0 bg-primary"
             />
           </div>
         </section>

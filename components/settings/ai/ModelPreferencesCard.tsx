@@ -96,7 +96,7 @@ export default function ModelPreferencesCard() {
   return (
     <section
       data-settings-key="ai-model"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -128,7 +128,7 @@ export default function ModelPreferencesCard() {
             id="ai-provider"
             value={settings.provider}
             onChange={(event) => setProvider(event.target.value as AiProvider)}
-            className="w-full appearance-none rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-fuchsia-400/60"
+            className="w-full appearance-none rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-fuchsia-400/60"
           >
             {AI_PROVIDERS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -175,7 +175,7 @@ export default function ModelPreferencesCard() {
             onChange={(event) => setApiKey(event.target.value)}
             placeholder="••••••••••••••••"
             autoComplete="off"
-            className="w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] py-2.5 pl-9 pr-3 text-sm text-slate-200 outline-none transition focus:border-fuchsia-400/60"
+            className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2.5 pl-9 pr-3 text-sm text-slate-200 outline-none transition focus:border-fuchsia-400/60"
           />
         </div>
         <p className="mt-2 flex items-start gap-2 text-[11px] leading-relaxed text-slate-500">
@@ -189,7 +189,7 @@ export default function ModelPreferencesCard() {
       </div>
 
       {/* Test connection */}
-      <div className="mt-5 border-t border-[#1c2740] pt-4">
+      <div className="mt-5 border-t border-panel-border pt-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-[11px] text-slate-500">
             Verifies this provider family&apos;s server chain. Your local key never leaves
@@ -211,7 +211,7 @@ export default function ModelPreferencesCard() {
         </div>
 
         {lastProbe && (
-          <div className="mt-3 rounded-md border border-[#1c2740] bg-surface-muted/40 p-3">
+          <div className="mt-3 rounded-md border border-panel-border bg-surface-muted/40 p-3">
             <p
               className={`flex items-center gap-2 text-[11px] font-semibold ${
                 lastProbe.reachable ? "text-emerald-300" : "text-red-300"
@@ -245,7 +245,7 @@ export default function ModelPreferencesCard() {
         )}
       </div>
 
-      <div className="mt-4 flex items-start gap-2 rounded-md border border-[#1c2740] bg-surface-muted/40 p-3">
+      <div className="mt-4 flex items-start gap-2 rounded-md border border-panel-border bg-surface-muted/40 p-3">
         <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-fuchsia-300" aria-hidden />
         <p className="text-[11px] leading-relaxed text-slate-500">
           The assistant defaults to the bundled organizational tier. Adding a key

@@ -54,7 +54,7 @@ export default function MapRefreshCacheCard() {
   return (
     <section
       data-settings-key="map-offline"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -73,7 +73,7 @@ export default function MapRefreshCacheCard() {
       </p>
 
       {/* Refresh cadence */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <p className="flex items-center gap-2 text-xs font-semibold text-slate-400">
           <Database className="h-3.5 w-3.5" aria-hidden />
           AUTO-REFRESH CADENCE
@@ -90,7 +90,7 @@ export default function MapRefreshCacheCard() {
                 className={`flex items-center gap-2 rounded-md border px-3 py-2 text-xs font-semibold transition ${
                   active
                     ? "border-sky-400/60 bg-sky-500/10 text-sky-200"
-                    : "border-[#1c2740] bg-[#0a0f1d] text-slate-400 hover:border-sky-400/40"
+                    : "border-panel-border bg-[#0a0f1d] text-slate-400 hover:border-sky-400/40"
                 }`}
               >
                 {active && (
@@ -102,7 +102,7 @@ export default function MapRefreshCacheCard() {
           })}
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#1c2740] pt-3">
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-panel-border pt-3">
           <span className="flex items-center gap-2 text-[11px] text-slate-500">
             <RefreshCw
               className={`h-3.5 w-3.5 ${interval !== 0 ? "animate-spin text-sky-300" : "text-slate-600"}`}

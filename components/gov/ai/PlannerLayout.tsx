@@ -113,7 +113,7 @@ export function PlannerLayout({
       />
 
       {/* ------------------------------- 64px workspace header */}
-      <header className="relative z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-[#0d1526]/95 px-3 backdrop-blur sm:px-4">
+      <header className="relative z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-panel-deep/95 px-3 backdrop-blur sm:px-4">
         <div className="flex min-w-0 items-center gap-2.5">
           <Link
             href="/gov/dashboard"
@@ -221,7 +221,7 @@ export function PlannerLayout({
                 className="absolute inset-0 bg-black/70 backdrop-blur-sm lg:hidden"
               />
               {/* Overlay chrome (mobile only) */}
-              <div className="relative flex h-14 shrink-0 items-center justify-between border-b border-white/10 bg-[#0d1526]/95 px-4 lg:hidden">
+              <div className="relative flex h-14 shrink-0 items-center justify-between border-b border-white/10 bg-panel-deep/95 px-4 lg:hidden">
                 <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-accent-purple">
                   <Sparkles className="h-3.5 w-3.5" aria-hidden />
                   Live Plan

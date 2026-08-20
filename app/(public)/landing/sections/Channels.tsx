@@ -27,7 +27,7 @@ export default function Channels() {
   };
 
   return (
-    <section className="bg-gradient-to-b from-[#0B1F3A] to-[#0d2545] py-28 relative overflow-hidden">
+    <section className="bg-gradient-to-b from-[var(--navy)] to-[#0d2545] py-28 relative overflow-hidden">
       <div
         className="absolute inset-0 pointer-events-none opacity-30"
         style={{
@@ -49,7 +49,7 @@ export default function Channels() {
         <div className="grid grid-cols-3 gap-4">
           {channels.map((channel, i) => (
             <div key={i} className="flex flex-col items-center">
-              <div className="bg-white/[0.07] border border-white/[0.16] backdrop-blur-[8px] rounded-[14px] w-[52px] h-[52px] flex items-center justify-center text-[22px] hover:scale-110 hover:bg-white/[0.14] transition-all duration-300">
+              <div className="bg-white/[0.07] border border-white/[0.16] backdrop-blur-[8px] rounded-lg w-[52px] h-[52px] flex items-center justify-center text-[22px] hover:scale-110 hover:bg-white/[0.14] transition-all duration-300">
                 {channel.emoji}
               </div>
               <span className="text-[11px] text-white/60 text-center mt-2 leading-tight">
@@ -78,7 +78,7 @@ export default function Channels() {
         </motion.div>
 
         {/* Center Circle */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] rounded-full bg-gradient-to-br from-[#2563EB] to-[#F97316] flex flex-col items-center justify-center text-center z-10 shadow-[0_0_60px_rgba(37,99,235,0.45)]">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] rounded-full bg-gradient-to-br from-[var(--blue)] to-[var(--orange)] flex flex-col items-center justify-center text-center z-10 shadow-[0_0_60px_rgba(37,99,235,0.45)]">
           <span className="text-white text-sm font-bold leading-tight">
             AI Broadcast
             <br />
@@ -102,7 +102,7 @@ export default function Channels() {
               className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
               style={{ left: pos.left, top: pos.top }}
             >
-              <div className="bg-white/[0.07] border border-white/[0.16] backdrop-blur-[8px] rounded-[14px] w-[52px] h-[52px] flex items-center justify-center text-[22px] hover:scale-110 hover:bg-white/[0.14] transition-all duration-300 cursor-default shadow-lg">
+              <div className="bg-white/[0.07] border border-white/[0.16] backdrop-blur-[8px] rounded-lg w-[52px] h-[52px] flex items-center justify-center text-[22px] hover:scale-110 hover:bg-white/[0.14] transition-all duration-300 cursor-default shadow-lg">
                 {channel.emoji}
               </div>
               <span className="text-[11px] text-white/60 text-center mt-2 whitespace-nowrap font-medium">

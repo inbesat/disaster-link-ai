@@ -91,7 +91,7 @@ function StrengthMeter({ value }: { value: string }) {
 }
 
 const inputClass =
-  "w-full rounded-md border border-[#2c3f6d] bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
+  "w-full rounded-md border border-panel-borderHover bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
 const labelClass = "eoc-label block mb-1.5 text-slate-400";
 const errorClass = "mt-1 text-xs text-severity-red-400";
 
@@ -150,7 +150,7 @@ export default function PasswordChangeCard() {
   return (
     <section
       data-settings-key="password"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-6"
+      className="rounded-eoc border border-panel-border bg-surface p-6"
     >
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/10">
@@ -234,7 +234,7 @@ export default function PasswordChangeCard() {
           <button
             type="button"
             onClick={() => reset()}
-            className="rounded-md border border-[#2c3f6d] px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted"
+            className="rounded-md border border-panel-borderHover px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted"
           >
             Cancel
           </button>

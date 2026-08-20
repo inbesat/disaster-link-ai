@@ -79,7 +79,7 @@ export default function DemoConversionWelcome() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 8, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
-              className="relative w-full max-w-md rounded-2xl border border-emerald-500/40 bg-[#0d1526] p-6 text-white shadow-[0_12px_36px_rgba(0,0,0,0.5)]"
+              className="relative w-full max-w-md rounded-2xl border border-emerald-500/40 bg-panel-deep p-6 text-white shadow-[0_12px_36px_rgba(0,0,0,0.5)]"
             >
               <button
                 type="button"

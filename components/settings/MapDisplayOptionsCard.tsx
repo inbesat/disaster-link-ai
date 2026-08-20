@@ -65,7 +65,7 @@ export default function MapDisplayOptionsCard() {
   return (
     <section
       data-settings-key="map-units"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -104,7 +104,7 @@ export default function MapDisplayOptionsCard() {
                 className={`rounded-md border px-2 py-2.5 text-center transition ${
                   active
                     ? "border-amber-400/60 bg-amber-500/10"
-                    : "border-[#1c2740] bg-surface-muted/40 hover:border-amber-400/40"
+                    : "border-panel-border bg-surface-muted/40 hover:border-amber-400/40"
                 }`}
               >
                 <div
@@ -147,7 +147,7 @@ export default function MapDisplayOptionsCard() {
           return (
             <div
               key={key}
-              className="flex items-center justify-between gap-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-3"
+              className="flex items-center justify-between gap-4 rounded-md border border-panel-border bg-surface-muted/40 p-3"
             >
               <div className="flex items-start gap-3">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-amber-500/10">

@@ -217,13 +217,13 @@ export default function FmBroadcastHistory() {
   }
 
   const inputClass =
-    "rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-2 text-sm text-foreground outline-none transition focus:border-amber-400/50";
+    "rounded-md border border-panel-border bg-primary px-3 py-2 text-sm text-foreground outline-none transition focus:border-amber-400/50";
   const labelClass = "text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500";
 
   return (
     <div className="space-y-4">
       {/* ------------------------------------------------ Filter bar */}
-      <div className="rounded-lg border border-[#1c2740] bg-[#0b1120] p-4">
+      <div className="rounded-lg border border-panel-border bg-panel p-4">
         <div className="flex flex-wrap items-end gap-3">
           <label className="flex flex-col gap-1">
             <span className={labelClass}>From</span>
@@ -278,7 +278,7 @@ export default function FmBroadcastHistory() {
               type="button"
               onClick={exportPdf}
               disabled={alerts.length === 0}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3.5 py-2 text-sm font-semibold text-slate-300 transition hover:border-sky-500/50 hover:text-sky-300 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-primary px-3.5 py-2 text-sm font-semibold text-slate-300 transition hover:border-sky-500/50 hover:text-sky-300 disabled:cursor-not-allowed disabled:opacity-40"
               title="Open the print-ready DDMA/MIB report for these filters"
             >
               <FileDown className="h-4 w-4" />
@@ -288,7 +288,7 @@ export default function FmBroadcastHistory() {
               type="button"
               onClick={exportCsv}
               disabled={alerts.length === 0}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3.5 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-500/50 hover:text-emerald-300 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-primary px-3.5 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-500/50 hover:text-emerald-300 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Download className="h-4 w-4" />
               Export CSV
@@ -303,14 +303,14 @@ export default function FmBroadcastHistory() {
           <Loader2 className="h-5 w-5 animate-spin" />
         </div>
       ) : alerts.length === 0 ? (
-        <div className="flex h-48 flex-col items-center justify-center rounded-lg border border-dashed border-[#1c2740] text-center">
+        <div className="flex h-48 flex-col items-center justify-center rounded-lg border border-dashed border-panel-border text-center">
           <ScrollText className="mb-2 h-8 w-8 text-slate-600" />
           <p className="text-sm text-slate-500">No broadcasts match these filters.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-[#1c2740]">
+        <div className="overflow-hidden rounded-lg border border-panel-border">
           <table className="w-full text-left text-sm">
-            <thead className="bg-[#0a0f1a] text-[0.6875rem] uppercase tracking-wider text-slate-500">
+            <thead className="bg-primary text-[0.6875rem] uppercase tracking-wider text-slate-500">
               <tr>
                 <th className="py-2.5 pl-4 pr-2 font-semibold" />
                 <th className="py-2.5 pr-3 font-semibold">Alert ID</th>
@@ -360,7 +360,7 @@ function HistoryRow({
   return (
     <>
       <tr
-        className={`cursor-pointer transition hover:bg-[#0f172a] ${expanded ? "bg-[#0f172a]" : ""}`}
+        className={`cursor-pointer transition hover:bg-secondary ${expanded ? "bg-secondary" : ""}`}
         onClick={onToggle}
       >
         <td className="py-3 pl-4 pr-2">
@@ -399,7 +399,7 @@ function HistoryRow({
         </td>
       </tr>
       {expanded && (
-        <tr className="bg-[#0d1526]">
+        <tr className="bg-panel-deep">
           <td colSpan={9} className="px-4 py-4">
             {/* Station-wise certificate */}
             <p className="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wider text-amber-300">

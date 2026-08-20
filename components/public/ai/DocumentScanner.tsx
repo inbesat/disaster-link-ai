@@ -147,7 +147,7 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
             <div className="flex items-center justify-between gap-3 px-4 pt-4">
               <div className="flex items-center gap-2.5">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1e4a39] ring-1 ring-[#dcf8c6]/25">
-                  <ScanLine className="h-4 w-4 text-[#6ee7b7]" strokeWidth={2.1} aria-hidden />
+                  <ScanLine className="h-4 w-4 text-severity-green-300" strokeWidth={2.1} aria-hidden />
                 </span>
                 <div>
                   <p className="text-sm font-bold text-white">{t("scan_title")}</p>
@@ -165,8 +165,8 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
               {stage === "idle" && (
                 <div className="space-y-3">
                   <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-white/15 bg-white/5 px-6 py-10 text-center">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#34d399]/15 ring-1 ring-[#34d399]/30">
-                      <FileText className="h-7 w-7 text-[#6ee7b7]" strokeWidth={1.8} aria-hidden />
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-severity-green-400/15 ring-1 ring-severity-green-400/30">
+                      <FileText className="h-7 w-7 text-severity-green-300" strokeWidth={1.8} aria-hidden />
                     </span>
                     <p className="text-sm leading-relaxed text-[#a9bccf]">
                       {t("scan_local_note")}
@@ -175,7 +175,7 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
                   <button
                     type="button"
                     onClick={() => cameraRef.current?.click()}
-                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-sm font-bold text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399]"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-sm font-bold text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400"
                   >
                     <ScanLine className="h-4 w-4" aria-hidden />
                     {t("scan_take_photo")}
@@ -183,7 +183,7 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
                   <button
                     type="button"
                     onClick={() => galleryRef.current?.click()}
-                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 text-sm font-bold text-[#cfe0f2] transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399]"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 text-sm font-bold text-[#cfe0f2] transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400"
                   >
                     <FileText className="h-4 w-4" aria-hidden />
                     {t("scan_choose_file")}
@@ -234,7 +234,7 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
                   <button
                     type="button"
                     onClick={runScan}
-                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-sm font-bold text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399]"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-sm font-bold text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400"
                   >
                     <ScanLine className="h-4 w-4" aria-hidden />
                     {t("scan_scan_button")}
@@ -245,7 +245,7 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
               {/* SCANNING — local OCR spinner */}
               {stage === "scanning" && (
                 <div className="flex flex-col items-center gap-3 py-8 text-center">
-                  <Loader2 className="h-10 w-10 animate-spin text-[#34d399]" aria-hidden />
+                  <Loader2 className="h-10 w-10 animate-spin text-severity-green-400" aria-hidden />
                   <p className="text-sm font-semibold text-white">{t("scan_scanning")}</p>
                   <p className="text-xs text-[#7f96ad]">{t("scan_local_note")}</p>
                 </div>
@@ -254,9 +254,9 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
               {/* SUCCESS — extracted fields */}
               {stage === "success" && result && (
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 rounded-2xl border border-[#34d399]/30 bg-[#34d399]/10 px-4 py-3">
-                    <CheckCircle2 className="h-5 w-5 shrink-0 text-[#34d399]" aria-hidden />
-                    <p className="text-sm font-bold text-[#6ee7b7]">{t("scan_success_title")}</p>
+                  <div className="flex items-center gap-2 rounded-2xl border border-severity-green-400/30 bg-severity-green-400/10 px-4 py-3">
+                    <CheckCircle2 className="h-5 w-5 shrink-0 text-severity-green-400" aria-hidden />
+                    <p className="text-sm font-bold text-severity-green-300">{t("scan_success_title")}</p>
                     <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[0.625rem] font-bold tabular-nums text-[#a7f3d0]">
                       {result.confidence.toFixed(1)}% {t("scan_confidence")}
                     </span>
@@ -271,7 +271,7 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
                   <button
                     type="button"
                     onClick={saveId}
-                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-sm font-bold text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399]"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-sm font-bold text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400"
                   >
                     <CheckCircle2 className="h-4 w-4" aria-hidden />
                     {t("scan_save_button")}
@@ -297,9 +297,9 @@ export function DocumentScanner({ open, onClose }: DocumentScannerProps) {
                     initial={{ scale: 0.6, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="flex h-16 w-16 items-center justify-center rounded-full bg-[#34d399]/20 ring-1 ring-[#34d399]/40"
+                    className="flex h-16 w-16 items-center justify-center rounded-full bg-severity-green-400/20 ring-1 ring-severity-green-400/40"
                   >
-                    <CheckCircle2 className="h-8 w-8 text-[#34d399]" aria-hidden />
+                    <CheckCircle2 className="h-8 w-8 text-severity-green-400" aria-hidden />
                   </motion.span>
                   <p className="text-sm font-bold text-white">{t("scan_saved")}</p>
                   <p className="text-xs text-[#7f96ad]">{t("scan_saved_desc")}</p>

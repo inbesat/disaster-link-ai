@@ -128,7 +128,7 @@ export function BiometricPrompt({
             exit={{ y: 40, opacity: 0, scale: 0.96 }}
             transition={{ type: "spring", stiffness: 340, damping: 28 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-3xl border border-white/10 bg-[#0f172a] p-6 text-center shadow-2xl shadow-black/60"
+            className="w-full max-w-sm rounded-3xl border border-white/10 bg-secondary p-6 text-center shadow-2xl shadow-black/60"
           >
             <button
               type="button"

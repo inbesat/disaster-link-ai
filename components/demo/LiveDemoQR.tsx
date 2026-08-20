@@ -65,7 +65,7 @@ export default function LiveDemoQR() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 12 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className="relative w-[360px] max-w-full rounded-3xl border border-white/15 bg-[#0B1F3A] p-7 text-center shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9)]"
+            className="relative w-[360px] max-w-full rounded-3xl border border-white/15 bg-[var(--brand-navy)] p-7 text-center shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9)]"
             onClick={(e) => e.stopPropagation()}
           >
             <button

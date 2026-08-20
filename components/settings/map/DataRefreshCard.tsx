@@ -84,7 +84,7 @@ export default function DataRefreshCard() {
   return (
     <section
       data-settings-key="map-refresh-mode"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -116,7 +116,7 @@ export default function DataRefreshCard() {
               id="map-refresh-rate"
               value={refreshInterval}
               onChange={(event) => setRate(event.target.value as RefreshInterval)}
-              className="w-full appearance-none rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-cyan-400/60"
+              className="w-full appearance-none rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-cyan-400/60"
             >
               {RATE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>

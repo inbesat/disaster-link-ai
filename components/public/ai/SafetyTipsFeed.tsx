@@ -63,7 +63,7 @@ export function SafetyTipsFeed() {
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
-      className="relative overflow-hidden rounded-[var(--dl-radius-sm)] border border-[#34d399]/25 bg-gradient-to-br from-[#12314a]/90 to-[#0a1d30]/90 p-4 shadow-[0_8px_28px_rgba(0,0,0,0.35)]"
+      className="relative overflow-hidden rounded-[var(--dl-radius-sm)] border border-severity-green-400/25 bg-gradient-to-br from-[#12314a]/90 to-[#0a1d30]/90 p-4 shadow-[0_8px_28px_rgba(0,0,0,0.35)]"
     >
       {/* Soft green ambient glow — Nova's calm signature. */}
       <span
@@ -77,12 +77,12 @@ export function SafetyTipsFeed() {
           <Bot className="h-6 w-6 text-[#dcf8c6]" strokeWidth={2.1} aria-hidden />
           <span
             aria-hidden
-            className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-[#34d399] ring-2 ring-[#0e2a45]"
+            className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-severity-green-400 ring-2 ring-[#0e2a45]"
           />
         </span>
 
         <div className="min-w-0 flex-1">
-          <p className="flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-[#6ee7b7]">
+          <p className="flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-severity-green-300">
             <Lightbulb className="h-3 w-3" aria-hidden />
             {t("tips_label")}
           </p>
@@ -113,7 +113,7 @@ export function SafetyTipsFeed() {
             tabIndex={-1}
             onClick={() => setIndex(i)}
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === index ? "w-6 bg-[#34d399]" : "w-1.5 bg-white/20 hover:bg-white/40"
+              i === index ? "w-6 bg-severity-green-400" : "w-1.5 bg-white/20 hover:bg-white/40"
             }`}
           />
         ))}

@@ -122,7 +122,7 @@ export function AlertDetailModal({
               <div className="flex items-start justify-between gap-3 border-b border-white/10 p-5">
                 <div className="flex items-center gap-3">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
-                    <ShieldCheck aria-hidden="true" className="h-5 w-5 text-[#FDBA74]" />
+                    <ShieldCheck aria-hidden="true" className="h-5 w-5 text-[var(--brand-orangeLight)]" />
                   </span>
                   <div>
                     <p className="eoc-label text-[var(--dl-text-muted)]">
@@ -206,7 +206,7 @@ export function AlertDetailModal({
                   >
                     <span className="relative flex h-14 w-14 items-center justify-center">
                       <span className="absolute inset-0 animate-ping rounded-full bg-[var(--dl-orange)]/30" />
-                      <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#F97316] shadow-[0_0_20px_rgba(249,115,22,0.6)]">
+                      <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-orange)] shadow-[0_0_20px_rgba(249,115,22,0.6)]">
                         <MapPin aria-hidden="true" className="h-5 w-5 text-white" />
                       </span>
                     </span>
@@ -236,7 +236,7 @@ export function AlertDetailModal({
                   }
                   aria-label={speaking ? "Stop reading aloud" : "Read alert aloud"}
                   aria-pressed={speaking}
-                  className="absolute bottom-24 right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#F97316] text-white shadow-[0_4px_20px_rgba(249,115,22,0.5)] transition hover:bg-[#EA5B0C] active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
+                  className="absolute bottom-24 right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--brand-orange)] text-white shadow-[0_4px_20px_rgba(249,115,22,0.5)] transition hover:bg-[#EA5B0C] active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
                 >
                   {speaking ? (
                     <Square aria-hidden="true" className="h-4 w-4 fill-current" />

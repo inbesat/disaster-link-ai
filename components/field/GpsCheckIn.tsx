@@ -127,7 +127,7 @@ export default function GpsCheckIn() {
   }
 
   return (
-    <section className="rounded-xl border-2 border-[#1c2740] bg-[#0d1526] p-5">
+    <section className="rounded-xl border-2 border-panel-border bg-panel-deep p-5">
       <header className="flex items-center gap-2">
         <MapPin className="h-5 w-5 text-cyan-300" />
         <h2 className="text-lg font-bold uppercase tracking-wider text-cyan-300">
@@ -163,7 +163,7 @@ export default function GpsCheckIn() {
         type="button"
         onClick={() => recordCheckIn(PATNA_CENTER.lat, PATNA_CENTER.lng, "sim")}
         disabled={busy}
-        className="mt-3 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#2a3a5a] bg-surface px-4 text-base font-semibold text-slate-300 transition active:scale-[0.98] disabled:opacity-60"
+        className="mt-3 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-panel-borderStrong bg-surface px-4 text-base font-semibold text-slate-300 transition active:scale-[0.98] disabled:opacity-60"
       >
         <Navigation className="h-5 w-5" />
         Simulate GPS (Patna Flood Zone)
@@ -199,7 +199,7 @@ export default function GpsCheckIn() {
             {activity.map((c) => (
               <li
                 key={c.id}
-                className="flex min-h-[48px] items-center gap-3 rounded-xl border-2 border-[#1c2740] bg-surface px-4 py-2"
+                className="flex min-h-[48px] items-center gap-3 rounded-xl border-2 border-panel-border bg-surface px-4 py-2"
               >
                 <span
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${

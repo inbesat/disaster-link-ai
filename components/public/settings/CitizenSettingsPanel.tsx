@@ -158,7 +158,7 @@ function SettingsSection({
   return (
     <section className="rounded-[var(--dl-radius)] border border-white/10 bg-white/5 p-4 backdrop-blur sm:p-5">
       <header className="flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F97316]/15 text-[#FDBA74] ring-1 ring-[#F97316]/30">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F97316]/15 text-[var(--brand-orangeLight)] ring-1 ring-[#F97316]/30">
           <Icon aria-hidden="true" className="h-5 w-5" strokeWidth={1.5} />
         </span>
         <div>
@@ -424,7 +424,7 @@ export default function CitizenSettingsPanel({
                   value={bloodGroup}
                   onChange={(e) => setBloodGroup(e.target.value)}
                   aria-label="Blood group"
-                  className="w-full appearance-none rounded-[var(--dl-radius-sm)] border border-white/15 bg-[#0F2A4F] px-4 py-3 text-base text-white transition focus:border-[var(--dl-orange)] focus:outline-none"
+                  className="w-full appearance-none rounded-[var(--dl-radius-sm)] border border-white/15 bg-[var(--brand-navy2)] px-4 py-3 text-base text-white transition focus:border-[var(--dl-orange)] focus:outline-none"
                 >
                   {BLOOD_GROUPS.map((group) => (
                     <option key={group} value={group}>
@@ -528,7 +528,7 @@ export default function CitizenSettingsPanel({
                     setLanguage(e.target.value as (typeof LOCALE_OPTIONS)[number]["code"])
                   }
                   aria-label="App language"
-                  className="w-full appearance-none rounded-[var(--dl-radius-sm)] border border-white/15 bg-[#0F2A4F] px-4 py-3 text-base text-white transition focus:border-[var(--dl-orange)] focus:outline-none"
+                  className="w-full appearance-none rounded-[var(--dl-radius-sm)] border border-white/15 bg-[var(--brand-navy2)] px-4 py-3 text-base text-white transition focus:border-[var(--dl-orange)] focus:outline-none"
                 >
                   {LOCALE_OPTIONS.map(({ code, nativeLabel }) => (
                     <option key={code} value={code}>
@@ -739,7 +739,7 @@ export default function CitizenSettingsPanel({
                       className="h-2.5 w-full overflow-hidden rounded-full bg-white/10"
                     >
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-[#F97316] to-[#16a34a] transition-[width] duration-200"
+                        className="h-full rounded-full bg-gradient-to-r from-[var(--brand-orange)] to-[#16a34a] transition-[width] duration-200"
                         style={{ width: `${Math.round(modelProgress * 100)}%` }}
                       />
                     </div>

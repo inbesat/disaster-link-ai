@@ -51,7 +51,7 @@ export default function FieldBottomNav() {
               className={`relative flex min-h-[68px] flex-col items-center justify-center gap-1 py-2 transition active:scale-95 ${
                 active
                   ? "text-cyan-300"
-                  : "border-t border-[#1c2740] text-slate-400 active:bg-white/5"
+                  : "border-t border-panel-border text-slate-400 active:bg-white/5"
               }`}
             >
               <Icon className="h-7 w-7" aria-hidden />

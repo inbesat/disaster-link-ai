@@ -81,7 +81,7 @@ export default function Navbar() {
               className={`text-sm px-3 py-2 rounded-lg transition-all duration-200 ${
                 activeSection === link.href.replace("#", "")
                   ? "text-white bg-white/10"
-                  : "text-[#C9D6EC] hover:text-white hover:bg-white/5"
+                  : "text-[var(--text-on-navy)] hover:text-white hover:bg-white/5"
               }`}
             >
               {link.label}
@@ -120,7 +120,7 @@ export default function Navbar() {
           </Link>
           <a
             href="#contact"
-            className="bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
+            className="bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
           >
             Request Demo
             <ArrowRight size={14} />
@@ -157,7 +157,7 @@ export default function Navbar() {
                 className={`text-sm px-4 py-3 rounded-lg transition-all block ${
                   activeSection === link.href.replace("#", "")
                     ? "text-white bg-white/10"
-                    : "text-[#C9D6EC] hover:text-white hover:bg-white/5"
+                    : "text-[var(--text-on-navy)] hover:text-white hover:bg-white/5"
                 }`}
                 onClick={closeMobile}
               >
@@ -191,7 +191,7 @@ export default function Navbar() {
               <a
                 href="#contact"
                 onClick={closeMobile}
-                className="bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white rounded-full w-full py-2.5 text-sm text-center font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                className="bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full w-full py-2.5 text-sm text-center font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 Request Demo
                 <ArrowRight size={14} />

@@ -59,7 +59,7 @@ export default function ContactVerificationCard() {
   return (
     <section
       data-settings-key="contacts-health-check"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -86,17 +86,17 @@ export default function ContactVerificationCard() {
       {/* Results table */}
       <div
         aria-live="polite"
-        className="mt-5 overflow-x-auto rounded-md border border-[#1c2740]"
+        className="mt-5 overflow-x-auto rounded-md border border-panel-border"
       >
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-[#1c2740] bg-[#0a0f1d] text-[10px] uppercase tracking-[0.14em] text-slate-500">
+          <thead className="border-b border-panel-border bg-[#0a0f1d] text-[10px] uppercase tracking-[0.14em] text-slate-500">
             <tr>
               <th className="px-4 py-2.5 font-bold">Contact</th>
               <th className="px-4 py-2.5 font-bold">Number</th>
               <th className="px-4 py-2.5 text-right font-bold">Result</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#151d31]">
+          <tbody className="divide-y divide-panel-divide">
             {CONTACTS.map((contact) => {
               const testing = status === "testing";
               return (

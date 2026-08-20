@@ -197,7 +197,7 @@ export default function ProfileIdentityPage() {
 
       {/* Sticky Save footer — only appears once inputs are modified */}
       {isDirty && (
-        <div className="sticky bottom-0 z-10 flex items-center justify-end gap-3 rounded-xl border border-subtle bg-[#0a0f1a]/95 px-6 py-4 backdrop-blur">
+        <div className="sticky bottom-0 z-10 flex items-center justify-end gap-3 rounded-xl border border-subtle bg-[rgb(var(--bg-primary-rgb)/95)] px-6 py-4 backdrop-blur">
           <p className="mr-auto text-xs text-muted">You have unsaved changes.</p>
           <button
             type="button"

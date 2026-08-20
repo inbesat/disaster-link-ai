@@ -48,7 +48,7 @@ export default function AutoShareLocationCard() {
   return (
     <section
       data-settings-key="contacts-gps-injection"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -63,7 +63,7 @@ export default function AutoShareLocationCard() {
           className={`ml-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
             injectEnabled
               ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-300"
-              : "border-[#2c3f6d] bg-surface-muted/40 text-slate-500"
+              : "border-panel-borderHover bg-surface-muted/40 text-slate-500"
           }`}
         >
           <span
@@ -76,7 +76,7 @@ export default function AutoShareLocationCard() {
       </div>
 
       {/* Main toggle — prominent */}
-      <div className="mt-4 flex items-start justify-between gap-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-4 flex items-start justify-between gap-4 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="min-w-0">
           <p className="text-sm font-bold text-slate-100">
             Automatically append my live GPS coordinates and tracking link to
@@ -105,14 +105,14 @@ export default function AutoShareLocationCard() {
             <p className="mt-0.5 text-cyan-300">{TRACK_PREVIEW}</p>
           </div>
         ) : (
-          <div className="rounded-md border border-dashed border-[#2c3f6d] bg-surface-muted/30 p-3 font-mono text-[11px] text-slate-600">
+          <div className="rounded-md border border-dashed border-panel-borderHover bg-surface-muted/30 p-3 font-mono text-[11px] text-slate-600">
             Preview appears once Live GPS injection is enabled.
           </div>
         )}
       </div>
 
       {/* Secondary toggle — 60 min tracking */}
-      <div className="mt-3 flex items-start justify-between gap-4 rounded-md border border-[#1c2740] bg-surface-muted/30 p-4">
+      <div className="mt-3 flex items-start justify-between gap-4 rounded-md border border-panel-border bg-surface-muted/30 p-4">
         <div className="min-w-0">
           <p className="text-sm font-semibold text-slate-200">
             Keep GPS tracking active for 60 minutes after SOS is triggered.

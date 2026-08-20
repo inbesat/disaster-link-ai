@@ -130,7 +130,7 @@ export default function TelecomApiCard() {
     <>
       <section
         data-settings-key="integrations-sms"
-        className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+        className="rounded-eoc border border-panel-border bg-surface p-5"
       >
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -160,7 +160,7 @@ export default function TelecomApiCard() {
             return (
               <div
                 key={gateway.id}
-                className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-3.5"
+                className="rounded-md border border-panel-border bg-surface-muted/40 p-3.5"
               >
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#1c2740]">
@@ -206,7 +206,7 @@ export default function TelecomApiCard() {
                             aria-label={`${gateway.name} ${field.label}`}
                             autoComplete="off"
                             spellCheck={false}
-                            className="w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
+                            className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
                           />
                           <button
                             type="button"
@@ -302,7 +302,7 @@ export default function TelecomApiCard() {
               Recipient phone number
             </label>
             <div className="relative mt-2">
-              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 rounded border border-[#2c3f6d] bg-[#1c2740] px-1.5 py-0.5 font-mono text-[11px] font-bold text-emerald-300">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 rounded border border-panel-borderHover bg-[#1c2740] px-1.5 py-0.5 font-mono text-[11px] font-bold text-emerald-300">
                 +91
               </span>
               <input
@@ -317,7 +317,7 @@ export default function TelecomApiCard() {
                 autoFocus
                 required
                 pattern="[0-9]{10}"
-                className="w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] py-2.5 pl-14 pr-3 font-mono text-sm font-semibold text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
+                className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2.5 pl-14 pr-3 font-mono text-sm font-semibold text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
               />
             </div>
 
@@ -333,7 +333,7 @@ export default function TelecomApiCard() {
                     className={`flex cursor-pointer items-center gap-2 rounded-md border p-2.5 transition ${
                       gateway === g.id
                         ? "border-emerald-400/60 bg-emerald-500/10"
-                        : "border-[#1c2740] bg-surface-muted/40 hover:border-emerald-400/40"
+                        : "border-panel-border bg-surface-muted/40 hover:border-emerald-400/40"
                     }`}
                   >
                     <input
@@ -358,7 +358,7 @@ export default function TelecomApiCard() {
             </fieldset>
 
             {/* Message preview */}
-            <div className="mt-4 rounded-md border border-[#1c2740] bg-[#0a0f1d] p-3">
+            <div className="mt-4 rounded-md border border-panel-border bg-[#0a0f1d] p-3">
               <p className="eoc-label text-emerald-300/70">MESSAGE PREVIEW</p>
               <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
                 {TEST_MESSAGE}
@@ -370,7 +370,7 @@ export default function TelecomApiCard() {
                 type="button"
                 onClick={closeModal}
                 disabled={sending}
-                className="rounded-md border border-[#2c3f6d] px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted disabled:opacity-50"
+                className="rounded-md border border-panel-borderHover px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted disabled:opacity-50"
               >
                 Cancel
               </button>

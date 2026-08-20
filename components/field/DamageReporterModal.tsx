@@ -152,7 +152,7 @@ export default function DamageReporterModal() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex min-h-[72px] w-full items-center gap-4 rounded-xl border-2 border-[#1c2740] bg-[#0d1526] px-5 py-4 transition hover:border-amber-400 hover:bg-[#111a2e]"
+        className="flex min-h-[72px] w-full items-center gap-4 rounded-xl border-2 border-panel-border bg-panel-deep px-5 py-4 transition hover:border-amber-400 hover:bg-[#111a2e]"
       >
         <Camera className="h-7 w-7 shrink-0 text-amber-300" />
         <span className="leading-tight">
@@ -173,7 +173,7 @@ export default function DamageReporterModal() {
           className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4"
           onClick={saving ? undefined : close}
         >
-          <div className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-2xl border-2 border-[#1c2740] bg-[#0d1526] p-5">
+          <div className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-2xl border-2 border-panel-border bg-panel-deep p-5">
             <header className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-cyan-300">Photo Inspection</h2>
               <button
@@ -203,7 +203,7 @@ export default function DamageReporterModal() {
                 />
                 <label
                   htmlFor="damage-photo"
-                  className="flex min-h-[160px] cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-[#2a3a5a] bg-surface p-6 text-center"
+                  className="flex min-h-[160px] cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-panel-borderStrong bg-surface p-6 text-center"
                 >
                   <Camera className="h-12 w-12 text-cyan-300" />
                   <span className="text-lg font-bold text-gray-100">
@@ -217,7 +217,7 @@ export default function DamageReporterModal() {
             ) : (
               <>
                 {/* Watermarked preview */}
-                <div className="relative mt-4 overflow-hidden rounded-2xl border-2 border-[#1c2740]">
+                <div className="relative mt-4 overflow-hidden rounded-2xl border-2 border-panel-border">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={preview}
@@ -250,7 +250,7 @@ export default function DamageReporterModal() {
                     setSeverity(null);
                     if (inputRef.current) inputRef.current.value = "";
                   }}
-                  className="mt-3 flex min-h-[48px] items-center justify-center gap-2 rounded-xl border-2 border-[#1c2740] bg-surface text-base font-semibold text-slate-300"
+                  className="mt-3 flex min-h-[48px] items-center justify-center gap-2 rounded-xl border-2 border-panel-border bg-surface text-base font-semibold text-slate-300"
                 >
                   <FileImage className="h-5 w-5" /> Choose a different photo
                 </button>
@@ -272,7 +272,7 @@ export default function DamageReporterModal() {
                       className={`min-h-[52px] rounded-xl border-2 px-4 text-left text-base font-bold transition ${
                         severity === s.label
                           ? `${s.style} ring-2 ring-amber-400/70`
-                          : "border-[#1c2740] bg-transparent text-slate-400"
+                          : "border-panel-border bg-transparent text-slate-400"
                       }`}
                     >
                       {s.label}

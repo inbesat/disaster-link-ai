@@ -72,7 +72,7 @@ export default function AdminLoginModal({ open, onClose }: AdminLoginModalProps)
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ type: "spring", stiffness: 320, damping: 26 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md rounded-[var(--dl-radius)] border border-white/15 bg-[#0d1526] p-6 text-[var(--dl-text-on-navy)] shadow-[var(--dl-shadow-soft)]"
+            className="relative w-full max-w-md rounded-[var(--dl-radius)] border border-white/15 bg-panel-deep p-6 text-[var(--dl-text-on-navy)] shadow-[var(--dl-shadow-soft)]"
           >
             <button
               type="button"

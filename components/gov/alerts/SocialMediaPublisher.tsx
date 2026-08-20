@@ -187,7 +187,7 @@ export function SocialMediaPublisher() {
       </p>
       <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_220px]">
         {/* Square narration the card is built from. */}
-        <div className="flex aspect-square w-full max-w-[380px] flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0d1526] shadow-lg">
+        <div className="flex aspect-square w-full max-w-[380px] flex-col overflow-hidden rounded-xl border border-white/10 bg-panel-deep shadow-lg">
           {/* Logo bar. */}
           <div className="flex items-center justify-between px-4 py-3">
             <span className="flex items-center gap-2">

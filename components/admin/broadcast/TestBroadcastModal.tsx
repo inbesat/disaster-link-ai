@@ -87,7 +87,7 @@ export default function TestBroadcastModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg rounded-xl border border-[#1c2740] bg-[#0b1120] p-5 shadow-2xl"
+        className="w-full max-w-lg rounded-xl border border-panel-border bg-panel p-5 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -107,7 +107,7 @@ export default function TestBroadcastModal({
         </div>
 
         {/* Guard rails */}
-        <div className="space-y-2 rounded-lg border border-[#1c2740] bg-[#0a0f1a] p-3 text-xs text-slate-400">
+        <div className="space-y-2 rounded-lg border border-panel-border bg-primary p-3 text-xs text-slate-400">
           <p className="flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
             Targets <span className="font-semibold text-slate-200">only TEST stations</span> (fake
@@ -138,7 +138,7 @@ export default function TestBroadcastModal({
             onChange={(e) => setConfirmation(e.target.value)}
             placeholder={TEST_BROADCAST_CONFIRMATION}
             autoFocus
-            className="mt-1.5 w-full rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-2 font-mono text-sm text-foreground outline-none transition focus:border-amber-400/50"
+            className="mt-1.5 w-full rounded-md border border-panel-border bg-primary px-3 py-2 font-mono text-sm text-foreground outline-none transition focus:border-amber-400/50"
           />
         </label>
 
@@ -160,7 +160,7 @@ export default function TestBroadcastModal({
         {results && (
           <div className="mt-4">
             {message && (
-              <p className="mb-2 rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-2 text-xs italic text-slate-400">
+              <p className="mb-2 rounded-md border border-panel-border bg-primary px-3 py-2 text-xs italic text-slate-400">
                 {message}
               </p>
             )}
@@ -168,7 +168,7 @@ export default function TestBroadcastModal({
               {results.map((r, i) => (
                 <li
                   key={i}
-                  className="flex items-center justify-between rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-2 text-xs"
+                  className="flex items-center justify-between rounded-md border border-panel-border bg-primary px-3 py-2 text-xs"
                 >
                   <span className="min-w-0 truncate font-medium text-foreground">
                     {r.stationName}
@@ -177,7 +177,7 @@ export default function TestBroadcastModal({
                     </span>
                   </span>
                   <span className="flex shrink-0 items-center gap-1.5">
-                    <span className="rounded border border-[#1c2740] bg-[#0a0f1a] px-1.5 py-0.5 text-[0.625rem] font-bold uppercase text-slate-400">
+                    <span className="rounded border border-panel-border bg-primary px-1.5 py-0.5 text-[0.625rem] font-bold uppercase text-slate-400">
                       {r.strategy}
                     </span>
                     <span className="font-mono text-[0.625rem] text-slate-500">{r.responseCode}</span>

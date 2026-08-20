@@ -111,7 +111,7 @@ export default function AlertSoundCard({
   return (
     <section
       data-settings-key="alert-sound"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -130,7 +130,7 @@ export default function AlertSoundCard({
       </p>
 
       {/* Critical alert tone dropdown */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-56 flex-1">
             <label
@@ -143,7 +143,7 @@ export default function AlertSoundCard({
               id="critical-tone"
               value={tone}
               onChange={(e) => onToneChange(e.target.value as ToneId)}
-              className="mt-1.5 w-full rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-rose-400"
+              className="mt-1.5 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-rose-400"
             >
               {TONE_OPTIONS.map((option) => (
                 <option key={option.id} value={option.id} className="bg-[#0a0f1d] text-slate-300">
@@ -181,7 +181,7 @@ export default function AlertSoundCard({
       </div>
 
       {/* Haptics toggle */}
-      <div className="mt-4 flex items-center justify-between gap-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-4 flex items-center justify-between gap-4 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-start gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-rose-500/10">
             <Vibrate className="h-4 w-4 text-rose-300" aria-hidden />

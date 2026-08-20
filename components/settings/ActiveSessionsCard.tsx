@@ -104,7 +104,7 @@ export default function ActiveSessionsCard() {
     <>
       <section
         data-settings-key="sessions"
-        className="rounded-eoc border border-[#1c2740] bg-surface p-6"
+        className="rounded-eoc border border-panel-border bg-surface p-6"
       >
         {/* Account Status summary header */}
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -127,7 +127,7 @@ export default function ActiveSessionsCard() {
         </div>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+          <div className="rounded-md border border-panel-border bg-surface-muted/40 p-4">
             <p className="eoc-label flex items-center gap-1.5 text-slate-400">
               <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
               ACCOUNT CREATED
@@ -135,7 +135,7 @@ export default function ActiveSessionsCard() {
             <p className="mt-1.5 text-sm font-semibold">{ACCOUNT_CREATED}</p>
           </div>
 
-          <div className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+          <div className="rounded-md border border-panel-border bg-surface-muted/40 p-4">
             <p className="eoc-label flex items-center gap-1.5 text-slate-400">
               <LogIn className="h-3.5 w-3.5" aria-hidden />
               LAST LOGIN
@@ -161,7 +161,7 @@ export default function ActiveSessionsCard() {
                 className={`flex items-center gap-4 rounded-md border px-4 py-3.5 ${
                   session.isCurrent
                     ? "border-severity-green-500/40 bg-severity-green-500/5"
-                    : "border-[#1c2740] bg-surface-muted/40"
+                    : "border-panel-border bg-surface-muted/40"
                 }`}
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#1c2740]">
@@ -175,7 +175,7 @@ export default function ActiveSessionsCard() {
                       className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
                         session.isCurrent
                           ? "border border-severity-green-500/40 bg-severity-green-500/10 text-severity-green-400"
-                          : "border border-[#2c3f6d] bg-[#1c2740] text-slate-400"
+                          : "border border-panel-borderHover bg-[#1c2740] text-slate-400"
                       }`}
                     >
                       {session.isCurrent ? (
@@ -262,7 +262,7 @@ export default function ActiveSessionsCard() {
                 type="button"
                 onClick={() => setConfirmOpen(false)}
                 disabled={signingOut}
-                className="rounded-md border border-[#2c3f6d] px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted disabled:opacity-50"
+                className="rounded-md border border-panel-borderHover px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted disabled:opacity-50"
               >
                 Cancel
               </button>

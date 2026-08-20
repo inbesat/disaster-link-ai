@@ -35,12 +35,12 @@ export function AITeaser() {
 
       <div className="relative flex items-start gap-3">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
-          <Bot aria-hidden="true" className="h-5 w-5 text-[#FDBA74]" />
+          <Bot aria-hidden="true" className="h-5 w-5 text-[var(--brand-orangeLight)]" />
         </span>
         <div className="min-w-0">
           <h2 className="flex items-center gap-1.5 text-base font-bold text-white">
             Need help preparing?
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#F97316]/20 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-[#FDBA74]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[#F97316]/20 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-[var(--brand-orangeLight)]">
               <Sparkles aria-hidden="true" className="h-3 w-3" />
               AI
             </span>
@@ -58,7 +58,7 @@ export function AITeaser() {
           <Link
             key={prompt.text}
             href={`/public/ai?q=${encodeURIComponent(prompt.q)}`}
-            className="group inline-flex items-center gap-1.5 rounded-full border border-[#F97316]/40 bg-[#F97316]/10 px-3.5 py-2 text-[0.8125rem] font-semibold text-[#FDBA74] transition hover:border-[#F97316] hover:bg-[#F97316]/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
+            className="group inline-flex items-center gap-1.5 rounded-full border border-[#F97316]/40 bg-[#F97316]/10 px-3.5 py-2 text-[0.8125rem] font-semibold text-[var(--brand-orangeLight)] transition hover:border-[var(--brand-orange)] hover:bg-[#F97316]/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
           >
             {prompt.text}
             <ArrowRight

@@ -143,7 +143,7 @@ export default function DeploymentTimeline({ data = MOCK_DEPLOYMENTS }: { data?:
       </div>
       <div className="mt-4 flex gap-4 justify-center text-xs text-slate-400">
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 rounded-sm bg-[#f59e0b]" /> Pending
+          <div className="w-3 h-3 rounded-sm bg-severity-amber-500" /> Pending
         </div>
         <div className="flex items-center gap-1">
           <div className="w-3 h-3 rounded-sm bg-[#3b82f6]" /> En Route

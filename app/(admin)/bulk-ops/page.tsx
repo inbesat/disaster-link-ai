@@ -137,7 +137,7 @@ export default function BulkOperationsPage() {
             key={id}
             type="button"
             onClick={() => openCard(id)}
-            className={`group flex flex-col items-start gap-3 rounded-lg border border-[#1c2740] ${accent} bg-[#0b1120] p-6 text-left transition hover:-translate-y-0.5 hover:bg-[#131b30]`}
+            className={`group flex flex-col items-start gap-3 rounded-lg border border-panel-border ${accent} bg-panel p-6 text-left transition hover:-translate-y-0.5 hover:bg-panel-hover`}
           >
             <Icon className="h-6 w-6 text-amber-300" />
             <div>
@@ -162,8 +162,8 @@ export default function BulkOperationsPage() {
             className="absolute inset-0 bg-black/70"
             onClick={() => !busy && setOpenAction(null)}
           />
-          <div className="relative z-10 w-full max-w-lg rounded-xl border border-[#2a3a5c] bg-[#0b1120] shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#1c2740] px-6 py-4">
+          <div className="relative z-10 w-full max-w-lg rounded-xl border border-panel-borderStrong bg-panel shadow-2xl">
+            <div className="flex items-center justify-between border-b border-panel-border px-6 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-foreground">
                   {openAction === "sms"
@@ -179,7 +179,7 @@ export default function BulkOperationsPage() {
               <button
                 type="button"
                 onClick={() => !busy && setOpenAction(null)}
-                className="rounded-md p-1.5 text-slate-400 transition hover:bg-[#1a2740] hover:text-slate-200"
+                className="rounded-md p-1.5 text-slate-400 transition hover:bg-panel-chip hover:text-slate-200"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
@@ -218,7 +218,7 @@ export default function BulkOperationsPage() {
                             className={`flex cursor-pointer items-center justify-between rounded-md border px-3 py-2.5 transition ${
                               checked
                                 ? "border-amber-400/50 bg-amber-500/10"
-                                : "border-[#1c2740] bg-surface-elevated hover:border-[#2a3a5c]"
+                                : "border-panel-border bg-surface-elevated hover:border-panel-borderStrong"
                             }`}
                           >
                             <span className="flex items-center gap-2">
@@ -245,7 +245,7 @@ export default function BulkOperationsPage() {
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-3 border-t border-[#1c2740] px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-panel-border px-6 py-4">
               <button
                 type="button"
                 onClick={() => !busy && setOpenAction(null)}

@@ -99,12 +99,12 @@ function SizeTooltip({ size, tip }: { size: string; tip: string }) {
         />
         <span
           role="tooltip"
-          className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-64 -translate-x-1/2 translate-y-1 rounded-lg border border-slate-700 bg-[#0d1526]/95 px-3 py-2.5 text-xs leading-relaxed text-slate-200 opacity-0 shadow-[0_8px_24px_rgba(0,0,0,0.5)] backdrop-blur transition-all duration-200 group-hover/info:translate-y-0 group-hover/info:opacity-100"
+          className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-64 -translate-x-1/2 translate-y-1 rounded-lg border border-slate-700 bg-panel-deep/95 px-3 py-2.5 text-xs leading-relaxed text-slate-200 opacity-0 shadow-[var(--shadow-float-lg)] backdrop-blur transition-all duration-200 group-hover/info:translate-y-0 group-hover/info:opacity-100"
         >
           {tip}
           <span
             aria-hidden="true"
-            className="absolute left-1/2 top-full -mt-px h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-slate-700 bg-[#0d1526]"
+            className="absolute left-1/2 top-full -mt-px h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-slate-700 bg-panel-deep"
           />
         </span>
       </span>
@@ -114,7 +114,7 @@ function SizeTooltip({ size, tip }: { size: string; tip: string }) {
 
 export default function DownloadPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-[#0a0f1a] px-4 py-16 text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-primary px-4 py-16 text-white">
       {/* Header */}
       <header className="mx-auto w-full max-w-2xl text-center">
         <Link

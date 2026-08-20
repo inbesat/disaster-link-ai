@@ -51,7 +51,7 @@ function Avatar({ user }: { user: PresenceUser }) {
     >
       {initials(user.name)}
       {/* Name tooltip */}
-      <span className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-white/10 bg-[#0d1526]/95 px-2 py-1 text-center opacity-0 shadow-lg backdrop-blur transition-opacity duration-150 group-hover:opacity-100">
+      <span className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-white/10 bg-panel-deep/95 px-2 py-1 text-center opacity-0 shadow-lg backdrop-blur transition-opacity duration-150 group-hover:opacity-100">
         <span className="block text-[0.6875rem] font-semibold text-white">{user.name}</span>
         <span className="block text-[0.625rem] text-[var(--dl-text-muted)]">{user.role}</span>
       </span>

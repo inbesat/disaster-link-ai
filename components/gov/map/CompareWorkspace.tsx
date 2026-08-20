@@ -78,7 +78,7 @@ export function CompareWorkspace() {
   const sync = (vs: SyncViewState) => setViewState(vs);
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-[#0a0f1a]">
+    <div className="relative h-screen w-screen overflow-hidden bg-primary">
       {/* Two 50%-wide panes sharing the one camera. */}
       <div className="flex h-full w-full">
         <ComparePane
@@ -103,7 +103,7 @@ export function CompareWorkspace() {
 
       {/* Floating "Scenario Comparison Mode" header — top centre. */}
       <div className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2">
-        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-[#0d1526]/90 px-4 py-2 shadow-[0_8px_24px_rgba(0,0,0,0.5)] backdrop-blur">
+        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-panel-deep/90 px-4 py-2 shadow-[var(--shadow-float-lg)] backdrop-blur">
           <Columns2 aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/85">
             Scenario Comparison Mode
@@ -114,7 +114,7 @@ export function CompareWorkspace() {
       {/* Back to the ops map — top left. */}
       <Link
         href="/gov/map"
-        className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-[#0d1526]/85 px-3.5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.4)] backdrop-blur transition hover:scale-[1.03] hover:bg-[#0d1526] active:scale-95"
+        className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-panel-deep/85 px-3.5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-float-md)] backdrop-blur transition hover:scale-[1.03] hover:bg-panel-deep active:scale-95"
       >
         <ArrowLeft aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
         Ops Map
@@ -196,7 +196,7 @@ function ComparePane({
       </Map>
 
       {/* Pane badge — top left of the pane. */}
-      <div className="pointer-events-none absolute left-3 top-3 z-10 rounded-lg border border-white/15 bg-[#0d1526]/90 px-3 py-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.5)] backdrop-blur">
+      <div className="pointer-events-none absolute left-3 top-3 z-10 rounded-lg border border-white/15 bg-panel-deep/90 px-3 py-1.5 shadow-[var(--shadow-float-lg)] backdrop-blur">
         <span className="flex items-center gap-1.5 text-[0.6875rem] font-bold tracking-wider text-white/90">
           <span
             aria-hidden="true"

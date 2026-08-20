@@ -47,7 +47,7 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <section className="bg-[#0a0f1a] py-28">
+    <section className="bg-primary py-28">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
         <ScrollReveal animation="fade-right">
           <div>
@@ -77,9 +77,9 @@ export default function Contact() {
                       <Icon
                         className={`${
                           contact.color === "blue"
-                            ? "text-[#5B8DF6]"
+                            ? "text-[var(--blue-light)]"
                             : contact.color === "orange"
-                              ? "text-[#F97316]"
+                              ? "text-[var(--orange)]"
                               : "text-emerald-400"
                         }`}
                         size={18}
@@ -92,7 +92,7 @@ export default function Contact() {
                       {contact.href ? (
                         <a
                           href={contact.href}
-                          className="text-white font-medium hover:text-[#5B8DF6]"
+                          className="text-white font-medium hover:text-[var(--blue-light)]"
                         >
                           {contact.value}
                         </a>
@@ -108,9 +108,9 @@ export default function Contact() {
         </ScrollReveal>
 
         <ScrollReveal animation="fade-left" delay={0.2}>
-          <div className="bg-white/5 border border-slate-800 rounded-[20px] p-8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.6)]">
+          <div className="bg-white/5 border border-slate-800 rounded-[var(--radius-xl6)] p-8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.6)]">
             {submitted ? (
-              <div className="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 rounded-[14px] p-5 text-emerald-300 font-medium">
+              <div className="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-5 text-emerald-300 font-medium">
                 ✓ Thanks — our team will follow up shortly.
               </div>
             ) : (
@@ -128,7 +128,7 @@ export default function Contact() {
                   <input
                     type="text"
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
                 </div>
 
@@ -139,7 +139,7 @@ export default function Contact() {
                   <input
                     type="text"
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
                 </div>
 
@@ -150,7 +150,7 @@ export default function Contact() {
                   <input
                     type="email"
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
                 </div>
 
@@ -161,7 +161,7 @@ export default function Contact() {
                   <input
                     type="tel"
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
                 </div>
 
@@ -171,7 +171,7 @@ export default function Contact() {
                   </label>
                   <select
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all appearance-none"
+                    className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all appearance-none"
                   >
                     <option value=""></option>
                     <option value="Government">Government</option>
@@ -188,13 +188,13 @@ export default function Contact() {
                   <textarea
                     rows={4}
                     required
-                    className="w-full px-4 py-3 rounded-[12px] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
+                    className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full mt-2 bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white rounded-full py-3.5 font-semibold hover:shadow-[0_20px_60px_-20px_rgba(37,99,235,0.5)] transition-all duration-300"
+                  className="w-full mt-2 bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full py-3.5 font-semibold hover:shadow-[0_20px_60px_-20px_rgba(37,99,235,0.5)] transition-all duration-300"
                 >
                   Request Demo →
                 </button>

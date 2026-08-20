@@ -59,7 +59,7 @@ export default function ECCGrid() {
     <div>
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0F2A4F] to-[#132f57] flex items-center justify-center text-lg shadow-md border border-white/10">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--navy-2)] to-[var(--navy-3)] flex items-center justify-center text-lg shadow-md border border-white/10">
           🖥
         </div>
         <div>
@@ -75,7 +75,7 @@ export default function ECCGrid() {
         {CARDS.map((card, i) => (
           <motion.div
             key={card.title}
-            className="bg-white/[0.04] border border-white/[0.08] rounded-[16px] p-5 hover:bg-white/[0.07] transition-all duration-200 group"
+            className="bg-white/[0.04] border border-white/[0.08] rounded-[var(--radius-xl5)] p-5 hover:bg-white/[0.07] transition-all duration-200 group"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -106,7 +106,7 @@ export default function ECCGrid() {
             <h4 className="text-white font-semibold text-sm mb-1">{card.title}</h4>
 
             {/* Value */}
-            <div className="text-2xl font-bold text-white tabular-nums mb-2 group-hover:text-[#5B8DF6] transition-colors">
+            <div className="text-2xl font-bold text-white tabular-nums mb-2 group-hover:text-[var(--blue-light)] transition-colors">
               {card.value}
             </div>
 

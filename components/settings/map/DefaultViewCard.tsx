@@ -44,7 +44,7 @@ const BASEMAP_STYLES: {
     description: "High-res aerial imagery",
     thumb: (
       <div className="relative h-full w-full overflow-hidden rounded-sm bg-gradient-to-br from-emerald-700 via-teal-800 to-cyan-900">
-        <div className="absolute left-1 top-1 h-2 w-4 rounded-[2px] bg-emerald-400/60" />
+        <div className="absolute left-1 top-1 h-2 w-4 rounded-[var(--radius-micro)] bg-emerald-400/60" />
         <div className="absolute bottom-1 right-1 h-1 w-3 rounded-full bg-cyan-300/50" />
       </div>
     ),
@@ -158,7 +158,7 @@ export default function DefaultViewCard() {
   return (
     <section
       data-settings-key="map-default"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -195,7 +195,7 @@ export default function DefaultViewCard() {
                 className={`group rounded-md border p-2 text-left transition ${
                   active
                     ? "border-emerald-400/70 bg-emerald-500/10"
-                    : "border-[#1c2740] bg-surface-muted/40 hover:border-emerald-400/40"
+                    : "border-panel-border bg-surface-muted/40 hover:border-emerald-400/40"
                 }`}
               >
                 <div className="h-12 w-full overflow-hidden rounded-sm">
@@ -218,7 +218,7 @@ export default function DefaultViewCard() {
       </div>
 
       {/* Default Zoom Level */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-center justify-between gap-3">
           <p className="flex items-center gap-2 text-sm font-semibold text-slate-200">
             <Navigation className="h-4 w-4 text-emerald-300" aria-hidden />
@@ -258,7 +258,7 @@ export default function DefaultViewCard() {
       </div>
 
       {/* Home Coordinates + geolocate */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-center justify-between gap-3">
           <p className="flex items-center gap-2 text-sm font-semibold text-slate-200">
             <LocateFixed className="h-4 w-4 text-emerald-300" aria-hidden />
@@ -298,7 +298,7 @@ export default function DefaultViewCard() {
               max={90}
               value={Number(view.center.lat.toFixed(4))}
               onChange={(e) => setLat(Number(e.target.value))}
-              className="mt-1 w-full rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+              className="mt-1 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-emerald-400"
             />
           </div>
           <div>
@@ -316,7 +316,7 @@ export default function DefaultViewCard() {
               max={180}
               value={Number(view.center.lng.toFixed(4))}
               onChange={(e) => setLng(Number(e.target.value))}
-              className="mt-1 w-full rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+              className="mt-1 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-emerald-400"
             />
           </div>
         </div>

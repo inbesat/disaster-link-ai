@@ -101,7 +101,7 @@ export default function Features() {
   };
 
   return (
-    <section className="bg-[#0a0f1a] py-28" id="features">
+    <section className="bg-primary py-28" id="features">
       <SectionHead
         eyebrow="AI Features"
         eyebrowVariant="blue"
@@ -120,13 +120,13 @@ export default function Features() {
                 <TiltCard
                   maxTilt={6}
                   perspective={1000}
-                  className="h-full rounded-[18px]"
+                  className="h-full rounded-xl"
                 >
-                  <div className="bg-white/5 border border-slate-800 rounded-[18px] p-7 relative overflow-hidden group hover:-translate-y-1 hover:border-[#2563EB]/30 hover:bg-white/[0.07] transition-all duration-300 h-full">
+                  <div className="bg-white/5 border border-slate-800 rounded-xl p-7 relative overflow-hidden group hover:-translate-y-1 hover:border-[#2563EB]/30 hover:bg-white/[0.07] transition-all duration-300 h-full">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#2563EB]/5 to-[#F97316]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                     <div
-                      className={`w-[52px] h-[52px] rounded-[14px] flex items-center justify-center text-[24px] mb-5 shadow-sm group-hover:scale-110 transition-transform duration-300 ${getBadgeGradient(feature.gradient)} relative z-10`}
+                      className={`w-[52px] h-[52px] rounded-lg flex items-center justify-center text-[24px] mb-5 shadow-sm group-hover:scale-110 transition-transform duration-300 ${getBadgeGradient(feature.gradient)} relative z-10`}
                       style={{ transformStyle: "preserve-3d" }}
                     >
                       {feature.emoji}

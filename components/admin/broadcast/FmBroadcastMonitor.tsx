@@ -108,7 +108,7 @@ function typeBadge(type: string) {
       ? "border-red-500/40 bg-red-500/10 text-red-400"
       : type === "community"
         ? "border-sky-500/40 bg-sky-500/10 text-sky-400"
-        : "border-[#1c2740] bg-[#0a0f1a] text-slate-400";
+        : "border-panel-border bg-primary text-slate-400";
   return (
     <span
       className={`inline-flex items-center rounded border px-1.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider ${cls}`}
@@ -216,7 +216,7 @@ export default function FmBroadcastMonitor() {
     }
   }
 
-  const cardClass = "rounded-lg border border-[#1c2740] bg-[#0b1120] p-5";
+  const cardClass = "rounded-lg border border-panel-border bg-panel p-5";
 
   return (
     <div className="space-y-6">
@@ -280,7 +280,7 @@ export default function FmBroadcastMonitor() {
             <button
               type="button"
               onClick={() => void refresh()}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300"
+              className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-primary px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
               Refresh
@@ -293,7 +293,7 @@ export default function FmBroadcastMonitor() {
             <Loader2 className="h-5 w-5 animate-spin" />
           </div>
         ) : stations.length === 0 ? (
-          <div className="flex h-40 flex-col items-center justify-center rounded-md border border-dashed border-[#1c2740] text-center">
+          <div className="flex h-40 flex-col items-center justify-center rounded-md border border-dashed border-panel-border text-center">
             <Radio className="mb-2 h-6 w-6 text-slate-600" />
             <p className="text-sm text-slate-500">No FM stations configured yet.</p>
             <p className="mt-1 text-xs text-slate-600">
@@ -304,7 +304,7 @@ export default function FmBroadcastMonitor() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-[#1c2740] text-[0.6875rem] uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-panel-border text-[0.6875rem] uppercase tracking-wider text-slate-500">
                   <th className="py-2 pr-3 font-semibold">Station</th>
                   <th className="py-2 pr-3 font-semibold">Type</th>
                   <th className="py-2 pr-3 font-semibold">Channel Chain</th>
@@ -322,7 +322,7 @@ export default function FmBroadcastMonitor() {
                   return (
                     <tr
                       key={station.id}
-                      className="border-b border-[#111a2e] transition hover:bg-[#0a0f1a]"
+                      className="border-b border-[#111a2e] transition hover:bg-primary"
                     >
                       <td className="py-2.5 pr-3">
                         <p className="font-semibold text-foreground">{station.name}</p>
@@ -413,7 +413,7 @@ export default function FmBroadcastMonitor() {
           </h2>
         </div>
         {logs.length === 0 ? (
-          <p className="rounded-md border border-dashed border-[#1c2740] py-8 text-center text-sm text-slate-600">
+          <p className="rounded-md border border-dashed border-panel-border py-8 text-center text-sm text-slate-600">
             No broadcasts yet — dispatch an alert to see activity here.
           </p>
         ) : (
@@ -427,7 +427,7 @@ export default function FmBroadcastMonitor() {
                   className={`rounded border px-1.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider ${
                     log.strategy === "ivr"
                       ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
-                      : "border-[#1c2740] bg-[#0a0f1a] text-slate-400"
+                      : "border-panel-border bg-primary text-slate-400"
                   }`}
                 >
                   {STRATEGY_LABELS[log.strategy] ?? log.strategy}

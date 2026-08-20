@@ -104,7 +104,7 @@ export default function DemoMode() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -40, opacity: 0 }}
               transition={{ type: "spring", stiffness: 320, damping: 30 }}
-              className="ml-3 w-72 overflow-hidden rounded-xl border-2 border-red-500/60 bg-[#0d1526]/95 shadow-[0_12px_36px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+              className="ml-3 w-72 overflow-hidden rounded-xl border-2 border-red-500/60 bg-panel-deep/95 shadow-[0_12px_36px_rgba(0,0,0,0.5)] backdrop-blur-xl"
             >
               <div className="flex items-center justify-between border-b border-red-500/30 px-4 py-3">
                 <div>
@@ -302,7 +302,7 @@ export default function DemoMode() {
               initial={{ x: -40, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -40, opacity: 0 }}
-              className="flex items-center gap-2 rounded-r-lg border border-l-0 border-red-500/60 bg-red-600/90 px-2 py-3 text-white shadow-[0_8px_24px_rgba(0,0,0,0.4)] transition hover:bg-red-500"
+              className="flex items-center gap-2 rounded-r-lg border border-l-0 border-red-500/60 bg-red-600/90 px-2 py-3 text-white shadow-[var(--shadow-float-md)] transition hover:bg-red-500"
             >
               <MonitorOff aria-hidden="true" className="h-4 w-4 shrink-0" />
               <span className="text-xs font-black uppercase tracking-widest [writing-mode:vertical-rl]">

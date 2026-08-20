@@ -129,7 +129,7 @@ export default function GoogleMapsButton({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 8, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
-              className="relative w-full max-w-sm rounded-[var(--dl-radius-sm)] border border-white/15 bg-[#0d1526] p-5 text-[var(--dl-text-on-navy)] shadow-[var(--dl-shadow-soft)]"
+              className="relative w-full max-w-sm rounded-[var(--dl-radius-sm)] border border-white/15 bg-panel-deep p-5 text-[var(--dl-text-on-navy)] shadow-[var(--dl-shadow-soft)]"
             >
               <button
                 type="button"

@@ -302,7 +302,7 @@ export function PlanVisualizer() {
   return (
     <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-white/10 bg-secondary">
       {/* Operation-order document header */}
-      <div className="border-b border-white/10 bg-[#0d1526] px-4 py-3">
+      <div className="border-b border-white/10 bg-panel-deep px-4 py-3">
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
           <div className="flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-md border border-accent-purple/40 bg-accent-purple/10 text-accent-purple">
@@ -510,7 +510,7 @@ export function PlanVisualizer() {
 
       {/* Step 10 — panic button: Halt Operations */}
       {executing && (
-        <div className="shrink-0 border-t border-white/10 bg-[#0d1526]/95 px-3 py-3 backdrop-blur">
+        <div className="shrink-0 border-t border-white/10 bg-panel-deep/95 px-3 py-3 backdrop-blur">
           <button
             type="button"
             onClick={handleHalt}

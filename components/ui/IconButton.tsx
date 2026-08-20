@@ -37,7 +37,7 @@ const VARIANTS = {
   floating:
     "border border-border bg-surface-elevated text-foreground shadow-lg transition hover:border-accent hover:text-accent",
   purple:
-    "bg-[#a855f7] text-white shadow-[0_0_16px_rgba(168,85,247,0.35)] transition hover:opacity-90 hover:shadow-none",
+    "bg-severity-purple-500 text-white shadow-[0_0_16px_rgba(168,85,247,0.35)] transition hover:opacity-90 hover:shadow-none",
 } as const;
 
 const SIZES = {

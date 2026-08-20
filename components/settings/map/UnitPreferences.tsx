@@ -81,7 +81,7 @@ function SegmentedButton({
       className={`flex-1 rounded-md border px-3 py-2.5 text-left transition ${
         active
           ? "border-amber-400/60 bg-amber-500/10"
-          : "border-[#1c2740] bg-surface-muted/40 hover:border-amber-400/40"
+          : "border-panel-border bg-surface-muted/40 hover:border-amber-400/40"
       }`}
     >
       <p

@@ -123,7 +123,7 @@ export default function Benefits() {
   const [activeTab, setActiveTab] = useState<keyof typeof benefitsData>("government");
 
   return (
-    <section id="benefits" className="bg-[#0a0f1a] py-28">
+    <section id="benefits" className="bg-primary py-28">
       <SectionHead
         eyebrow="Who It's For"
         eyebrowVariant="blue"
@@ -139,7 +139,7 @@ export default function Benefits() {
             onClick={() => setActiveTab(tab.id as keyof typeof benefitsData)}
             className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
               activeTab === tab.id
-                ? "bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] text-white shadow-lg"
+                ? "bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white shadow-lg"
                 : "bg-white/5 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-600"
             }`}
           >
@@ -156,7 +156,7 @@ export default function Benefits() {
               <ScrollReveal key={i} animation="fade-up" delay={i * 0.1}>
                 <div className="flex items-start gap-4">
                   <div className="w-11 h-11 rounded-full bg-[#2563EB]/10 flex items-center justify-center shrink-0">
-                    <Icon className="text-[#5B8DF6]" size={20} />
+                    <Icon className="text-[var(--blue-light)]" size={20} />
                   </div>
                   <div>
                     <h5 className="text-base font-bold text-white">

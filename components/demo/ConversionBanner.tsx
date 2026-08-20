@@ -86,7 +86,7 @@ export default function ConversionBanner({ mode }: ConversionBannerProps) {
 
   return (
     <div className="fixed inset-x-3 bottom-3 z-40 mx-auto max-w-2xl">
-      <div className="flex items-center gap-3 rounded-xl border border-amber-500/50 bg-[#0d1526]/95 px-4 py-3 shadow-[0_12px_36px_rgba(0,0,0,0.6)] backdrop-blur-xl">
+      <div className="flex items-center gap-3 rounded-xl border border-amber-500/50 bg-panel-deep/95 px-4 py-3 shadow-[0_12px_36px_rgba(0,0,0,0.6)] backdrop-blur-xl">
         <Sparkles aria-hidden="true" className="h-5 w-5 shrink-0 text-amber-400" />
         <p className="min-w-0 flex-1 text-sm font-medium text-primary">
           This is a <span className="font-bold text-amber-400">demo</span>. Want to register

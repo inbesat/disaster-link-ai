@@ -24,7 +24,7 @@ export default function FeedbackLoopCard() {
   return (
     <section
       data-settings-key="ai-feedback-loop"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -43,7 +43,7 @@ export default function FeedbackLoopCard() {
       </p>
 
       {/* Toggle row */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
@@ -84,7 +84,7 @@ export default function FeedbackLoopCard() {
       </div>
 
       {/* Privacy policy link */}
-      <div className="mt-4 flex items-center justify-between gap-3 rounded-md border border-[#1c2740] bg-[#0a0f1d] p-3">
+      <div className="mt-4 flex items-center justify-between gap-3 rounded-md border border-panel-border bg-[#0a0f1d] p-3">
         <p className="text-[11px] text-slate-500">
           Read how feedback data is collected, used and protected.
         </p>

@@ -162,13 +162,13 @@ export default function ProfessionalDetailsCard() {
   }
 
   const inputClass =
-    "w-full rounded-md border border-[#2c3f6d] bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
+    "w-full rounded-md border border-panel-borderHover bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
   const labelClass = "eoc-label block mb-1.5 text-slate-400";
 
   return (
     <div className="space-y-5" data-settings-key="professional-details">
       {/* Credentials + Verification Status */}
-      <section className="rounded-eoc border border-[#1c2740] bg-surface p-6">
+      <section className="rounded-eoc border border-panel-border bg-surface p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10">
@@ -263,7 +263,7 @@ export default function ProfessionalDetailsCard() {
       </section>
 
       {/* Uploaded Certifications */}
-      <section className="rounded-e border border-[#1c2740] bg-surface p-6">
+      <section className="rounded-e border border-panel-border bg-surface p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="eoc-label text-cyan-400/80">UPLOADED CERTIFICATIONS</p>
@@ -296,14 +296,14 @@ export default function ProfessionalDetailsCard() {
 
         <ul className="mt-5 space-y-3">
           {certs.length === 0 ? (
-            <li className="rounded-md border border-dashed border-[#2c3f6d] px-4 py-6 text-center text-sm text-slate-500">
+            <li className="rounded-md border border-dashed border-panel-borderHover px-4 py-6 text-center text-sm text-slate-500">
               No certifications on record yet. Upload one to get started.
             </li>
           ) : (
             certs.map((cert) => (
               <li
                 key={cert.id}
-                className="flex items-center gap-4 rounded-md border border-[#1c2740] bg-surface-muted/40 px-4 py-3.5"
+                className="flex items-center gap-4 rounded-md border border-panel-border bg-surface-muted/40 px-4 py-3.5"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#1c2740]">
                   {cert.status === "verified" ? (

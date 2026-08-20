@@ -37,7 +37,7 @@ export default function AlertRadiusCard({
   return (
     <section
       data-settings-key="alert-radius"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -56,7 +56,7 @@ export default function AlertRadiusCard({
       </p>
 
       {/* Current radius badge */}
-      <div className="mt-4 flex items-center gap-2 rounded-md border border-[#1c2740] bg-surface-muted/40 px-3 py-2">
+      <div className="mt-4 flex items-center gap-2 rounded-md border border-panel-border bg-surface-muted/40 px-3 py-2">
         <MapPinned className="h-4 w-4 shrink-0 text-emerald-300" aria-hidden />
         <span className="text-sm font-semibold text-slate-200">
           Current radius: {option.label}
@@ -102,7 +102,7 @@ export default function AlertRadiusCard({
 
       {/* Live helper text */}
       <p
-        className="mt-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-3 text-xs leading-relaxed text-slate-300"
+        className="mt-4 rounded-md border border-panel-border bg-surface-muted/40 p-3 text-xs leading-relaxed text-slate-300"
         aria-live="polite"
       >
         <LocateFixed className="mr-1.5 inline h-3.5 w-3.5 text-emerald-300" aria-hidden />
@@ -110,7 +110,7 @@ export default function AlertRadiusCard({
       </p>
 
       {/* Home District always-on toggle */}
-      <div className="mt-5 flex items-center justify-between gap-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 flex items-center justify-between gap-4 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-start gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
             <Home className="h-4 w-4 text-emerald-300" aria-hidden />

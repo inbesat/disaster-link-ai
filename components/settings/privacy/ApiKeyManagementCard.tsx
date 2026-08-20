@@ -88,7 +88,7 @@ export default function ApiKeyManagementCard({
     <>
       <section
         data-settings-key="privacy-api-keys"
-        className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+        className="rounded-eoc border border-panel-border bg-surface p-5"
       >
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -115,10 +115,10 @@ export default function ApiKeyManagementCard({
         </p>
 
         {/* Key list */}
-        <div className="mt-5 overflow-hidden rounded-md border border-[#1c2740]">
+        <div className="mt-5 overflow-hidden rounded-md border border-panel-border">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[680px] text-left text-sm">
-              <thead className="border-b border-[#1c2740] bg-surface-muted/40 text-[11px] uppercase tracking-wider text-slate-500">
+              <thead className="border-b border-panel-border bg-surface-muted/40 text-[11px] uppercase tracking-wider text-slate-500">
                 <tr>
                   <th className="px-4 py-2.5 font-semibold">Name</th>
                   <th className="px-4 py-2.5 font-semibold">Scope</th>
@@ -128,7 +128,7 @@ export default function ApiKeyManagementCard({
                   <th className="px-4 py-2.5 text-right font-semibold">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#151d31]">
+              <tbody className="divide-y divide-panel-divide">
                 {apiKeys.map((key) => (
                   <tr
                     key={key.id}
@@ -237,7 +237,7 @@ export default function ApiKeyManagementCard({
               onChange={(e) => setLabel(e.target.value)}
               placeholder="e.g. Drone-Telemetry-Feed"
               maxLength={80}
-              className="mt-2 w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
+              className="mt-2 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
             />
 
             <p className="mt-4 text-xs font-semibold text-slate-300">Scope</p>
@@ -251,7 +251,7 @@ export default function ApiKeyManagementCard({
                   className={`rounded-md border px-3 py-2.5 text-left transition ${
                     scope === option.value
                       ? "border-emerald-400/60 bg-emerald-500/10"
-                      : "border-[#1c2740] bg-surface-muted/40 hover:border-emerald-400/40"
+                      : "border-panel-border bg-surface-muted/40 hover:border-emerald-400/40"
                   }`}
                 >
                   <p className="text-sm font-bold text-slate-200">{option.label}</p>
@@ -264,7 +264,7 @@ export default function ApiKeyManagementCard({
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="rounded-md border border-[#2c3f6d] px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted"
+                className="rounded-md border border-panel-borderHover px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted"
               >
                 Cancel
               </button>
@@ -304,7 +304,7 @@ export default function ApiKeyManagementCard({
               </div>
             </div>
 
-            <div className="mt-5 flex items-center gap-2 rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-3">
+            <div className="mt-5 flex items-center gap-2 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-3">
               <code className="flex-1 break-all font-mono text-xs font-bold text-emerald-200">
                 {revealed.secret}
               </code>
@@ -315,7 +315,7 @@ export default function ApiKeyManagementCard({
                   toast.success("Secret copied to clipboard.");
                 }}
                 aria-label="Copy secret"
-                className="rounded-md border border-[#1c2740] p-2 text-slate-400 transition hover:border-emerald-400/50 hover:text-emerald-200"
+                className="rounded-md border border-panel-border p-2 text-slate-400 transition hover:border-emerald-400/50 hover:text-emerald-200"
               >
                 <Copy className="h-4 w-4" aria-hidden />
               </button>

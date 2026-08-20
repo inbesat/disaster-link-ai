@@ -27,7 +27,7 @@ const PILLARS = [
 
 export default function Solution() {
   return (
-    <section className="bg-[#0f172a] py-28">
+    <section className="bg-secondary py-28">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-16 items-center">
           <ScrollReveal>
@@ -66,9 +66,9 @@ export default function Solution() {
               maxTilt={6}
               perspective={1200}
               glare={false}
-              className="rounded-[22px]"
+              className="rounded-[var(--radius-xl2)]"
             >
-              <div className="relative rounded-[22px] overflow-hidden h-[420px] md:h-[500px] bg-[#0B1F3A]">
+              <div className="relative rounded-[var(--radius-xl2)] overflow-hidden h-[420px] md:h-[500px] bg-[var(--navy)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop"
@@ -77,7 +77,7 @@ export default function Solution() {
                   decoding="async"
                   className="object-cover w-full h-full rounded-2xl opacity-90"
                 />
-                <div className="absolute bottom-6 left-6 right-6 bg-[rgba(11,31,58,0.75)] backdrop-blur-[10px] rounded-[14px] p-4 flex items-center gap-3">
+                <div className="absolute bottom-6 left-6 right-6 bg-[rgba(11,31,58,0.75)] backdrop-blur-[10px] rounded-lg p-4 flex items-center gap-3">
                   <div className="relative flex h-2.5 w-2.5 shrink-0">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />

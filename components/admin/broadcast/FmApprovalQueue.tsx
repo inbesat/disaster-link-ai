@@ -184,7 +184,7 @@ export default function FmApprovalQueue() {
     }
   }
 
-  const cardClass = "rounded-lg border border-[#1c2740] bg-[#0b1120] p-5";
+  const cardClass = "rounded-lg border border-panel-border bg-panel p-5";
 
   return (
     <div className="space-y-6">
@@ -204,7 +204,7 @@ export default function FmApprovalQueue() {
         <button
           type="button"
           onClick={() => void refresh()}
-          className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300"
+          className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-primary px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
           Refresh
@@ -217,7 +217,7 @@ export default function FmApprovalQueue() {
           <Loader2 className="h-5 w-5 animate-spin" />
         </div>
       ) : approvals.length === 0 ? (
-        <div className="flex h-48 flex-col items-center justify-center rounded-lg border border-dashed border-[#1c2740] text-center">
+        <div className="flex h-48 flex-col items-center justify-center rounded-lg border border-dashed border-panel-border text-center">
           <Check className="mb-2 h-8 w-8 text-emerald-500/60" />
           <p className="text-sm text-slate-500">No pending broadcast approvals.</p>
           <p className="mt-1 text-xs text-slate-600">
@@ -233,7 +233,7 @@ export default function FmApprovalQueue() {
               <article key={approval.id} className={cardClass}>
                 {/* Header */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded border border-[#1c2740] bg-[#0a0f1a] px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-slate-300">
+                  <span className="rounded border border-panel-border bg-primary px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-slate-300">
                     {DISASTER_LABELS[approval.disasterType] ?? approval.disasterType}
                   </span>
                   <span className="text-sm font-semibold text-foreground">
@@ -266,7 +266,7 @@ export default function FmApprovalQueue() {
                 </p>
 
                 {/* Voice message preview */}
-                <div className="mt-3 rounded-md border border-[#1c2740] bg-[#0a0f1a] p-3">
+                <div className="mt-3 rounded-md border border-panel-border bg-primary p-3">
                   <div className="flex items-center justify-between gap-2">
                     <p className="flex items-center gap-1.5 text-[0.6875rem] uppercase tracking-wider text-slate-500">
                       <Volume2 className="h-3 w-3" /> AI Voice Message
@@ -290,7 +290,7 @@ export default function FmApprovalQueue() {
                       value={editedMessage}
                       onChange={(e) => setEditedMessage(e.target.value)}
                       rows={5}
-                      className="mt-2 w-full resize-none rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-2 text-sm text-foreground outline-none transition focus:border-amber-400/50"
+                      className="mt-2 w-full resize-none rounded-md border border-panel-border bg-primary px-3 py-2 text-sm text-foreground outline-none transition focus:border-amber-400/50"
                     />
                   ) : (
                     <p className="mt-2 text-sm leading-relaxed text-slate-300">
@@ -300,7 +300,7 @@ export default function FmApprovalQueue() {
                 </div>
 
                 {/* RDS text preview */}
-                <div className="mt-3 rounded-md border border-[#1c2740] bg-[#0a0f1a] p-3">
+                <div className="mt-3 rounded-md border border-panel-border bg-primary p-3">
                   <p className="flex items-center gap-1.5 text-[0.6875rem] uppercase tracking-wider text-slate-500">
                     <ScrollText className="h-3 w-3" /> RDS Scrolling Text
                   </p>
@@ -332,7 +332,7 @@ export default function FmApprovalQueue() {
                         setEditedMessage(approval.message);
                       }}
                       disabled={decidingId !== null}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300 disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-primary px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300 disabled:opacity-50"
                     >
                       <Pencil className="h-4 w-4" /> Edit Message First
                     </button>
@@ -341,7 +341,7 @@ export default function FmApprovalQueue() {
                       type="button"
                       onClick={() => setEditingId(null)}
                       disabled={decidingId !== null}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300 disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-primary px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300 disabled:opacity-50"
                     >
                       <X className="h-4 w-4" /> Cancel Edit
                     </button>

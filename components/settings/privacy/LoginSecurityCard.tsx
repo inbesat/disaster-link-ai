@@ -35,7 +35,7 @@ export default function LoginSecurityCard({
   return (
     <section
       data-settings-key="privacy-login-security"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -57,7 +57,7 @@ export default function LoginSecurityCard({
 
       <div className="mt-5 space-y-4">
         {/* Idle session timeout */}
-        <div className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+        <div className="rounded-md border border-panel-border bg-surface-muted/40 p-4">
           <label
             htmlFor="idle-timeout"
             className="flex items-center gap-2 text-sm font-bold text-slate-200"
@@ -83,7 +83,7 @@ export default function LoginSecurityCard({
                   { duration: 2500 },
                 );
               }}
-              className="rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2 text-sm font-semibold text-slate-200 outline-none focus:border-emerald-400/60"
+              className="rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm font-semibold text-slate-200 outline-none focus:border-emerald-400/60"
             >
               {SESSION_TIMEOUTS.map((t) => (
                 <option key={t.value} value={t.value} className="bg-[#0a0f1d]">
@@ -154,7 +154,7 @@ function ToggleRow({
   onChange: () => void;
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-panel-border bg-surface-muted/40 p-4">
       <div className="flex items-center gap-2.5">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-emerald-500/10">
           {icon}

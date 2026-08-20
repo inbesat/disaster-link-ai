@@ -103,7 +103,7 @@ export default function PlanApprovalCard() {
                     : "border-amber-400 bg-amber-500/10"
                   : recommended
                     ? "border-green-400/40 bg-surface-muted/40 hover:border-green-400"
-                    : "border-[#1c2740] bg-surface-muted/40 hover:border-amber-400/40"
+                    : "border-panel-border bg-surface-muted/40 hover:border-amber-400/40"
               }`}
             >
               <span
@@ -153,7 +153,7 @@ export default function PlanApprovalCard() {
             ? "border-red-400/40 bg-red-500/[0.07]"
             : mode === "suggest"
               ? "border-green-400/40 bg-green-500/[0.07]"
-              : "border-[#1c2740] bg-[#0a0f1d]"
+              : "border-panel-border bg-[#0a0f1d]"
         }`}
       >
         <IconByMode mode={mode} />

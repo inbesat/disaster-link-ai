@@ -97,7 +97,7 @@ export default function PermissionMatrixCard() {
   return (
     <section
       data-settings-key="org-permission-matrix"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -119,10 +119,10 @@ export default function PermissionMatrixCard() {
         platform per team.
       </p>
 
-      <div className="mt-5 overflow-x-auto rounded-md border border-[#1c2740]">
+      <div className="mt-5 overflow-x-auto rounded-md border border-panel-border">
         <table className="w-full min-w-[560px] text-left text-sm">
           <thead>
-            <tr className="border-b border-[#1c2740] bg-surface-muted/40">
+            <tr className="border-b border-panel-border bg-surface-muted/40">
               <th
                 scope="col"
                 className="px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-slate-500"
@@ -188,7 +188,7 @@ export default function PermissionMatrixCard() {
             ))}
           </tbody>
           <tfoot>
-            <tr className="border-t border-[#1c2740] bg-surface-muted/30">
+            <tr className="border-t border-panel-border bg-surface-muted/30">
               <td className="px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-slate-500">
                 Granted count
               </td>
@@ -218,7 +218,7 @@ export default function PermissionMatrixCard() {
             setMatrix(DEFAULT_MATRIX);
             toast("Permission matrix reset to default.", { duration: 2500 });
           }}
-          className="rounded-md border border-[#1c2740] px-3 py-2 text-xs font-bold text-slate-400 transition hover:border-blue-400/50 hover:text-blue-200"
+          className="rounded-md border border-panel-border px-3 py-2 text-xs font-bold text-slate-400 transition hover:border-blue-400/50 hover:text-blue-200"
         >
           Reset to Defaults
         </button>

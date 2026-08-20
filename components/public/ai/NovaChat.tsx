@@ -105,7 +105,7 @@ function SourceBadge({ engineUsed }: { engineUsed: "cloud" | "local-gemma" | "lo
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-[#F97316]/20 px-2 py-0.5 text-[0.625rem] font-bold text-[#FDBA74] ring-1 ring-[#F97316]/30">
+    <span className="inline-flex items-center gap-1 rounded-full bg-[#F97316]/20 px-2 py-0.5 text-[0.625rem] font-bold text-[var(--brand-orangeLight)] ring-1 ring-[#F97316]/30">
       ⚡ Offline Logic Engine
     </span>
   );
@@ -375,7 +375,7 @@ export function NovaChat() {
             transition={{ type: "spring", stiffness: 380, damping: 26 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.94 }}
-            className="fixed bottom-[88px] right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-gradient-to-br from-[#16a34a] to-[#0d9488] pl-4 pr-5 text-white shadow-[0_10px_28px_rgba(16,185,129,0.4)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399]"
+            className="fixed bottom-[88px] right-6 z-50 flex h-14 items-center gap-2 rounded-full bg-gradient-to-br from-[#16a34a] to-[#0d9488] pl-4 pr-5 text-white shadow-[0_10px_28px_rgba(16,185,129,0.4)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400"
           >
             <span className="relative flex h-6 w-6 items-center justify-center">
               <MessageCircle className="h-6 w-6" strokeWidth={2} aria-hidden />
@@ -439,7 +439,7 @@ export function NovaChat() {
                   <Bot className="h-5 w-5 text-[#dcf8c6]" strokeWidth={2.1} aria-hidden />
                   <span
                     aria-hidden
-                    className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-[#34d399] ring-2 ring-[#0e2a45]"
+                    className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-severity-green-400 ring-2 ring-[#0e2a45]"
                   />
                 </span>
 
@@ -478,12 +478,12 @@ export function NovaChat() {
               {!online && (
                 <div
                   role="status"
-                  className="flex shrink-0 items-center gap-2.5 border-y border-[#fbbf24]/30 bg-[#b45309]/25 px-4 py-2.5"
+                  className="flex shrink-0 items-center gap-2.5 border-y border-severity-amber-400/30 bg-[#b45309]/25 px-4 py-2.5"
                 >
-                  <WifiOff className="h-4 w-4 shrink-0 text-[#fcd34d]" aria-hidden />
+                  <WifiOff className="h-4 w-4 shrink-0 text-severity-amber-300" aria-hidden />
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-[#fde68a]">{t("offline_title")}</p>
-                    <p className="truncate text-[0.6875rem] text-[#fbbf24]/90">
+                    <p className="truncate text-[0.6875rem] text-severity-amber-400/90">
                       {t("offline_desc")}
                     </p>
                   </div>
@@ -536,7 +536,7 @@ export function NovaChat() {
                       >
                         <Bot className="h-[18px] w-[18px] text-[#dcf8c6]" strokeWidth={2.2} />
                       </span>
-                      <span className="flex items-center gap-2 rounded-2xl rounded-bl-[4px] bg-[#dcf8c6]/90 px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.25)]">
+                      <span className="flex items-center gap-2 rounded-2xl rounded-bl-chat bg-[#dcf8c6]/90 px-4 py-3 shadow-[var(--shadow-float-sm)]">
                         <span className="text-[0.625rem] font-bold uppercase tracking-wider text-[#1a2e1e]/55">
                           Typing…
                         </span>
@@ -570,13 +570,13 @@ export function NovaChat() {
                     }}
                     aria-label={t("scan_open")}
                     whileTap={{ scale: 0.9 }}
-                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#34d399]/25 bg-white/5 text-[#6ee7b7] transition-colors hover:border-[#34d399]/60 hover:bg-[#34d399]/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399]"
+                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-severity-green-400/25 bg-white/5 text-severity-green-300 transition-colors hover:border-severity-green-400/60 hover:bg-severity-green-400/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400"
                   >
                     <ScanLine className="h-6 w-6" strokeWidth={2} aria-hidden />
                   </motion.button>
 
                   <VoiceInput onResult={handleVoiceResult} lang={voiceLang} disabled={typing} />
-                  <div className="flex min-h-[48px] flex-1 items-center rounded-2xl border border-white/15 bg-white/5 px-4 focus-within:border-[#34d399]/60 focus-within:ring-1 focus-within:ring-[#34d399]/30">
+                  <div className="flex min-h-[48px] flex-1 items-center rounded-2xl border border-white/15 bg-white/5 px-4 focus-within:border-severity-green-400/60 focus-within:ring-1 focus-within:ring-severity-green-400/30">
                     <textarea
                       ref={inputRef}
                       rows={1}
@@ -594,7 +594,7 @@ export function NovaChat() {
                     disabled={!draft.trim() || typing}
                     aria-label={t("nova_send")}
                     whileTap={{ scale: 0.92 }}
-                    className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399] disabled:cursor-not-allowed disabled:opacity-35"
+                    className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400 disabled:cursor-not-allowed disabled:opacity-35"
                   >
                     <Send className="h-5 w-5" aria-hidden />
                   </motion.button>

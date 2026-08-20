@@ -159,7 +159,7 @@ setMembers((prev) => [
   return (
     <section
       data-settings-key="org-team-management"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -203,10 +203,10 @@ setMembers((prev) => [
       </div>
 
       {/* Data table */}
-      <div className="mt-5 overflow-x-auto rounded-md border border-[#1c2740]">
+      <div className="mt-5 overflow-x-auto rounded-md border border-panel-border">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead>
-            <tr className="border-b border-[#1c2740] bg-surface-muted/40 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            <tr className="border-b border-panel-border bg-surface-muted/40 text-[10px] font-bold uppercase tracking-widest text-slate-500">
               <th className="px-4 py-2.5">Name</th>
               <th className="px-4 py-2.5">Email</th>
               <th className="px-4 py-2.5">Organization</th>
@@ -300,7 +300,7 @@ setMembers((prev) => [
           onClick={() => !sending && setInviteOpen(false)}
         >
           <div
-            className="w-full max-w-md rounded-eoc border border-[#1c2740] bg-surface p-5"
+            className="w-full max-w-md rounded-eoc border border-panel-border bg-surface p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between">
@@ -331,7 +331,7 @@ setMembers((prev) => [
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="responder@org.gov.in"
-                  className="mt-1.5 w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
+                  className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
                 />
               </label>
 
@@ -349,7 +349,7 @@ setMembers((prev) => [
                         className={`flex items-center gap-2 rounded-md border px-3 py-2 text-xs font-semibold transition ${
                           selected
                             ? "border-amber-400/60 bg-amber-500/10 text-amber-200"
-                            : "border-[#1c2740] bg-[#0a0f1d] text-slate-400 hover:border-amber-400/40"
+                            : "border-panel-border bg-[#0a0f1d] text-slate-400 hover:border-amber-400/40"
                         }`}
                       >
                         <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />
@@ -366,7 +366,7 @@ setMembers((prev) => [
                 type="button"
                 onClick={() => setInviteOpen(false)}
                 disabled={sending}
-                className="rounded-md border border-[#1c2740] px-3 py-2 text-xs font-semibold text-slate-400 transition hover:text-slate-200"
+                className="rounded-md border border-panel-border px-3 py-2 text-xs font-semibold text-slate-400 transition hover:text-slate-200"
               >
                 Cancel
               </button>

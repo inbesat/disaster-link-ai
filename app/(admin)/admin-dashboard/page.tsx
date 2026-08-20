@@ -242,7 +242,7 @@ export default function AdminDashboardPage() {
         ].map(({ icon: Icon, label, value, sub, tint }) => (
           <div
             key={label}
-            className="rounded-lg border border-[#1c2740] bg-[#0b1120] p-4"
+            className="rounded-lg border border-panel-border bg-panel p-4"
           >
             <div className="flex items-center justify-between">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
@@ -276,9 +276,9 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Persistent filter bar */}
-      <div className="sticky top-12 z-30 -my-1 rounded-lg border border-[#1c2740] bg-[#020617]/95 py-2 pl-2 pr-3 backdrop-blur">
+      <div className="sticky top-12 z-30 -my-1 rounded-lg border border-panel-border bg-panel-darker/95 py-2 pl-2 pr-3 backdrop-blur">
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex min-w-[220px] flex-1 items-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-2.5 py-1.5">
+          <div className="flex min-w-[220px] flex-1 items-center gap-2 rounded-md border border-panel-border bg-panel px-2.5 py-1.5">
             <Search className="h-4 w-4 shrink-0 text-slate-500" aria-hidden />
             <input
               value={query}
@@ -292,7 +292,7 @@ export default function AdminDashboardPage() {
           <select
             value={district}
             onChange={(e) => setDistrict(e.target.value as (typeof DISTRICTS)[number])}
-            className="rounded-md border border-[#1c2740] bg-[#0b1120] px-2 py-1.5 text-xs font-medium text-slate-300 outline-none focus:border-[#2c3f6d]"
+            className="rounded-md border border-panel-border bg-panel px-2 py-1.5 text-xs font-medium text-slate-300 outline-none focus:border-panel-borderHover"
           >
             {DISTRICTS.map((d) => (
               <option key={d} value={d}>
@@ -305,7 +305,7 @@ export default function AdminDashboardPage() {
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-            className="rounded-md border border-[#1c2740] bg-[#0b1120] px-2 py-1.5 text-xs font-medium text-slate-300 outline-none focus:border-[#2c3f6d]"
+            className="rounded-md border border-panel-border bg-panel px-2 py-1.5 text-xs font-medium text-slate-300 outline-none focus:border-panel-borderHover"
           >
             <option value="all">All priorities</option>
             <option value="critical">Critical</option>
@@ -322,7 +322,7 @@ export default function AdminDashboardPage() {
                 description: `Showing ${rows.length} operation${rows.length === 1 ? "" : "s"} under current filters.`,
               })
             }
-            className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0b1120] px-2.5 py-1.5 text-xs font-medium text-slate-300 transition hover:border-cyan-500/50 hover:text-cyan-300"
+            className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-panel px-2.5 py-1.5 text-xs font-medium text-slate-300 transition hover:border-cyan-500/50 hover:text-cyan-300"
           >
             <Filter className="h-3.5 w-3.5" aria-hidden />
             Apply
@@ -330,7 +330,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Bulk operation row */}
-        <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-[#1c2740] pt-2">
+        <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-panel-border pt-2">
           <div className="flex flex-1 items-center gap-2 text-xs">
             <input
               id="select-all"
@@ -382,7 +382,7 @@ export default function AdminDashboardPage() {
                 description: "Compiling operations manifest (CSV).",
               })
             }
-            className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0b1120] px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-cyan-500/50 hover:text-cyan-300"
+            className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-panel px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-cyan-500/50 hover:text-cyan-300"
           >
             <Download className="h-4 w-4" aria-hidden />
             Export CSV
@@ -391,8 +391,8 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Dense operations table */}
-      <div className="overflow-hidden rounded-lg border border-[#1c2740]">
-        <div className="flex items-center justify-between border-b border-[#1c2740] bg-[#0b1120] px-4 py-2">
+      <div className="overflow-hidden rounded-lg border border-panel-border">
+        <div className="flex items-center justify-between border-b border-panel-border bg-panel px-4 py-2">
           <div className="flex items-center gap-2">
             <Zap className="h-4 w-4 text-amber-300" aria-hidden />
             <span className="text-xs font-bold uppercase tracking-widest text-slate-300">
@@ -406,7 +406,7 @@ export default function AdminDashboardPage() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="bg-[#0b1120] text-[10px] uppercase tracking-widest text-slate-500">
+              <tr className="bg-panel text-[10px] uppercase tracking-widest text-slate-500">
                 <th className="w-9 border-b border-b-slate-700 px-3 py-2">
                   <input
                     type="checkbox"
@@ -433,7 +433,7 @@ export default function AdminDashboardPage() {
                 return (
                   <tr
                     key={row.id}
-                    className="group border-b border-[#141d33] text-sm transition-colors last:border-0 hover:bg-[#0d1526]"
+                    className="group border-b border-[#141d33] text-sm transition-colors last:border-0 hover:bg-panel-deep"
                   >
                     <td className="px-3 py-2">
                       <input

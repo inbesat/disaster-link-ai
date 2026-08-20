@@ -148,7 +148,7 @@ export function ResourceMap() {
       </Map>
 
       {/* Legend */}
-      <div className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-lg border border-white/10 bg-[#0d1526]/90 px-3 py-2 backdrop-blur">
+      <div className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-lg border border-white/10 bg-panel-deep/90 px-3 py-2 backdrop-blur">
         <p className="text-[0.5625rem] font-bold uppercase tracking-[0.2em] text-slate-500">
           Status
         </p>

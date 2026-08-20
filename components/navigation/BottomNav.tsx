@@ -5,7 +5,7 @@
 // UI/UX Phase 3 · Steps 1–6 — mobile-first bottom navigation shell.
 //
 // Two contextual modes, both sharing the fixed 72px bar shell
-// (bg-[#0f172a]/95, blur, top border, safe-area padding, md:hidden —
+// (bg-[rgb(var(--bg-secondary-rgb)/95)], blur, top border, safe-area padding, md:hidden —
 // phones only; tablet+ uses the pinned sidebar, see audit pass Aug 9):
 //
 //   NAV MODE (default) — seven items: Dashboard, Predictions, Map, AI
@@ -275,7 +275,7 @@ export function BottomNav({
         onPointerDown={handleBarPointerDown}
         aria-label={mapMode ? "Map tools" : "Main navigation"}
         data-one-handed={oneHanded || undefined}
-        className={`fixed inset-x-0 bottom-0 z-30 h-[72px] w-full border-t bg-[#0f172a]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg transition-colors duration-150 motion-reduce:transition-none md:hidden ${
+        className={`fixed inset-x-0 bottom-0 z-30 h-[72px] w-full border-t bg-[rgb(var(--bg-secondary-rgb)/95)] pb-[env(safe-area-inset-bottom)] backdrop-blur-lg transition-colors duration-150 motion-reduce:transition-none md:hidden ${
           oneHanded ? "border-t-accent-primary" : "border-t-white/10"
         }`}
       >

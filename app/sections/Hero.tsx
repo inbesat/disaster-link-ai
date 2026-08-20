@@ -137,7 +137,7 @@ export default function Hero() {
         <motion.div style={reduce ? undefined : { y: copyY, opacity: orbOpacity }}>
           <Reveal delay={0}>
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white/90">
-              <Satellite size={14} className="text-[#5B8DF6]" aria-hidden="true" />
+              <Satellite size={14} className="text-[var(--blue-light)]" aria-hidden="true" />
               AI-Powered Disaster Management Platform
             </span>
           </Reveal>
@@ -148,14 +148,14 @@ export default function Hero() {
               <br />
               Saves Lives.
               <br />
-              <span className="bg-gradient-to-r from-[#5B8DF6] via-[#F97316] to-[#FDBA74] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[var(--blue-light)] via-[var(--orange)] to-[var(--orange-light)] bg-clip-text text-transparent">
                 No Citizen Left Unwarned.
               </span>
             </h1>
           </Reveal>
 
           <Reveal delay={0.2}>
-            <p className="text-lg text-[#C9D6EC] mt-6 max-w-xl leading-relaxed">
+            <p className="text-lg text-[var(--text-on-navy)] mt-6 max-w-xl leading-relaxed">
               SafeSphere predicts disasters before they strike and delivers critical
               alerts across 9 communication channels — FM, TV, SMS, WhatsApp, Telegram and
               village loudspeakers — reaching every citizen, even where the internet goes dark.
@@ -166,7 +166,7 @@ export default function Hero() {
             <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap mt-8">
               <a
                 href="#platform"
-                className="btn btn-primary rounded-full px-8 py-3.5 text-base font-semibold normal-case font-sans items-center gap-2 bg-gradient-to-r from-[#2563EB] to-[#5B8DF6] border-0 text-white shadow-[0_12px_30px_-10px_rgba(37,99,235,0.55)] hover:shadow-[0_20px_60px_-20px_rgba(37,99,235,0.6)] hover:-translate-y-0.5 transition-all w-full sm:w-auto"
+                className="btn btn-primary rounded-full px-8 py-3.5 text-base font-semibold normal-case font-sans items-center gap-2 bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] border-0 text-white shadow-[0_12px_30px_-10px_rgba(37,99,235,0.55)] hover:shadow-[0_20px_60px_-20px_rgba(37,99,235,0.6)] hover:-translate-y-0.5 transition-all w-full sm:w-auto"
               >
                 Explore Platform <ArrowRight size={18} aria-hidden="true" />
               </a>
@@ -196,7 +196,7 @@ export default function Hero() {
                   <span className="text-2xl font-bold text-white tabular-nums">
                     {stat.value}
                   </span>
-                  <span className="text-xs text-[#C9D6EC] uppercase tracking-wider mt-1">
+                  <span className="text-xs text-[var(--text-on-navy)] uppercase tracking-wider mt-1">
                     {stat.label}
                   </span>
                 </div>
@@ -214,8 +214,8 @@ export default function Hero() {
           }
         >
         <Reveal delay={0.35} y={34} className="relative">
-          <TiltCard maxTilt={9} perspective={1200} className="rounded-[26px]">
-            <div className="bg-white/[0.06] border border-white/[0.14] backdrop-blur-[18px] rounded-[26px] p-5 relative z-10 shadow-[0_50px_100px_-40px_rgba(0,0,0,0.7)] [transform-style:preserve-3d]">
+          <TiltCard maxTilt={9} perspective={1200} className="rounded-[var(--radius-xl3)]">
+            <div className="bg-white/[0.06] border border-white/[0.14] backdrop-blur-[18px] rounded-[var(--radius-xl3)] p-5 relative z-10 shadow-[0_50px_100px_-40px_rgba(0,0,0,0.7)] [transform-style:preserve-3d]">
               {/* Header */}
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
@@ -250,11 +250,11 @@ export default function Hero() {
 
                 {/* Pins */}
                 <span
-                  className={`absolute w-3 h-3 bg-[#2563EB] rounded-full top-1/4 left-1/3 ${reduce ? "" : "animate-dotpulse"}`}
+                  className={`absolute w-3 h-3 bg-[var(--blue)] rounded-full top-1/4 left-1/3 ${reduce ? "" : "animate-dotpulse"}`}
                   aria-hidden="true"
                 />
                 <span
-                  className={`absolute w-3 h-3 bg-[#F97316] rounded-full top-2/3 right-1/4 ${reduce ? "" : "animate-dotpulse"}`}
+                  className={`absolute w-3 h-3 bg-[var(--orange)] rounded-full top-2/3 right-1/4 ${reduce ? "" : "animate-dotpulse"}`}
                   style={{ animationDelay: "0.6s" }}
                   aria-hidden="true"
                 />
@@ -271,7 +271,7 @@ export default function Hero() {
                   transition={{ delay: 0.8, duration: 0.5 }}
                   className="absolute top-2 left-2 flex items-center gap-1 rounded-md bg-white/10 border border-white/15 backdrop-blur px-2 py-1 text-[9px] font-semibold text-white/80"
                 >
-                  <Waves size={10} className="text-[#5B8DF6]" aria-hidden="true" /> Flood · Ganga
+                  <Waves size={10} className="text-[var(--blue-light)]" aria-hidden="true" /> Flood · Ganga
                 </motion.span>
                 <motion.span
                   initial={reduce ? false : { opacity: 0, y: -8 }}
@@ -279,7 +279,7 @@ export default function Hero() {
                   transition={{ delay: 1, duration: 0.5 }}
                   className="absolute bottom-2 right-2 flex items-center gap-1 rounded-md bg-white/10 border border-white/15 backdrop-blur px-2 py-1 text-[9px] font-semibold text-white/80"
                 >
-                  <CloudLightning size={10} className="text-[#FDBA74]" aria-hidden="true" /> Cyclone · Odisha
+                  <CloudLightning size={10} className="text-[var(--orange-light)]" aria-hidden="true" /> Cyclone · Odisha
                 </motion.span>
               </div>
 
@@ -295,7 +295,7 @@ export default function Hero() {
                       transition={{ duration: 0.5, delay: 0.85 + idx * 0.1, ease: EASE }}
                       className="bg-white/[0.06] rounded-xl p-3 text-center border border-white/[0.06]"
                     >
-                      <Icon size={14} className="mx-auto mb-1 text-[#5B8DF6]" aria-hidden="true" />
+                      <Icon size={14} className="mx-auto mb-1 text-[var(--blue-light)]" aria-hidden="true" />
                       <div className="text-xl font-bold text-white tabular-nums">{stat.value}</div>
                       <div className="text-[10px] text-white/50 uppercase tracking-wider mt-1">
                         {stat.label}
@@ -316,7 +316,7 @@ export default function Hero() {
             className={`absolute top-4 -right-4 lg:-right-14 bg-[#0B1F3A]/85 border border-white/[0.15] backdrop-blur-[12px] rounded-xl px-4 py-2.5 text-sm text-white z-30 shadow-xl ${reduce ? "" : "animate-floaty"}`}
           >
             <span className="flex items-center gap-2">
-              <Radio size={14} className="text-[#FDBA74]" aria-hidden="true" />
+              <Radio size={14} className="text-[var(--orange-light)]" aria-hidden="true" />
               AI Prediction: 96% confidence
             </span>
           </motion.div>
@@ -344,7 +344,7 @@ export default function Hero() {
             animate={reduce ? {} : { opacity: 1, scale: 1 }}
             transition={{ delay: 1.3, duration: 0.5 }}
             style={{ transform: "translateZ(80px)" }}
-            className="absolute -top-6 left-8 w-11 h-11 rounded-full bg-gradient-to-br from-[#2563EB] to-[#F97316] flex items-center justify-center text-white shadow-[0_0_0_4px_rgba(11,31,58,0.9),0_10px_30px_-8px_rgba(37,99,235,0.6)] z-30"
+            className="absolute -top-6 left-8 w-11 h-11 rounded-full bg-gradient-to-br from-[var(--blue)] to-[var(--orange)] flex items-center justify-center text-white shadow-[0_0_0_4px_rgba(11,31,58,0.9),0_10px_30px_-8px_rgba(37,99,235,0.6)] z-30"
           >
             <ShieldCheck size={20} aria-hidden="true" />
           </motion.div>

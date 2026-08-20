@@ -107,7 +107,7 @@ export function ChatThread({ onHistoryToggle }: { onHistoryToggle?: () => void }
   };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-[#0a0f1a]">
+    <div className="flex min-h-0 flex-1 flex-col bg-primary">
       {/* Thread header */}
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">

@@ -116,7 +116,7 @@ export default function OfflineCacheCard() {
   return (
     <section
       data-settings-key="map-offline-cache"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -135,7 +135,7 @@ export default function OfflineCacheCard() {
       </p>
 
       {/* Storage progress bar */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-center justify-between text-xs text-slate-400">
           <span className="flex items-center gap-2 font-semibold">
             <HardDrive className="h-3.5 w-3.5" aria-hidden />
@@ -185,7 +185,7 @@ export default function OfflineCacheCard() {
                 className={`rounded-md border px-2 py-2 text-xs font-semibold transition ${
                   active
                     ? "border-emerald-400/60 bg-emerald-500/10 text-emerald-200"
-                    : "border-[#1c2740] bg-[#0a0f1d] text-slate-400 hover:border-emerald-400/40"
+                    : "border-panel-border bg-[#0a0f1d] text-slate-400 hover:border-emerald-400/40"
                 }`}
               >
                 {option.label}
@@ -210,7 +210,7 @@ export default function OfflineCacheCard() {
                 className={`flex items-center justify-between gap-3 rounded-md border p-3 transition ${
                   cached
                     ? "border-emerald-400/40 bg-emerald-500/[0.07]"
-                    : "border-[#1c2740] bg-surface-muted/40"
+                    : "border-panel-border bg-surface-muted/40"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -233,7 +233,7 @@ export default function OfflineCacheCard() {
                     type="button"
                     onClick={() => removeDistrict(district.name, district.sizeMb)}
                     aria-label={`Remove ${district.name} from offline cache`}
-                    className="inline-flex items-center gap-1 rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-2.5 py-1.5 text-[11px] font-semibold text-emerald-300 transition hover:border-red-400/60 hover:text-red-300"
+                    className="inline-flex items-center gap-1 rounded-md border border-panel-borderHover bg-[#0a0f1d] px-2.5 py-1.5 text-[11px] font-semibold text-emerald-300 transition hover:border-red-400/60 hover:text-red-300"
                   >
                     <Check className="h-3 w-3" aria-hidden />
                     Ready
@@ -262,7 +262,7 @@ export default function OfflineCacheCard() {
       </div>
 
       {/* Destructive clear */}
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#1c2740] pt-4">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-panel-border pt-4">
         <p className="text-[11px] text-slate-500">
           Frees all downloaded district data and storage instantly.
         </p>

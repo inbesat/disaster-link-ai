@@ -28,7 +28,7 @@ export default function Solution() {
   ];
 
   return (
-    <section className="bg-[#0f172a] py-28">
+    <section className="bg-secondary py-28">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-16 items-center">
           <ScrollReveal>
@@ -45,7 +45,7 @@ export default function Solution() {
             <div className="mt-10 space-y-6">
               {pillars.map((pillar, i) => (
                 <div key={i} className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#2563EB]/10 text-[#5B8DF6] font-bold flex items-center justify-center shrink-0 text-sm">
+                  <div className="w-10 h-10 rounded-full bg-[#2563EB]/10 text-[var(--blue-light)] font-bold flex items-center justify-center shrink-0 text-sm">
                     {pillar.num}
                   </div>
                   <div>
@@ -58,14 +58,14 @@ export default function Solution() {
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
-            <div className="relative rounded-[22px] overflow-hidden h-[500px] bg-[#0B1F3A]">
+            <div className="relative rounded-[var(--radius-xl2)] overflow-hidden h-[500px] bg-[var(--navy)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop"
                 alt="Emergency Command Center"
                 className="object-cover w-full h-full rounded-2xl opacity-90"
               />
-              <div className="absolute bottom-6 left-6 right-6 bg-[rgba(11,31,58,0.75)] backdrop-blur-[10px] rounded-[14px] p-4 flex items-center gap-3">
+              <div className="absolute bottom-6 left-6 right-6 bg-[rgba(11,31,58,0.75)] backdrop-blur-[10px] rounded-lg p-4 flex items-center gap-3">
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                 <span className="text-white text-sm font-medium">
                   Real-time coordination across every response agency

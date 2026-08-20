@@ -82,7 +82,7 @@ export function MapSearchBar({ className = "" }: { className?: string }) {
           <ul
             role="listbox"
             aria-label="Search results"
-            className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-xl border border-white/10 bg-[#0f172a]/90 p-1 shadow-xl shadow-black/40 backdrop-blur-md"
+            className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-xl border border-white/10 bg-[rgb(var(--bg-secondary-rgb)/90)] p-1 shadow-xl shadow-black/40 backdrop-blur-md"
           >
             {filteredResults.length === 0 ? (
               <li className="px-3 py-3 text-sm text-muted">No matches for “{query}”.</li>

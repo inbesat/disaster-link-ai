@@ -19,7 +19,7 @@ import dynamic from "next/dynamic";
 const GovMapWorkspace = dynamic(() => import("@/components/gov/map/GovMapWorkspace"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-screen w-screen items-center justify-center bg-[#0a0f1a]">
+    <div className="flex h-screen w-screen items-center justify-center bg-primary">
       <p className="text-sm text-white/60">Loading operations map…</p>
     </div>
   ),

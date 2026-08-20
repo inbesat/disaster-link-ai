@@ -54,14 +54,14 @@ export function MeasurementToolbar({
               className={`flex h-11 w-11 items-center justify-center rounded-xl border backdrop-blur transition hover:scale-105 active:scale-95 ${
                 active
                   ? "border-[var(--dl-blue-light)] bg-[var(--dl-blue)]/30 text-[var(--dl-blue-light)] shadow-[0_0_16px_rgba(91,141,246,0.4)]"
-                  : "border-white/15 bg-[#0d1526]/85 text-white/70 hover:bg-[#0d1526] hover:text-white"
+                  : "border-white/15 bg-panel-deep/85 text-white/70 hover:bg-panel-deep hover:text-white"
               }`}
             >
               <tool.icon aria-hidden="true" className="h-5 w-5" />
             </button>
 
             {/* Tooltip — right side of the left-edge toolbar */}
-            <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-lg border border-white/10 bg-[#0d1526]/95 px-3 py-1.5 opacity-0 shadow-lg backdrop-blur transition-opacity duration-150 group-hover:opacity-100">
+            <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-lg border border-white/10 bg-panel-deep/95 px-3 py-1.5 opacity-0 shadow-lg backdrop-blur transition-opacity duration-150 group-hover:opacity-100">
               <span className="block text-xs font-semibold text-white">{tool.label}</span>
               <span className="block text-[0.625rem] text-[var(--dl-text-muted)]">{tool.hint}</span>
             </span>

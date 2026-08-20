@@ -172,14 +172,14 @@ export default function ProfileForm({ initial }: { initial: ProfileSettingsIniti
   }
 
   const inputClass =
-    "w-full rounded-md border border-[#2c3f6d] bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
+    "w-full rounded-md border border-panel-borderHover bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
   const labelClass = "eoc-label block mb-1.5 text-slate-400";
   const errorClass = "mt-1 text-xs text-severity-red-400";
 
   return (
     <div className="space-y-5" data-settings-key="personal-info">
       {/* Assigned role — styled, non-editable badge */}
-      <section className="rounded-eoc border border-[#1c2740] bg-surface p-5">
+      <section className="rounded-eoc border border-panel-border bg-surface p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="eoc-label text-amber-400/80">ASSIGNED ROLE</p>
@@ -201,7 +201,7 @@ export default function ProfileForm({ initial }: { initial: ProfileSettingsIniti
       </section>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        <section className="rounded-eoc border border-[#1c2740] bg-surface p-6">
+        <section className="rounded-eoc border border-panel-border bg-surface p-6">
           <p className="eoc-label mb-4 text-cyan-400/80">PERSONAL INFO</p>
 
           <div className="grid gap-5 sm:grid-cols-2">
@@ -249,7 +249,7 @@ export default function ProfileForm({ initial }: { initial: ProfileSettingsIniti
                 value={email}
                 readOnly
                 disabled
-                className="w-full rounded-md border border-[#2c3f6d] bg-surface-muted/50 px-3 py-2.5 text-sm text-slate-400 focus:outline-none"
+                className="w-full rounded-md border border-panel-borderHover bg-surface-muted/50 px-3 py-2.5 text-sm text-slate-400 focus:outline-none"
               />
               {isVerified ? (
                 <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-severity-green-500/40 bg-severity-green-500/10 px-2.5 py-1 text-[11px] font-semibold text-severity-green-400">

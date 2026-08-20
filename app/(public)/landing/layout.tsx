@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function LandingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className={`${poppins.variable} ${inter.variable} font-sans bg-[#0B1F3A] min-h-screen scroll-smooth`}
+      className={`${poppins.variable} ${inter.variable} font-sans bg-[var(--brand-navy)] min-h-screen scroll-smooth`}
     >
       <main>{children}</main>
     </div>

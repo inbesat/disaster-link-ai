@@ -95,7 +95,7 @@ export default function SosPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#0a0f1a] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-primary flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center space-y-6">
           <div className="flex justify-center">
             <div className="h-20 w-20 rounded-full bg-emerald-500/15 border-2 border-emerald-500/30 flex items-center justify-center">
@@ -131,7 +131,7 @@ export default function SosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0f1a] p-4 sm:p-6">
+    <div className="min-h-screen bg-primary p-4 sm:p-6">
       <div className="max-w-lg mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-3">

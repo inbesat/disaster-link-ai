@@ -163,7 +163,7 @@ export default function OutgoingWebhooksCard() {
     <>
       <section
         data-settings-key="integrations-webhooks"
-        className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+        className="rounded-eoc border border-panel-border bg-surface p-5"
       >
         {/* Header */}
         <div className="flex flex-wrap items-center gap-3">
@@ -198,7 +198,7 @@ export default function OutgoingWebhooksCard() {
           {webhooks.map((hook: IntegrationWebhook) => (
             <div
               key={hook.id}
-              className="flex flex-wrap items-center gap-3 rounded-md border border-[#1c2740] bg-surface-muted/40 p-3.5"
+              className="flex flex-wrap items-center gap-3 rounded-md border border-panel-border bg-surface-muted/40 p-3.5"
             >
               <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#1c2740]">
                 <Webhook className="h-4 w-4 text-amber-300" aria-hidden />
@@ -234,7 +234,7 @@ export default function OutgoingWebhooksCard() {
                 ))}
                 <span
                   title="Stored server-side — never logged"
-                  className="flex items-center gap-1 rounded-full border border-[#2c3f6d] bg-[#0a0f1d] px-2 py-0.5 font-mono text-[10px] text-slate-500"
+                  className="flex items-center gap-1 rounded-full border border-panel-borderHover bg-[#0a0f1d] px-2 py-0.5 font-mono text-[10px] text-slate-500"
                 >
                   <KeyRound className="h-3 w-3" aria-hidden />
                   {maskSecret(hook.secret)}
@@ -243,7 +243,7 @@ export default function OutgoingWebhooksCard() {
 
               <div className="flex shrink-0 items-center gap-2">
                 {pingingId === hook.id ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-md border border-[#2c3f6d] px-3 py-1.5 text-xs font-semibold text-slate-400">
+                  <span className="inline-flex items-center gap-1.5 rounded-md border border-panel-borderHover px-3 py-1.5 text-xs font-semibold text-slate-400">
                     <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
                     Pinging…
                   </span>
@@ -252,7 +252,7 @@ export default function OutgoingWebhooksCard() {
                     type="button"
                     onClick={() => handlePing(hook.id)}
                     disabled={pingingId !== null}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-[#2c3f6d] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-200 disabled:cursor-wait disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-panel-borderHover px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-200 disabled:cursor-wait disabled:opacity-50"
                   >
                     <RadioTower className="h-3.5 w-3.5" aria-hidden />
                     Ping (Test)
@@ -272,7 +272,7 @@ export default function OutgoingWebhooksCard() {
           ))}
 
           {webhooks.length === 0 && (
-            <div className="rounded-md border border-dashed border-[#2c3f6d] bg-surface-muted/40 px-4 py-8 text-center text-sm text-slate-500">
+            <div className="rounded-md border border-dashed border-panel-borderHover bg-surface-muted/40 px-4 py-8 text-center text-sm text-slate-500">
               No webhooks configured yet — add one to push events to an
               external system.
             </div>
@@ -337,7 +337,7 @@ export default function OutgoingWebhooksCard() {
               placeholder="e.g. Slack Command Center Channel"
               maxLength={80}
               autoFocus
-              className="mt-2 w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
+              className="mt-2 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
             />
 
             <label
@@ -359,7 +359,7 @@ export default function OutgoingWebhooksCard() {
                 placeholder="https://your-system.example.com/hooks/drip"
                 autoComplete="off"
                 spellCheck={false}
-                className="w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] py-2 pl-9 pr-3 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
+                className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-3 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
               />
             </div>
 
@@ -382,7 +382,7 @@ export default function OutgoingWebhooksCard() {
                 placeholder="whsec_••••••••••"
                 autoComplete="off"
                 spellCheck={false}
-                className="w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
+                className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
               />
               <button
                 type="button"
@@ -414,7 +414,7 @@ export default function OutgoingWebhooksCard() {
                     className={`rounded-md border px-3 py-2.5 text-left transition ${
                       selected
                         ? "border-amber-400/60 bg-amber-500/10"
-                        : "border-[#1c2740] bg-surface-muted/40 hover:border-amber-400/40"
+                        : "border-panel-border bg-surface-muted/40 hover:border-amber-400/40"
                     }`}
                   >
                     <p className="flex items-center gap-1.5 text-xs font-bold text-slate-200">
@@ -438,7 +438,7 @@ export default function OutgoingWebhooksCard() {
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="rounded-md border border-[#2c3f6d] px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted"
+                className="rounded-md border border-panel-borderHover px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted"
               >
                 Cancel
               </button>

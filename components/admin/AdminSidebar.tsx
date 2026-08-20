@@ -43,7 +43,7 @@ function SidebarContent() {
 
   return (
     <>
-      <div className="flex h-14 items-center justify-between gap-2.5 border-b border-[#1c2740] px-5">
+      <div className="flex h-14 items-center justify-between gap-2.5 border-b border-panel-border px-5">
         <div className="flex items-center gap-2.5">
           <Logo className="h-7 w-7 shrink-0" />
           <span className="eoc-label text-amber-400/90">SAFESPHERE / ADMIN</span>
@@ -61,7 +61,7 @@ function SidebarContent() {
               className={`flex min-h-[44px] items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition ${
                 active
                   ? "bg-amber-500/10 text-amber-300 shadow-[0_0_0_1px_rgba(245,158,11,0.25)]"
-                  : "text-slate-400 hover:bg-[#1a2338] hover:text-slate-200"
+                  : "text-slate-400 hover:bg-panel-hoverAlt hover:text-slate-200"
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -71,7 +71,7 @@ function SidebarContent() {
         })}
       </nav>
 
-      <div className="border-t border-[#1c2740] px-5 py-4">
+      <div className="border-t border-panel-border px-5 py-4">
         <p className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
           Super Admin
         </p>
@@ -82,7 +82,7 @@ function SidebarContent() {
         <form action={signOutAction} className="mt-4">
           <button
             type="submit"
-            className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-3 py-2 text-sm font-medium text-slate-300 transition hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400"
+            className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-md border border-panel-border bg-panel px-3 py-2 text-sm font-medium text-slate-300 transition hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400"
           >
             <LogOut className="h-4 w-4" aria-hidden />
             Sign Out
@@ -99,18 +99,18 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-[#070b13] text-foreground">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-[#1c2740] bg-[#0b1120] lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-panel-border bg-panel lg:flex">
         <SidebarContent />
       </aside>
 
       {/* Distinguant elevated top header — darker/stricter than the main app */}
-      <header className="sticky top-0 z-40 flex h-12 items-center justify-between gap-3 border-b border-[#1c2740] bg-[#020617] px-4">
+      <header className="sticky top-0 z-40 flex h-12 items-center justify-between gap-3 border-b border-panel-border bg-panel-darker px-4">
         <div className="flex min-w-0 items-center gap-2.5">
           {!open && (
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex min-h-[44px] items-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-3 py-2 text-sm font-medium text-amber-300 transition hover:bg-[#1a2338] lg:hidden"
+              className="flex min-h-[44px] items-center gap-2 rounded-md border border-panel-border bg-panel px-3 py-2 text-sm font-medium text-amber-300 transition hover:bg-panel-hoverAlt lg:hidden"
               aria-label="Open admin navigation"
             >
               <Menu className="h-4 w-4" />
@@ -129,7 +129,7 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
           <span className="hidden items-center gap-1 rounded border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-widest text-red-400 sm:inline-flex">
             Elevated Access
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0b1120] px-2.5 py-1 font-mono text-[0.625rem] text-slate-400">
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-panel px-2.5 py-1 font-mono text-[0.625rem] text-slate-400">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
             LIVE
           </span>
@@ -141,11 +141,11 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 flex w-72 flex-col border-r border-[#1c2740] bg-[#0b1120]">
+          <aside className="absolute inset-y-0 left-0 flex w-72 flex-col border-r border-panel-border bg-panel">
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-md p-2 text-slate-400 transition hover:bg-[#1a2338] hover:text-slate-200"
+              className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-md p-2 text-slate-400 transition hover:bg-panel-hoverAlt hover:text-slate-200"
               aria-label="Close admin navigation"
             >
               <X className="h-5 w-5" />

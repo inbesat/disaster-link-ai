@@ -48,7 +48,7 @@ export default function TaskDispatchButton() {
   }
 
   return (
-    <section className="rounded-xl border-2 border-[#1c2740] bg-[#0d1526] p-4">
+    <section className="rounded-xl border-2 border-panel-border bg-panel-deep p-4">
       <button
         type="button"
         onClick={() => void dispatch()}

@@ -141,7 +141,7 @@ export function PullToRefresh({
           >
             <motion.div
               style={{ scale: spinnerScale }}
-              className="mt-2 flex items-center gap-2 rounded-full border border-[#2c3f6d] bg-surface px-3.5 py-1.5 shadow-lg"
+              className="mt-2 flex items-center gap-2 rounded-full border border-panel-borderHover bg-surface px-3.5 py-1.5 shadow-lg"
             >
               <motion.span
                 className="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-500/15"

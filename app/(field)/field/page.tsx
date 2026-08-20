@@ -24,7 +24,7 @@ export default function FieldHomePage() {
       <EmergencyRecallBanner />
 
       {/* On-duty greeting */}
-      <section className="rounded-xl border-2 border-cyan-400/30 bg-[#0d1526] p-5">
+      <section className="rounded-xl border-2 border-cyan-400/30 bg-panel-deep p-5">
         <p className="text-2xl font-bold text-amber-300">On duty</p>
         <p className="mt-1 text-lg text-gray-200">
           Your district is on <span className="font-bold text-red-400">AMBER WATCH</span>.

@@ -104,7 +104,7 @@ export default function ShiftHandover() {
           aria-label="Shift handover report"
           className="fixed inset-0 z-[75] flex items-center justify-center bg-black/85 p-5"
         >
-          <div className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-3xl border-2 border-purple-400/50 bg-[#0d1526] p-6">
+          <div className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-3xl border-2 border-purple-400/50 bg-panel-deep p-6">
             {submitted ? (
               <div className="py-8 text-center">
                 <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-emerald-400 bg-emerald-500/15 text-3xl">
@@ -164,7 +164,7 @@ export default function ShiftHandover() {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Road conditions, shelter status, anything the next team must know…"
-                    className="min-h-[120px] w-full resize-y rounded-2xl border-2 border-[#2a3a5a] bg-[#0b1120] px-4 py-3 text-base text-gray-100 placeholder:text-slate-500 focus:border-purple-400 focus:outline-none"
+                    className="min-h-[120px] w-full resize-y rounded-2xl border-2 border-panel-borderStrong bg-panel px-4 py-3 text-base text-gray-100 placeholder:text-slate-500 focus:border-purple-400 focus:outline-none"
                   />
                   <VoiceInputButton onTranscription={(t) => setNotes((n) => (n ? `${n} ${t}` : t))} label="Dictate handover notes" />
                 </div>
@@ -179,7 +179,7 @@ export default function ShiftHandover() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="mt-3 min-h-[48px] w-full rounded-2xl border border-[#2a3a5a] text-base font-bold text-slate-300"
+                  className="mt-3 min-h-[48px] w-full rounded-2xl border border-panel-borderStrong text-base font-bold text-slate-300"
                 >
                   Cancel
                 </button>

@@ -177,7 +177,7 @@ export function ContextActionBar({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 18, opacity: 0 }}
               transition={transition}
-              className="pointer-events-auto mx-auto w-full max-w-md overflow-hidden rounded-xl border border-white/10 bg-[#0f172a]/95 shadow-2xl shadow-black/40 backdrop-blur-lg"
+              className="pointer-events-auto mx-auto w-full max-w-md overflow-hidden rounded-xl border border-white/10 bg-[rgb(var(--bg-secondary-rgb)/95)] shadow-2xl shadow-black/40 backdrop-blur-lg"
             >
               {context && (
                 <p className="border-b border-white/10 px-4 pt-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">

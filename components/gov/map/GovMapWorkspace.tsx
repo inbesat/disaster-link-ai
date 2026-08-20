@@ -65,7 +65,7 @@ export function GovMapWorkspace() {
 
   return (
     <GovMapLayersProvider>
-      <div className="gov-ops-map relative h-screen w-screen overflow-hidden bg-[#0a0f1a]">
+      <div className="gov-ops-map relative h-screen w-screen overflow-hidden bg-primary">
         {/* 100% screen map canvas */}
         <div className="absolute inset-0">
           <GovMapCanvas
@@ -80,7 +80,7 @@ export function GovMapWorkspace() {
         {/* Floating "Back to Dashboard" — top left */}
         <Link
           href="/gov/dashboard"
-          className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-[#0d1526]/85 px-3.5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.4)] backdrop-blur transition hover:bg-[#0d1526] hover:scale-[1.03] active:scale-95"
+          className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-panel-deep/85 px-3.5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-float-md)] backdrop-blur transition hover:bg-panel-deep hover:scale-[1.03] active:scale-95"
         >
           <ArrowLeft aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
           Back to Dashboard
@@ -105,7 +105,7 @@ export function GovMapWorkspace() {
             className={`inline-flex h-10 items-center gap-2 rounded-xl border px-3.5 text-sm font-semibold backdrop-blur transition hover:scale-[1.03] active:scale-95 ${
               is3D
                 ? "border-[var(--dl-blue-light)] bg-[var(--dl-blue)]/30 text-[var(--dl-blue-light)] shadow-[0_0_16px_rgba(91,141,246,0.4)]"
-                : "border-white/15 bg-[#0d1526]/85 text-white hover:bg-[#0d1526]"
+                : "border-white/15 bg-panel-deep/85 text-white hover:bg-panel-deep"
             }`}
           >
             <Mountain aria-hidden="true" className="h-4 w-4" />
@@ -121,7 +121,7 @@ export function GovMapWorkspace() {
         <AdvancedLayerControl />
 
         {/* Title chip — bottom left, over the attribution. */}
-        <div className="pointer-events-none absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full bg-[#0d1526]/80 px-3 py-1.5 text-[0.6875rem] font-medium text-white/80 backdrop-blur">
+        <div className="pointer-events-none absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full bg-panel-deep/80 px-3 py-1.5 text-[0.6875rem] font-medium text-white/80 backdrop-blur">
           <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 text-[var(--dl-blue-light)]" />
           GOV OPERATIONS MAP · PATNA
         </div>

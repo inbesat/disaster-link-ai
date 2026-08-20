@@ -243,13 +243,13 @@ export function VoiceInput({
           tone === "violet"
             ? `focus-visible:outline-[#c4b5fd] ${
                 listening
-                  ? "border-[#f87171]/70 bg-[#ef4444] bg-gradient-to-br from-[#ef4444] to-[#dc2626] text-white shadow-[0_0_24px_rgba(239,68,68,0.55)]"
+                  ? "border-severity-red-400/70 bg-severity-red-500 bg-gradient-to-br from-severity-red-500 to-severity-red-600 text-white shadow-[0_0_24px_rgba(239,68,68,0.55)]"
                   : "border-[#c4b5fd]/40 bg-[#8b5cf6] bg-gradient-to-br from-[#8b5cf6] to-[#7c3aed] text-white shadow-[0_6px_18px_rgba(139,92,246,0.4)] hover:border-[#c4b5fd]"
               }`
-            : `focus-visible:outline-[#34d399] ${
+            : `focus-visible:outline-severity-green-400 ${
                 listening
-                  ? "border-[#f87171]/70 bg-[#ef4444] bg-gradient-to-br from-[#ef4444] to-[#dc2626] text-white shadow-[0_0_24px_rgba(239,68,68,0.55)]"
-                  : "border-[#34d399]/40 bg-[#16a34a] bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] hover:border-[#34d399]"
+                  ? "border-severity-red-400/70 bg-severity-red-500 bg-gradient-to-br from-severity-red-500 to-severity-red-600 text-white shadow-[0_0_24px_rgba(239,68,68,0.55)]"
+                  : "border-severity-green-400/40 bg-[#16a34a] bg-gradient-to-br from-[#16a34a] to-[#0d9488] text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] hover:border-severity-green-400"
               }`
         }`}
       >
@@ -257,7 +257,7 @@ export function VoiceInput({
         {listening && (
           <motion.span
             aria-hidden
-            className="absolute inset-0 rounded-full border-2 border-[#f87171]"
+            className="absolute inset-0 rounded-full border-2 border-severity-red-400"
             animate={{ scale: [1, 1.35], opacity: [0.7, 0] }}
             transition={{ duration: 1.1, repeat: Infinity, ease: "easeOut" }}
           />
@@ -282,13 +282,13 @@ export function VoiceInput({
             transition={{ duration: 0.18 }}
             className="pointer-events-none absolute inset-x-0 bottom-full pb-2"
           >
-            <div className="flex items-center gap-3 rounded-2xl border border-[#f87171]/30 bg-[#0f172a]/95 px-4 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.4)] backdrop-blur">
+            <div className="flex items-center gap-3 rounded-2xl border border-severity-red-400/30 bg-[rgb(var(--bg-secondary-rgb)/95)] px-4 py-3 shadow-[var(--shadow-float-md)] backdrop-blur">
               <Waveform />
               <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-2 text-[0.8125rem] font-bold uppercase tracking-wider text-[#fca5a5]">
+                <p className="flex items-center gap-2 text-[0.8125rem] font-bold uppercase tracking-wider text-severity-red-300">
                   <span
                     aria-hidden
-                    className="h-2 w-2 animate-pulse rounded-full bg-[#f87171]"
+                    className="h-2 w-2 animate-pulse rounded-full bg-severity-red-400"
                   />
                   {simulated ? t("voice_unsupported") : t("voice_listen")}
                 </p>
@@ -317,7 +317,7 @@ function Waveform() {
       {[0, 1, 2, 3].map((i) => (
         <motion.span
           key={i}
-          className="h-6 w-1.5 rounded-full bg-[#f87171]"
+          className="h-6 w-1.5 rounded-full bg-severity-red-400"
           animate={{ scaleY: [0.35, 1, 0.35] }}
           transition={{
             duration: 0.9,

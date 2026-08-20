@@ -105,7 +105,7 @@ export default function EmergencyRecallBanner() {
   if (!active) {
     // Persistent idle/quiet bar listening for a broadcast.
     return (
-      <div className="flex items-center gap-3 rounded-xl border-2 border-[#1c2740] bg-[#0d1526] p-4">
+      <div className="flex items-center gap-3 rounded-xl border-2 border-panel-border bg-panel-deep p-4">
         <Radio className="h-5 w-5 shrink-0 animate-pulse text-amber-300" />
         <p className="flex-1 text-base text-gray-300">
           <span className="font-bold text-amber-300">Command Link LIVE.</span>{" "}
