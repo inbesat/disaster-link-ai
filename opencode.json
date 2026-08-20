@@ -6,6 +6,12 @@
       "command": ["npx", "-y", "stitch-mcp-server"],
       "enabled": true,
       "environment": {}
+    },
+    "open-design": {
+      "type": "local",
+      "command": ["node", "E:\\Hackathons\\disaster management\\open-design\\apps\\daemon\\bin\\od.mjs", "mcp"],
+      "enabled": true,
+      "environment": {}
     }
   }
 }

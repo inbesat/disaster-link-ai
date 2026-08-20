@@ -61,14 +61,17 @@ function SafeAction() {
       title="You're all clear"
       copy="No active threat in your area right now. Check the forecast to stay ahead of any change."
     >
-      <button
-        type="button"
-        onClick={scrollToWeather}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3.5 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white/10 hover:shadow-lg hover:shadow-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-300"
-      >
-        <CloudSun aria-hidden="true" className="h-5 w-5" />
-        View Weather Forecast
-      </button>
+      <div className="relative group">
+        <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-xl group-hover:bg-emerald-500/30 transition-all duration-500" />
+        <button
+          type="button"
+          onClick={scrollToWeather}
+          className="relative flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-5 py-3.5 text-base font-bold text-slate-900 shadow-lg shadow-emerald-500/25 transition-transform duration-200 hover:bg-emerald-400 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+        >
+          <CloudSun aria-hidden="true" className="h-5 w-5" />
+          View Weather Forecast
+        </button>
+      </div>
     </ActionBody>
   );
 }
@@ -83,21 +86,24 @@ function WatchAction() {
       title="Conditions are being monitored"
       copy="Nothing to act on yet — but get ready so you're never caught off guard."
     >
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-severity-amber-500 px-5 py-3.5 text-base font-bold text-white transition hover:bg-severity-amber-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-amber-300"
-      >
-        Check Evacuation Readiness
-        <ChevronDown
-          aria-hidden="true"
-          className={`h-5 w-5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
-      </button>
+      <div className="relative group">
+        <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-xl group-hover:bg-amber-500/30 transition-all duration-500" />
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          className="relative flex w-full items-center justify-center gap-2 rounded-full bg-amber-500 px-5 py-3.5 text-base font-bold text-slate-900 shadow-lg shadow-amber-500/25 transition-transform duration-200 hover:bg-amber-400 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
+        >
+          Check Evacuation Readiness
+          <ChevronDown
+            aria-hidden="true"
+            className={`h-5 w-5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          />
+        </button>
+      </div>
 
       {open && (
-        <ul className="mt-3 space-y-2 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
+        <ul className="mt-3 space-y-2 rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
           {CHECKLIST.map((item) => (
             <li key={item} className="flex items-start gap-2.5 text-sm text-[var(--dl-text-on-navy)]">
               <span aria-hidden="true" className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-severity-amber-400" />
@@ -119,13 +125,16 @@ function PrepareAction() {
       title="Prepare to evacuate"
       copy="Flooding is likely in the coming hours. Know the evacuation routes before you need them."
     >
-      <Link
-        href="/public/map"
-        className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[#F97316] px-5 py-3.5 text-base font-bold text-white transition hover:bg-[#EA5B0C] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange-light)]"
-      >
-        <Map aria-hidden="true" className="h-5 w-5" />
-        View Evacuation Routes
-      </Link>
+      <div className="relative group">
+        <div className="absolute inset-0 bg-orange-500/20 rounded-full blur-xl group-hover:bg-orange-500/30 transition-all duration-500" />
+        <Link
+          href="/public/map"
+          className="relative flex w-full items-center justify-center gap-2 rounded-full bg-orange-500 px-5 py-3.5 text-base font-bold text-slate-900 shadow-lg shadow-orange-500/25 transition-transform duration-200 hover:bg-orange-400 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-300"
+        >
+          <Map aria-hidden="true" className="h-5 w-5" />
+          View Evacuation Routes
+        </Link>
+      </div>
     </ActionBody>
   );
 }
@@ -140,13 +149,16 @@ function EvacuateAction() {
       copy="Move to higher ground immediately. Do not wait — your safety comes first."
       urgent
     >
-      <Link
-        href="/public/shelters"
-        className="animate-alert-pulse flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-severity-red-600 px-5 py-5 text-lg font-black uppercase tracking-wide text-white transition hover:bg-severity-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-red-300"
-      >
-        <Siren aria-hidden="true" className="h-6 w-6" />
-        Go to Nearest Shelter
-      </Link>
+      <div className="relative group">
+        <div className="absolute inset-0 bg-red-500/25 rounded-full blur-xl group-hover:bg-red-500/40 transition-all duration-500 animate-pulse" />
+        <Link
+          href="/public/shelters"
+          className="relative flex w-full items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-5 text-lg font-black uppercase tracking-wide text-white shadow-lg shadow-red-500/30 transition-transform duration-200 hover:bg-red-500 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-300"
+        >
+          <Siren aria-hidden="true" className="h-6 w-6" />
+          Go to Nearest Shelter
+        </Link>
+      </div>
     </ActionBody>
   );
 }
@@ -170,10 +182,10 @@ function ActionBody({
   return (
     <section
       aria-label={`What to do next — ${title}`}
-      className={`rounded-2xl border p-5 backdrop-blur-md transition-all duration-300 ${
+      className={`rounded-3xl border p-5 backdrop-blur-xl transition-all duration-300 ${
         urgent
-          ? "border-red-500/40 bg-red-500/10"
-          : "border-white/10 bg-white/5 hover:-translate-y-1 hover:bg-white/10 hover:shadow-lg hover:shadow-white/5"
+          ? "border-red-500/40 bg-red-500/10 shadow-[0_0_20px_rgba(239,68,68,0.15)]"
+          : "border-white/10 bg-white/5 hover:-translate-y-1 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]"
       }`}
     >
       <div className="flex items-start gap-3">

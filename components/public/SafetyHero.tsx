@@ -120,7 +120,7 @@ export function SafetyHero({
     <section
       role="status"
       aria-label={`${t("safety_status_label")}: ${status}`}
-      className={`relative flex min-h-[48vh] flex-col justify-between overflow-hidden rounded-3xl border border-white/10 p-6 shadow-2xl backdrop-blur-2xl transition-all duration-300 ${theme.glowShadow} ${theme.pulseClass ?? ""}`}
+      className={`relative flex min-h-[48vh] flex-col justify-between overflow-hidden rounded-[2rem] border border-white/10 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.5)] backdrop-blur-2xl transition-all duration-300 ${theme.glowShadow} ${theme.pulseClass ?? ""}`}
     >
       {/* Deep status-tinted gradient mesh */}
       <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${theme.gradientClass}`} />
@@ -157,9 +157,9 @@ export function SafetyHero({
       </div>
 
       {/* Massive status text — gradient-clipped headline in a frosted panel */}
-      <div className="relative mt-8 rounded-2xl border border-white/20 bg-white/10 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+      <div className="relative mt-8 rounded-3xl border border-white/20 bg-white/10 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.28)] backdrop-blur-xl">
         <h2
-          className={`text-balance text-4xl font-black leading-none tracking-tight sm:text-5xl ${theme.headlineGradient}`}
+          className={`text-balance text-4xl font-extrabold leading-none tracking-tight sm:text-5xl ${theme.headlineGradient}`}
         >
           {t(theme.headlineKey)}
         </h2>
@@ -169,7 +169,7 @@ export function SafetyHero({
       </div>
 
       {/* Area + last-updated footer — lighter frosted strip */}
-      <div className="relative mt-8 flex flex-wrap items-end justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-lg">
+      <div className="relative mt-8 flex flex-wrap items-end justify-between gap-3 rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
         <div>
           <p className="eoc-label text-[var(--dl-text-muted)]">{t("safety_your_area")}</p>
           <p className="mt-0.5 text-sm font-semibold text-white">{area}</p>

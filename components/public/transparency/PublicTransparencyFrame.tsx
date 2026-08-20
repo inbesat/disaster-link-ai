@@ -4,23 +4,23 @@
 // components/public/transparency/PublicTransparencyFrame.tsx — client
 // shell for the public "Live Response Status" panel.
 //
-// Desktop (lg+): a fixed right rail that slides in/out as a drawer
-// (transition-transform, closed by default via translate-x-full). A
-// floating toggle button rides the drawer's left edge — it slides to the
-// screen edge when the drawer is closed so it stays clickable. The
-// content area scrolls independently (overflow-y-auto pb-24) under a
-// pinned header.
+// Converted to a full-height sliding overlay drawer (Phase 3):
 //
-// Mobile (< lg): a floating trigger button above the citizen BottomNav
-// opens a slide-up bottom sheet (max-h 80dvh). Both surfaces share the
-// same context state (TransparencyPanelContext) so opening one syncs the
-// other. The widget content is passed in as `children`
-// (server-composed by PublicTransparencyPanel).
+//   • Drawer: fixed top-0 right-0 h-[100dvh] z-[70], slides in/out
+//     via translate-x with duration-500 ease-out.
+//   • Width: w-full on mobile (full-screen overlay), md:w-[400px] on
+//     desktop (side panel).
+//   • Toggle: a frosted-glass button on the left outer edge of the
+//     panel (absolute top-1/3 -left-12) with a Chart icon.
+//   • Backdrop: fixed inset-0 bg-black/60 backdrop-blur-sm z-[65]
+//     behind the panel on mobile so tapping empty space closes it.
+//   • Mobile trigger: a floating pill above the BottomNav that opens
+//     the drawer when it's closed.
 // ---------------------------------------------------------------------
 
-import { useEffect, type ReactNode } from "react";
-import { Activity, BarChart2, ChevronRight, X } from "lucide-react";
-import { useTransparencyPanel } from "./TransparencyPanelContext";
+import { useEffect, useState, type ReactNode } from "react";
+import { Activity, BarChart2, X } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 type PublicTransparencyFrameProps = {
   title?: string;
@@ -33,13 +33,16 @@ export default function PublicTransparencyFrame({
   subtitle = "Read-only view of the district response",
   children,
 }: PublicTransparencyFrameProps) {
-  const { isOpen, setOpen } = useTransparencyPanel();
+  const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Lock body scroll while the mobile sheet is up (< lg). The desktop
-  // drawer leaves the page scrollable behind it.
+  // Lock body scroll on mobile while the drawer is open (< md).
   useEffect(() => {
     if (!isOpen) return;
-    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches)
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(min-width: 768px)").matches
+    )
       return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -51,7 +54,10 @@ export default function PublicTransparencyFrame({
   const header = (
     <div className="min-w-0 flex-1">
       <p className="flex items-center gap-2 text-sm font-bold text-white">
-        <Activity aria-hidden className="h-4 w-4 shrink-0 text-[var(--dl-orange)]" />
+        <Activity
+          aria-hidden
+          className="h-4 w-4 shrink-0 text-[var(--dl-orange)]"
+        />
         {title}
       </p>
       <p className="mt-0.5 text-xs text-[var(--dl-text-muted)]">{subtitle}</p>
@@ -60,83 +66,68 @@ export default function PublicTransparencyFrame({
 
   return (
     <>
-      {/* Desktop: sliding drawer rail (lg+), closed by default. */}
+      {/* ── Backdrop — mobile only, rendered when drawer is open ── */}
+      {isOpen && (
+        <div
+          aria-hidden="true"
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-[65] bg-black/60 backdrop-blur-sm transition-opacity duration-500 md:hidden"
+        />
+      )}
+
+      {/* ── Drawer panel — full-height sliding overlay ── */}
       <aside
         aria-hidden={!isOpen}
-        className={`fixed top-0 right-0 z-40 hidden h-screen w-[360px] border-l border-white/10 bg-[#0a0f1a]/95 backdrop-blur-xl transition-transform duration-300 ease-in-out lg:block ${
-          isOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
+        className={`fixed top-0 right-0 z-[70] h-[100dvh] w-full border-l border-white/10 bg-[#0a0f1a]/95 backdrop-blur-xl transition-transform duration-500 ease-out md:w-[400px] ${
+          isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex h-full flex-col overflow-hidden">
-          {/* Pinned header */}
+        <div className="relative flex h-full flex-col overflow-hidden">
+          {/* ── Frosted-glass toggle button — left outer edge ── */}
+          <button
+            type="button"
+            onClick={() => setIsOpen((v) => !v)}
+            aria-expanded={isOpen}
+            aria-label={
+              isOpen ? "Close live response panel" : "Open live response panel"
+            }
+            className="absolute top-1/3 -left-12 z-[71] flex h-16 w-12 -translate-y-1/2 items-center justify-center rounded-l-2xl border-y border-l border-white/20 bg-white/10 backdrop-blur-md transition-colors duration-300 hover:bg-white/20"
+          >
+            <BarChart2 aria-hidden className="h-5 w-5 text-white" />
+          </button>
+
+          {/* ── Pinned header with close button ── */}
           <div className="flex items-start justify-between gap-3 border-b border-white/10 px-4 pt-4 pb-3">
             {header}
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              aria-label="Close panel"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/5 text-[var(--dl-text-muted)] transition hover:text-white"
+            >
+              <X aria-hidden className="h-4 w-4" />
+            </button>
           </div>
-          {/* Scrollable widget stack */}
-          <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24">{children}</div>
+
+          {/* ── Scrollable widget stack ── */}
+          <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24">
+            {children}
+          </div>
         </div>
       </aside>
 
-      {/* Desktop toggle — rides the drawer's left edge; slides to the
-          screen edge when closed so it stays reachable. */}
-      <button
-        type="button"
-        onClick={() => setOpen(!isOpen)}
-        aria-expanded={isOpen}
-        aria-label={isOpen ? "Close live response panel" : "Open live response panel"}
-        className={`fixed top-1/2 z-50 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-l-xl border border-white/20 bg-white/10 shadow-lg backdrop-blur-md transition-all duration-300 hover:bg-white/20 lg:flex ${
-          isOpen ? "right-[360px]" : "right-0"
-        }`}
-      >
-        {isOpen ? (
-          <ChevronRight aria-hidden className="h-5 w-5 text-white" />
-        ) : (
-          <BarChart2 aria-hidden className="h-5 w-5 text-white" />
-        )}
-      </button>
-
-      {/* Mobile: floating trigger above the bottom nav (< lg) */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-haspopup="dialog"
-        aria-label="Open live response status"
-        className="fixed bottom-[calc(160px+env(safe-area-inset-bottom))] right-4 z-40 flex items-center gap-2 rounded-full border border-white/10 bg-[#0f2a4f] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-1 ring-white/10 transition hover:border-[var(--dl-orange)]/60 active:scale-95 lg:hidden"
-      >
-        <Activity aria-hidden className="h-4 w-4 text-[var(--dl-orange)]" />
-        Live Status
-      </button>
-
-      {/* Mobile: slide-up bottom sheet (< lg) */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-[70] lg:hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Live response status"
+      {/* ── Mobile floating trigger — visible when drawer is closed ── */}
+      {!isOpen && (
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          aria-haspopup="dialog"
+          aria-label="Open live response status"
+          className="fixed bottom-[calc(160px+env(safe-area-inset-bottom))] right-4 z-40 flex items-center gap-2 rounded-full border border-white/10 bg-[#0f2a4f] px-4 py-3 text-sm font-semibold text-white shadow-xl ring-1 ring-white/10 transition hover:border-[var(--dl-orange)]/60 active:scale-95 md:hidden"
         >
-          <button
-            type="button"
-            aria-label="Close"
-            onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/60"
-          />
-          <div className="absolute inset-x-0 bottom-0 mx-auto max-h-[80dvh] w-full max-w-md overflow-y-auto rounded-t-3xl border-t border-white/10 bg-[#0a0f1a] px-4 pt-2 pb-[calc(20px+env(safe-area-inset-bottom))] shadow-2xl">
-            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/20" aria-hidden />
-            <div className="flex items-start justify-between gap-3">
-              {header}
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="Close panel"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/5 text-[var(--dl-text-muted)] transition hover:text-white"
-              >
-                <X aria-hidden className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="mt-4">{children}</div>
-          </div>
-        </div>
+          <Activity aria-hidden className="h-4 w-4 text-[var(--dl-orange)]" />
+          Live Status
+        </button>
       )}
     </>
   );

@@ -8,7 +8,7 @@ export default function EmergencyContactCard() {
     <a
       href="tel:1070"
       aria-label="Call District Control Room 1070"
-      className="fixed bottom-6 right-6 z-40 hidden w-auto items-center gap-3 rounded-2xl bg-severity-red-600 px-4 py-3 font-semibold text-white shadow-lg transition hover:bg-severity-red-500 md:flex"
+      className="fixed top-20 right-4 z-[60] flex w-auto max-w-[90vw] items-center gap-3 rounded-2xl border border-red-400/50 bg-red-600/90 px-4 py-3 font-semibold text-white shadow-2xl shadow-red-500/20 backdrop-blur-xl transition hover:bg-red-500/90"
     >
       <SosIcon />
       <span>

@@ -95,7 +95,7 @@ export default function BottomNav({ className }: { className?: string }) {
   return (
     <nav
       aria-label="Citizen navigation"
-      className={`fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md border-t border-white/10 bg-[#0F2A4F]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg${
+      className={`fixed bottom-0 w-full z-[40] mx-auto max-w-md bg-[#0a0f1a]/80 pb-[env(safe-area-inset-bottom)] backdrop-blur-2xl border-t border-white/10${
         className ? ` ${className}` : ""
       }`}
     >
