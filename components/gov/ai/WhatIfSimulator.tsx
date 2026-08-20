@@ -89,7 +89,7 @@ export function WhatIfSimulator() {
   };
 
   return (
-    <section className="shrink-0 rounded-xl border border-white/10 bg-[#0d1526]">
+    <section className="shrink-0 rounded-xl border border-white/10 bg-panel-deep">
       {/* Panel header (collapsible) */}
       <button
         type="button"

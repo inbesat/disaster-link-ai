@@ -160,7 +160,7 @@ export default function DataRetentionCard({
     <>
       <section
         data-settings-key="privacy-data-retention"
-        className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+        className="rounded-eoc border border-panel-border bg-surface p-5"
       >
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -184,7 +184,7 @@ export default function DataRetentionCard({
           {POLICIES.map((policy) => (
             <div
               key={policy.key}
-              className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-4"
+              className="rounded-md border border-panel-border bg-surface-muted/40 p-4"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="min-w-0">
@@ -200,7 +200,7 @@ export default function DataRetentionCard({
                   id={`retention-${policy.key}`}
                   value={selectValue(policy, retention[policy.key])}
                   onChange={(e) => updatePolicy(policy.key, e.target.value)}
-                  className="rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2 text-sm font-semibold text-slate-100 outline-none transition focus:border-emerald-400/60"
+                  className="rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm font-semibold text-slate-100 outline-none transition focus:border-emerald-400/60"
                 >
                   {policy.options.map((option) => (
                     <option
@@ -219,7 +219,7 @@ export default function DataRetentionCard({
                     ? "No auto-deletion configured"
                     : "Automated cleanup is active"}
                 </p>
-                <span className="rounded-full border border-[#2c3f6d] bg-[#1c2740] px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-300">
+                <span className="rounded-full border border-panel-borderHover bg-[#1c2740] px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-300">
                   {mounted ? scheduleLabel(policy, retention[policy.key]) : "—"}
                 </span>
               </div>
@@ -285,7 +285,7 @@ export default function DataRetentionCard({
                 type="button"
                 onClick={() => setConfirmOpen(false)}
                 disabled={purging}
-                className="rounded-md border border-[#2c3f6d] px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted disabled:opacity-50"
+                className="rounded-md border border-panel-borderHover px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-surface-muted disabled:opacity-50"
               >
                 Cancel
               </button>

@@ -11,7 +11,7 @@
 //   • Right  — Global flood status badge, notification bell, avatar + role
 //              chip.
 //
-// All colors follow the hero-screen spec exactly (bg-[#0a0f1a]/95 + white/10
+// All colors follow the hero-screen spec exactly (bg-[rgb(var(--bg-primary-rgb)/95)] + white/10
 // hairline) so the header reads as one dark slab independent of theme tokens.
 // ---------------------------------------------------------------------
 
@@ -96,7 +96,7 @@ function DistrictSelect({
         <ul
           role="listbox"
           aria-label="Select district"
-          className="absolute left-0 top-full z-50 mt-2 w-52 rounded-md border border-white/10 bg-[#111827] p-1 shadow-xl shadow-black/40"
+          className="absolute left-0 top-full z-50 mt-2 w-52 rounded-md border border-white/10 bg-secondary p-1 shadow-xl shadow-black/40"
         >
           {DASHBOARD_DISTRICTS.map((district) => {
             const active = district === currentDistrict;
@@ -137,7 +137,7 @@ export function DashboardHeader({
   avatarUrl = null,
 }: DashboardHeaderProps) {
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-white/10 bg-[#0a0f1a]/95 px-4 backdrop-blur-md">
+    <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-white/10 bg-[rgb(var(--bg-primary-rgb)/95)] px-4 backdrop-blur-md">
       {/* Left — district selector */}
       <DistrictSelect
         currentDistrict={currentDistrict}

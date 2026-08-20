@@ -68,20 +68,20 @@ export default function SystemHealthPage() {
             IT pipeline monitor — data, DMS, ML, and message pipelines.
           </p>
         </div>
-        <div className="rounded-md border border-[#1c2740] bg-[#0b1120] px-4 py-2 font-mono text-sm text-severity-amber-300">
+        <div className="rounded-md border border-panel-border bg-panel px-4 py-2 font-mono text-sm text-severity-amber-300">
           {upCount}/{SERVICES.length} SERVICES HEALTHY
         </div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Server rack status */}
-        <div className="rounded-lg border border-[#1c2740] bg-[#0b1120] lg:col-span-2">
-          <div className="border-b border-[#1c2740] px-5 py-4">
+        <div className="rounded-lg border border-panel-border bg-panel lg:col-span-2">
+          <div className="border-b border-panel-border px-5 py-4">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               Server Rack · Service Status
             </h2>
           </div>
-          <ul className="divide-y divide-[#151d31]">
+          <ul className="divide-y divide-panel-divide">
             {SERVICES.map((s) => (
               <li key={s.name} className="flex items-center gap-4 px-5 py-4">
                 <span
@@ -117,8 +117,8 @@ export default function SystemHealthPage() {
         </div>
 
         {/* Response time chart */}
-        <div className="rounded-lg border border-[#1c2740] bg-[#0b1120]">
-          <div className="border-b border-[#1c2740] px-5 py-4">
+        <div className="rounded-lg border border-panel-border bg-panel">
+          <div className="border-b border-panel-border px-5 py-4">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               API Response Time
             </h2>

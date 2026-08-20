@@ -46,7 +46,7 @@ export default function ControlRoomCard() {
   return (
     <section
       data-settings-key="contacts-control-room"
-      className="rounded-eoc border border-[#1c2740] border-t-4 border-t-amber-400 bg-surface p-5"
+      className="rounded-eoc border border-panel-border border-t-4 border-t-amber-400 bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -75,7 +75,7 @@ export default function ControlRoomCard() {
         {CONTROL_LINES.map((line) => (
           <div
             key={line.key}
-            className="flex flex-wrap items-center gap-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4"
+            className="flex flex-wrap items-center gap-4 rounded-md border border-panel-border bg-surface-muted/40 p-4"
           >
             <div className="min-w-0">
               <p className="eoc-label text-amber-300/80">{line.label}</p>
@@ -109,7 +109,7 @@ export default function ControlRoomCard() {
         ))}
 
         {/* Email row */}
-        <div className="flex flex-wrap items-center gap-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+        <div className="flex flex-wrap items-center gap-4 rounded-md border border-panel-border bg-surface-muted/40 p-4">
           <div className="min-w-0">
             <p className="eoc-label text-cyan-300/80">EMAIL</p>
             <p className="mt-0.5 font-mono text-lg font-bold tracking-wide text-slate-50">

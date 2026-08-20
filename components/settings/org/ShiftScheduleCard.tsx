@@ -69,7 +69,7 @@ export default function ShiftScheduleCard() {
   return (
     <section
       data-settings-key="org-shift-schedule"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -118,10 +118,10 @@ export default function ShiftScheduleCard() {
       )}
 
       {/* Shift table */}
-      <div className="mt-5 overflow-x-auto rounded-md border border-[#1c2740]">
+      <div className="mt-5 overflow-x-auto rounded-md border border-panel-border">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-[#1c2740] bg-surface-muted/40 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            <tr className="border-b border-panel-border bg-surface-muted/40 text-[10px] font-bold uppercase tracking-widest text-slate-500">
               <th className="px-4 py-2.5">Shift</th>
               <th className="px-4 py-2.5">Start</th>
               <th className="px-4 py-2.5">End</th>
@@ -171,7 +171,7 @@ export default function ShiftScheduleCard() {
                       value={shift.start}
                       onChange={(e) => setTime(shift.id, "start", e.target.value)}
                       aria-label={`${shift.name} shift start time`}
-                      className="rounded-md border border-[#1c2740] bg-[#0a0f1d] px-2 py-1.5 font-mono text-xs text-slate-200 outline-none focus:border-teal-400/60"
+                      className="rounded-md border border-panel-border bg-[#0a0f1d] px-2 py-1.5 font-mono text-xs text-slate-200 outline-none focus:border-teal-400/60"
                     />
                   </td>
                   <td className="px-4 py-3">
@@ -180,7 +180,7 @@ export default function ShiftScheduleCard() {
                       value={shift.end}
                       onChange={(e) => setTime(shift.id, "end", e.target.value)}
                       aria-label={`${shift.name} shift end time`}
-                      className="rounded-md border border-[#1c2740] bg-[#0a0f1d] px-2 py-1.5 font-mono text-xs text-slate-200 outline-none focus:border-teal-400/60"
+                      className="rounded-md border border-panel-border bg-[#0a0f1d] px-2 py-1.5 font-mono text-xs text-slate-200 outline-none focus:border-teal-400/60"
                     />
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -191,7 +191,7 @@ export default function ShiftScheduleCard() {
                       className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-[11px] font-semibold transition ${
                         isActiveShift
                           ? "border-teal-400/50 bg-teal-500/10 text-teal-200"
-                          : "border-[#1c2740] text-slate-500 hover:border-teal-400/40 hover:text-teal-200"
+                          : "border-panel-border text-slate-500 hover:border-teal-400/40 hover:text-teal-200"
                       }`}
                     >
                       <Users className="h-3.5 w-3.5" aria-hidden />
@@ -210,7 +210,7 @@ export default function ShiftScheduleCard() {
         className={`mt-4 rounded-md border p-4 transition ${
           activeShiftId === "night"
             ? "border-teal-400/50 bg-teal-500/[0.06]"
-            : "border-[#1c2740] bg-surface-muted/40"
+            : "border-panel-border bg-surface-muted/40"
         }`}
       >
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -256,7 +256,7 @@ export default function ShiftScheduleCard() {
                 <div
                   role="listbox"
                   aria-label={`Assign team members to the ${activeShift.name} shift`}
-                  className="absolute right-0 z-20 mt-2 w-72 overflow-hidden rounded-md border border-[#1c2740] bg-surface shadow-2xl"
+                  className="absolute right-0 z-20 mt-2 w-72 overflow-hidden rounded-md border border-panel-border bg-surface shadow-2xl"
                 >
                   {TEAM_MEMBERS.map((member) => {
                     const assigned = activeRoster.includes(member.name);
@@ -331,7 +331,7 @@ export default function ShiftScheduleCard() {
       </div>
 
       {/* Helper note */}
-      <p className="mt-4 rounded-md border border-[#1c2740] bg-surface-muted/40 px-3 py-2.5 text-xs leading-relaxed text-slate-400">
+      <p className="mt-4 rounded-md border border-panel-border bg-surface-muted/40 px-3 py-2.5 text-xs leading-relaxed text-slate-400">
         Alerts routed to DND-enabled responders will automatically divert to
         the active shift roster.
       </p>

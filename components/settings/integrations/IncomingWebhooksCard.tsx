@@ -159,7 +159,7 @@ export default function IncomingWebhooksCard() {
   return (
     <section
       data-settings-key="integrations-sensors"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex flex-wrap items-center gap-3">
@@ -185,7 +185,7 @@ export default function IncomingWebhooksCard() {
       </p>
 
       {/* Sensor ingest endpoint */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-[#0a0f1d] p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-[#0a0f1d] p-4">
         <p className="eoc-label flex items-center gap-1.5 text-violet-300/80">
           <Cpu className="h-3 w-3" aria-hidden />
           SENSOR INGEST ENDPOINT
@@ -200,7 +200,7 @@ export default function IncomingWebhooksCard() {
 
         {webhookUrl ? (
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <code className="min-w-0 flex-1 break-all rounded-md border border-[#1c2740] bg-surface-muted/40 px-3 py-2 font-mono text-xs text-violet-200">
+            <code className="min-w-0 flex-1 break-all rounded-md border border-panel-border bg-surface-muted/40 px-3 py-2 font-mono text-xs text-violet-200">
               {webhookUrl}
             </code>
             <button
@@ -208,7 +208,7 @@ export default function IncomingWebhooksCard() {
               onClick={handleCopy}
               aria-label="Copy webhook URL"
               title="Copy webhook URL"
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#2c3f6d] px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-violet-400/50 hover:bg-violet-500/10 hover:text-violet-200"
+              className="inline-flex items-center gap-1.5 rounded-md border border-panel-borderHover px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-violet-400/50 hover:bg-violet-500/10 hover:text-violet-200"
             >
               {copied ? (
                 <>
@@ -226,7 +226,7 @@ export default function IncomingWebhooksCard() {
               type="button"
               onClick={handleRotate}
               title="Rotate URL — old endpoint stops accepting data"
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#2c3f6d] px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-200"
+              className="inline-flex items-center gap-1.5 rounded-md border border-panel-borderHover px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-200"
             >
               <RefreshCw className="h-3.5 w-3.5" aria-hidden />
               Rotate
@@ -245,7 +245,7 @@ export default function IncomingWebhooksCard() {
       </div>
 
       {/* Recent payloads terminal */}
-      <div className="mt-5 overflow-hidden rounded-md border border-[#1c2740] bg-[#04080f]">
+      <div className="mt-5 overflow-hidden rounded-md border border-panel-border bg-[#04080f]">
         {/* Terminal chrome */}
         <div className="flex items-center gap-2 border-b border-[#122033] bg-[#0a1322] px-4 py-2.5">
           <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
@@ -261,7 +261,7 @@ export default function IncomingWebhooksCard() {
           <button
             type="button"
             onClick={handleSimulate}
-            className="inline-flex items-center gap-1 rounded-md border border-[#1c2740] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-violet-300 transition hover:border-violet-400/50 hover:bg-violet-500/10"
+            className="inline-flex items-center gap-1 rounded-md border border-panel-border px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-violet-300 transition hover:border-violet-400/50 hover:bg-violet-500/10"
           >
             <Activity className="h-3 w-3" aria-hidden />
             Simulate

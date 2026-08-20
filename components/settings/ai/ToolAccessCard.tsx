@@ -97,7 +97,7 @@ export default function ToolAccessCard() {
   return (
     <section
       data-settings-key="ai-tool-access"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -131,7 +131,7 @@ export default function ToolAccessCard() {
                   ? on
                     ? "border-red-400/40 bg-red-500/[0.07]"
                     : "border-[#2a1a1a] bg-surface-muted/40"
-                  : "border-[#1c2740] bg-surface-muted/40"
+                  : "border-panel-border bg-surface-muted/40"
               }`}
             >
               <div className="flex items-start gap-3">
@@ -191,7 +191,7 @@ export default function ToolAccessCard() {
       </div>
 
       {/* Guardrail footnote */}
-      <div className="mt-4 flex items-start gap-2 rounded-md border border-[#1c2740] bg-[#0a0f1d] p-3">
+      <div className="mt-4 flex items-start gap-2 rounded-md border border-panel-border bg-[#0a0f1d] p-3">
         <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" aria-hidden />
         <p className="text-[11px] leading-relaxed text-slate-500">
           The assistant never silently escalates. Any denied tool request is

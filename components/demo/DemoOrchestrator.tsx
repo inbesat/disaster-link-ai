@@ -175,10 +175,10 @@ export default function DemoOrchestrator({ className = "" }: DevToolsProps) {
         dragElastic={0}
         dragMomentum={false}
         whileDrag={{ scale: 1.02 }}
-        className={`pointer-events-auto absolute bottom-4 right-4 w-[360px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-white/15 bg-[#0a0f1a]/95 text-white shadow-[0_24px_80px_rgba(0,0,0,0.7)] backdrop-blur-md ${className}`}
+        className={`pointer-events-auto absolute bottom-4 right-4 w-[360px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-white/15 bg-[rgb(var(--bg-primary-rgb)/95)] text-white shadow-[0_24px_80px_rgba(0,0,0,0.7)] backdrop-blur-md ${className}`}
       >
         {/* Title bar — the drag handle */}
-        <div className="flex cursor-grab items-center justify-between border-b border-white/10 bg-[#0d1526] px-3 py-2 active:cursor-grabbing">
+        <div className="flex cursor-grab items-center justify-between border-b border-white/10 bg-panel-deep px-3 py-2 active:cursor-grabbing">
           <span className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-300">
             <GripHorizontal className="h-3.5 w-3.5 text-slate-500" aria-hidden />
             Dev Tools · Demo Orchestrator

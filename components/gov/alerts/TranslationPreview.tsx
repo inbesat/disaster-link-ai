@@ -39,7 +39,7 @@ export function TranslationPreview({
   const isEditing = editingLang !== null;
 
   return (
-    <div className="mt-3 overflow-hidden rounded-xl border border-white/10 bg-[#0d1526]">
+    <div className="mt-3 overflow-hidden rounded-xl border border-white/10 bg-panel-deep">
       {/* Language switch — segmented control (aria-pressed buttons, the
           codebase convention — avoids half-implemented ARIA tabs). */}
       <div

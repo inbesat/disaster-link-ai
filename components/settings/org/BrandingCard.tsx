@@ -65,7 +65,7 @@ export default function BrandingCard() {
   return (
     <section
       data-settings-key="org-branding"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -93,7 +93,7 @@ export default function BrandingCard() {
               <img
                 src={logoPreview}
                 alt="Agency logo preview"
-                className="h-12 w-12 shrink-0 rounded-md border border-[#1c2740] object-contain bg-[#0a0f1d]"
+                className="h-12 w-12 shrink-0 rounded-md border border-panel-border object-contain bg-[#0a0f1d]"
               />
               <div>
                 <p className="text-sm font-semibold text-slate-200">
@@ -116,7 +116,7 @@ export default function BrandingCard() {
                 type="button"
                 onClick={removeLogo}
                 aria-label="Remove logo"
-                className="rounded-md border border-[#1c2740] p-1.5 text-slate-400 transition hover:bg-red-500/10 hover:text-red-300"
+                className="rounded-md border border-panel-border p-1.5 text-slate-400 transition hover:bg-red-500/10 hover:text-red-300"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
@@ -137,7 +137,7 @@ export default function BrandingCard() {
             className={`mt-2 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-dashed px-4 py-8 text-center transition ${
               dragOver
                 ? "border-violet-400 bg-violet-500/10"
-                : "border-[#1c2740] bg-[#0a0f1d] hover:border-violet-400/40"
+                : "border-panel-border bg-[#0a0f1d] hover:border-violet-400/40"
             }`}
           >
             <ImageIcon className="h-6 w-6 text-slate-500" aria-hidden />
@@ -169,7 +169,7 @@ export default function BrandingCard() {
           onChange={(e) => setLegalText(e.target.value)}
           rows={3}
           placeholder="e.g. CONFIDENTIAL: NDRF Internal Operations Use Only"
-          className="mt-2 w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2.5 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-violet-400/60"
+          className="mt-2 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-violet-400/60"
         />
         <div className="mt-1 flex items-center justify-between">
           <p className="text-[11px] text-slate-500">
@@ -182,7 +182,7 @@ export default function BrandingCard() {
       </div>
 
       {/* Export embed explainer */}
-      <div className="mt-5 flex items-start gap-3 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 flex items-start gap-3 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <FileText className="mt-0.5 h-4 w-4 shrink-0 text-violet-300" aria-hidden />
         <p className="text-xs leading-relaxed text-slate-400">
           This logo and legal text will be{" "}

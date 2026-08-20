@@ -227,7 +227,7 @@ export function VoiceInputButton({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
             transition={{ type: "spring", stiffness: 380, damping: 26 }}
-            className="fixed inset-x-0 bottom-[calc(72px+env(safe-area-inset-bottom)+1rem)] z-50 mx-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-white/10 bg-[#0f172a]/95 p-4 shadow-2xl shadow-black/50 backdrop-blur-lg"
+            className="fixed inset-x-0 bottom-[calc(72px+env(safe-area-inset-bottom)+1rem)] z-50 mx-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-white/10 bg-[rgb(var(--bg-secondary-rgb)/95)] p-4 shadow-2xl shadow-black/50 backdrop-blur-lg"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-2">

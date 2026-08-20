@@ -44,7 +44,7 @@ function ConfettiPiece({ color, delay }: { color: string; delay: number }) {
   return (
     <motion.span
       aria-hidden
-      className="absolute bottom-0 block rounded-[2px]"
+      className="absolute bottom-0 block rounded-[var(--radius-micro)]"
       style={{ width, height: 10 + Math.random() * 8, background: color }}
       initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }}
       animate={{ x, y: -260 - Math.random() * 120, opacity: 0, rotate: rotation }}
@@ -105,7 +105,7 @@ export default function PwaInstallPrompt() {
           animate={{ y: 0 }}
           exit={{ y: "110%" }}
           transition={{ type: "spring", stiffness: 320, damping: 34, mass: 1 }}
-          className="fixed inset-x-0 bottom-0 z-[90] mx-auto w-full max-w-md rounded-t-3xl border-t border-white/10 bg-[#0d1526] pb-[calc(20px+env(safe-area-inset-bottom))] shadow-[0_-12px_48px_rgba(0,0,0,0.6)]"
+          className="fixed inset-x-0 bottom-0 z-[90] mx-auto w-full max-w-md rounded-t-3xl border-t border-white/10 bg-panel-deep pb-[calc(20px+env(safe-area-inset-bottom))] shadow-[var(--shadow-float-sheet)]"
         >
           <div className="relative px-6 pt-5">
             {/* Drag handle */}
@@ -148,7 +148,7 @@ export default function PwaInstallPrompt() {
             <ul className="mt-5 space-y-2.5">
               {FEATURES.map(({ icon: Icon, label }) => (
                 <li key={label} className="flex items-center gap-3 text-sm font-semibold text-slate-200">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F97316]/15 text-[#FDBA74]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F97316]/15 text-[var(--brand-orangeLight)]">
                     <Icon aria-hidden className="h-4 w-4" />
                   </span>
                   {label}
@@ -161,7 +161,7 @@ export default function PwaInstallPrompt() {
               <button
                 type="button"
                 onClick={() => void onInstall()}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#F97316] px-5 py-3.5 text-sm font-black uppercase tracking-wider text-white shadow-[0_8px_24px_rgba(249,115,22,0.45)] transition hover:brightness-110 active:scale-[0.99]"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--brand-orange)] px-5 py-3.5 text-sm font-black uppercase tracking-wider text-white shadow-[0_8px_24px_rgba(249,115,22,0.45)] transition hover:brightness-110 active:scale-[0.99]"
               >
                 <Smartphone aria-hidden className="h-4 w-4" />
                 Install Now

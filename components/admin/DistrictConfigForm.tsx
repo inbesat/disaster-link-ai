@@ -35,7 +35,7 @@ export default function DistrictConfigForm() {
     <div className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Threshold controls */}
-        <div className="rounded-lg border border-[#1c2740] bg-[#0b1120] p-5 space-y-6">
+        <div className="rounded-lg border border-panel-border bg-panel p-5 space-y-6">
           <div>
             <div className="flex items-center">
               <label
@@ -111,7 +111,7 @@ export default function DistrictConfigForm() {
         </div>
 
         {/* Live summary */}
-        <div className="rounded-lg border border-[#1c2740] bg-[#0b1120] p-5">
+        <div className="rounded-lg border border-panel-border bg-panel p-5">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
             Live Summary
           </h3>

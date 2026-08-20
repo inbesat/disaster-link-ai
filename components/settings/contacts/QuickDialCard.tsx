@@ -87,7 +87,7 @@ export default function QuickDialCard() {
   return (
     <section
       data-settings-key="contacts-quickdial"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -143,7 +143,7 @@ export default function QuickDialCard() {
             toast("Shortcut editor arrives in a later step.", { duration: 2500 })
           }
           aria-label="Add a custom shortcut"
-          className="flex aspect-square flex-col items-center justify-center gap-2 rounded-md border border-dashed border-[#2c3f6d] bg-surface-muted/30 p-2 text-slate-500 transition hover:border-amber-400/40 hover:bg-amber-500/10 hover:text-amber-300"
+          className="flex aspect-square flex-col items-center justify-center gap-2 rounded-md border border-dashed border-panel-borderHover bg-surface-muted/30 p-2 text-slate-500 transition hover:border-amber-400/40 hover:bg-amber-500/10 hover:text-amber-300"
         >
           <Plus className="h-6 w-6" aria-hidden />
           <span className="px-1 text-center text-[11px] font-bold leading-tight">

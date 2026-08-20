@@ -98,7 +98,7 @@ export default function DemoInsightsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0B1F3A] px-4 py-10 text-primary">
+    <main className="min-h-screen bg-[var(--brand-navy)] px-4 py-10 text-primary">
       <div className="mx-auto max-w-3xl">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -129,7 +129,7 @@ export default function DemoInsightsPage() {
         </div>
 
         {events.length === 0 ? (
-          <div className="eoc-panel flex flex-col items-center gap-3 border border-white/10 bg-[#0d1526]/80 p-10 text-center">
+          <div className="eoc-panel flex flex-col items-center gap-3 border border-white/10 bg-panel-deep/80 p-10 text-center">
             <BarChart3 aria-hidden="true" className="h-10 w-10 text-slate-600" />
             <h2 className="text-lg font-bold">Nothing tracked yet</h2>
             <p className="text-sm text-slate-400">
@@ -169,7 +169,7 @@ export default function DemoInsightsPage() {
             </section>
 
             {/* Time-in-mode breakdown — Drop-Stats copy for Q&A */}
-            <section className="mt-4 rounded-xl border border-white/10 bg-[#0d1526]/80 p-5">
+            <section className="mt-4 rounded-xl border border-white/10 bg-panel-deep/80 p-5">
               <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400">
                 <Timer aria-hidden="true" className="h-4 w-4" />
                 Time spent in each mode (tracked)
@@ -191,7 +191,7 @@ export default function DemoInsightsPage() {
             </section>
 
             {/* Recent trail */}
-            <section className="mt-4 rounded-xl border border-white/10 bg-[#0d1526]/80 p-5">
+            <section className="mt-4 rounded-xl border border-white/10 bg-panel-deep/80 p-5">
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
                 Recent activity
               </p>
@@ -234,7 +234,7 @@ function StatCard({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-[#0d1526]/80 p-4">
+    <div className="rounded-xl border border-white/10 bg-panel-deep/80 p-4">
       <p className="flex items-center gap-1.5 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-400">
         <Icon aria-hidden="true" className="h-3.5 w-3.5" />
         {label}

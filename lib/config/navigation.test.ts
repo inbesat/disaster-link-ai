@@ -16,8 +16,8 @@ function labelsFor(role: Role): string[] {
 }
 
 describe("NAVIGATION_ROUTES", () => {
-  it("defines the 10 required routes", () => {
-    expect(NAVIGATION_ROUTES).toHaveLength(10);
+  it("defines the required routes (10 core + later-phase additions)", () => {
+    expect(NAVIGATION_ROUTES).toHaveLength(13);
     const labels = NAVIGATION_ROUTES.map((route) => route.label);
     expect(labels).toEqual(
       expect.arrayContaining([
@@ -31,6 +31,9 @@ describe("NAVIGATION_ROUTES", () => {
         "Satellite",
         "Team",
         "Settings",
+        "Missing Persons",
+        "Casualty Tracking",
+        "NGO Portal",
       ]),
     );
   });
@@ -54,10 +57,13 @@ describe("NAVIGATION_ROUTES", () => {
 });
 
 describe("filterRoutesByRole — role matrix", () => {
-  it("field_responder sees Alerts, Routes, AI, Team", () => {
+  it("field_responder sees Alerts, Routes, Missing/Casualty/NGO, AI, Team", () => {
     expect(labelsFor("field_responder")).toEqual([
       "Alerts",
       "Evacuation Routes",
+      "Missing Persons",
+      "Casualty Tracking",
+      "NGO Portal",
       "AI Planner",
       "Team",
     ]);
@@ -70,7 +76,10 @@ describe("filterRoutesByRole — role matrix", () => {
       "Alerts",
       "Evacuation Routes",
       "Shelters",
+      "Missing Persons",
+      "Casualty Tracking",
       "Resources",
+      "NGO Portal",
       "AI Planner",
       "Satellite",
       "Team",

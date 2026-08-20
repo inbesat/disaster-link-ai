@@ -140,7 +140,7 @@ export default function LayerVisibilityCard() {
   return (
     <section
       data-settings-key="map-layers"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -151,7 +151,7 @@ export default function LayerVisibilityCard() {
           <p className="eoc-label text-cyan-300/80">DATA OVERLAYS</p>
           <h2 className="mt-0.5 text-lg font-bold">Layer Visibility</h2>
         </div>
-        <span className="rounded-md border border-[#1c2740] bg-surface-muted/60 px-2.5 py-1 text-xs text-cyan-300">
+        <span className="rounded-md border border-panel-border bg-surface-muted/60 px-2.5 py-1 text-xs text-cyan-300">
           {activeCount}/{total} active
         </span>
       </div>
@@ -180,7 +180,7 @@ export default function LayerVisibilityCard() {
                     className={`flex items-center justify-between gap-4 rounded-md border p-3 transition ${
                       on
                         ? "border-cyan-500/30 bg-cyan-500/[0.06]"
-                        : "border-[#1c2740] bg-surface-muted/40"
+                        : "border-panel-border bg-surface-muted/40"
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -231,7 +231,7 @@ export default function LayerVisibilityCard() {
       </div>
 
       {/* Helper hint */}
-      <p className="mt-5 flex items-start gap-2 rounded-md border border-[#1c2740] bg-surface-muted/40 p-3 text-[11px] leading-relaxed text-slate-500">
+      <p className="mt-5 flex items-start gap-2 rounded-md border border-panel-border bg-surface-muted/40 p-3 text-[11px] leading-relaxed text-slate-500">
         <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-500" aria-hidden />
         Turn off unnecessary layers to improve map performance on low-end field
         devices.
@@ -245,7 +245,7 @@ export default function LayerVisibilityCard() {
         <button
           type="button"
           onClick={resetToDefault}
-          className="inline-flex items-center gap-2 rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-cyan-300"
+          className="inline-flex items-center gap-2 rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-cyan-300"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden />
           Reset to Default Tactical View

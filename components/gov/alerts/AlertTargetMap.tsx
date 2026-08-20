@@ -271,7 +271,7 @@ export function AlertTargetMap({
   const copy = MODE_COPY[mode];
 
   return (
-    <div className="alert-target-map relative h-[250px] w-full overflow-hidden rounded-xl border border-white/10 bg-[#0d1526]">
+    <div className="alert-target-map relative h-[250px] w-full overflow-hidden rounded-xl border border-white/10 bg-panel-deep">
       <Map
         mapLib={maplibregl}
         mapStyle={MAP_STYLE}
@@ -308,7 +308,7 @@ export function AlertTargetMap({
       </Map>
 
       {/* Mode chip + instruction */}
-      <div className="pointer-events-none absolute left-2 top-2 z-10 flex max-w-[70%] flex-col gap-0.5 rounded-lg border border-white/10 bg-[#0a0f1a]/90 px-2.5 py-1.5 backdrop-blur">
+      <div className="pointer-events-none absolute left-2 top-2 z-10 flex max-w-[70%] flex-col gap-0.5 rounded-lg border border-white/10 bg-[rgb(var(--bg-primary-rgb)/90)] px-2.5 py-1.5 backdrop-blur">
         <p className="flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-slate-200">
           <Crosshair className="h-3 w-3 text-[var(--dl-blue-light)]" aria-hidden />
           {copy.title}

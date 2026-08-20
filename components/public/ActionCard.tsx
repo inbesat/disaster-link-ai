@@ -121,7 +121,7 @@ function PrepareAction() {
   return (
     <ActionBody
       icon={Route}
-      iconClass="bg-[#F97316]/15 text-[#FDBA74]"
+      iconClass="bg-[#F97316]/15 text-[var(--brand-orangeLight)]"
       title="Prepare to evacuate"
       copy="Flooding is likely in the coming hours. Know the evacuation routes before you need them."
     >

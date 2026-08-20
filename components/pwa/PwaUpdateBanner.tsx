@@ -72,7 +72,7 @@ export default function PwaUpdateBanner() {
             transition={{ type: "spring", stiffness: 380, damping: 32 }}
             className="fixed inset-x-0 top-0 z-[60]"
           >
-            <div className="mx-auto flex w-full max-w-2xl items-center gap-3 rounded-b-xl border border-t-0 border-[var(--dl-blue)]/30 bg-[#0d1526]/95 px-4 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-sm">
+            <div className="mx-auto flex w-full max-w-2xl items-center gap-3 rounded-b-xl border border-t-0 border-[var(--dl-blue)]/30 bg-panel-deep/95 px-4 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-sm">
               <RefreshCw
                 aria-hidden="true"
                 className="h-4 w-4 shrink-0 animate-spin text-[var(--dl-blue-light)] [animation-duration:3s]"

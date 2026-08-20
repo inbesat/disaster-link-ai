@@ -200,7 +200,7 @@ export default function FieldChat() {
               className={`flex min-h-[52px] items-center justify-center gap-2 rounded-xl border-2 px-2 text-[0.9375rem] font-bold transition active:scale-95 ${
                 active
                   ? "border-cyan-400/70 bg-cyan-500/15 text-cyan-200"
-                  : "border-[#1c2740] bg-[#0d1526] text-slate-400"
+                  : "border-panel-border bg-panel-deep text-slate-400"
               }`}
             >
               <Icon className="h-5 w-5 shrink-0" aria-hidden />
@@ -211,7 +211,7 @@ export default function FieldChat() {
       </div>
 
       {/* Thread */}
-      <div className="mt-3 flex-1 space-y-3 overflow-y-auto rounded-2xl border-2 border-[#1c2740] bg-[#0d1526] p-4">
+      <div className="mt-3 flex-1 space-y-3 overflow-y-auto rounded-2xl border-2 border-panel-border bg-panel-deep p-4">
         {thread.map((m) => (
           <div
             key={m.id}
@@ -221,7 +221,7 @@ export default function FieldChat() {
               className={`max-w-[82%] rounded-2xl border-2 px-4 py-2.5 ${
                 m.mine
                   ? "border-cyan-400/40 bg-cyan-500/15"
-                  : "border-[#2a3a5a] bg-[#0b1120]"
+                  : "border-panel-borderStrong bg-panel"
               }`}
             >
               {!m.mine && (
@@ -258,7 +258,7 @@ export default function FieldChat() {
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 transition active:scale-95 disabled:opacity-60 ${
             recording
               ? "border-red-400 bg-red-500/25 text-red-300"
-              : "border-[#2a3a5a] bg-[#0d1526] text-slate-300"
+              : "border-panel-borderStrong bg-panel-deep text-slate-300"
           }`}
         >
           <Mic className={`h-6 w-6 ${recording ? "animate-pulse" : ""}`} />
@@ -268,7 +268,7 @@ export default function FieldChat() {
           type="button"
           onClick={sharePhoto}
           aria-label="Share damage photo"
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#2a3a5a] bg-[#0d1526] text-slate-300 transition active:scale-95"
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-panel-borderStrong bg-panel-deep text-slate-300 transition active:scale-95"
         >
           <Camera className="h-6 w-6" />
         </button>
@@ -280,7 +280,7 @@ export default function FieldChat() {
           onKeyDown={(e) => e.key === "Enter" && sendText()}
           placeholder="Secure message…"
           aria-label="Message"
-          className="h-12 min-w-0 flex-1 rounded-full border-2 border-[#2a3a5a] bg-[#0d1526] px-4 text-base text-gray-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none"
+          className="h-12 min-w-0 flex-1 rounded-full border-2 border-panel-borderStrong bg-panel-deep px-4 text-base text-gray-100 placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none"
         />
 
         <button

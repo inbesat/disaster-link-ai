@@ -39,7 +39,7 @@ export default function DataVisibilityCard() {
   return (
     <section
       data-settings-key="privacy-data-visibility"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -90,7 +90,7 @@ export default function DataVisibilityCard() {
       </div>
 
       {/* Emergency Mode tooltip */}
-      <div className="mt-6 flex items-start gap-3 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-6 flex items-start gap-3 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-300" aria-hidden />
         <p className="text-xs leading-relaxed text-slate-400">
           In the event of an active{" "}
@@ -120,7 +120,7 @@ function VisibilityRow<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+    <div className="rounded-md border border-panel-border bg-surface-muted/40 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-bold text-slate-200">{kind}</p>
@@ -131,7 +131,7 @@ function VisibilityRow<T extends string>({
         <div
           role="group"
           aria-label={`Visibility for ${kind}`}
-          className="flex flex-wrap items-center gap-1 rounded-md border border-[#1c2740] bg-[#0a0f1d] p-1"
+          className="flex flex-wrap items-center gap-1 rounded-md border border-panel-border bg-[#0a0f1d] p-1"
         >
           {options.map((option) => {
             const selected = option.value === value;

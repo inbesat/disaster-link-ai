@@ -22,7 +22,7 @@ function FlowArrow({ delay }: { delay: number }) {
       <div className="w-[2px] h-full bg-gradient-to-b from-white/10 to-white/5" />
       {/* Flowing dot */}
       <motion.div
-        className="absolute w-1.5 h-1.5 rounded-full bg-[#5B8DF6] shadow-[0_0_8px_rgba(91,141,246,0.6)]"
+        className="absolute w-1.5 h-1.5 rounded-full bg-[var(--blue-light)] shadow-[0_0_8px_rgba(91,141,246,0.6)]"
         animate={{ y: [-14, 14] }}
         transition={{
           duration: 1,
@@ -38,10 +38,10 @@ function FlowArrow({ delay }: { delay: number }) {
 
 export default function IntelligencePipeline() {
   return (
-    <div className="bg-white/[0.04] border border-white/[0.08] rounded-[20px] p-6 flex flex-col h-full">
+    <div className="bg-white/[0.04] border border-white/[0.08] rounded-[var(--radius-xl6)] p-6 flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#5B8DF6] flex items-center justify-center text-lg shadow-md">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--blue)] to-[var(--blue-light)] flex items-center justify-center text-lg shadow-md">
           🔗
         </div>
         <div>
@@ -81,7 +81,7 @@ export default function IntelligencePipeline() {
               </span>
               {node.highlight && (
                 <motion.span
-                  className="ml-auto text-[10px] font-bold uppercase tracking-wider text-[#5B8DF6] flex-shrink-0"
+                  className="ml-auto text-[10px] font-bold uppercase tracking-wider text-[var(--blue-light)] flex-shrink-0"
                   animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >

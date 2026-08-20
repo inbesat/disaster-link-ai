@@ -314,7 +314,7 @@ export default function FmStationsManager() {
 
       {/* CSV import panel */}
       {csvOpen && (
-        <div className="rounded-lg border border-[#1c2740] bg-[#0b1120] p-4">
+        <div className="rounded-lg border border-panel-border bg-panel p-4">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-foreground">
               CSV Bulk Import (upserts on name + frequency)
@@ -355,7 +355,7 @@ export default function FmStationsManager() {
 
       {/* Create / edit form */}
       {showForm && (
-        <div className="rounded-lg border border-[#1c2740] bg-[#0b1120] p-4">
+        <div className="rounded-lg border border-panel-border bg-panel p-4">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-foreground">
               {editingId ? "Edit Station" : "Add FM Station"}
@@ -423,18 +423,18 @@ export default function FmStationsManager() {
 
       {/* Map + coverage test */}
       <div className="grid gap-4 lg:grid-cols-3">
-        <div className="relative h-[380px] overflow-hidden rounded-lg border border-[#1c2740] lg:col-span-2">
+        <div className="relative h-[380px] overflow-hidden rounded-lg border border-panel-border lg:col-span-2">
           <FmCoverageMap
             stations={filtered}
             onTest={testCoverage}
             testPoint={testResult?.point ?? null}
           />
-          <div className="pointer-events-none absolute left-3 top-3 rounded-md bg-[#0b1120]/90 px-3 py-2 text-[0.6875rem] text-slate-300 shadow-lg">
+          <div className="pointer-events-none absolute left-3 top-3 rounded-md bg-panel/90 px-3 py-2 text-[0.6875rem] text-slate-300 shadow-lg">
             Click the map to test coverage at a point
           </div>
         </div>
 
-        <div className="rounded-lg border border-[#1c2740] bg-[#0b1120] p-4">
+        <div className="rounded-lg border border-panel-border bg-panel p-4">
           <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
             <MapPin className="h-4 w-4 text-amber-400" />
             Test Coverage Result
@@ -456,7 +456,7 @@ export default function FmStationsManager() {
                   {testResult.covering.map((s) => (
                     <li
                       key={s.id}
-                      className="rounded-md border border-[#1c2740] bg-surface-elevated p-2.5"
+                      className="rounded-md border border-panel-border bg-surface-elevated p-2.5"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="flex min-w-0 items-center gap-2 text-sm font-medium text-foreground">
@@ -496,9 +496,9 @@ export default function FmStationsManager() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-[#1c2740] bg-[#0b1120]">
+      <div className="overflow-x-auto rounded-lg border border-panel-border bg-panel">
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-[#1c2740]">
+          <thead className="border-b border-panel-border">
             <tr className="text-[0.6875rem] uppercase tracking-wider text-slate-500">
               <th className="px-4 py-3 font-semibold">Station</th>
               <th className="px-4 py-3 font-semibold">Location</th>
@@ -575,7 +575,7 @@ export default function FmStationsManager() {
                       <button
                         type="button"
                         onClick={() => startEdit(s)}
-                        className="rounded-md p-1.5 text-slate-400 transition hover:bg-[#1a2338] hover:text-amber-300"
+                        className="rounded-md p-1.5 text-slate-400 transition hover:bg-panel-hoverAlt hover:text-amber-300"
                         aria-label={`Edit ${s.name}`}
                       >
                         <Pencil className="h-4 w-4" />

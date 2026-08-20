@@ -80,7 +80,7 @@ export default function DemoIndicators({ mode }: DemoIndicatorsProps) {
           onClick={handleReset}
           disabled={resetting}
           aria-label="Reset demo data"
-          className="flex items-center gap-1.5 rounded-full border border-amber-500/60 bg-[#0d1526]/90 px-3.5 py-2.5 text-xs font-bold text-amber-300 shadow-[0_8px_24px_rgba(0,0,0,0.45)] backdrop-blur transition hover:bg-amber-600/20 active:scale-95 disabled:opacity-60"
+          className="flex items-center gap-1.5 rounded-full border border-amber-500/60 bg-panel-deep/90 px-3.5 py-2.5 text-xs font-bold text-amber-300 shadow-[0_8px_24px_rgba(0,0,0,0.45)] backdrop-blur transition hover:bg-amber-600/20 active:scale-95 disabled:opacity-60"
         >
           {resetting ? (
             <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />

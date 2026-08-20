@@ -82,7 +82,7 @@ export function PlanApprovalBar() {
   return (
     <div
       aria-live="polite"
-      className="shrink-0 border-t border-white/10 bg-[#0d1526]/95 px-3 py-3 backdrop-blur"
+      className="shrink-0 border-t border-white/10 bg-panel-deep/95 px-3 py-3 backdrop-blur"
     >
       {status === "pending" && (
         <div className="flex flex-col gap-2.5">

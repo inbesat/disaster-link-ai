@@ -123,9 +123,9 @@ export function QuickPrompts({ onSelect, disabled = false }: QuickPromptsProps) 
               onSelect(label, cardFor(key) ?? textReplyFor(key) ?? t("nova_reply"));
             }}
             disabled={disabled}
-            className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-white/5 py-2 pl-3 pr-4 text-[0.8125rem] font-semibold text-[#cfe0f2] transition hover:border-[#34d399]/60 hover:bg-[#34d399]/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-white/5 py-2 pl-3 pr-4 text-[0.8125rem] font-semibold text-[#cfe0f2] transition hover:border-severity-green-400/60 hover:bg-severity-green-400/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Icon aria-hidden className="h-4 w-4 text-[#34d399]" strokeWidth={2} />
+            <Icon aria-hidden className="h-4 w-4 text-severity-green-400" strokeWidth={2} />
             {label}
           </button>
         );

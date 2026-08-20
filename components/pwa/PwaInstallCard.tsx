@@ -49,7 +49,7 @@ export default function PwaInstallCard() {
           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ring-1 ${
             isInstalled
               ? "bg-severity-green-500/15 text-severity-green-400 ring-severity-green-500/40"
-              : "bg-[#F97316]/15 text-[#FDBA74] ring-[#F97316]/40"
+              : "bg-[#F97316]/15 text-[var(--brand-orangeLight)] ring-[#F97316]/40"
           }`}
         >
           {isInstalled ? (
@@ -73,7 +73,7 @@ export default function PwaInstallCard() {
             <button
               type="button"
               onClick={() => void promptInstall()}
-              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#F97316] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(249,115,22,0.4)] transition hover:brightness-110 active:scale-[0.98]"
+              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[var(--brand-orange)] px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[0_4px_14px_rgba(249,115,22,0.4)] transition hover:brightness-110 active:scale-[0.98]"
             >
               <Download aria-hidden="true" className="h-3.5 w-3.5" />
               Install

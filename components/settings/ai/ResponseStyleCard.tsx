@@ -63,7 +63,7 @@ export default function ResponseStyleCard() {
   return (
     <section
       data-settings-key="ai-response-style"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -113,7 +113,7 @@ export default function ResponseStyleCard() {
                 className={`rounded-md border px-2 py-2 text-center transition ${
                   active
                     ? "border-fuchsia-400/60 bg-fuchsia-500/10"
-                    : "border-[#1c2740] bg-surface-muted/40 hover:border-fuchsia-400/40"
+                    : "border-panel-border bg-surface-muted/40 hover:border-fuchsia-400/40"
                 }`}
               >
                 <p className={`text-xs font-semibold ${active ? "text-fuchsia-200" : "text-slate-300"}`}>
@@ -149,7 +149,7 @@ export default function ResponseStyleCard() {
                 className={`flex-1 rounded-md border px-2 py-2.5 text-center transition ${
                   active
                     ? "border-fuchsia-400/60 bg-fuchsia-500/10"
-                    : "border-[#1c2740] bg-surface-muted/40 hover:border-fuchsia-400/40"
+                    : "border-panel-border bg-surface-muted/40 hover:border-fuchsia-400/40"
                 }`}
               >
                 <p className={`text-xs font-semibold ${active ? "text-fuchsia-200" : "text-slate-300"}`}>
@@ -170,11 +170,11 @@ export default function ResponseStyleCard() {
         </p>
         <div
           data-testid="ai-preview"
-          className={`mt-2 rounded-lg border border-[#1c2740] bg-[#0a0f1d] p-4 ${
+          className={`mt-2 rounded-lg border border-panel-border bg-[#0a0f1d] p-4 ${
             personality === "urgent" ? "border-red-400/30" : ""
           }`}
         >
-          <div className="flex items-center gap-2 rounded-t-md border-b border-[#1c2740] pb-2">
+          <div className="flex items-center gap-2 rounded-t-md border-b border-panel-border pb-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-fuchsia-500/15 text-[10px] font-bold text-fuchsia-300">
               AI
             </span>

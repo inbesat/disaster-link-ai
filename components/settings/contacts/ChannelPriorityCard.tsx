@@ -89,7 +89,7 @@ export default function ChannelPriorityCard() {
   return (
     <section
       data-settings-key="contacts-channel-priority"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -136,7 +136,7 @@ export default function ChannelPriorityCard() {
                   ? "border-violet-400/60 bg-violet-500/10 opacity-40"
                   : dropTarget
                     ? "border-t-2 border-t-violet-400 bg-violet-500/[0.06]"
-                    : "border-[#1c2740] bg-surface-muted/40 hover:border-violet-400/40"
+                    : "border-panel-border bg-surface-muted/40 hover:border-violet-400/40"
               }`}
             >
               {/* Rank */}
@@ -170,7 +170,7 @@ export default function ChannelPriorityCard() {
                 className={`hidden shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider sm:inline-block ${
                   index === 0
                     ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-300"
-                    : "border-[#2c3f6d] bg-[#0a0f1d] text-slate-400"
+                    : "border-panel-borderHover bg-[#0a0f1d] text-slate-400"
                 }`}
               >
                 {index === 0 ? "Primary" : `Fallback ${index}`}
@@ -211,7 +211,7 @@ export default function ChannelPriorityCard() {
         <button
           type="button"
           onClick={resetOrder}
-          className="inline-flex items-center gap-2 rounded-md border border-[#2c3f6d] px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-violet-400/50 hover:bg-violet-500/10 hover:text-violet-200 active:scale-[0.98]"
+          className="inline-flex items-center gap-2 rounded-md border border-panel-borderHover px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-violet-400/50 hover:bg-violet-500/10 hover:text-violet-200 active:scale-[0.98]"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden />
           Reset Order

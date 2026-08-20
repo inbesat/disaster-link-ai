@@ -44,7 +44,7 @@ export function ChatInputBar({
   };
 
   return (
-    <div className="sticky bottom-0 border-t border-border bg-[#0a0f1a]/95 backdrop-blur">
+    <div className="sticky bottom-0 border-t border-border bg-[rgb(var(--bg-primary-rgb)/95)] backdrop-blur">
       {isProcessing && (
         <div className="flex items-center gap-2 px-4 pb-1 pt-2 text-[10px] font-bold uppercase tracking-wider text-muted">
           <span className="flex items-center gap-1" aria-hidden>

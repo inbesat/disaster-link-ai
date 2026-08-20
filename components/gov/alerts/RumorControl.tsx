@@ -185,7 +185,7 @@ export function RumorControl() {
                   </button>
                 </div>
                 <p className="mt-1.5 text-xs text-slate-400">
-                  <span className="font-bold text-[#fca5a5]">FALSE: </span>
+                  <span className="font-bold text-severity-red-300">FALSE: </span>
                   {item.claim}
                 </p>
                 <p className="mt-0.5 text-xs text-slate-200">

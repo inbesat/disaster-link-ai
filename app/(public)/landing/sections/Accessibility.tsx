@@ -44,7 +44,7 @@ const features = [
 
 export default function Accessibility() {
   return (
-    <section className="bg-[#0f172a] py-28">
+    <section className="bg-secondary py-28">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <ScrollReveal animation="fade-right">
           <div>
@@ -61,7 +61,7 @@ export default function Accessibility() {
               {languages.map((lang, i) => (
                 <span
                   key={i}
-                  className="bg-white/5 border border-slate-800 rounded-full px-4 py-2 text-sm font-semibold text-slate-200 hover:border-[#F97316] hover:bg-[#F97316]/10 transition-all duration-200"
+                  className="bg-white/5 border border-slate-800 rounded-full px-4 py-2 text-sm font-semibold text-slate-200 hover:border-[var(--orange)] hover:bg-[#F97316]/10 transition-all duration-200"
                 >
                   {lang}
                 </span>
@@ -77,10 +77,10 @@ export default function Accessibility() {
               return (
                 <div
                   key={i}
-                  className="flex items-start gap-4 bg-white/5 border border-slate-800 rounded-[16px] p-5 hover:bg-white/[0.07] transition-all duration-300"
+                  className="flex items-start gap-4 bg-white/5 border border-slate-800 rounded-[var(--radius-xl5)] p-5 hover:bg-white/[0.07] transition-all duration-300"
                 >
                   <div className="w-11 h-11 rounded-xl bg-[#F97316]/10 flex items-center justify-center shrink-0">
-                    <Icon className="text-[#F97316]" size={20} />
+                    <Icon className="text-[var(--orange)]" size={20} />
                   </div>
                   <div>
                     <h5 className="text-base font-bold text-white">

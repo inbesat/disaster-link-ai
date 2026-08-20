@@ -116,10 +116,10 @@ export default function EvacuationLifelines() {
       <div className="flex flex-col rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition hover:border-white/20">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
-            <MapPinned aria-hidden className="h-5 w-5 text-[#FDBA74]" />
+            <MapPinned aria-hidden className="h-5 w-5 text-[var(--brand-orangeLight)]" />
           </span>
           <div className="min-w-0">
-            <p className="text-[0.6875rem] font-semibold uppercase tracking-widest text-[#FDBA74]">
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-widest text-[var(--brand-orangeLight)]">
               Evacuation
             </p>
             <h2 className="mt-0.5 text-base font-bold text-white">
@@ -157,10 +157,10 @@ export default function EvacuationLifelines() {
       <div className="flex flex-col rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition hover:border-white/20">
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#25D366]/20 ring-1 ring-[#25D366]/40">
-            <MessageCircle aria-hidden className="h-5 w-5 text-[#6ee7b7]" />
+            <MessageCircle aria-hidden className="h-5 w-5 text-severity-green-300" />
           </span>
           <div className="min-w-0">
-            <p className="text-[0.6875rem] font-semibold uppercase tracking-widest text-[#6ee7b7]">
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-widest text-severity-green-300">
               WhatsApp Lifeline
             </p>
             <h2 className="mt-0.5 text-base font-bold text-white">

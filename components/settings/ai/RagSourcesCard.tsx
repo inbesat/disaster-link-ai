@@ -71,7 +71,7 @@ export default function RagSourcesCard() {
   return (
     <section
       data-settings-key="ai-rag-sources"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -106,7 +106,7 @@ export default function RagSourcesCard() {
               className={`flex cursor-pointer items-center justify-between gap-4 rounded-md border p-3 transition ${
                 on
                   ? "border-teal-400/40 bg-teal-500/[0.07]"
-                  : "border-[#1c2740] bg-surface-muted/40"
+                  : "border-panel-border bg-surface-muted/40"
               }`}
             >
               <div className="flex items-start gap-3">

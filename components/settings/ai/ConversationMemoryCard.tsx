@@ -72,7 +72,7 @@ export default function ConversationMemoryCard() {
   return (
     <section
       data-settings-key="ai-memory"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -103,7 +103,7 @@ export default function ConversationMemoryCard() {
             id="ai-retention"
             value={memory.retention}
             onChange={(event) => setRetention(event.target.value as ContextRetention)}
-            className="w-full appearance-none rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-sky-400/60"
+            className="w-full appearance-none rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-sky-400/60"
           >
             {RETENTION_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -135,7 +135,7 @@ export default function ConversationMemoryCard() {
       </div>
 
       {/* Auto-archive toggle */}
-      <div className="mt-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-4 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-sky-500/10">
@@ -171,7 +171,7 @@ export default function ConversationMemoryCard() {
       </div>
 
       {/* Clear history */}
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#1c2740] pt-4">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-panel-border pt-4">
         <p className="flex items-center gap-2 text-[11px] text-slate-500">
           <Eraser className="h-3.5 w-3.5 shrink-0 text-slate-500" aria-hidden />
           Permanently wipes all assistant conversations from this device.
@@ -236,7 +236,7 @@ export default function ConversationMemoryCard() {
               disabled={wiping}
               onChange={(event) => setTyped(event.target.value.toUpperCase())}
               placeholder="CLEAR"
-              className="mt-1.5 w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2.5 font-mono text-sm tracking-widest text-slate-200 outline-none transition focus:border-red-400/60"
+              className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 font-mono text-sm tracking-widest text-slate-200 outline-none transition focus:border-red-400/60"
             />
 
             <div className="mt-5 flex items-center justify-end gap-3">
@@ -244,7 +244,7 @@ export default function ConversationMemoryCard() {
                 type="button"
                 onClick={closeModal}
                 disabled={wiping}
-                className="rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-slate-400"
+                className="rounded-md border border-panel-borderHover bg-[#0a0f1d] px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-slate-400"
               >
                 Cancel
               </button>

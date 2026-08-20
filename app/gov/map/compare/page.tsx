@@ -15,7 +15,7 @@ const CompareWorkspace = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-screen w-screen items-center justify-center bg-[#0a0f1a]">
+      <div className="flex h-screen w-screen items-center justify-center bg-primary">
         <p className="text-sm text-white/60">Loading comparison view…</p>
       </div>
     ),

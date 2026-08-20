@@ -81,7 +81,7 @@ export default function QADrawer() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 34 }}
-            className="absolute inset-y-0 right-0 flex w-[440px] max-w-[94vw] flex-col border-l border-white/10 bg-[#0a0f1a] text-white shadow-2xl"
+            className="absolute inset-y-0 right-0 flex w-[440px] max-w-[94vw] flex-col border-l border-white/10 bg-primary text-white shadow-2xl"
           >
             <header className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-4">
               <div>
@@ -135,8 +135,8 @@ export default function QADrawer() {
                     >
                       <div className="space-y-3 border-t border-white/10 px-4 pb-4 pt-3">
                         {/* Live Lite-mode render — a truthful "screenshot". */}
-                        <div className="mx-auto w-fit overflow-hidden rounded-xl border border-white/15 shadow-[0_16px_48px_rgba(0,0,0,0.5)]">
-                          <div className="bg-[#0d1526] px-3 py-1.5 text-center text-[9px] font-bold uppercase tracking-[0.22em] text-slate-400">
+                        <div className="mx-auto w-fit overflow-hidden rounded-xl border border-white/15 shadow-[var(--shadow-float-xl)]">
+                          <div className="bg-panel-deep px-3 py-1.5 text-center text-[9px] font-bold uppercase tracking-[0.22em] text-slate-400">
                             PWA Lite Mode — /lite
                           </div>
                           <iframe

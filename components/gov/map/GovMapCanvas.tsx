@@ -398,7 +398,7 @@ export function GovMapCanvas({
       {/* Phase 8 · Step 4 — floating readout near the cursor. */}
       {measuring && cursor && (
         <div
-          className="pointer-events-none fixed z-40 -translate-x-1/2 rounded-lg border border-white/15 bg-[#0d1526]/95 px-3 py-1.5 text-xs font-bold tabular-nums text-white shadow-[0_8px_24px_rgba(0,0,0,0.5)] backdrop-blur"
+          className="pointer-events-none fixed z-40 -translate-x-1/2 rounded-lg border border-white/15 bg-panel-deep/95 px-3 py-1.5 text-xs font-bold tabular-nums text-white shadow-[var(--shadow-float-lg)] backdrop-blur"
           style={{ left: cursor.x, top: cursor.y + 18 }}
         >
           <span className="mr-1.5 text-[0.625rem] font-semibold uppercase tracking-wide text-[var(--dl-blue-light)]">

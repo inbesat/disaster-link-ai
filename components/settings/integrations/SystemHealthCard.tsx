@@ -73,7 +73,7 @@ const STATUS_META: Record<
     dotClass: "bg-emerald-400",
     pingClass: "bg-emerald-400/60",
     stripClass: "bg-emerald-400/80",
-    tileClass: "border-[#1c2740] bg-surface-muted/40",
+    tileClass: "border-panel-border bg-surface-muted/40",
   },
   degraded: {
     label: "Degraded",
@@ -144,7 +144,7 @@ export default function SystemHealthCard() {
   return (
     <section
       data-settings-key="integrations-health"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex flex-wrap items-center gap-3">
@@ -155,7 +155,7 @@ export default function SystemHealthCard() {
           <p className="eoc-label text-rose-300/80">EXTERNAL SYSTEMS · OPS MONITOR</p>
           <h2 className="mt-0.5 text-lg font-bold">External Systems Health</h2>
         </div>
-        <span className="rounded-full border border-[#2c3f6d] bg-surface-muted/40 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-slate-400">
+        <span className="rounded-full border border-panel-borderHover bg-surface-muted/40 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-slate-400">
           {services.length} services
         </span>
         <button
@@ -186,7 +186,7 @@ export default function SystemHealthCard() {
       {/* Summary strip */}
       <div
         role="status"
-        className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-[#1c2740] bg-[#0a0f1d] px-4 py-3"
+        className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-panel-border bg-[#0a0f1d] px-4 py-3"
       >
         <p className="flex items-center gap-2 text-sm text-slate-300">
           <Activity className="h-4 w-4 shrink-0 text-cyan-400" aria-hidden />

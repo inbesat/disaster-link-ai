@@ -93,7 +93,7 @@ export function ResourceWidget() {
           </li>
           <li className="flex items-center justify-between text-xs text-[var(--dl-text-muted)]">
             <span className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#ef4444]" aria-hidden /> Deployed
+              <span className="h-2 w-2 rounded-full bg-severity-red-500" aria-hidden /> Deployed
             </span>
             <span className="font-semibold tabular-nums text-white/80">{DEPLOYED.toLocaleString()}</span>
           </li>

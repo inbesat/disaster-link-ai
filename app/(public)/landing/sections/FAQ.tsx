@@ -35,7 +35,7 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="bg-[#0f172a] py-28">
+    <section className="bg-secondary py-28">
       <SectionHead
         eyebrow="FAQ"
         eyebrowVariant="blue"
@@ -48,7 +48,7 @@ export default function FAQ() {
         {faqs.map((faq, i) => (
           <div
             key={i}
-            className="bg-white/5 border border-slate-800 rounded-[14px] overflow-hidden"
+            className="bg-white/5 border border-slate-800 rounded-lg overflow-hidden"
           >
             <button
               className="w-full flex items-center justify-between p-5 text-left"

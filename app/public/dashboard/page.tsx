@@ -86,7 +86,7 @@ const MODULES = [
 
 export default function PublicDashboardPage() {
   return (
-    <div className="relative w-full min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="relative w-full min-h-screen flex flex-col bg-primary">
     <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-[140px] px-4 md:px-8 text-[var(--dl-text-on-navy)]">
       {/* Ambient backdrop */}
       <div

@@ -76,7 +76,7 @@ export default function PerformanceSettingsCard() {
   return (
     <section
       data-settings-key="map-performance"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -108,7 +108,7 @@ export default function PerformanceSettingsCard() {
           return (
             <div
               key={key}
-              className="flex items-center justify-between gap-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-3"
+              className="flex items-center justify-between gap-4 rounded-md border border-panel-border bg-surface-muted/40 p-3"
             >
               <div className="flex items-start gap-3">
                 <div
@@ -152,7 +152,7 @@ export default function PerformanceSettingsCard() {
           className={`flex w-full items-center justify-between gap-4 rounded-md border p-4 text-left transition ${
             performance.ecoMode
               ? "border-emerald-400/50 bg-emerald-500/10"
-              : "border-[#1c2740] bg-surface-muted/40 hover:border-emerald-400/40"
+              : "border-panel-border bg-surface-muted/40 hover:border-emerald-400/40"
           }`}
         >
           <div className="flex items-start gap-3">

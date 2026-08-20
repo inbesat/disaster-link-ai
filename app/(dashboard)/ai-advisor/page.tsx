@@ -37,9 +37,9 @@ export default function AiAdvisorPage() {
   );
 
   return (
-    <div className="relative flex h-[calc(100vh-56px)] flex-col bg-[#0a0f1a] text-foreground">
+    <div className="relative flex h-[calc(100vh-56px)] flex-col bg-primary text-foreground">
       {/* Mobile-only sticky tab bar */}
-      <div className="sticky top-0 z-20 flex border-b border-border bg-[#0a0f1a]/95 backdrop-blur md:hidden">
+      <div className="sticky top-0 z-20 flex border-b border-border bg-[rgb(var(--bg-primary-rgb)/95)] backdrop-blur md:hidden">
         {tabButton("chat", "Chat")}
         {tabButton("plan", "Live Plan")}
       </div>
@@ -59,7 +59,7 @@ export default function AiAdvisorPage() {
         <section
           className={`${
             tab === "plan" ? "flex" : "hidden"
-          } min-h-0 flex-1 flex-col bg-[#111827] md:flex`}
+          } min-h-0 flex-1 flex-col bg-secondary md:flex`}
           aria-label="Plan visualization"
         >
           <PlanVisualization />

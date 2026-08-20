@@ -116,7 +116,7 @@ export default function PreDeploymentChecklist() {
       aria-label="Pre-deployment checklist"
       className="fixed inset-0 z-[75] flex items-center justify-center bg-black/85 p-5"
     >
-      <div className="w-full max-w-md rounded-3xl border-2 border-cyan-400/50 bg-[#0d1526] p-6">
+      <div className="w-full max-w-md rounded-3xl border-2 border-cyan-400/50 bg-panel-deep p-6">
         <div className="flex items-center gap-3">
           <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-cyan-400 bg-cyan-500/15 text-cyan-300">
             <ShieldCheck className="h-8 w-8" />
@@ -146,14 +146,14 @@ export default function PreDeploymentChecklist() {
                   className={`flex min-h-[56px] w-full items-center gap-3 rounded-2xl border-2 px-4 text-left transition active:scale-[0.98] ${
                     on
                       ? "border-emerald-400/70 bg-emerald-500/15"
-                      : "border-[#2a3a5a] bg-[#0b1120]"
+                      : "border-panel-borderStrong bg-panel"
                   }`}
                 >
                   <span
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 ${
                       on
                         ? "border-emerald-400 bg-emerald-500 text-black"
-                        : "border-[#2a3a5a] text-slate-500"
+                        : "border-panel-borderStrong text-slate-500"
                     }`}
                   >
                     {on ? <Check className="h-5 w-5" /> : <Icon className="h-5 w-5" />}

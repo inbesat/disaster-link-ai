@@ -131,7 +131,7 @@ function DistrictSelect() {
         <ul
           role="listbox"
           aria-label="Select district"
-          className="absolute left-0 top-full z-50 mt-2 w-52 rounded-md border border-white/10 bg-[#111827] p-1 shadow-xl shadow-black/40"
+          className="absolute left-0 top-full z-50 mt-2 w-52 rounded-md border border-white/10 bg-secondary p-1 shadow-xl shadow-black/40"
         >
           {GOV_DISTRICTS.map((d) => {
             const active = d === district;
@@ -188,7 +188,7 @@ export function SituationHeader() {
   return (
     // top-14: the shell's DashboardTopBar is a sticky h-14 bar above this
     // header, so pinning at top-0 would slide this bar underneath it.
-    <header className="sticky top-14 z-30 border-b border-white/10 bg-[#0a0f1a]/95 backdrop-blur-md">
+    <header className="sticky top-14 z-30 border-b border-white/10 bg-[rgb(var(--bg-primary-rgb)/95)] backdrop-blur-md">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 sm:px-6">
         {/* Left — District Context */}
         <div className="flex items-center gap-3">
@@ -228,7 +228,7 @@ export function SituationHeader() {
 
           {/* Blinking "Last synced" — remounts (fades in) every 30s */}
           <div className="flex items-center gap-1.5 border-l border-white/10 pl-5">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#34d399]" aria-hidden />
+            <span className="h-1.5 w-1.5 rounded-full bg-severity-green-400" aria-hidden />
             <motion.p
               key={blink}
               initial={{ opacity: 0.2 }}

@@ -110,7 +110,7 @@ function SelectColumnFilter<T>({
       aria-label={`Filter by ${String(column.columnDef.header).toLowerCase()}`}
       value={filterValue}
       onChange={(e) => column.setFilterValue(e.target.value || undefined)}
-      className="h-10 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white focus:border-accent-purple/60 focus:outline-none [&>option]:bg-[#0d1526]"
+      className="h-10 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white focus:border-accent-purple/60 focus:outline-none [&>option]:bg-panel-deep"
     >
       <option value="">{allOptionLabel}</option>
       {options.map((option) => (
@@ -244,7 +244,7 @@ export function InventoryTable() {
   return (
     <section className="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-secondary">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-white/10 bg-[#0d1526] px-4 py-3">
+      <div className="flex flex-wrap items-center gap-3 border-b border-white/10 bg-panel-deep px-4 py-3">
         <div className="min-w-[220px] flex-1">
           <GlobalSearch value={globalFilter} onChange={setGlobalFilter} />
         </div>
@@ -277,7 +277,7 @@ export function InventoryTable() {
       {/* Table */}
       <div className="min-h-0 flex-1 overflow-auto">
         <table className="w-full border-collapse text-sm">
-          <thead className="sticky top-0 z-10 bg-[#0d1526]">
+          <thead className="sticky top-0 z-10 bg-panel-deep">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -355,7 +355,7 @@ export function InventoryTable() {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between border-t border-white/10 bg-[#0d1526] px-4 py-2.5">
+      <div className="flex items-center justify-between border-t border-white/10 bg-panel-deep px-4 py-2.5">
         <p className="text-[0.6875rem] uppercase tracking-wider text-muted">
           Showing <span className="font-bold text-white">{filteredCount}</span> of{" "}
           {RESOURCE_INVENTORY.length} district assets

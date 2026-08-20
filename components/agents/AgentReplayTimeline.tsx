@@ -166,7 +166,7 @@ export default function AgentReplayTimeline() {
                 className="relative mb-8 pl-8 last:mb-0"
               >
                 {/* Timeline Dot */}
-                <div className={`absolute -left-[17px] top-1 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-[#0a0f1a] ring-4 ring-[var(--bg-secondary)]`}>
+                <div className={`absolute -left-[17px] top-1 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-primary ring-4 ring-[var(--bg-secondary)]`}>
                   <Icon className={`h-4 w-4 ${step.color}`} />
                 </div>
 

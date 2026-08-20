@@ -160,16 +160,16 @@ export default function FmBroadcastSimulator({
   return (
     <div className="grid gap-4 lg:grid-cols-5">
       {/* ------------------------------------------------ District map */}
-      <div className="relative h-[420px] overflow-hidden rounded-xl border border-[#1c2740] bg-[#0b1120] lg:col-span-3">
+      <div className="relative h-[420px] overflow-hidden rounded-xl border border-panel-border bg-panel lg:col-span-3">
         <DistrictMap
           districtId={district.id}
           stations={stations}
           onSelect={onDistrictChange}
         />
-        <div className="pointer-events-none absolute left-3 top-3 rounded-md bg-[#0b1120]/90 px-3 py-2 text-[0.6875rem] text-slate-300 shadow-lg">
+        <div className="pointer-events-none absolute left-3 top-3 rounded-md bg-panel/90 px-3 py-2 text-[0.6875rem] text-slate-300 shadow-lg">
           Click a district to simulate a calamity there
         </div>
-        <div className="pointer-events-none absolute bottom-3 left-3 flex items-center gap-2 rounded-md bg-[#0b1120]/90 px-3 py-1.5 text-[0.6875rem] text-slate-400 shadow-lg">
+        <div className="pointer-events-none absolute bottom-3 left-3 flex items-center gap-2 rounded-md bg-panel/90 px-3 py-1.5 text-[0.6875rem] text-slate-400 shadow-lg">
           <span className="h-2.5 w-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_2px_rgba(245,158,11,0.5)]" />
           AIR · mandatory EWS
           <span className="ml-2 h-2.5 w-2.5 rounded-full bg-sky-500 shadow-[0_0_8px_2px_rgba(56,189,248,0.5)]" />
@@ -180,7 +180,7 @@ export default function FmBroadcastSimulator({
       {/* ------------------------------------------------ Controls + pipeline */}
       <div className="flex flex-col gap-4 lg:col-span-2">
         {/* District + disaster picker */}
-        <div className="rounded-xl border border-[#1c2740] bg-[#0b1120] p-4">
+        <div className="rounded-xl border border-panel-border bg-panel p-4">
           <p className="mb-2 flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
             <MapPin className="h-3.5 w-3.5 text-amber-400" />
             {district.name}, {district.state}
@@ -198,7 +198,7 @@ export default function FmBroadcastSimulator({
                   className={`rounded-lg border px-3 py-1.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-35 ${
                     active
                       ? "border-amber-500/50 bg-amber-500/15 text-amber-300"
-                      : "border-[#1c2740] bg-[#0a0f1a] text-slate-400 hover:border-amber-500/30 hover:text-amber-300"
+                      : "border-panel-border bg-primary text-slate-400 hover:border-amber-500/30 hover:text-amber-300"
                   }`}
                   title={
                     allowed
@@ -226,7 +226,7 @@ export default function FmBroadcastSimulator({
         </div>
 
         {/* Animated pipeline */}
-        <div className="flex-1 rounded-xl border border-[#1c2740] bg-[#0b1120] p-4">
+        <div className="flex-1 rounded-xl border border-panel-border bg-panel p-4">
           <div className="mb-3 flex items-center justify-between">
             <p className="flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
               <RadioTower className="h-3.5 w-3.5 text-amber-400" />
@@ -249,7 +249,7 @@ export default function FmBroadcastSimulator({
           )}
 
           {stageIndex < 0 ? (
-            <div className="flex h-40 flex-col items-center justify-center rounded-md border border-dashed border-[#1c2740] text-center">
+            <div className="flex h-40 flex-col items-center justify-center rounded-md border border-dashed border-panel-border text-center">
               <Sparkles className="mb-2 h-6 w-6 text-slate-600" />
               <p className="text-sm text-slate-500">
                 Pick a district on the map and press{" "}
@@ -269,7 +269,7 @@ export default function FmBroadcastSimulator({
                         ? "border-amber-500/40 bg-amber-500/5 text-amber-200"
                         : isDone
                           ? "border-emerald-500/20 bg-emerald-500/5 text-slate-300"
-                          : "border-[#1c2740] bg-[#0a0f1a] text-slate-500"
+                          : "border-panel-border bg-primary text-slate-500"
                     }`}
                   >
                     {isDone ? (

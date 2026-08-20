@@ -34,7 +34,7 @@ export default function FieldTeamPage() {
         {TEAM.map((m) => (
           <li
             key={m.initials}
-            className="flex items-center gap-4 rounded-2xl border-2 border-[#1c2740] bg-[#0d1526] p-4"
+            className="flex items-center gap-4 rounded-2xl border-2 border-panel-border bg-panel-deep p-4"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-amber-400/60 bg-amber-500/15 text-base font-bold text-amber-300">
               {m.initials}

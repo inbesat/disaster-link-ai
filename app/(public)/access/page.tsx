@@ -34,7 +34,7 @@ export default function ChooseAccessPage() {
       {/* Slim header */}
       <header className="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-5">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#2563EB] to-[#F97316] shadow-md">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--blue)] to-[var(--orange)] shadow-md">
             <ShieldCheck className="h-4.5 w-4.5 text-white" aria-hidden="true" />
           </span>
           <span className="text-sm font-bold tracking-tight text-white">

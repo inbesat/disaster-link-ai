@@ -63,7 +63,7 @@ export default function LanguageTranslator() {
               className={`w-full text-left rounded-lg px-3 py-2 text-sm transition-all ${
                 activeLang === lang.code
                   ? "bg-white/15 text-white font-semibold"
-                  : "text-[#C9D6EC] hover:bg-white/5 hover:text-white"
+                  : "text-[var(--brand-textOnNavy)] hover:bg-white/5 hover:text-white"
               }`}
             >
               {lang.label}

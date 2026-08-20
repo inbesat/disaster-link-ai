@@ -12,8 +12,8 @@
 //   • user → right-aligned, soft WhatsApp blue, same dark ink.
 //
 // Both bubbles use the classic messenger shape — rounded-2xl with the
-// corner nearest the sender clipped flat (rounded-bl-[4px] for AI on the
-// left, rounded-br-[4px] for the user on the right), like a tail without
+// corner nearest the sender clipped flat (rounded-bl-chat for AI on the
+// left, rounded-br-chat for the user on the right), like a tail without
 // needing a pseudo-element. Timestamps sit beneath in muted type.
 //
 // Step 10 — the RLHF feedback loop: at the bottom of every AI response
@@ -94,10 +94,10 @@ export function ChatMessage({ role, children, timestamp, badge }: ChatMessagePro
         {/* Source badge (AI only) — e.g. "⚡ Offline AI Mode" / "☁️ Live Data". */}
         {isAI && badge && <div className="mb-1">{badge}</div>}
         <div
-          className={`px-3.5 py-2.5 shadow-[0_2px_12px_rgba(0,0,0,0.25)] ${
+          className={`px-3.5 py-2.5 shadow-[var(--shadow-float-sm)] ${
             isAI
-              ? "rounded-2xl rounded-bl-[4px] bg-[#dcf8c6] text-[#1a2e1e]"
-              : "rounded-2xl rounded-br-[4px] bg-[#c8e6fb] text-[#12283a]"
+              ? "rounded-2xl rounded-bl-chat bg-[#dcf8c6] text-[#1a2e1e]"
+              : "rounded-2xl rounded-br-chat bg-[#c8e6fb] text-[#12283a]"
           }`}
         >
           <p className="text-[0.9375rem] leading-relaxed sm:text-base">{children}</p>
@@ -133,8 +133,8 @@ export function ChatMessage({ role, children, timestamp, badge }: ChatMessagePro
                 title={t("feedback_not_helpful")}
                 className={`rounded p-1 transition hover:bg-white/10 ${
                   feedback === "down"
-                    ? "text-[#dc2626]"
-                    : "text-[var(--dl-text-muted)] hover:text-[#f87171]"
+                    ? "text-severity-red-600"
+                    : "text-[var(--dl-text-muted)] hover:text-severity-red-400"
                 }`}
               >
                 <ThumbsDown
@@ -181,7 +181,7 @@ export function ChatMessage({ role, children, timestamp, badge }: ChatMessagePro
                   type="button"
                   onClick={submitReason}
                   aria-label={t("feedback_send")}
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#34d399]/20 text-[#6ee7b7] transition hover:bg-[#34d399]/35"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-severity-green-400/20 text-severity-green-300 transition hover:bg-severity-green-400/35"
                 >
                   <Send className="h-3 w-3" aria-hidden />
                 </button>

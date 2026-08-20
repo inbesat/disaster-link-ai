@@ -199,7 +199,7 @@ export function BenchmarkPanel() {
 
   return (
     <div className="fixed right-4 top-1/2 z-40 -translate-y-1/2">
-      <div className="w-[360px] rounded-2xl border border-white/10 bg-[#0a0f1a]/95 p-4 shadow-2xl shadow-black/50 backdrop-blur-xl">
+      <div className="w-[360px] rounded-2xl border border-white/10 bg-[rgb(var(--bg-primary-rgb)/95)] p-4 shadow-2xl shadow-black/50 backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <p className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-300">
             <Activity aria-hidden className="h-3.5 w-3.5 text-cyan-400" />

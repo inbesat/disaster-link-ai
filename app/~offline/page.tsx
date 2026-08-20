@@ -117,7 +117,7 @@ export default function OfflinePage() {
                     className="flex items-center gap-3 rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-3.5 transition hover:border-[var(--dl-orange)]/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] active:scale-[0.99]"
                   >
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
-                      <Icon aria-hidden="true" className="h-4 w-4 text-[#FDBA74]" />
+                      <Icon aria-hidden="true" className="h-4 w-4 text-[var(--brand-orangeLight)]" />
                     </span>
                     <span className="flex-1 text-sm font-semibold text-white">
                       {line.label}

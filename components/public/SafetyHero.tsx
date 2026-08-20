@@ -91,7 +91,7 @@ const STATUS_THEMES: Record<SafetyStatus, StatusTheme> = {
     gradientClass: "bg-gradient-to-br from-orange-500/20 via-orange-900/40 to-[#0a0f1a]",
     glowShadow: "shadow-orange-500/10",
     headlineGradient: "bg-gradient-to-r from-orange-300 to-amber-200 bg-clip-text text-transparent",
-    tileClass: "bg-white/10 text-[#FDBA74] ring-1 ring-white/15",
+    tileClass: "bg-white/10 text-[var(--brand-orangeLight)] ring-1 ring-white/15",
     labelClass: "text-[#FDBA74]/80",
   },
   EVACUATE: {

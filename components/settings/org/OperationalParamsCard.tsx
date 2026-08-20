@@ -21,7 +21,7 @@ export default function OperationalParamsCard() {
   return (
     <section
       data-settings-key="org-operational-params"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -41,7 +41,7 @@ export default function OperationalParamsCard() {
 
       <div className="mt-6 space-y-6">
         {/* Shelter capacity warning */}
-        <div className="rounded-eoc border border-[#1c2740] bg-surface-muted/40 p-4">
+        <div className="rounded-eoc border border-panel-border bg-surface-muted/40 p-4">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-md bg-emerald-500/10">
               <Home className="h-4 w-4 text-emerald-300" aria-hidden />
@@ -94,7 +94,7 @@ export default function OperationalParamsCard() {
         </div>
 
         {/* Resource low-stock threshold */}
-        <div className="rounded-lg border border-[#1c2740] bg-surface-muted/40 p-4">
+        <div className="rounded-lg border border-panel-border bg-surface-muted/40 p-4">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-md bg-sky-500/10">
               <Home className="h-4 w-4 text-sky-300" aria-hidden />
@@ -127,7 +127,7 @@ export default function OperationalParamsCard() {
                   ),
                 })
               }
-              className="w-28 rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-200 outline-none focus:border-sky-400/60"
+              className="w-28 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-200 outline-none focus:border-sky-400/60"
             />
             <span className="text-xs font-semibold text-slate-500">
               units per depot — e.g. min 10 boats per dispatch point
@@ -144,7 +144,7 @@ export default function OperationalParamsCard() {
                 className={`rounded-md border px-2.5 py-1 text-xs font-semibold transition ${
                   lowStock === preset
                     ? "border-sky-400/60 bg-sky-500/10 text-sky-200"
-                    : "border-[#1c2740] bg-[#0a0f1d] text-slate-400 hover:border-sky-400/40"
+                    : "border-panel-border bg-[#0a0f1d] text-slate-400 hover:border-sky-400/40"
                 }`}
               >
                 {preset}
@@ -156,7 +156,7 @@ export default function OperationalParamsCard() {
         {/* Auto-trigger evacuation protocol */}
         <div
           className={`flex flex-wrap items-center justify-between gap-3 rounded-lg border p-4 transition ${
-            autoEvacuation ? "border-red-400/50 bg-red-500/[0.06]" : "border-[#1c2740] bg-surface-muted/40"
+            autoEvacuation ? "border-red-400/50 bg-red-500/[0.06]" : "border-panel-border bg-surface-muted/40"
           }`}
         >
           <div className="flex items-center gap-2.5">

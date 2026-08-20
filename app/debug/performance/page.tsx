@@ -22,7 +22,7 @@ const ROWS = [
 
 export default function DebugPerformancePage() {
   return (
-    <main className="min-h-[100dvh] bg-[#0a0f1a] p-6 text-slate-100">
+    <main className="min-h-[100dvh] bg-primary p-6 text-slate-100">
       <div className="max-w-3xl">
         <p className="eoc-label text-slate-500">PHASE 10 · PERFORMANCE MONITOR</p>
         <h1 className="mt-1 text-2xl font-black tracking-tight">

@@ -104,7 +104,7 @@ function OrgSettingsShell() {
         <button
           type="button"
           onClick={reset}
-          className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] px-3 py-2 text-xs font-bold text-slate-400 transition hover:border-red-400/50 hover:text-red-300"
+          className="inline-flex items-center gap-1.5 rounded-md border border-panel-border px-3 py-2 text-xs font-bold text-slate-400 transition hover:border-red-400/50 hover:text-red-300"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden />
           Reset to Defaults
@@ -115,7 +115,7 @@ function OrgSettingsShell() {
       <div
         role="tablist"
         aria-label="Organization settings sections"
-        className="flex gap-1 overflow-x-auto rounded-eoc border border-[#1c2740] bg-surface-muted/40 p-1"
+        className="flex gap-1 overflow-x-auto rounded-eoc border border-panel-border bg-surface-muted/40 p-1"
       >
         {TABS.map((tab) => {
           const active = tab.id === activeTab;
@@ -241,7 +241,7 @@ function PlaceholderCard({
   icon: typeof MapPinned;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-eoc border border-dashed border-[#1c2740] bg-surface-muted/40 p-6">
+    <div className="flex items-center gap-3 rounded-eoc border border-dashed border-panel-border bg-surface-muted/40 p-6">
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#1c2740]">
         <Icon className="h-4 w-4 text-slate-500" aria-hidden />
       </div>

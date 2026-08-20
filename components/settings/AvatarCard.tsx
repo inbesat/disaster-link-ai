@@ -159,7 +159,7 @@ export default function AvatarCard({
   return (
     <section
       data-settings-key="avatar"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-6"
+      className="rounded-eoc border border-panel-border bg-surface p-6"
     >
       <div className="flex flex-wrap items-center gap-6">
         <div className="relative shrink-0">
@@ -177,7 +177,7 @@ export default function AvatarCard({
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border border-[#2c3f6d] bg-surface-elevated text-slate-300 shadow-lg transition hover:border-cyan-400 hover:text-cyan-300"
+            className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border border-panel-borderHover bg-surface-elevated text-slate-300 shadow-lg transition hover:border-cyan-400 hover:text-cyan-300"
             aria-label="Change photo"
             title="Change photo"
           >
@@ -199,7 +199,7 @@ export default function AvatarCard({
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={uploading || removing}
-            className="inline-flex items-center gap-2 rounded-md border border-[#2c3f6d] bg-surface-muted px-4 py-2 text-sm font-semibold text-foreground transition hover:border-cyan-400 hover:text-cyan-300 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-md border border-panel-borderHover bg-surface-muted px-4 py-2 text-sm font-semibold text-foreground transition hover:border-cyan-400 hover:text-cyan-300 disabled:opacity-50"
           >
             <Camera className="h-4 w-4" aria-hidden />
             Change Photo

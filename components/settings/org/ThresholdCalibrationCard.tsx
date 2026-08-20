@@ -47,7 +47,7 @@ export default function ThresholdCalibrationCard() {
   return (
     <section
       data-settings-key="org-threshold-calibration"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -75,7 +75,7 @@ export default function ThresholdCalibrationCard() {
             id="calibration-district"
             value={district ? district.id : ""}
             onChange={(e) => setDistrictId(e.target.value)}
-            className="rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2 text-sm font-semibold text-slate-200 outline-none focus:border-red-400/60"
+            className="rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm font-semibold text-slate-200 outline-none focus:border-red-400/60"
           >
             {options.map((d) => (
               <option key={d.id} value={d.id} className="bg-[#0a0f1d]">
@@ -91,7 +91,7 @@ export default function ThresholdCalibrationCard() {
         {district ? `${district.name}, ${district.state} — applying local marks to` : "Applying local marks to"}{" "}the AI Prediction Engine.
       </p>
 
-      <p className="mt-4 rounded-md border border-[#1c2740] bg-surface-muted/40 px-3 py-2.5 text-xs leading-relaxed text-slate-400">
+      <p className="mt-4 rounded-md border border-panel-border bg-surface-muted/40 px-3 py-2.5 text-xs leading-relaxed text-slate-400">
         These local thresholds calibrate the AI Prediction Engine to account
         for regional topography.
       </p>
@@ -167,7 +167,7 @@ export default function ThresholdCalibrationCard() {
           <h3 className="text-sm font-bold text-slate-200">
             River Danger Marks
           </h3>
-          <span className="rounded-full border border-[#1c2740] bg-surface-muted/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <span className="rounded-full border border-panel-border bg-surface-muted/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
             metres
           </span>
         </div>

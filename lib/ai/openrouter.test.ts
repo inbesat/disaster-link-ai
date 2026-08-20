@@ -74,6 +74,17 @@ describe("hasAnyAiProviderConfigured", () => {
     const mod = await freshModule();
     expect(mod.hasAnyAiProviderConfigured()).toBe(false);
   });
+
+  it("rejects .env.example placeholder values as not configured", async () => {
+    vi.stubEnv("OPENROUTER_API_KEY", "your-openrouter-api-key");
+    vi.stubEnv("GROQ_API_KEY", "your-groq-api-key");
+    vi.stubEnv("BLUESMINDS_API_KEY", "your-bluesminds-api-key");
+    const mod = await freshModule();
+    expect(mod.hasAnyAiProviderConfigured()).toBe(false);
+    expect(mod.getMissingAiProviderKeys()).toContain("OPENROUTER_API_KEY");
+    expect(mod.getMissingAiProviderKeys()).toContain("GROQ_API_KEY");
+    expect(mod.getMissingAiProviderKeys()).toContain("BLUESMINDS_API_KEY");
+  });
 });
 
 describe("resolveEmergencyPlannerModel", () => {
@@ -199,5 +210,109 @@ describe("resolveEmergencyPlannerModel", () => {
 
     // No cached provider and every probe 402'd — best-effort instead of throw.
     expect((model as { provider?: string }).provider).toBe("groq.chat");
+  });
+
+  it("falls through to Groq when the preferred OpenRouter returns HTTP 500", async () => {
+    vi.stubEnv("OPENROUTER_API_KEY", "sk-or-1234567890");
+    vi.stubEnv("GROQ_API_KEY", "gk-1234567890");
+    const fetchMock = vi.fn(async (url: string | URL | Request) => {
+      return String(url).includes("api.groq.com")
+        ? OK_RESPONSE
+        : new Response(JSON.stringify({ error: "server error" }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const mod = await freshModule();
+    const model = await mod.resolveEmergencyPlannerModel("openrouter");
+
+    expect((model as { provider?: string }).provider).toBe("groq.chat");
+  });
+
+  it("classifies a 429 as rate-limited and surfaces the Retry-After hint", async () => {
+    vi.stubEnv("GROQ_API_KEY", "gk-1234567890");
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ error: "rate limit" }), {
+          status: 429,
+          headers: { "Content-Type": "application/json", "Retry-After": "45" },
+        }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const mod = await freshModule();
+    const report = await mod.probeEmergencyPlanner();
+
+    expect(report.results).toBe(1);
+    expect(report.reachable).toBe(false);
+    const groq = report.statuses.find((s) => s.name === "groq");
+    expect(groq?.status).toBe("failed");
+    expect(groq?.detail.status).toBe("rate-limited");
+    expect(groq?.detail.statusCode).toBe(429);
+    expect(groq?.detail.retryAfterMs).toBe(45_000);
+  });
+});
+
+describe("getAiProviderHealth (admin / health endpoint)", () => {
+  beforeEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+    clearProviderKeys();
+  });
+
+  it("reports missing keys distinctly from provider outages", async () => {
+    vi.stubEnv("GROQ_API_KEY", "gk-1234567890");
+    const mod = await freshModule();
+
+    const health = mod.getAiProviderHealth();
+    expect(health.allConfigured).toBe(false);
+    expect(health.missingKeys).toContain("OPENROUTER_API_KEY");
+
+    const groq = health.providers.find((p) => p.provider === "groq");
+    expect(groq?.status).toBe("unchecked"); // key present, never probed yet
+
+    const openrouter = health.providers.find((p) => p.provider === "openrouter");
+    expect(openrouter?.configured).toBe(false);
+    expect(openrouter?.status).toBe("not-configured");
+    expect(openrouter?.error).toContain("OPENROUTER_API_KEY not set");
+  });
+
+  it("reflects a recorded probe outcome without making network calls", async () => {
+    vi.stubEnv("GROQ_API_KEY", "gk-1234567890");
+    const fetchMock = vi.fn(async () => OK_RESPONSE);
+    vi.stubGlobal("fetch", fetchMock);
+
+    const mod = await freshModule();
+    await mod.resolveEmergencyPlannerModel(); // probes groq → ok, cached
+
+    const health = mod.getAiProviderHealth();
+    const groq = health.providers.find((p) => p.provider === "groq");
+    expect(groq?.status).toBe("ok");
+    expect(groq?.reachable).toBe(true);
+    expect(health.cachedWinner).toBe("groq");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("getEmergencyPlannerCandidates", () => {
+  beforeEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+    clearProviderKeys();
+  });
+
+  it("orders the last healthy provider first on the next request", async () => {
+    vi.stubEnv("GROQ_API_KEY", "gk-1234567890");
+    vi.stubEnv("OPENROUTER_API_KEY", "sk-or-1234567890");
+    const mod = await freshModule();
+
+    let order = mod.getEmergencyPlannerCandidates().map((c) => c.name);
+    expect(order[0]).toBe("groq");
+
+    mod.recordGenerationSuccess("openrouter");
+    order = mod.getEmergencyPlannerCandidates().map((c) => c.name);
+    expect(order[0]).toBe("openrouter");
   });
 });

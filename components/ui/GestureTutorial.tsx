@@ -69,14 +69,14 @@ export function GestureTutorial() {
           <Hand className="h-8 w-8 text-white" strokeWidth={1.5} aria-hidden />
         </motion.div>
 
-        <p className="rounded-full border border-white/10 bg-[#0f172a]/90 px-4 py-2 text-sm font-bold text-white">
+        <p className="rounded-full border border-white/10 bg-[rgb(var(--bg-secondary-rgb)/90)] px-4 py-2 text-sm font-bold text-white">
           Swipe to cycle tabs
         </p>
       </div>
 
       {/* Secondary pull-to-refresh nudge. */}
       <div className="pointer-events-none absolute inset-x-0 top-16 flex justify-center">
-        <p className="flex items-center gap-2 rounded-full border border-white/10 bg-[#0f172a]/90 px-4 py-2 text-xs font-semibold text-slate-200">
+        <p className="flex items-center gap-2 rounded-full border border-white/10 bg-[rgb(var(--bg-secondary-rgb)/90)] px-4 py-2 text-xs font-semibold text-slate-200">
           <ShieldCheck className="h-4 w-4 text-cyan-300" aria-hidden />
           Pull down on any list to refresh
         </p>

@@ -57,7 +57,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <>
-      <div className="flex h-14 items-center justify-between gap-2.5 border-b border-[#1c2740] px-5">
+      <div className="flex h-14 items-center justify-between gap-2.5 border-b border-panel-border px-5">
         <div className="flex items-center gap-2.5">
           <Settings className="h-4 w-4 text-cyan-400" />
           <span className="eoc-label text-cyan-400/90">DRIP / SETTINGS</span>
@@ -77,7 +77,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
               className={`group relative flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition ${
                 active
                   ? "bg-cyan-500/10 text-cyan-300"
-                  : "text-slate-400 hover:bg-[#1a2338] hover:text-slate-200"
+                  : "text-slate-400 hover:bg-panel-hoverAlt hover:text-slate-200"
               }`}
             >
               {/* Active-tab accent: cyan border on the left + soft glow. */}
@@ -106,7 +106,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         })}
       </nav>
 
-      <div className="border-t border-[#1c2740] px-5 py-4">
+      <div className="border-t border-panel-border px-5 py-4">
         <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
           Command Center
         </p>
@@ -124,16 +124,16 @@ export default function SettingsSidebar({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-[#0a0f1d] text-foreground">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-[#1c2740] bg-[#0a0f1d] lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-panel-border bg-[#0a0f1d] lg:flex">
         <SidebarContent />
       </aside>
 
       {/* Mobile top bar */}
-      <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-[#1c2740] bg-[#0a0f1d] px-4 lg:hidden">
+      <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-panel-border bg-[#0a0f1d] px-4 lg:hidden">
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="flex items-center gap-2 rounded-md bg-[#1a2740] px-3 py-2 text-sm font-medium text-cyan-300 transition hover:bg-[#24334f]"
+          className="flex items-center gap-2 rounded-md bg-panel-chip px-3 py-2 text-sm font-medium text-cyan-300 transition hover:bg-[#24334f]"
           aria-label="Open settings navigation"
         >
           <Menu className="h-4 w-4" />
@@ -152,7 +152,7 @@ export default function SettingsSidebar({ children }: { children: ReactNode }) {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setOpen(false)}
           />
-          <aside className="absolute inset-y-0 left-0 flex w-72 flex-col border-r border-[#1c2740] bg-[#0a0f1d]">
+          <aside className="absolute inset-y-0 left-0 flex w-72 flex-col border-r border-panel-border bg-[#0a0f1d]">
             <button
               type="button"
               onClick={() => setOpen(false)}

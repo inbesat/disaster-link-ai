@@ -344,7 +344,7 @@ export function NovaChat() {
       <span className={text} role="img" aria-label="Nova's friendly face">
         😊
       </span>
-      <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-[#34d399] ring-2 ring-[#1e1b4b]" />
+      <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-severity-green-400 ring-2 ring-[#1e1b4b]" />
     </span>
   );
 
@@ -506,7 +506,7 @@ export function NovaChat() {
                           />
                         ) : (
                           <div
-                            className={`rounded-2xl rounded-bl-[4px] bg-[#ede9fe] px-3.5 py-2.5 leading-relaxed text-[#2e1065] shadow-[0_2px_12px_rgba(0,0,0,0.25)] ${
+                            className={`rounded-2xl rounded-bl-chat bg-[#ede9fe] px-3.5 py-2.5 leading-relaxed text-[#2e1065] shadow-[var(--shadow-float-sm)] ${
                               emergencyActive ? "text-lg" : "text-[0.9375rem]"
                             }`}
                           >
@@ -522,7 +522,7 @@ export function NovaChat() {
                     <div key={m.id} className="flex w-full items-end justify-end">
                       <div className="flex max-w-[82%] flex-col items-end">
                         <div
-                          className={`rounded-2xl rounded-br-[4px] bg-[#ddd6fe] px-3.5 py-2.5 leading-relaxed text-[#1e1b4b] shadow-[0_2px_12px_rgba(0,0,0,0.25)] ${
+                          className={`rounded-2xl rounded-br-chat bg-[#ddd6fe] px-3.5 py-2.5 leading-relaxed text-[#1e1b4b] shadow-[var(--shadow-float-sm)] ${
                             emergencyActive ? "text-lg" : "text-[0.9375rem]"
                           }`}
                         >
@@ -546,7 +546,7 @@ export function NovaChat() {
                       className="flex items-end gap-2"
                     >
                       <Avatar size="h-8 w-8" text="text-base" />
-                      <span className="flex items-center gap-1.5 rounded-2xl rounded-bl-[4px] bg-[#ede9fe]/90 px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.25)]">
+                      <span className="flex items-center gap-1.5 rounded-2xl rounded-bl-chat bg-[#ede9fe]/90 px-4 py-3 shadow-[var(--shadow-float-sm)]">
                         {[0, 1, 2].map((i) => (
                           <span
                             key={i}
@@ -636,7 +636,7 @@ function CenterRecommendCard({
 
   return (
     <div
-      className={`w-full rounded-2xl rounded-bl-[4px] border border-[#c4b5fd]/30 bg-[#f3f0ff] p-3 shadow-[0_2px_12px_rgba(0,0,0,0.25)] ${
+      className={`w-full rounded-2xl rounded-bl-chat border border-[#c4b5fd]/30 bg-[#f3f0ff] p-3 shadow-[var(--shadow-float-sm)] ${
         emergencyActive ? "text-lg" : "text-[0.9375rem]"
       }`}
     >

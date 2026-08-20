@@ -34,7 +34,7 @@ export function AdvancedLayerControl() {
           onClick={() => setCollapsed(false)}
           aria-label="Show layer controls"
           title="Show layer controls"
-          className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/15 bg-[#0d1526]/85 text-[var(--dl-blue-light)] shadow-[0_8px_24px_rgba(0,0,0,0.4)] backdrop-blur transition hover:bg-[#0d1526] hover:scale-105 active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/15 bg-panel-deep/85 text-[var(--dl-blue-light)] shadow-[var(--shadow-float-md)] backdrop-blur transition hover:bg-panel-deep hover:scale-105 active:scale-95"
         >
           <Layers aria-hidden="true" className="h-5 w-5" />
         </button>
@@ -43,7 +43,7 @@ export function AdvancedLayerControl() {
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ type: "spring", stiffness: 350, damping: 30 }}
-          className="flex max-h-[calc(100vh-2rem)] w-72 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0d1526]/90 shadow-[0_16px_48px_rgba(0,0,0,0.5)] backdrop-blur-md"
+          className="flex max-h-[calc(100vh-2rem)] w-72 flex-col overflow-hidden rounded-2xl border border-white/10 bg-panel-deep/90 shadow-[var(--shadow-float-xl)] backdrop-blur-md"
         >
           {/* Header */}
           <header className="flex items-center justify-between gap-2 border-b border-white/10 px-4 py-3">

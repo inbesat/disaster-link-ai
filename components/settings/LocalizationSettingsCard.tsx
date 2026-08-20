@@ -90,7 +90,7 @@ export default function LocalizationSettingsCard() {
   return (
     <section
       data-settings-key="localization"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-6"
+      className="rounded-eoc border border-panel-border bg-surface p-6"
     >
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/10">
@@ -116,7 +116,7 @@ export default function LocalizationSettingsCard() {
             id="language"
             value={language}
             onChange={(e) => handleLanguageChange(e.target.value as Locale)}
-            className="w-full appearance-none rounded-md border border-[#2c3f6d] bg-surface-muted py-2.5 pl-10 pr-10 text-sm text-foreground focus:border-cyan-400 focus:outline-none"
+            className="w-full appearance-none rounded-md border border-panel-borderHover bg-surface-muted py-2.5 pl-10 pr-10 text-sm text-foreground focus:border-cyan-400 focus:outline-none"
           >
             {LANGUAGE_OPTIONS.map((option) => (
               <option key={option.code} value={option.code}>
@@ -157,7 +157,7 @@ export default function LocalizationSettingsCard() {
               id="timezone"
               value={timezone}
               onChange={(e) => setTimezone(e.target.value)}
-              className="w-full appearance-none rounded-md border border-[#2c3f6d] bg-surface-muted py-2.5 pl-10 pr-10 text-sm text-foreground focus:border-cyan-400 focus:outline-none"
+              className="w-full appearance-none rounded-md border border-panel-borderHover bg-surface-muted py-2.5 pl-10 pr-10 text-sm text-foreground focus:border-cyan-400 focus:outline-none"
             >
               {TIMEZONE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>

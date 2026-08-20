@@ -75,11 +75,11 @@ export default function UserManagementPage() {
         />
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-[#1c2740] bg-[#0b1120]">
+      <div className="overflow-hidden rounded-lg border border-panel-border bg-panel">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead>
-              <tr className="border-b border-[#1c2740] text-xs uppercase tracking-wider text-slate-500">
+              <tr className="border-b border-panel-border text-xs uppercase tracking-wider text-slate-500">
                 <th className="px-4 py-3 font-semibold">User</th>
                 <th className="px-4 py-3 font-semibold">Organization</th>
                 <th className="px-4 py-3 font-semibold">District</th>
@@ -89,7 +89,7 @@ export default function UserManagementPage() {
                 <th className="px-4 py-3 text-right font-semibold">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#151d31]">
+            <tbody className="divide-y divide-panel-divide">
               {loading ? (
                 <tr>
                   <td colSpan={7} className="px-4 py-12 text-center text-slate-500">
@@ -104,10 +104,10 @@ export default function UserManagementPage() {
                 </tr>
               ) : (
                 filtered.map((u) => (
-                  <tr key={u.id} className="transition hover:bg-[#131b30]">
+                  <tr key={u.id} className="transition hover:bg-panel-hover">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1a2740] text-xs font-semibold text-amber-300">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-panel-chip text-xs font-semibold text-amber-300">
                           {u.name
                             .split(" ")
                             .map((w) => w[0])

@@ -194,7 +194,7 @@ export function MapBottomSheet({
             dragElastic={{ top: 0.12, bottom: 0.04 }}
             dragMomentum={false}
             onDragEnd={handleDragEnd}
-            className="fixed inset-x-0 bottom-0 z-50 flex h-[95%] flex-col rounded-t-2xl border-t border-x border-[#2c3f6d] bg-secondary/95 shadow-2xl backdrop-blur-md"
+            className="fixed inset-x-0 bottom-0 z-50 flex h-[95%] flex-col rounded-t-2xl border-t border-x border-panel-borderHover bg-secondary/95 shadow-2xl backdrop-blur-md"
           >
             {/* Drag handle — thick gray pill, top-center. The handle area IS
                 the grab surface; `touch-none` keeps the browser's scroll from

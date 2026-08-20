@@ -144,7 +144,7 @@ function NgoCard({ ngo }: { ngo: VerifiedNgo }) {
 
 export default function DonationsPage() {
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-[#0a0f1a]">
+    <div className="relative flex min-h-screen w-full flex-col bg-primary">
       <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-[100px] text-[var(--dl-text-on-navy)]">
         {/* Ambient backdrop */}
         <div

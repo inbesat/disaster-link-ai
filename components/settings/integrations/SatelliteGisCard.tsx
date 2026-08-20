@@ -170,7 +170,7 @@ export default function SatelliteGisCard() {
   return (
     <section
       data-settings-key="integrations-satellite-gis"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -202,7 +202,7 @@ export default function SatelliteGisCard() {
           return (
             <div
               key={provider.id}
-              className="rounded-md border border-[#1c2740] bg-surface-muted/40 p-4"
+              className="rounded-md border border-panel-border bg-surface-muted/40 p-4"
             >
               <div className="flex flex-wrap items-center gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#1c2740]">
@@ -237,7 +237,7 @@ export default function SatelliteGisCard() {
                       type="button"
                       onClick={() => validateCredentials(provider.id)}
                       disabled={state === "validating"}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-[#2c3f6d] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-violet-400/50 hover:bg-violet-500/10 hover:text-violet-200 disabled:cursor-wait disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 rounded-md border border-panel-borderHover px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-violet-400/50 hover:bg-violet-500/10 hover:text-violet-200 disabled:cursor-wait disabled:opacity-50"
                     >
                       {state === "validating" ? (
                         <>
@@ -300,7 +300,7 @@ export default function SatelliteGisCard() {
                           aria-label={`${provider.name} ${field.label}`}
                           autoComplete="off"
                           spellCheck={false}
-                          className="w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-violet-400/60"
+                          className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-violet-400/60"
                         />
                         {field.kind !== "id" && (
                           <button

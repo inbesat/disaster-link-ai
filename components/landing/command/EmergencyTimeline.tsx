@@ -33,10 +33,10 @@ const STEPS = [
 
 export default function EmergencyTimeline() {
   return (
-    <div className="bg-white/[0.04] border border-white/[0.08] rounded-[20px] p-6 h-full">
+    <div className="bg-white/[0.04] border border-white/[0.08] rounded-[var(--radius-xl6)] p-6 h-full">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F97316] to-[#2563EB] flex items-center justify-center text-lg shadow-md">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--orange)] to-[var(--blue)] flex items-center justify-center text-lg shadow-md">
           ⏱
         </div>
         <div>
@@ -50,7 +50,7 @@ export default function EmergencyTimeline() {
       {/* Timeline */}
       <div className="relative pl-8">
         {/* Gradient vertical line */}
-        <div className="absolute left-[11px] top-2 bottom-2 w-[2px] bg-gradient-to-b from-[#2563EB] via-[#5B8DF6] to-[#F97316] rounded-full" />
+        <div className="absolute left-[11px] top-2 bottom-2 w-[2px] bg-gradient-to-b from-[var(--blue)] via-[var(--blue-light)] to-[var(--orange)] rounded-full" />
 
         <div className="flex flex-col gap-6">
           {STEPS.map((step, i) => (
@@ -80,7 +80,7 @@ export default function EmergencyTimeline() {
               </motion.div>
 
               <div className="flex-1 min-w-0">
-                <span className="text-xs font-bold text-[#F97316] tabular-nums">
+                <span className="text-xs font-bold text-[var(--orange)] tabular-nums">
                   {step.time}
                 </span>
                 <p className="text-sm text-white/70 leading-relaxed mt-0.5">

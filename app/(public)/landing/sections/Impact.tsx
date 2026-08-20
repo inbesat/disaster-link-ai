@@ -12,7 +12,7 @@ const stats = [
 
 export default function Impact() {
   return (
-    <section className="bg-gradient-to-br from-[#0B1F3A] to-[#0c2a52] py-28 relative overflow-hidden">
+    <section className="bg-gradient-to-br from-[var(--navy)] to-[#0c2a52] py-28 relative overflow-hidden">
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
@@ -37,7 +37,7 @@ export default function Impact() {
                 <div className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-white to-[#BFD3FF] bg-clip-text text-transparent">
                   {stat.value}
                 </div>
-                <div className="text-sm text-[#C9D6EC] mt-3 uppercase tracking-wider">
+                <div className="text-sm text-[var(--text-on-navy)] mt-3 uppercase tracking-wider">
                   {stat.label}
                 </div>
               </div>

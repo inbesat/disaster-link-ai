@@ -55,7 +55,7 @@ export default function SosHistoryPage() {
             </Link>
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
-                <History aria-hidden="true" className="h-4 w-4 text-[#FDBA74]" />
+                <History aria-hidden="true" className="h-4 w-4 text-[var(--brand-orangeLight)]" />
               </span>
               <div>
                 <h1 className="text-base font-bold text-white">SOS History</h1>
@@ -109,7 +109,7 @@ export default function SosHistoryPage() {
                       />
                       {formatSosDate(entry.date)}
                     </p>
-                    <span className="shrink-0 rounded-full border border-[var(--dl-orange)]/40 bg-[var(--dl-orange)]/10 px-2.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-[#FDBA74]">
+                    <span className="shrink-0 rounded-full border border-[var(--dl-orange)]/40 bg-[var(--dl-orange)]/10 px-2.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-[var(--brand-orangeLight)]">
                       {entry.incidentType}
                     </span>
                   </div>

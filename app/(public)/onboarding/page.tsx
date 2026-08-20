@@ -114,7 +114,7 @@ export default function OnboardingPage() {
   const lastSlide = index === count - 1;
 
   return (
-    <main className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-[#0a0f1a] text-white">
+    <main className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-primary text-white">
       {/* Ambient glow — soft radial sky tint rising from the top. */}
       <div
         aria-hidden

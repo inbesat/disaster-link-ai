@@ -97,7 +97,7 @@ export function PlanVisualization({ override }: PlanVisualizationProps) {
   const live = planStatus === "monitoring";
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-accent-purple/30 bg-[#111827] p-4 shadow-[0_0_32px_rgba(168,85,247,0.18)]">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-accent-purple/30 bg-secondary p-4 shadow-[0_0_32px_rgba(168,85,247,0.18)]">
       {/* AI-generated plan header */}
       <div className="flex items-center justify-between rounded-lg border border-accent-purple/40 bg-accent-purple/5 px-3 py-2.5">
         <div className="flex items-center gap-2">

@@ -30,7 +30,7 @@ export function MapHeader({
   onToggleFullscreen,
 }: MapHeaderProps) {
   return (
-    <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-3 bg-[#0a0f1a]/80 px-3 py-2.5 backdrop-blur-md sm:px-4">
+    <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-3 bg-[rgb(var(--bg-primary-rgb)/80)] px-3 py-2.5 backdrop-blur-md sm:px-4">
       {/* Back */}
       <Link
         href={backHref}

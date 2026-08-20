@@ -41,13 +41,13 @@ export function SourcesPanel({ sources }: SourcesPanelProps) {
 
       {open && (
         <div className="rounded-b-md border border-t-0 border-border bg-[#0a0f1e] px-3 py-2 font-mono text-[11px]">
-          <p className="text-[#10b981]">
+          <p className="text-severity-green-500">
             $ ground_search --plan execution --top_k {sources.length}
           </p>
           <ul className="mt-1.5 space-y-1">
             {sources.map((source, index) => (
               <li key={source} className="flex items-baseline gap-2">
-                <span className="shrink-0 text-[#10b981]/70">
+                <span className="shrink-0 text-severity-green-500/70">
                   [{String(index + 1).padStart(2, "0")}]
                 </span>
                 <span className="text-slate-300">[{source}]</span>

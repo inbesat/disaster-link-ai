@@ -15,12 +15,12 @@ const DECISIONS = [
 
 export default function AIDecisionEngine() {
   return (
-    <div className="bg-white/[0.04] border border-white/[0.08] rounded-[20px] p-6 shadow-[0_0_0_1px_rgba(249,115,22,0.25),0_20px_60px_-20px_rgba(249,115,22,0.35)]">
+    <div className="bg-white/[0.04] border border-white/[0.08] rounded-[var(--radius-xl6)] p-6 shadow-[0_0_0_1px_rgba(249,115,22,0.25),0_20px_60px_-20px_rgba(249,115,22,0.35)]">
       {/* Header */}
       <div className="flex items-start gap-4 mb-6">
         {/* AI Orb */}
         <motion.div
-          className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F97316] to-[#FDBA74] flex items-center justify-center text-xl flex-shrink-0 shadow-md"
+          className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--orange)] to-[var(--orange-light)] flex items-center justify-center text-xl flex-shrink-0 shadow-md"
           animate={{
             boxShadow: [
               "0 0 0 0 rgba(249,115,22,0.4)",

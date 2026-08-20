@@ -41,7 +41,7 @@ export default function EscalationChainCard() {
   return (
     <section
       data-settings-key="org-escalation-chain"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -154,7 +154,7 @@ export default function EscalationChainCard() {
               value={controlRoom}
               onChange={(e) => setControlRoom(e.target.value)}
               placeholder="e.g. 1070 or +91 …"
-              className="w-full rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-200 outline-none focus:border-orange-400/60"
+              className="w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-200 outline-none focus:border-orange-400/60"
             />
           </div>
           <p className="mt-2 text-[11px] text-slate-500">
@@ -164,7 +164,7 @@ export default function EscalationChainCard() {
       </div>
 
       {/* Action bar */}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-[#1c2740] pt-4">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-panel-border pt-4">
         <p className="text-[11px] text-slate-500">
           Escalation timers run automatically from alert dispatch.
         </p>
@@ -187,7 +187,7 @@ function EscalArrow({ label }: { label: string }) {
       className="flex flex-col items-center gap-1 py-2"
       role="presentation"
     >
-      <div className="flex h-7 w-9 items-center justify-center rounded-full border border-[#1c2740] bg-[#0a0f1d]">
+      <div className="flex h-7 w-9 items-center justify-center rounded-full border border-panel-border bg-[#0a0f1d]">
         <ChevronDown className="h-4 w-4 text-slate-400" aria-hidden />
       </div>
       <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">

@@ -75,7 +75,7 @@ export default function PublicSidebar() {
     : NAV_ITEMS;
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col overflow-y-auto border-r border-white/10 bg-[#0a0f1a] p-4 pb-32 md:flex">
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col overflow-y-auto border-r border-white/10 bg-primary p-4 pb-32 md:flex">
       {/* App logo / title — desktop layout polish. */}
       <Link
         href="/public/dashboard"

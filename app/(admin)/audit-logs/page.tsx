@@ -94,7 +94,7 @@ export default function AuditLogsPage() {
         <div
           role="group"
           aria-label="Filter by severity"
-          className="flex flex-wrap items-center gap-1 rounded-md border border-[#1c2740] bg-[#0b1120] p-1"
+          className="flex flex-wrap items-center gap-1 rounded-md border border-panel-border bg-panel p-1"
         >
           {SEVERITY_OPTIONS.map((option) => (
             <button
@@ -123,20 +123,20 @@ export default function AuditLogsPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search action, actor, IP…"
-            className="w-full rounded-md border border-[#1c2740] bg-[#0b1120] py-2 pl-9 pr-3 text-sm text-foreground outline-none transition placeholder:text-slate-500 focus:border-amber-400/60"
+            className="w-full rounded-md border border-panel-border bg-panel py-2 pl-9 pr-3 text-sm text-foreground outline-none transition placeholder:text-slate-500 focus:border-amber-400/60"
           />
         </div>
 
-        <span className="ml-auto rounded-full border border-[#1c2740] bg-[#0b1120] px-2.5 py-1 text-xs tabular-nums text-slate-400">
+        <span className="ml-auto rounded-full border border-panel-border bg-panel px-2.5 py-1 text-xs tabular-nums text-slate-400">
           {filtered.length} event{filtered.length === 1 ? "" : "s"}
         </span>
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-lg border border-[#1c2740] bg-[#0b1120]">
+      <div className="overflow-hidden rounded-lg border border-panel-border bg-panel">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-left text-sm">
-            <thead className="border-b border-[#1c2740] text-xs uppercase tracking-wider text-slate-500">
+            <thead className="border-b border-panel-border text-xs uppercase tracking-wider text-slate-500">
               <tr>
                 <th className="px-4 py-3 font-semibold">Event</th>
                 <th className="px-4 py-3 font-semibold">Actor</th>
@@ -145,7 +145,7 @@ export default function AuditLogsPage() {
                 <th className="px-4 py-3 text-right font-semibold">When</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#151d31]">
+            <tbody className="divide-y divide-panel-divide">
               {loading ? (
                 <tr>
                   <td colSpan={5} className="px-4 py-12 text-center text-slate-500">
@@ -160,7 +160,7 @@ export default function AuditLogsPage() {
                 </tr>
               ) : (
                 filtered.map((event) => (
-                  <tr key={event.id} className="transition hover:bg-[#131b30]">
+                  <tr key={event.id} className="transition hover:bg-panel-hover">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <span

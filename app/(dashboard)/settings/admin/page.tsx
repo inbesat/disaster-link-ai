@@ -5,7 +5,7 @@
 //
 // Admin Panel — deliberately distinct from regular settings: a dense,
 // data-first table with a filter bar, per-row action dropdowns and bulk
-// operation buttons. The darker header (bg-[#020617]) signals elevated
+// operation buttons. The darker header (bg-panel-darker) signals elevated
 // privileges.
 // ---------------------------------------------------------------------
 
@@ -154,7 +154,7 @@ export default function AdminPanelPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* Elevated-privilege header */}
-      <div className="-mx-4 -mt-4 rounded-b-xl border-b border-subtle bg-[#020617] px-6 py-5 sm:-mx-6 sm:px-8 sm:-mt-6 lg:-mx-8 lg:px-8 lg:-mt-8">
+      <div className="-mx-4 -mt-4 rounded-b-xl border-b border-subtle bg-panel-darker px-6 py-5 sm:-mx-6 sm:px-8 sm:-mt-6 lg:-mx-8 lg:px-8 lg:-mt-8">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-accent-danger/40 bg-accent-danger/10 text-accent-danger">

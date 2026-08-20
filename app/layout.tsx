@@ -88,7 +88,7 @@ export default function RootLayout({
       {/* bg-primary / text-primary = the roadmap tokens (globals.css also
           sets them on body — these classes make it explicit). */}
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${poppins.variable} bg-[#0B1F3A] text-primary antialiased scroll-smooth`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${poppins.variable} bg-[var(--brand-navy)] text-primary antialiased scroll-smooth`}
       >
         {simulationActive && (
           <div

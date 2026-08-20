@@ -53,7 +53,7 @@ export default function ExportDataButton<T extends object>({
     <button
       type="button"
       onClick={handleExport}
-      className="inline-flex items-center gap-2 rounded-md border border-[#1c2740] bg-[#0b1120] px-4 py-2 text-sm font-medium text-foreground transition hover:border-amber-400/50 hover:text-amber-300"
+      className="inline-flex items-center gap-2 rounded-md border border-panel-border bg-panel px-4 py-2 text-sm font-medium text-foreground transition hover:border-amber-400/50 hover:text-amber-300"
     >
       <Download className="h-4 w-4" />
       {label}

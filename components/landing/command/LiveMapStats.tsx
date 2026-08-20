@@ -133,7 +133,7 @@ function StatCard({ stat, delay }: { stat: (typeof STATS)[0]; delay: number }) {
 
   return (
     <motion.div
-      className="bg-white/[0.04] border border-white/[0.08] rounded-[16px] p-4 flex items-center gap-4 hover:bg-white/[0.07] transition-colors duration-200"
+      className="bg-white/[0.04] border border-white/[0.08] rounded-[var(--radius-xl5)] p-4 flex items-center gap-4 hover:bg-white/[0.07] transition-colors duration-200"
       initial={{ opacity: 0, x: 20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -203,7 +203,7 @@ export default function LiveMapStats() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
       {/* ---- Map Panel ---- */}
-      <div className="bg-white/[0.04] border border-white/10 rounded-[20px] p-6 min-h-[520px] shadow-[0_0_0_1px_rgba(37,99,235,0.25),0_20px_60px_-20px_rgba(37,99,235,0.35)]">
+      <div className="bg-white/[0.04] border border-white/10 rounded-[var(--radius-xl6)] p-6 min-h-[520px] shadow-[0_0_0_1px_rgba(37,99,235,0.25),0_20px_60px_-20px_rgba(37,99,235,0.35)]">
         {/* Header */}
         <div className="flex flex-wrap justify-between items-center mb-6 gap-3">
           <div className="flex items-center gap-2">

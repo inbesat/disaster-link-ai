@@ -129,7 +129,7 @@ export default function NotificationDiagnostics() {
   return (
     <section
       data-settings-key="notification-diagnostics"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -163,8 +163,8 @@ export default function NotificationDiagnostics() {
                 state === "sent"
                   ? "border-emerald-500/50 bg-emerald-500/10"
                   : isToast
-                    ? "border-[#2c3f6d] bg-surface-muted/40 hover:border-red-400/60"
-                    : "border-[#2c3f6d] bg-surface-muted/40 hover:border-fuchsia-400/60"
+                    ? "border-panel-borderHover bg-surface-muted/40 hover:border-red-400/60"
+                    : "border-panel-borderHover bg-surface-muted/40 hover:border-fuchsia-400/60"
               } ${state === "sending" ? "cursor-wait opacity-70" : "cursor-pointer"}`}
               aria-live={state === "sending" ? "polite" : "off"}
             >

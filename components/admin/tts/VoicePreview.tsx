@@ -264,12 +264,12 @@ export default function VoicePreview() {
   }
 
   const inputClass =
-    "mt-1 w-full rounded-md border border-[#1c2740] bg-[#0a0f1a] px-3 py-2 text-sm text-foreground outline-none transition focus:border-amber-400/50";
+    "mt-1 w-full rounded-md border border-panel-border bg-primary px-3 py-2 text-sm text-foreground outline-none transition focus:border-amber-400/50";
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       {/* ---------------------------------------------------------- Config */}
-      <section className="rounded-lg border border-[#1c2740] bg-[#0b1120] p-5">
+      <section className="rounded-lg border border-panel-border bg-panel p-5">
         <div className="mb-4 flex items-center gap-2">
           <Radio className="h-4 w-4 text-amber-400" />
           <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
@@ -368,7 +368,7 @@ export default function VoicePreview() {
       </section>
 
       {/* ---------------------------------------------------------- Preview */}
-      <section className="rounded-lg border border-[#1c2740] bg-[#0b1120] p-5">
+      <section className="rounded-lg border border-panel-border bg-panel p-5">
         <div className="mb-4 flex items-center gap-2">
           <Volume2 className="h-4 w-4 text-amber-400" />
           <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
@@ -377,7 +377,7 @@ export default function VoicePreview() {
         </div>
 
         {!result ? (
-          <div className="flex h-64 flex-col items-center justify-center rounded-md border border-dashed border-[#1c2740] text-center">
+          <div className="flex h-64 flex-col items-center justify-center rounded-md border border-dashed border-panel-border text-center">
             <Volume2 className="mb-3 h-8 w-8 text-slate-600" />
             <p className="text-sm text-slate-500">
               Generate an alert to preview the radio-ready audio here.
@@ -389,7 +389,7 @@ export default function VoicePreview() {
         ) : (
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-3">
-              <div className="rounded-md bg-[#0a0f1a] p-3">
+              <div className="rounded-md bg-primary p-3">
                 <p className="text-[0.6875rem] uppercase tracking-wider text-slate-500">
                   Provider
                 </p>
@@ -397,7 +397,7 @@ export default function VoicePreview() {
                   {result.provider}
                 </p>
               </div>
-              <div className="rounded-md bg-[#0a0f1a] p-3">
+              <div className="rounded-md bg-primary p-3">
                 <p className="text-[0.6875rem] uppercase tracking-wider text-slate-500">
                   Duration
                 </p>
@@ -405,7 +405,7 @@ export default function VoicePreview() {
                   {result.durationSec.toFixed(1)} s
                 </p>
               </div>
-              <div className="rounded-md bg-[#0a0f1a] p-3">
+              <div className="rounded-md bg-primary p-3">
                 <p className="text-[0.6875rem] uppercase tracking-wider text-slate-500">
                   Cache
                 </p>
@@ -423,7 +423,7 @@ export default function VoicePreview() {
               </div>
             </div>
 
-            <div className="rounded-md border border-[#1c2740] bg-[#0a0f1a] p-3">
+            <div className="rounded-md border border-panel-border bg-primary p-3">
               <div className="flex items-center justify-between">
                 <p className="flex items-center gap-1.5 text-[0.6875rem] uppercase tracking-wider text-slate-500">
                   <Activity className="h-3 w-3" /> Waveform
@@ -457,14 +457,14 @@ export default function VoicePreview() {
               <button
                 type="button"
                 onClick={download}
-                className="inline-flex items-center gap-2 rounded-md border border-[#1c2740] bg-[#0a0f1a] px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300"
+                className="inline-flex items-center gap-2 rounded-md border border-panel-border bg-primary px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-amber-400/50 hover:text-amber-300"
               >
                 <Download className="h-4 w-4" />
                 MP3
               </button>
             </div>
 
-            <div className="rounded-md border border-[#1c2740] bg-[#0a0f1a] p-3">
+            <div className="rounded-md border border-panel-border bg-primary p-3">
               <p className="flex items-center gap-1.5 text-[0.6875rem] uppercase tracking-wider text-slate-500">
                 <FileText className="h-3 w-3" /> Spoken Script
               </p>

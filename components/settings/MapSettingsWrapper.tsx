@@ -72,7 +72,7 @@ export default function MapSettingsWrapper() {
       <AccessibilityCard />
 
       {/* Stripped footer summary bar */}
-      <footer className="flex flex-wrap items-center justify-between gap-3 rounded-eoc border border-[#1c2740] bg-surface-muted/40 p-4">
+      <footer className="flex flex-wrap items-center justify-between gap-3 rounded-eoc border border-panel-border bg-surface-muted/40 p-4">
         <p className="flex items-center gap-2 text-xs text-slate-500">
           <MapIcon className="h-4 w-4 shrink-0 text-cyan-400" aria-hidden />
           Live-preview your tactical configuration on the command-center map.
@@ -80,7 +80,7 @@ export default function MapSettingsWrapper() {
         <button
           type="button"
           onClick={reset}
-          className="inline-flex items-center gap-1.5 rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-cyan-300"
+          className="inline-flex items-center gap-1.5 rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-cyan-300"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden />
           Reset all map settings

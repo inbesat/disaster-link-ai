@@ -92,7 +92,7 @@ export default function FmBroadcastDemo() {
           <div className="flex items-center gap-3">
             <Link
               href="/demo"
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#1c2740] bg-[#0b1120] px-3 py-1.5 text-xs font-semibold text-slate-400 transition hover:text-foreground"
+              className="inline-flex items-center gap-1.5 rounded-md border border-panel-border bg-panel px-3 py-1.5 text-xs font-semibold text-slate-400 transition hover:text-foreground"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Demo
@@ -118,7 +118,7 @@ export default function FmBroadcastDemo() {
               key={q.label}
               type="button"
               onClick={() => quickStart(q.district, q.disaster)}
-              className="rounded-full border border-[#1c2740] bg-[#0b1120] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-amber-500/40 hover:text-amber-300"
+              className="rounded-full border border-panel-border bg-panel px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-amber-500/40 hover:text-amber-300"
             >
               ▶ {q.label}
             </button>
@@ -148,7 +148,7 @@ export default function FmBroadcastDemo() {
           </aside>
         </div>
 
-        <footer className="mt-8 border-t border-[#1c2740] pt-4 text-center text-[0.6875rem] text-slate-600">
+        <footer className="mt-8 border-t border-panel-border pt-4 text-center text-[0.6875rem] text-slate-600">
           Judges&apos; sandbox · nothing here contacts real FM stations ·
           production dispatch runs through /api/broadcast/fm/dispatch with CAP + audio
         </footer>

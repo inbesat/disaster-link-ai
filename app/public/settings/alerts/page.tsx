@@ -77,7 +77,7 @@ function Switch({
       onClick={() => onChange(!checked)}
       className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
         disabled ? "cursor-not-allowed" : ""
-      } ${checked ? "bg-[#F97316]" : "bg-white/15"}`}
+      } ${checked ? "bg-[var(--brand-orange)]" : "bg-white/15"}`}
     >
       <span
         aria-hidden="true"
@@ -121,7 +121,7 @@ export default function PublicAlertSettingsPage() {
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F97316]/20 ring-1 ring-[#F97316]/40">
                 <SlidersHorizontal
                   aria-hidden="true"
-                  className="h-4 w-4 text-[#FDBA74]"
+                  className="h-4 w-4 text-[var(--brand-orangeLight)]"
                 />
               </span>
               <div>
@@ -183,7 +183,7 @@ export default function PublicAlertSettingsPage() {
                   }
                   className={`rounded-xl border px-2 py-3 text-center text-xs font-bold leading-tight transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
                     active
-                      ? "border-[#F97316] bg-[#F97316]/20 text-[#FDBA74]"
+                      ? "border-[var(--brand-orange)] bg-[#F97316]/20 text-[var(--brand-orangeLight)]"
                       : "border-white/10 bg-white/5 text-[var(--dl-text-muted)] hover:border-white/25 hover:text-[var(--dl-text-on-navy)]"
                   }`}
                 >

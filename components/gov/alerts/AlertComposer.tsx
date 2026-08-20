@@ -73,7 +73,7 @@ import TranslationPreview from "@/components/gov/alerts/TranslationPreview";
 const AlertTargetMap = dynamic(() => import("@/components/gov/alerts/AlertTargetMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-[250px] w-full items-center justify-center rounded-xl border border-white/10 bg-[#0d1526]">
+    <div className="flex h-[250px] w-full items-center justify-center rounded-xl border border-white/10 bg-panel-deep">
       <p className="text-xs text-slate-400">Loading targeting map…</p>
     </div>
   ),
@@ -404,7 +404,7 @@ export function AlertComposer() {
                 id="alert-type"
                 value={type}
                 onChange={(e) => setType(e.target.value as GovAlertType)}
-                className="h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white focus:border-accent-purple/60 focus:outline-none [&>option]:bg-[#0d1526]"
+                className="h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white focus:border-accent-purple/60 focus:outline-none [&>option]:bg-panel-deep"
               >
                 {GOV_ALERT_TYPES.map((t) => (
                   <option key={t.value} value={t.value}>
@@ -484,7 +484,7 @@ export function AlertComposer() {
               id="target-district"
               value={district}
               onChange={(e) => setDistrict(e.target.value)}
-              className="h-9 w-44 rounded-lg border border-white/10 bg-white/5 px-2.5 text-sm text-white focus:border-accent-purple/60 focus:outline-none [&>option]:bg-[#0d1526]"
+              className="h-9 w-44 rounded-lg border border-white/10 bg-white/5 px-2.5 text-sm text-white focus:border-accent-purple/60 focus:outline-none [&>option]:bg-panel-deep"
             >
               {GOV_DISTRICTS.map((d) => (
                 <option key={d} value={d}>

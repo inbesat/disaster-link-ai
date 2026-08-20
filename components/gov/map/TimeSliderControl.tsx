@@ -74,7 +74,7 @@ export function TimeSliderControl({ hour, onChange }: TimeSliderControlProps) {
   };
 
   return (
-    <div className="absolute bottom-4 left-1/2 z-10 w-[min(92vw,38rem)] -translate-x-1/2 rounded-2xl border border-white/10 bg-[#0d1526]/90 px-5 py-3.5 shadow-[0_16px_48px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+    <div className="absolute bottom-4 left-1/2 z-10 w-[min(92vw,38rem)] -translate-x-1/2 rounded-2xl border border-white/10 bg-panel-deep/90 px-5 py-3.5 shadow-[0_16px_48px_rgba(0,0,0,0.55)] backdrop-blur-xl">
       {/* Header row — title, status chip, play, hour readout. */}
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">

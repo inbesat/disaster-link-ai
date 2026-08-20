@@ -31,7 +31,7 @@ export default function AccessibilityCard() {
   return (
     <section
       data-settings-key="map-accessibility"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -50,7 +50,7 @@ export default function AccessibilityCard() {
       </p>
 
       {/* Colorblind Mode toggle */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div
@@ -101,7 +101,7 @@ export default function AccessibilityCard() {
       </div>
 
       {/* High Contrast toggle */}
-      <div className="mt-4 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-4 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div
@@ -182,14 +182,14 @@ function PreviewThumbnail({
   const dangerText = colorblind ? "orange" : "red";
 
   return (
-    <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+    <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
       <p className="text-[11px] font-semibold tracking-wide text-slate-400">
         LIVE PREVIEW
       </p>
 
       {/* Stylized map thumbnail */}
       <div
-        className="mt-2.5 relative h-36 overflow-hidden rounded-md border border-[#2c3f6d] bg-gradient-to-br from-slate-800 to-slate-950"
+        className="mt-2.5 relative h-36 overflow-hidden rounded-md border border-panel-borderHover bg-gradient-to-br from-slate-800 to-slate-950"
         aria-label={`Map preview: ${colorblind ? "colorblind" : "standard"} palette`}
       >
         {/* Roads (thicken in high contrast) */}

@@ -123,14 +123,14 @@ function ChecklistCard({ data }: { data: ChecklistCardData }) {
   };
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_2px_12px_rgba(0,0,0,0.25)]">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[var(--shadow-float-sm)]">
       <div className="flex items-center justify-between gap-2">
         <p className="text-sm font-bold text-white">{data.title}</p>
         {allDone && (
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="inline-flex items-center gap-1 rounded-full bg-[#34d399]/20 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-[#6ee7b7]"
+            className="inline-flex items-center gap-1 rounded-full bg-severity-green-400/20 px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-severity-green-300"
           >
             <CheckCircle2 className="h-3 w-3" aria-hidden />
             {data.readyLabel}
@@ -149,22 +149,22 @@ function ChecklistCard({ data }: { data: ChecklistCardData }) {
                 aria-pressed={done}
                 className={`flex w-full items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition ${
                   done
-                    ? "border-[#34d399]/30 bg-[#34d399]/10"
-                    : "border-white/10 bg-white/5 hover:border-[#34d399]/40"
+                    ? "border-severity-green-400/30 bg-severity-green-400/10"
+                    : "border-white/10 bg-white/5 hover:border-severity-green-400/40"
                 }`}
               >
                 {done ? (
                   <CheckCircle2
-                    className="h-5 w-5 shrink-0 text-[#34d399]"
+                    className="h-5 w-5 shrink-0 text-severity-green-400"
                     aria-hidden
                   />
                 ) : (
-                  <Circle className="h-5 w-5 shrink-0 text-[#5b6b84]" aria-hidden />
+                  <Circle className="h-5 w-5 shrink-0 text-[var(--brand-textMuted)]" aria-hidden />
                 )}
                 <span
                   className={`text-sm transition-colors ${
                     done
-                      ? "text-[#6ee7b7] line-through decoration-[#34d399]/60"
+                      ? "text-severity-green-300 line-through decoration-severity-green-400/60"
                       : "text-[#d7e6f5]"
                   }`}
                 >
@@ -183,7 +183,7 @@ function ChecklistCard({ data }: { data: ChecklistCardData }) {
 
 function RouteCard({ data }: { data: RouteCardData }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[0_2px_12px_rgba(0,0,0,0.25)]">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-[var(--shadow-float-sm)]">
       {/* Map snippet placeholder — grid streets + pin + dashed path. */}
       <div
         aria-hidden
@@ -203,9 +203,9 @@ function RouteCard({ data }: { data: RouteCardData }) {
         <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#1e4a39] ring-1 ring-[#dcf8c6]/30 shadow-[0_2px_14px_rgba(16,185,129,0.45)]">
           <span
             aria-hidden
-            className="absolute inset-0 animate-ping rounded-full bg-[#34d399]/30 motion-reduce:animate-none"
+            className="absolute inset-0 animate-ping rounded-full bg-severity-green-400/30 motion-reduce:animate-none"
           />
-          <MapPin className="relative h-5 w-5 text-[#6ee7b7]" strokeWidth={2.2} />
+          <MapPin className="relative h-5 w-5 text-severity-green-300" strokeWidth={2.2} />
         </span>
       </div>
 
@@ -214,10 +214,10 @@ function RouteCard({ data }: { data: RouteCardData }) {
           {data.title}
         </p>
         <p className="mt-1 flex items-center gap-1.5 text-[0.9375rem] font-black leading-snug text-white">
-          <Route className="h-4 w-4 shrink-0 text-[#34d399]" aria-hidden />
+          <Route className="h-4 w-4 shrink-0 text-severity-green-400" aria-hidden />
           <span>
             {data.walkDistance} {data.to}{" "}
-            <span className="text-[#6ee7b7]">{data.shelterName}</span>
+            <span className="text-severity-green-300">{data.shelterName}</span>
           </span>
         </p>
       </div>
@@ -229,8 +229,8 @@ function RouteCard({ data }: { data: RouteCardData }) {
 
 function EscalationCard({ data }: { data: EscalationCardData }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#fbbf24]/35 bg-gradient-to-br from-[#7c2d12]/50 to-[#431407]/60 p-4 shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
-      <p className="flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-[#fdba74]">
+    <div className="overflow-hidden rounded-2xl border border-severity-amber-400/35 bg-gradient-to-br from-[#7c2d12]/50 to-[#431407]/60 p-4 shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+      <p className="flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-[var(--brand-orangeLight)]">
         <PhoneCall className="h-3 w-3" aria-hidden />
         {data.title}
       </p>
@@ -243,7 +243,7 @@ function EscalationCard({ data }: { data: EscalationCardData }) {
       <motion.a
         href={`tel:${data.phoneNumber}`}
         whileTap={{ scale: 0.97 }}
-        className="mt-3 flex h-14 w-full items-center justify-center gap-2.5 rounded-xl bg-gradient-to-br from-[#f97316] to-[#dc2626] text-base font-black text-white shadow-[0_8px_24px_rgba(239,68,68,0.45)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#fdba74]"
+        className="mt-3 flex h-14 w-full items-center justify-center gap-2.5 rounded-xl bg-gradient-to-br from-[var(--brand-orange)] to-severity-red-600 text-base font-black text-white shadow-[0_8px_24px_rgba(239,68,68,0.45)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-orangeLight)]"
       >
         <PhoneCall className="h-5 w-5 animate-pulse motion-reduce:animate-none" aria-hidden />
         {data.actionLabel}
@@ -258,10 +258,10 @@ function EscalationCard({ data }: { data: EscalationCardData }) {
 
 function ActionCard({ data, onAction }: { data: ActionCardData; onAction?: () => void }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[0_2px_12px_rgba(0,0,0,0.25)]">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-[var(--shadow-float-sm)]">
       <div className="flex items-center gap-2">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#34d399]/15 ring-1 ring-[#34d399]/30">
-          <ShieldCheck className="h-4 w-4 text-[#6ee7b7]" strokeWidth={2.2} aria-hidden />
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-severity-green-400/15 ring-1 ring-severity-green-400/30">
+          <ShieldCheck className="h-4 w-4 text-severity-green-300" strokeWidth={2.2} aria-hidden />
         </span>
         <p className="text-sm font-bold text-white">{data.title}</p>
       </div>
@@ -272,7 +272,7 @@ function ActionCard({ data, onAction }: { data: ActionCardData; onAction?: () =>
         type="button"
         onClick={onAction}
         whileTap={{ scale: 0.97 }}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] px-4 py-3 text-sm font-bold text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#34d399]"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-[#16a34a] to-[#0d9488] px-4 py-3 text-sm font-bold text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-severity-green-400"
       >
         <ShieldCheck className="h-4 w-4" aria-hidden />
         {data.actionLabel}

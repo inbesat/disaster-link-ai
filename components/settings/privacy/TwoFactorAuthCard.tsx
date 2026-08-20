@@ -59,7 +59,7 @@ export default function TwoFactorAuthCard() {
   return (
     <section
       data-settings-key="privacy-two-factor"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -82,7 +82,7 @@ export default function TwoFactorAuthCard() {
 
       {/* Disabled empty state */}
       {!enabled && !setupOpen && (
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-panel-border bg-surface-muted/40 p-4">
           <p className="text-xs text-slate-500">
             Your account is protected by password only. Enable 2FA to block
             unauthorised access to command data.
@@ -118,7 +118,7 @@ export default function TwoFactorAuthCard() {
                   <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
                     Manual setup key
                   </p>
-                  <div className="mt-2 flex items-center justify-between gap-2 rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2.5">
+                  <div className="mt-2 flex items-center justify-between gap-2 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5">
                     <code className="font-mono text-sm font-bold tracking-widest text-emerald-200">
                       {MOCK_SETUP_KEY}
                     </code>
@@ -128,7 +128,7 @@ export default function TwoFactorAuthCard() {
                         void navigator.clipboard.writeText(MOCK_SETUP_KEY);
                         toast("Setup key copied to clipboard.");
                       }}
-                      className="rounded-md border border-[#1c2740] px-2 py-1 text-[10px] font-bold text-slate-400 transition hover:border-emerald-400/50 hover:text-emerald-200"
+                      className="rounded-md border border-panel-border px-2 py-1 text-[10px] font-bold text-slate-400 transition hover:border-emerald-400/50 hover:text-emerald-200"
                     >
                       Copy
                     </button>
@@ -157,7 +157,7 @@ export default function TwoFactorAuthCard() {
                     }
                     inputMode="numeric"
                     placeholder="000 000"
-                    className="w-40 rounded-md border border-[#1c2740] bg-[#0a0f1d] px-3 py-2 text-center font-mono text-lg font-bold tracking-[0.4em] text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
+                    className="w-40 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-center font-mono text-lg font-bold tracking-[0.4em] text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
                   />
                   <button
                     type="button"
@@ -204,7 +204,7 @@ export default function TwoFactorAuthCard() {
                 setStage("scan");
                 setOtp("");
               }}
-              className="rounded-md border border-[#1c2740] px-3 py-2 text-xs font-semibold text-slate-400 transition hover:text-slate-200"
+              className="rounded-md border border-panel-border px-3 py-2 text-xs font-semibold text-slate-400 transition hover:text-slate-200"
             >
               Cancel
             </button>
@@ -280,7 +280,7 @@ function MockQr({ seed }: { seed: string }) {
 
   return (
     <div
-      className="rounded-md border border-[#1c2740] bg-white p-2"
+      className="rounded-md border border-panel-border bg-white p-2"
       style={{ width: 140 }}
       role="img"
       aria-label="Mock 2FA QR code for scanning"

@@ -105,7 +105,7 @@ export default function EmergencyOfflinePage() {
                 key={step.number}
                 className="flex items-start gap-3.5 rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-4"
               >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F97316]/20 text-sm font-black text-[#FDBA74] ring-1 ring-[#F97316]/40">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F97316]/20 text-sm font-black text-[var(--brand-orangeLight)] ring-1 ring-[#F97316]/40">
                   {step.number}
                 </span>
                 <div>
@@ -146,7 +146,7 @@ export default function EmergencyOfflinePage() {
         {/* Connect-to-setup call to action */}
         <Link
           href="/public/setup/location"
-          className="mt-8 flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[#F97316] px-5 py-4 text-sm font-black text-black transition hover:bg-[#FB923C] active:scale-[0.99]"
+          className="mt-8 flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[var(--brand-orange)] px-5 py-4 text-sm font-black text-black transition hover:bg-[#FB923C] active:scale-[0.99]"
         >
           <Download aria-hidden="true" className="h-4 w-4" />
           Connect to Internet to Download Local AI

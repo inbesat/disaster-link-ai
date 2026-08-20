@@ -24,11 +24,11 @@ export type PublicIdentity =
   | { mode: "user"; name: string; email: string; avatarUrl: string | null };
 
 const AVATAR_COLORS = [
-  "bg-[#F97316]",
-  "bg-[#2563EB]",
-  "bg-[#10B981]",
+  "bg-[var(--brand-orange)]",
+  "bg-[var(--brand-blue)]",
+  "bg-severity-green-500",
   "bg-[#8B5CF6]",
-  "bg-[#EF4444]",
+  "bg-severity-red-500",
 ];
 
 /** Deterministic colour from the name so each user keeps one avatar hue. */

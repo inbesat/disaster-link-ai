@@ -80,7 +80,7 @@ export default function TaskList() {
       )}
 
       {sorted.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-[#1c2740] bg-[#0d1526] p-8 text-center">
+        <div className="rounded-2xl border-2 border-dashed border-panel-border bg-panel-deep p-8 text-center">
           <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-400" />
           <p className="mt-2 text-lg font-bold text-gray-200">All clear</p>
           <p className="text-sm text-gray-400">No assigned tasks right now.</p>

@@ -92,7 +92,7 @@ export default function ScenarioSelector() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -6, scale: 0.97 }}
               transition={{ duration: 0.15 }}
-              className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-xl border border-white/10 bg-[#0d1526]/95 p-1 shadow-[0_12px_36px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+              className="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-xl border border-white/10 bg-panel-deep/95 p-1 shadow-[0_12px_36px_rgba(0,0,0,0.5)] backdrop-blur-xl"
             >
               {DEMO_SCENARIOS.map(({ key, label }) => {
                 const selected = key === active;

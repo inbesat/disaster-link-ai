@@ -104,7 +104,7 @@ export function MapContextMenu({ x, y, lng, lat, onClose }: MapContextMenuProps)
     <div
       role="menu"
       aria-label="Map actions"
-      className="absolute z-40 w-56 overflow-hidden rounded-xl border border-white/10 bg-[#0d1526]/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+      className="absolute z-40 w-56 overflow-hidden rounded-xl border border-white/10 bg-panel-deep/95 shadow-[var(--shadow-float-xxl)] backdrop-blur-xl"
       style={{ left, top }}
     >
       <p className="border-b border-white/10 px-3.5 py-2 font-mono text-[0.625rem] tabular-nums text-white/40">

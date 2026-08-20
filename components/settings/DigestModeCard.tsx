@@ -34,7 +34,7 @@ export default function DigestModeCard({
   return (
     <section
       data-settings-key="digest-mode"
-      className="rounded-eoc border border-[#1c2740] bg-surface p-5"
+      className="rounded-eoc border border-panel-border bg-surface p-5"
     >
       {/* Header */}
       <div className="flex items-center gap-3">
@@ -53,7 +53,7 @@ export default function DigestModeCard({
       </p>
 
       {/* Batching toggle */}
-      <div className="mt-5 rounded-md border border-[#1c2740] bg-surface-muted/40 p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-surface-muted/40 p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-sky-500/10">
@@ -103,7 +103,7 @@ export default function DigestModeCard({
                 type="time"
                 value={digestTime}
                 onChange={(e) => onTimeChange(e.target.value)}
-                className="w-40 rounded-md border border-[#2c3f6d] bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400 [color-scheme:dark]"
+                className="w-40 rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400 [color-scheme:dark]"
                 aria-label="Daily digest delivery time"
               />
               <span className="inline-flex items-center gap-1.5 rounded-md border border-sky-400/30 bg-sky-500/10 px-2.5 py-1.5 text-xs font-semibold text-sky-300">
@@ -124,7 +124,7 @@ export default function DigestModeCard({
         className={`mt-4 flex items-center gap-2 rounded-md border p-3 text-xs ${
           enabled
             ? "border-sky-400/30 bg-sky-500/[0.07] text-sky-200/90"
-            : "border-[#1c2740] bg-surface-muted/40 text-slate-500"
+            : "border-panel-border bg-surface-muted/40 text-slate-500"
         }`}
       >
         <CalendarClock className="h-3.5 w-3.5 shrink-0" aria-hidden />
