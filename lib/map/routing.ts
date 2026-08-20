@@ -81,7 +81,7 @@ export async function getEvacuationRoute(
         ? "Route optimized for wheelchair accessibility. Avoided steep inclines and unpaved footpaths."
         : undefined,
     };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[routing] OSRM lookup failed — using straight-line fallback.", error);
 
     // Straight-line fallback + a conservative ~35 km/h travel estimate.

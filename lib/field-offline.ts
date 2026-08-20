@@ -74,7 +74,7 @@ function write(key: string, value: unknown): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(key, JSON.stringify(value));
-  } catch (err) {
+  } catch (err: unknown) {
     console.warn("[offline] failed to persist", key, err);
   }
 }

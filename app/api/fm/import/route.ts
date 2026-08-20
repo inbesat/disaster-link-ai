@@ -33,7 +33,7 @@ type CsvRow = {
  * Upserts on (name, frequency) — rows that already exist update in place,
  * so re-importing a refreshed spreadsheet is safe.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(WRITE_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
         await prisma.fmStation.create({ data });
         created += 1;
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to import FM station row:", error);
       skipped += 1;
       errors.push(`Row ${index + 2} (${name}): import failed`);

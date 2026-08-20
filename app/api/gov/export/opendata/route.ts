@@ -27,7 +27,7 @@ import { ADMIN_ROLES } from "@/lib/validations/user";
 /** Live data — exports must reflect the current situation, never a cache. */
 export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   // Admin-only: open-data exports are a privileged gov operation.
   const auth = await requireRole(ADMIN_ROLES);
   if (!auth.ok) {
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
         "Content-Disposition": 'attachment; filename="disaster_open_data.geojson"',
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[gov/export/opendata] failed to build export:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to build the open-data export." },

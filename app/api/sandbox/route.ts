@@ -19,7 +19,7 @@ export const dynamic = "force-dynamic";
  * The cookie mirrors the demo guest cookie options (httpOnly, lax,
  * path=/, 24h TTL).
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const response = NextResponse.redirect(
     new URL("/public/dashboard", request.url),
     302,

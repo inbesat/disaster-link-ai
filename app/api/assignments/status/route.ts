@@ -9,7 +9,7 @@ const VALID_STATUS = ["Not Started", "En Route", "Completed"] as const;
  * updates queued while a responder was offline. Best-effort/ACK for the demo —
  * swap in a real `field_tasks` persistence layer as needed.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   let body: { id?: unknown; status?: unknown };
   try {
     body = (await request.json()) as typeof body;

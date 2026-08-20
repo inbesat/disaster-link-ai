@@ -12,7 +12,7 @@ export const runtime = "nodejs";
  *
  * Body: { responder, shiftDate, items: string[], confirmed, at }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   let body: {
     responder?: unknown;
     shiftDate?: unknown;

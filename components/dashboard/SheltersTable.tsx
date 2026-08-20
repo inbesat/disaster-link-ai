@@ -343,7 +343,7 @@ function AddShelterModal({
         facilities: toggles,
         imageUrl,
       });
-    } catch (e) {
+    } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to add shelter.");
       setBusy(false);
     }

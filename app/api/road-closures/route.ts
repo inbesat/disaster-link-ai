@@ -8,7 +8,7 @@ import { demoWhere, resolveDemoScope } from "@/lib/demo/scope";
 export const dynamic = "force-dynamic";
 
 /** Load active road closures (used by the map to draw blockers). */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     // Phase 2 · Step 8 — session isolation: a demo session sees only its
     // own isDemo rows; a real user never sees any demo rows.
@@ -18,7 +18,7 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json({ ok: true, closures });
-  } catch (error) {
+  } catch (error: unknown) {
     // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
     // serve an empty list so the map layer still renders.
     console.error("Failed to load road closures (serving empty list):", error);
@@ -27,7 +27,7 @@ export async function GET() {
 }
 
 /** Create a new road closure point placed by an admin on the map. */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Security: creating road-closure rows mutates the operational map layer.
   // GET stays public (the citizen map draws the blockers); writes are gov-only.
   const auth = await requireRole(GOV_ROLES);
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       },
     });
     return NextResponse.json({ ok: true, closure });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to create road closure:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to create closure." },

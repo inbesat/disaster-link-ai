@@ -148,7 +148,7 @@ export default function ProfileForm({ initial }: { initial: ProfileSettingsIniti
         designation: data.designation,
       });
       router.refresh(); // Navbar name / profile reads update immediately
-    } catch (error) {
+    } catch (error: unknown) {
       // Mock fallback: Supabase unreachable → persist through the unified
       // mock store so the demo keeps working fully offline (and stays
       // synced across tabs).

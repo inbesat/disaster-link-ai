@@ -55,7 +55,7 @@ export default function GovLoginPage() {
       // Demo auth: any credentials pass; writes the selected role cookie
       // (district_admin → /gov/dashboard, super_admin → /gov/overview).
       await govLogin(role);
-    } catch (err) {
+    } catch (err: unknown) {
       setLoading(false);
       setError(err instanceof Error ? err.message : "Sign-in failed. Try again.");
     }

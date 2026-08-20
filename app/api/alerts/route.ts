@@ -8,7 +8,7 @@ const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 const DEFAULT_LIMIT = 20;
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const limitParam = Number(request.nextUrl.searchParams.get("limit"));
   const limit = Math.min(
     50,
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const unreadCount = alerts.filter((alert) => !alert.isAcknowledged).length;
 
     return NextResponse.json({ ok: true, alerts, unreadCount });
-  } catch (error) {
+  } catch (error: unknown) {
     // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
     // serve realistic mock alerts so the dashboard table still renders.
     console.error("Failed to load alerts (serving mock data):", error);
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Mark one alert as acknowledged (mark-read).
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -110,7 +110,7 @@ export async function PATCH(request: NextRequest) {
       },
     });
     return NextResponse.json({ ok: true, alert });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to acknowledge alert:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to acknowledge alert." },

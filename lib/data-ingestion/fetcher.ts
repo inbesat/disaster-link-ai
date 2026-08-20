@@ -97,7 +97,7 @@ async function logDataSource(name: string, endpoint: string, status: "green" | "
         data: { name, endpoint, status, lastFetchTime: new Date() },
       });
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(`Failed to log data source health for "${name}":`, error);
   }
 }
@@ -131,7 +131,7 @@ export async function getSafeWeatherData(
     } else {
       throw new Error(`Rainfall validation failed: ${rain}`);
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("Live weather fetch failed, falling back:", error);
   }
 
@@ -147,7 +147,7 @@ export async function getSafeWeatherData(
     } else {
       throw new Error(`Discharge validation failed: ${discharge}`);
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("Live flood fetch failed, falling back:", error);
   }
 

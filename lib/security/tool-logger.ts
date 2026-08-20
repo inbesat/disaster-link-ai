@@ -29,7 +29,7 @@ export async function logToolCall(params: ToolCallInput): Promise<void> {
         durationMs: 0,
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn(`[tool-logger] Failed to log ${params.toolName}:`, error);
   }
 }
@@ -62,7 +62,7 @@ export async function withToolLogging<T>(
       },
     }).catch(() => {});
     return result;
-  } catch (error) {
+  } catch (error: unknown) {
     prisma.toolCallLog.create({
       data: {
         toolName: params.toolName,

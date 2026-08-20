@@ -59,7 +59,7 @@ export async function simulateCriticalAlert(
     );
 
     return { ok: true, result, acknowledged: true };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[alerts] simulateCriticalAlert failed:", error);
     return { ok: false, error: error instanceof Error ? error.message : String(error) };
   }
@@ -122,7 +122,7 @@ export async function acknowledgeAlert(
       acknowledgedAt: alert.acknowledgedAt?.toISOString() ?? new Date().toISOString(),
       acknowledgedBy: alert.acknowledgedBy ?? actorName ?? "Unknown",
     };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to acknowledge alert:", error);
     return {
       ok: false,
@@ -154,7 +154,7 @@ export async function sendFeedback(input: {
       },
     });
     return { ok: true };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[feedback] could not persist (table may be un-migrated).", error);
     return { ok: true };
   }

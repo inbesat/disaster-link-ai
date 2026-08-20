@@ -132,7 +132,7 @@ export class CloudAIProvider implements AIProvider {
         mode: "cloud",
         durationMs: Date.now() - startedAt,
       };
-    } catch (error) {
+    } catch (error: unknown) {
       return {
         text:
           error instanceof Error

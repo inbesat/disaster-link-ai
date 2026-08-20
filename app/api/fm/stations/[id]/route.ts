@@ -10,7 +10,7 @@ const WRITE_ROLES = ["super_admin", "district_admin"] as const;
 type Params = { params: { id: string } };
 
 /** Update an FM station (admin CRUD). */
-export async function PATCH(request: NextRequest, { params }: Params) {
+export async function PATCH(request: NextRequest, { params }: Params): Promise<NextResponse> {
   const auth = await requireRole(WRITE_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -52,7 +52,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       data,
     });
     return NextResponse.json({ ok: true, station: serializeFmStation(station) });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to update FM station:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to update FM station." },
@@ -62,7 +62,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 }
 
 /** Delete an FM station (admin CRUD). */
-export async function DELETE(request: NextRequest, { params }: Params) {
+export async function DELETE(request: NextRequest, { params }: Params): Promise<NextResponse> {
   const auth = await requireRole(WRITE_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -71,7 +71,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
   try {
     await prisma.fmStation.delete({ where: { id: params.id } });
     return NextResponse.json({ ok: true });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to delete FM station:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to delete FM station." },

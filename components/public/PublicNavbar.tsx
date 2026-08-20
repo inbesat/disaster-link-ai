@@ -47,7 +47,7 @@ async function resolveUserIdentity(
 
       return { mode: "user", name, email, avatarUrl };
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn(
       "[PublicNavbar] supabase unavailable — falling back to cookies:",
       error,

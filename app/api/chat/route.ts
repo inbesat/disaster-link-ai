@@ -139,7 +139,7 @@ async function resolveAccessContext(): Promise<AccessContext> {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<Response> {
   // Phase 21 · Enforce the server-side rate limit before doing any work.
   const rate = chatLimiter(clientKey(req));
   if (!rate.success) {
@@ -213,7 +213,7 @@ export async function POST(req: Request) {
           )
           .join("\n");
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.warn("[chat] vector retrieval failed; using keyword fallback.", error);
     }
   }
@@ -281,7 +281,7 @@ export async function POST(req: Request) {
   let model: LanguageModel;
   try {
     model = await resolveEmergencyPlannerModel(providerPreference);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[chat] failed to resolve an AI provider:", error);
     const detail = error instanceof Error ? error.message : String(error);
     return NextResponse.json(

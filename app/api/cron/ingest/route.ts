@@ -17,7 +17,7 @@ type IngestResult = {
   ok: boolean;
 };
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   // Bearer-token guard for Vercel Cron. Fails CLOSED: if CRON_SECRET is not
   // configured (unset or still a placeholder), reject the request rather than
   // silently allowing unauthenticated data ingestion.
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
         rainfall_mm: data.rainfall_mm,
         ok: true,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(`Ingest failed for ${district.name}:`, error);
       results.push({ district: district.name, ok: false });
     }

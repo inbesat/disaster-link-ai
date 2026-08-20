@@ -21,7 +21,7 @@ import { GOV_ROLES } from "@/lib/validations/user";
 /** Command Centers need real-time data — never cache this route. */
 export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   // Step 7 · block public access before doing any work.
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json({ ok: true, shelters });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[gov/shelters] failed to load shelters:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to load shelters." },

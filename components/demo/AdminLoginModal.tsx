@@ -47,7 +47,7 @@ export default function AdminLoginModal({ open, onClose }: AdminLoginModalProps)
       // redirects to /gov/dashboard (the action's redirect performs the
       // navigation; the try/catch only catches genuine failures).
       await govDemoLogin();
-    } catch (err) {
+    } catch (err: unknown) {
       setLoading(false);
       setError(err instanceof Error ? err.message : "Login failed. Try again.");
     }

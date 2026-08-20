@@ -102,7 +102,7 @@ export class FtpDropStrategy implements FMDispatchStrategy {
         responseCode: 226,
         responseBody,
       };
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return {
         ok: false,

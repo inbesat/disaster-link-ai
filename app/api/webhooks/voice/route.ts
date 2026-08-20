@@ -34,11 +34,11 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /** Twilio requests the call's TwiML via GET or POST. */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   return handleVoice(request);
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   return handleVoice(request);
 }
 

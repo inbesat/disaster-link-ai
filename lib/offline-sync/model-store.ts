@@ -274,7 +274,7 @@ export class ModelChunkStore {
         fraction: 1,
       };
       return progress;
-    } catch (error) {
+    } catch (error: unknown) {
       if (this.abort?.signal.aborted) {
         const paused: ModelManifest = { ...manifest, status: "paused", updatedAt: new Date().toISOString() };
         await this.writeManifest(db, paused);

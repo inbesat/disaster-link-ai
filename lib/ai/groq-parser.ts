@@ -102,7 +102,7 @@ export async function parseCitizenReport(rawText: string): Promise<ParsedCitizen
       temperature: 0.2,
     });
     return object;
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[groq-parser] Groq call failed — returning mock parse.", error);
     return mockParse(text);
   }

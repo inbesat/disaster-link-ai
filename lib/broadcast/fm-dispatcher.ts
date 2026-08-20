@@ -296,7 +296,7 @@ async function writeLog(
         externalRef: result.externalRef ?? null,
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[broadcast] Failed to write fm_broadcast_log:", error);
   }
 }
@@ -308,7 +308,7 @@ async function findCoveringStations(event: DisasterEvent): Promise<FmStation[]> 
     stations = await prisma.fmStation.findMany({
       where: { isActive: true },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     // DB unreachable (migrations not pushed / offline) — dispatch against
     // the seeded demo list so the end-to-end pipeline can still be
     // rehearsed (same fallback as /api/fm/stations + /api/fm/coverage).
@@ -363,7 +363,7 @@ async function buildDispatchContext(
       if (remote.ok) {
         audioBuffer = Buffer.from(await remote.arrayBuffer());
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("[broadcast] Failed to fetch stored audio:", error);
     }
   }

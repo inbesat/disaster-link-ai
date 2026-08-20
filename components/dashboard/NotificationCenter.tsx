@@ -63,7 +63,7 @@ export default function NotificationCenter() {
       const data = await response.json();
       setAlerts(data.alerts ?? []);
       setUnreadCount(data.unreadCount ?? 0);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to load alerts:", error);
     } finally {
       setLoading(false);

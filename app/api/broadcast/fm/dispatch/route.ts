@@ -21,7 +21,7 @@ const dispatchLimiter = createRateLimiter(5, 60_000);
  *
  * Returns: { dispatched, failed, testMode, stations: [...] }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(BROADCAST_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ ok: true, ...report });
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     if (message.includes("not found")) {
       return NextResponse.json({ ok: false, error: message }, { status: 404 });

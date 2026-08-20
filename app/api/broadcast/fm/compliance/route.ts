@@ -13,7 +13,7 @@ const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
  * Station Compliance Scores — worst performers first (DDMA follow-up).
  * Query: days (default 30) — the scoring window of broadcast logs.
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
       flagged: scores.filter((s) => s.needsFollowUp).length,
       stations: scores,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to compute station compliance:", error);
     return NextResponse.json(
       { ok: false, error: "Compliance scoring failed." },

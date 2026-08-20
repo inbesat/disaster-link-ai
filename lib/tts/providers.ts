@@ -218,7 +218,7 @@ export async function synthesizeVoice(
   for (const attempt of attempts) {
     try {
       return await attempt();
-    } catch (error) {
+    } catch (error: unknown) {
       lastError = error;
       // Fall through to the next provider.
     }

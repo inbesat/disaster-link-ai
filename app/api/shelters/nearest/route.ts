@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
  * empty array when the PostGIS column is NULL/unseeded, letting the caller
  * use its client-side (Turf) fallback.
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const lat = Number(request.nextUrl.searchParams.get("lat"));
   const lng = Number(request.nextUrl.searchParams.get("lng"));
   const limit = Math.min(
@@ -27,8 +27,20 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const rows = await prisma.$queryRaw<Array<Record<string, any>>>`
+    interface PostgisShelterRow {
+      id: string;
+      name: string;
+      district: string | null;
+      lat: number;
+      lng: number;
+      capacity: number;
+      current_occupancy: number;
+      status: string;
+      facilities: Record<string, boolean> | null;
+      distance_km: number;
+    }
+
+    const rows = await prisma.$queryRaw<PostgisShelterRow[]>`
       SELECT
         id, name, district, lat, lng, capacity, current_occupancy, status, facilities,
         ST_Distance(
@@ -55,7 +67,7 @@ export async function GET(request: NextRequest) {
     }));
 
     return NextResponse.json({ ok: true, shelters, source: "postgis" });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[postgis] nearest-shelter query failed:", error);
     return NextResponse.json(
       { ok: false, shelters: [], source: "postgis" },

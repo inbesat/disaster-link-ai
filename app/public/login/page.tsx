@@ -84,7 +84,7 @@ export default function PublicLoginPage() {
       // runs on an unexpected server failure (defensive — the action itself
       // never rejects on success).
       await publicOtpLogin(phone);
-    } catch (err) {
+    } catch (err: unknown) {
       setLoading(false);
       setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
     }

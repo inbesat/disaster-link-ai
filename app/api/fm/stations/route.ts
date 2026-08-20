@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 /** List FM stations — filtered by optional query params (admin UI table). */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     }));
 
     return NextResponse.json({ ok: true, stations: rows });
-  } catch (error) {
+  } catch (error: unknown) {
     // DB unreachable (migrations not pushed / offline) — serve the seeded
     // demo list so the admin UI and coverage tool keep working.
     console.error("Failed to list FM stations:", error);
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
 }
 
 /** Create a new FM station (admin CRUD). */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(["super_admin", "district_admin"]);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ ok: true, station: serializeFmStation(station) });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to create FM station:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to create FM station." },

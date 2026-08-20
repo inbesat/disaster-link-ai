@@ -223,7 +223,7 @@ export async function sendRDSText(
       responseCode: response.status,
       responseBody: body,
     };
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     return {
       ok: false,

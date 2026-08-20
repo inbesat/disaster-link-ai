@@ -38,7 +38,7 @@ const RECALL_SECTOR = "Beta · Rajendra Nagar";
  * Body (all optional, defaults to the standard recall template):
  *   { title?, message?, sector? }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
  * Polled by the field recall banner. Returns the most recent dispatched
  * broadcast, or `null` when the command room has nothing active.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   if (activeBroadcast) {
     return NextResponse.json({
       broadcast: {

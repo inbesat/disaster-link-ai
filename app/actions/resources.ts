@@ -162,7 +162,7 @@ export async function getInventory(): Promise<InventoryResource[]> {
       depotName: r.depotName,
       createdAt: r.createdAt.toISOString(),
     }));
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] getInventory fell back to mock data.", error);
     return MOCK_INVENTORY;
   }
@@ -189,7 +189,7 @@ export async function getPendingRequests(): Promise<ResourceRequest[]> {
       status: r.status,
       createdAt: r.createdAt.toISOString(),
     }));
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] getPendingRequests fell back to mock data.", error);
     return MOCK_REQUESTS;
   }
@@ -248,7 +248,7 @@ export async function submitResourceRequest(
     });
     revalidatePath("/dispatch");
     return { ok: true, id: created.id };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] submitResourceRequest fell back to mock success.", error);
     return { ok: true, id: `mock-${Date.now()}` };
   }
@@ -287,7 +287,7 @@ export async function bulkImportResources(
     });
     revalidatePath("/inventory");
     return { ok: true, count: rows.length };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] bulkImportResources fell back to mock success.", error);
     return { ok: true, count: rows.length };
   }
@@ -348,7 +348,7 @@ export async function approveRequest(
     revalidatePath("/inventory");
     revalidatePath("/dispatch");
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] approveRequest fell back to mock success.", error);
     return true;
   }
@@ -434,7 +434,7 @@ export async function addResource(
     });
     revalidatePath("/inventory");
     return { ok: true, id: created.id };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] addResource fell back to mock success.", error);
     return { ok: true, id: `mock-${Date.now()}` };
   }
@@ -470,7 +470,7 @@ export async function updateResource(input: UpdateResourceInput): Promise<boolea
     });
     revalidatePath("/inventory");
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] updateResource failed.", error);
     return false;
   }
@@ -486,7 +486,7 @@ export async function deleteResource(id: string): Promise<boolean> {
     await prisma.resource.delete({ where: { id } });
     revalidatePath("/inventory");
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] deleteResource failed.", error);
     // Mock rows (prefixed `mock-`/`res-`) don't exist in the DB — treat as
     // removed so the demo table can clear an item without a live database.
@@ -607,7 +607,7 @@ export async function getResourceMovements(limit = 15): Promise<ResourceMovement
       note: m.note,
       createdAt: m.createdAt.toISOString(),
     }));
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] getResourceMovements fell back to mock data.", error);
     return MOCK_MOVEMENTS.slice(0, limit);
   }
@@ -648,7 +648,7 @@ export async function logResourceMovement(
     revalidatePath("/inventory");
     revalidatePath("/dispatch");
     return { ok: true, id: created.id };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[resources] logResourceMovement fell back to mock success.", error);
     return { ok: true, id: `mock-${Date.now()}` };
   }

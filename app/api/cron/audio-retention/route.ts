@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
  * CRON_SECRET bearer token, same as /api/cron/ingest. ?dryRun=true lists
  * without deleting (safe to rehearse).
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const secret = process.env.CRON_SECRET;
   if (!secret || secret.startsWith("<")) {
     return NextResponse.json(

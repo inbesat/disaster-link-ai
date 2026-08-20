@@ -63,7 +63,7 @@ export async function sendSMSAlert(
     });
     console.log(`[twilio] SMS sent (sid=${message.sid}) to ${toNumber}`);
     return { ok: true, sid: message.sid };
-  } catch (error) {
+  } catch (error: unknown) {
     // Includes trial-credit exhaustion and quota errors — never throw.
     console.error("[twilio] SMS send failed:", error);
     return {
@@ -135,7 +135,7 @@ export async function placeVoiceCall(input: VoiceCallInput): Promise<VoiceCallRe
     });
     console.log(`[twilio] Voice call placed (sid=${call.sid}) to ${input.to}`);
     return { ok: true, callSid: call.sid };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[twilio] Voice call failed:", error);
     return {
       ok: false,
