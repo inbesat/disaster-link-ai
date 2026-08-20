@@ -65,7 +65,7 @@ export default function ProfileSetupPage() {
         return;
       }
     }
-    guard();
+    void guard();
   }, [router]);
 
   async function onSubmit(data: ProfileSetupInput) {

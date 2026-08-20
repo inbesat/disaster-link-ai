@@ -395,7 +395,7 @@ export default function AiPlannerPage() {
     // preference (non-secret) rides along so the planner honors the
     // operator-chosen provider on the server.
     const stored = readStoredAiSettings();
-    sendMessage(
+    void sendMessage(
       { text: value },
       {
         body: {

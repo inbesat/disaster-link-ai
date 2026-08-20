@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { initialsFor } from "@/lib/settings/avatar";
+import { safeParseJSON } from "@/lib/utils";
 
 const PROF_DETAILS_KEY = "drip_professional_details_v1";
 const CERTS_KEY = "drip_uploaded_certs_v1";
@@ -69,7 +70,7 @@ function readJson<T>(key: string): T | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : null;
+    return safeParseJSON<T>(raw);
   } catch {
     return null;
   }

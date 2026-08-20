@@ -71,13 +71,13 @@ export default function CasualtiesPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetchRecords();
+    void fetchRecords();
   }, []);
 
   async function fetchRecords() {
     try {
       const res = await fetch("/api/casualties");
-      const data = await res.json();
+      const data = (await res.json()) as { ok?: boolean; records: CasualtyRecord[] };
       if (data.ok) setRecords(data.records);
     } catch {
       // Use empty list
@@ -104,7 +104,7 @@ export default function CasualtiesPage() {
           district: formData.district || null,
         }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as { ok?: boolean; record: CasualtyRecord };
       if (data.ok) {
         setRecords((prev) => [data.record, ...prev]);
         setShowForm(false);
@@ -124,7 +124,7 @@ export default function CasualtiesPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as { ok?: boolean };
       if (data.ok) {
         setRecords((prev) =>
           prev.map((r) => (r.id === id ? { ...r, status } : r))
@@ -417,13 +417,17 @@ export default function CasualtiesPage() {
               {record.status === "active" && (
                 <div className="flex gap-2">
                   <button
-                    onClick={() => updateStatus(record.id, "treated")}
+                    onClick={() => {
+                      void updateStatus(record.id, "treated");
+                    }}
                     className="flex-1 rounded-lg bg-blue-500/15 border border-blue-500/20 py-1.5 text-xs font-medium text-blue-400 hover:bg-blue-500/25 transition"
                   >
                     Mark Treated
                   </button>
                   <button
-                    onClick={() => updateStatus(record.id, "discharged")}
+                    onClick={() => {
+                      void updateStatus(record.id, "discharged");
+                    }}
                     className="flex-1 rounded-lg bg-emerald-500/15 border border-emerald-500/20 py-1.5 text-xs font-medium text-emerald-400 hover:bg-emerald-500/25 transition"
                   >
                     Discharge

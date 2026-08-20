@@ -20,7 +20,6 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Activity, BarChart2, X } from "lucide-react";
-import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 type PublicTransparencyFrameProps = {
   title?: string;
@@ -33,7 +32,6 @@ export default function PublicTransparencyFrame({
   subtitle = "Read-only view of the district response",
   children,
 }: PublicTransparencyFrameProps) {
-  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   // Lock body scroll on mobile while the drawer is open (< md).

@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { enableWhatsAppAlerts } from "@/app/actions/whatsapp";
+import { safeParseJSON } from "@/lib/utils";
 
 const NOTIF_KEY = "citizen_notification_prefs";
 
@@ -49,9 +50,8 @@ export default function EvacuationLifelines() {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(NOTIF_KEY);
-      if (!raw) return;
-      const prefs = JSON.parse(raw) as { whatsapp?: boolean };
-      setSubscribed(Boolean(prefs.whatsapp));
+      const prefs = safeParseJSON<{ whatsapp?: boolean }>(raw);
+      if (prefs) setSubscribed(Boolean(prefs.whatsapp));
     } catch {
       /* ignore corrupt storage */
     }
@@ -92,7 +92,7 @@ export default function EvacuationLifelines() {
 
     try {
       const raw = window.localStorage.getItem(NOTIF_KEY);
-      const prefs = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
+      const prefs = safeParseJSON<Record<string, unknown>>(raw, {});
       window.localStorage.setItem(
         NOTIF_KEY,
         JSON.stringify({ ...prefs, whatsapp: true }),
@@ -172,7 +172,9 @@ export default function EvacuationLifelines() {
         <div className="mt-4 flex flex-1 flex-col gap-3">
           <button
             type="button"
-            onClick={subscribeWhatsApp}
+            onClick={() => {
+              void subscribeWhatsApp();
+            }}
             disabled={subscribed}
             className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-3.5 text-base font-bold text-[#062b14] transition hover:brightness-110 active:scale-[0.98] disabled:cursor-default disabled:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
           >

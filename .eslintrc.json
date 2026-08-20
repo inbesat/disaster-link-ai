@@ -1,4 +1,17 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
-  "ignorePatterns": ["ml_service/venv/**", "ml_service/__pycache__/**", "scripts/**"]
+  "ignorePatterns": ["ml_service/venv/**", "ml_service/__pycache__/**", "scripts/**"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": "warn"
+  }
 }

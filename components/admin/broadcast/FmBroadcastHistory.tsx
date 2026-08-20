@@ -186,7 +186,7 @@ export default function FmBroadcastHistory() {
     } finally {
       setLoading(false);
     }
-  }, [startDate, endDate, district, disasterType, status, filterParams]);
+  }, [filterParams]);
 
   useEffect(() => {
     void fetchHistory();

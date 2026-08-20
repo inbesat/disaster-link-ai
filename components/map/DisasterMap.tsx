@@ -449,7 +449,7 @@ export default function DisasterMap({
       showRerouteToast(
         `CRITICAL: Active route to ${evacRoute.shelterName ?? "shelter"} blocked by new road closure! Rerouting…`,
       );
-      findEvacuationRoute(evacRoute.start);
+      void findEvacuationRoute(evacRoute.start);
     }
   }
 
@@ -704,7 +704,7 @@ export default function DisasterMap({
         `/api/predict?lat=${lat}&lng=${lng}&rainfall=${rainfall}`,
       );
       if (!response.ok) throw new Error(`Status ${response.status}`);
-      const data = await response.json();
+      const data = (await response.json()) as { riskLevel?: string; confidenceScore?: number; source?: string };
       const riskLevel = String(data.riskLevel ?? "Safe");
       setMlPrediction({
         riskLevel,
@@ -751,7 +751,7 @@ export default function DisasterMap({
     try {
       const response = await fetch(`/api/live-conditions?lat=${lat}&lng=${lng}`);
       if (!response.ok) throw new Error(`Status ${response.status}`);
-      const data = await response.json();
+      const data = (await response.json()) as { district?: string; source?: "live" | "synthetic"; rainfall_mm?: number; river_level_m?: number; river_discharge_m3s?: number };
 
       setLiveConditions({
         lat,
@@ -790,7 +790,7 @@ export default function DisasterMap({
 
     lastFetchedCoords.current = { lat: latitude, lng: longitude };
     setMapCenter({ lat: latitude, lng: longitude });
-    fetchLiveData(latitude, longitude);
+    void fetchLiveData(latitude, longitude);
   }
 
   function handleMapClick(e: MapLayerMouseEvent) {
@@ -946,7 +946,7 @@ export default function DisasterMap({
           const center = e.target.getCenter();
           lastFetchedCoords.current = { lat: center.lat, lng: center.lng };
           setMapCenter({ lat: center.lat, lng: center.lng });
-          fetchLiveData(center.lat, center.lng);
+          void fetchLiveData(center.lat, center.lng);
         }}
       >
         {visibleLayers.floodZones && (
@@ -1399,7 +1399,7 @@ export default function DisasterMap({
             const { longitude, latitude } = e.coords;
             lastFetchedCoords.current = { lat: latitude, lng: longitude };
             setMapCenter({ lat: latitude, lng: longitude });
-            fetchLiveData(latitude, longitude);
+            void fetchLiveData(latitude, longitude);
           }}
         />
       </Map>
@@ -1415,7 +1415,9 @@ export default function DisasterMap({
         <div className="pointer-events-auto flex flex-col items-start gap-2">
           <button
             type="button"
-            onClick={runSmartAllocation}
+            onClick={() => {
+              void runSmartAllocation();
+            }}
             className="rounded-md border border-accent bg-accent-soft px-4 py-2 text-xs font-bold uppercase tracking-wider text-accent shadow-glow transition hover:bg-accent hover:text-slate-950"
           >
             Run Smart Allocation
