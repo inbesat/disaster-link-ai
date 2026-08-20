@@ -30,7 +30,7 @@ const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
  *
  * Body: { action: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
           mock: true,
           message: "Demo shelter not in DB — simulated FULL.",
         });
-      } catch (error) {
+      } catch (error: unknown) {
         console.warn("[demo/scenario] shelter-full failed, simulating:", error);
         return NextResponse.json({
           ok: true,
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
         const { resetDemoScenario } = await import("@/lib/demo/reset-scenario");
         const result = await resetDemoScenario({ sessionId: scope.demo ? scope.sessionId : null });
         return NextResponse.json({ ok: true, action, reset: true, sessionId: scope.sessionId, ...result });
-      } catch (error) {
+      } catch (error: unknown) {
         console.warn("[demo/scenario] reset failed, simulating:", error);
         return NextResponse.json({
           ok: true,

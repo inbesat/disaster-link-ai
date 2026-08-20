@@ -15,14 +15,14 @@ const VERSION = "1.0.0";
  *
  *   { "status": "healthy", "timestamp": "...", "version": "1.0.0", "db": "connected" }
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   let db: "connected" | "disconnected" = "disconnected";
 
   try {
     // SELECT 1 — verifies DB reachability without depending on any model.
     await prisma.$queryRaw`SELECT 1`;
     db = "connected";
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Health check: database connection failed:", error);
   }
 

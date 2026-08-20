@@ -35,7 +35,7 @@ export const runtime = "nodejs";
 /** Webhooks must never be statically cached or revalidated. */
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const rawBody = await request.text();
   const form = parseSmsForm(rawBody);
 

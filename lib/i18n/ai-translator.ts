@@ -82,7 +82,7 @@ export async function translateAlertForSMS(
       cleaned = cleaned.slice(1, -1).trim();
     }
     return cleaned || text;
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn(
       `[ai-translator] Translation to ${language} failed — returning original alert.`,
       error,

@@ -185,7 +185,7 @@ export async function evaluateAutoTrigger(
         severity,
         ruleId: rule.id,
       };
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("[auto-trigger] Auto dispatch failed, deferring to approval:", error);
     }
   }

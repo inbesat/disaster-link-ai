@@ -13,7 +13,7 @@ export const runtime = "nodejs";
  *
  * Body: { status, emoji?, responder, lat, lng, at }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   let body: {
     status?: unknown;
     emoji?: unknown;

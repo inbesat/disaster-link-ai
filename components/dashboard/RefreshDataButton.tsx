@@ -18,7 +18,7 @@ export default function RefreshDataButton() {
 
       toast.success(`Ingested ${data.ingested} district(s)`);
       window.location.reload();
-    } catch (error) {
+    } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : "Refresh failed.");
     } finally {
       setLoading(false);

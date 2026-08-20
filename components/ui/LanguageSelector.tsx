@@ -25,7 +25,7 @@ async function syncPreferredLanguage(lang: Locale): Promise<void> {
     if (result && result.ok === false) {
       console.warn(`[preferences] server sync skipped: ${result.error ?? "unknown"}`);
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[preferences] server sync failed (guest/demo mode ok):", error);
   }
 }
@@ -61,7 +61,7 @@ export default function LanguageSelector() {
 
     try {
       await syncPreferredLanguage(code);
-    } catch (error) {
+    } catch (error: unknown) {
       // Never break the UI over a preferences save — log and continue.
       console.error("Failed to persist preferred language:", error);
     }

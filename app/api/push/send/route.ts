@@ -12,7 +12,7 @@ const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
  * engine's push channel and by the demo Alert Simulator. Body (all optional):
  *   { title, body, url, tag }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });

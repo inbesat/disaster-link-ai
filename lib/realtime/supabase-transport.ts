@@ -77,7 +77,7 @@ export class SupabaseRealtimeTransport implements RealtimeTransport {
       // Wait briefly for subscription confirmation
       await new Promise((r) => setTimeout(r, 1000));
       return this.connected;
-    } catch (error) {
+    } catch (error: unknown) {
       console.warn("[supabase-realtime] connection failed:", error);
       return false;
     }

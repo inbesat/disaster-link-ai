@@ -11,7 +11,7 @@ export const runtime = "nodejs";
  *
  * Body: { responder, tasksCompleted, resourcesDispatched, notes, at }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   let body: {
     responder?: unknown;
     tasksCompleted?: unknown;

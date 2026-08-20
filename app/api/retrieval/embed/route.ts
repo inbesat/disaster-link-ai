@@ -16,7 +16,7 @@ const GOV_ROLES = ["super_admin", "district_admin"] as const;
  * exposed through the Prisma typed client). Without a key it returns
  * `{ ok: false, reason }` — retrieval keeps working via keyword search.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     docs = [{ id: "inline", title: body.title, content: body.content }];
   } else {
     try {
-      const rows = await prisma.$queryRaw<
+      docs = await prisma.$queryRaw<
         { id: string; title: string; content: string }[]
       >`
         SELECT id, title, content
@@ -43,9 +43,7 @@ export async function POST(request: NextRequest) {
         WHERE embedding IS NULL
         LIMIT 50
       `;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      docs = rows as any;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("[retrieval] failed to read documents:", error);
       return NextResponse.json(
         { ok: false, error: "Failed to read documents." },
@@ -77,7 +75,7 @@ export async function POST(request: NextRequest) {
         WHERE title = ${doc.title}
       `;
       embedded++;
-    } catch (error) {
+    } catch (error: unknown) {
       console.warn("[retrieval] embedding write failed:", error);
     }
   }

@@ -20,7 +20,7 @@ const orchestrateLimiter = createRateLimiter(3, 60_000);
 // `communicatorNode` is invoked separately once a commander approves.
 // ---------------------------------------------------------------------
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });

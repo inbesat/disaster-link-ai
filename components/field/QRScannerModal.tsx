@@ -80,7 +80,7 @@ export default function QRScannerModal() {
           /* per-frame decode misses are fine — keep scanning */
         },
       );
-    } catch (err) {
+    } catch (err: unknown) {
       console.warn("[qr] camera unavailable", err);
       setScanning(false);
       setCameraError(

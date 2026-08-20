@@ -106,7 +106,7 @@ export async function searchSimilarDocuments(
       docType: row.docType,
       score: Number(row.score),
     }));
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[rag] vector search failed — returning mock results.", error);
     return MOCK_RESULTS.slice(0, topK);
   }

@@ -16,7 +16,7 @@ const ragSearchLimiter = createRateLimiter(10, 60_000);
 // similarity search and returns the raw retrieved chunks with their cosine
 // similarity scores so judges can see exactly what the AI would be grounded on.
 // ---------------------------------------------------------------------
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Security: RAG retrieval exposes internal SOP / NDMA knowledge-base chunks
   // — gov roles only. Anonymous and citizen callers are rejected.
   const auth = await requireRole(GOV_ROLES);
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
   let results: Awaited<ReturnType<typeof searchSimilarDocuments>> = [];
   try {
     results = await searchSimilarDocuments(query, district, topK);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("RAG search failed (returning empty results):", error);
   }
 

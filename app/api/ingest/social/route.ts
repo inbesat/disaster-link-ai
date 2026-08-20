@@ -58,7 +58,7 @@ function toReportType(issue: ParsedCitizenReport["issue"]): ReportType {
   }
 }
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   const reports: Array<{
     lat: number;
     lng: number;

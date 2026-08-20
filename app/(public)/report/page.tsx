@@ -74,7 +74,7 @@ export default function ReportPage() {
       });
       if (result.ok) setSubmitted(true);
       else setGpsError(result.message ?? "Something went wrong.");
-    } catch (err) {
+    } catch (err: unknown) {
       // Server actions reject on hard failures (e.g. SpamPatrol flagged the
       // report as spam) — surface the message instead of crashing the page.
       setGpsError(err instanceof Error ? err.message : "Something went wrong.");

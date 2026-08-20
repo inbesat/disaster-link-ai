@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
  *
  * Response: { sandbox: boolean }
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const isSandbox = request.cookies.get("sandbox")?.value === "true";
   return NextResponse.json({ sandbox: isSandbox });
 }

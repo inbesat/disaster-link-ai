@@ -327,7 +327,7 @@ export async function middleware(request: NextRequest) {
         .maybeSingle();
       role =
         profile && ROLES.includes(profile.role as Role) ? (profile.role as Role) : null;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to resolve user role in middleware:", error);
     }
 

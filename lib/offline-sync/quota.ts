@@ -39,7 +39,7 @@ export async function checkStorageQuota(): Promise<StorageSnapshot> {
       // persisted() unsupported — default to false.
     }
     return { supported: true, usageBytes, quotaBytes, persisted };
-  } catch (error) {
+  } catch (error: unknown) {
     return {
       supported: false,
       usageBytes: 0,

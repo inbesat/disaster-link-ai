@@ -130,7 +130,7 @@ async function handle(message: WorkerMessage): Promise<void> {
         });
         const text = reply.choices?.[0]?.message?.content?.trim() ?? "";
         post({ type: "done", id: message.id, text, durationMs: Date.now() - startedAt });
-      } catch (cause) {
+      } catch (cause: unknown) {
         post({
           type: "done",
           id: message.id,
@@ -162,7 +162,7 @@ async function handle(message: WorkerMessage): Promise<void> {
           }
         }
         post({ type: "done", id: message.id, text: full, durationMs: Date.now() - startedAt });
-      } catch (cause) {
+      } catch (cause: unknown) {
         post({
           type: "done",
           id: message.id,

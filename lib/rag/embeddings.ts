@@ -175,7 +175,7 @@ async function embedBatch(chunks: string[]): Promise<EmbeddedChunk[]> {
       const embedding = Array.isArray(raw) && raw.length > 0 ? normalize(raw) : mockVector(text);
       return { text, embedding };
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[rag] Embedding call failed — returning mock embeddings.", error);
     return chunks.map((text) => ({ text, embedding: mockVector(text) }));
   }

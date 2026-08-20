@@ -113,7 +113,7 @@ export default function ShelterCSVUploader() {
           facilities: row.facilities,
         });
         imported += 1;
-      } catch (e) {
+      } catch (e: unknown) {
         skipped += 1;
         if (!firstError) firstError = e instanceof Error ? e.message : String(e);
       }

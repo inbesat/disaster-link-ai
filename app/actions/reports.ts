@@ -153,7 +153,7 @@ export async function submitCitizenReport(
 
     revalidatePath("/report");
     return { ok: true, id: report.id };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[reports] submitCitizenReport fell back to mock success.", error);
     return {
       ok: true,

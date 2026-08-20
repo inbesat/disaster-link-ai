@@ -201,7 +201,7 @@ export default function VoicePreview() {
       }
       setResult(data);
       toast.success(data.cached ? "Served from 24 h cache." : "Audio generated.");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("TTS generation failed:", error);
       toast.error("Could not reach the TTS service.");
     } finally {

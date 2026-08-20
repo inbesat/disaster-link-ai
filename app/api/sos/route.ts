@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
  * POST /api/sos — Public emergency SOS endpoint (no auth required).
  * Creates a CrowdsourcedReport with type "rescue" and optional PWD priority flag.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   let body: Record<string, unknown>;
   try {
     body = (await request.json()) as Record<string, unknown>;
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       sosId: report.id,
       message: "SOS dispatched to nearby responders.",
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to create SOS report:", error);
     // Still acknowledge — citizen should not retry in panic
     return NextResponse.json({

@@ -170,7 +170,7 @@ export async function pruneExpiredAlertAudio(options: {
       const { error } = await supabase.storage.from(BUCKET).remove(deleted);
       if (error) throw new Error(error.message);
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[audio-store] Retention prune failed:", error);
   }
 

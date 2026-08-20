@@ -79,7 +79,7 @@ export class EmailStudioStrategy implements FMDispatchStrategy {
         responseBody: `Sent to ${to} (messageId ${info.messageId ?? "n/a"}).`,
         broadcastTime: new Date().toISOString(),
       };
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return {
         ok: false,

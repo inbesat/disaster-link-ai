@@ -25,7 +25,7 @@ function capHeadline(capXml: string): string {
  * Twilio CallSid); the call-status webhook later moves it to delivered /
  * failed.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
       responseCode: result.responseCode,
       error: result.error ?? undefined,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("IVR fallback failed:", message);
     return NextResponse.json(

@@ -26,7 +26,7 @@ export async function shareAlert(payload: ShareAlertPayload): Promise<boolean> {
         url: payload.url ?? window.location.href,
       });
       return true;
-    } catch (err) {
+    } catch (err: unknown) {
       // User cancelled or API failed — fall through to clipboard
       if ((err as Error).name === 'AbortError') return false;
     }

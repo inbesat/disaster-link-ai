@@ -206,7 +206,7 @@ export async function routeChatQuery(
     const response = await localGenerate(userMessage, contextData);
     if (response.error) throw new Error(response.text);
     return { text: response.text, source: "local", engineUsed: "local-gemma" };
-  } catch (error) {
+  } catch (error: unknown) {
     // WebLLM crashed (WebView limits, OOM, corrupted weights) — log it
     // silently and step down to the rule engine, never a dead end.
     if (typeof console !== "undefined") {

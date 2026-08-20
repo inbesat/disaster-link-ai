@@ -28,7 +28,7 @@ function buildMockPoints(days: number) {
   });
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const daysParam = Number(request.nextUrl.searchParams.get("days"));
   const days = Math.min(14, Math.max(1, Number.isFinite(daysParam) ? daysParam : 7));
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
       }));
 
     return NextResponse.json({ source: "real", points, total: rows.length });
-  } catch (error) {
+  } catch (error: unknown) {
     // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
     // serve realistic mock points so the Recharts graph still renders.
     console.error("Failed to load prediction history (serving mock points):", error);

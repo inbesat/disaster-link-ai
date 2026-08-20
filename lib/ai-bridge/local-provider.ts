@@ -123,7 +123,7 @@ export class LocalGemmaProvider implements AIProvider {  private engine: WebLlmE
           mode: "local",
           durationMs: Date.now() - startedAt,
         };
-      } catch (error) {
+      } catch (error: unknown) {
         return {
           text:
             error instanceof Error

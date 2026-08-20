@@ -164,7 +164,7 @@ function calculatePriorityScore(d: AllocationDemand): number {
   );
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   // Security: the optimizer PERSISTS allocation plans (and can create stand-in
   // disaster events). Only gov roles may mutate operational allocations — an
   // anonymous caller must never write to resource_allocations. Guests (no role
@@ -224,7 +224,7 @@ export async function POST(request: Request) {
       resources = MOCK_RESOURCES;
       demands = MOCK_DEMANDS;
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[allocations] optimize fell back to mock data.", error);
     resources = MOCK_RESOURCES;
     demands = MOCK_DEMANDS;

@@ -13,7 +13,7 @@ const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
  * Query: limit (default 50, max 200), stationId (optional filter).
  * Powers the FM Broadcast Monitor widget.
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       ok: true,
       logs: logs.map((row) => serializeBroadcastLog(row)),
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to list FM broadcast logs:", error);
     return NextResponse.json({ ok: true, logs: [] });
   }
