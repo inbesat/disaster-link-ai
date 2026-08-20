@@ -91,7 +91,7 @@ export async function requireRole(
     const role = profile?.role as string | undefined;
     if (!role) return deny(true);
     return allowedRoles.includes(role) ? { ok: true, role } : deny(true);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[requireRole] Supabase lookup failed; denying access.", error);
     return deny(false);
   }
@@ -124,7 +124,7 @@ export async function requireSession(): Promise<RequireRoleResult> {
       data: { user },
     } = await supabase.auth.getUser();
     return user ? { ok: true, role: user.id } : deny(false);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[requireSession] Supabase lookup failed; denying access.", error);
     return deny(false);
   }

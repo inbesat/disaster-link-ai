@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const latParam = request.nextUrl.searchParams.get("lat");
   const lngParam = request.nextUrl.searchParams.get("lng");
   const apiKey = process.env.OPENWEATHER_API_KEY;
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
         lat: record.lat,
         lng: record.lng,
       };
-    } catch (persistError) {
+    } catch (persistError: unknown) {
       console.error("Failed to persist weather data (continuing):", persistError);
     }
 
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
         description: data.weather?.[0]?.description ?? null,
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Weather fetch failed:", error);
     return NextResponse.json({ error: "Failed to fetch weather data." }, { status: 500 });
   }

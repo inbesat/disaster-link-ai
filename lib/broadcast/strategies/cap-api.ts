@@ -76,7 +76,7 @@ export class CapApiStrategy implements FMDispatchStrategy {
         responseBody: text,
         error: `CAP API rejected (${response.status}): ${text}`,
       };
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       return {
         ok: false,

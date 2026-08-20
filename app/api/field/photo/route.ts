@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 // accepts the report metadata and returns 200 to simulate a successful upload;
 // if the fetch fails (or the device is offline), the client falls back to
 // queuing the base64 report locally in the offline report queue.
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse> {
   try {
     const body = (await req.json()) as {
       name?: string;

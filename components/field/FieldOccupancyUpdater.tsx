@@ -93,7 +93,7 @@ export default function FieldOccupancyUpdater({
           : 0;
       setFlash(`${updated.currentOccupancy} occupied · ${pctNow}% full`);
       window.setTimeout(() => setFlash(null), 2000);
-    } catch (e) {
+    } catch (e: unknown) {
       setFlash(e instanceof Error ? e.message : "Update failed. Try again.");
     } finally {
       setSaving(false);

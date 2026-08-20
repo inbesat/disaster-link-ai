@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 /** Replay endpoint for the field-offline sync queue (shelter occupancy writes). */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     // endpoint's cached list too so offline updates reach the Citizen App.
     revalidateTag(PUBLIC_SHELTERS_CACHE_TAG);
     return NextResponse.json({ ok: true, shelter: updated });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to sync shelter occupancy:", error);
     return NextResponse.json({ ok: false, error: "Failed to sync." }, { status: 500 });
   }

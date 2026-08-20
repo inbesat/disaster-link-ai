@@ -22,7 +22,7 @@ const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
  * route falls back to clearly-stamped DEMO rows so the export can still
  * be rehearsed end-to-end — same convention as /api/fm/stations.
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<Response> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       disasterType: disasterType ?? undefined,
       status: status ?? undefined,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     // DB unreachable — serve clearly-stamped demo rows so the export can
     // still be rehearsed before migrations are pushed.
     console.error("[broadcast] PDF export DB load failed — using demo rows:", error);

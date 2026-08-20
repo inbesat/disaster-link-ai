@@ -44,7 +44,7 @@ export async function enableWhatsAppAlerts(): Promise<EnableWhatsAppAlertsResult
     }
 
     return { ok: true, phone };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[whatsapp] server sync failed:", error);
     return {
       ok: true,

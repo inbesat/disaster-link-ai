@@ -20,7 +20,7 @@ const decideLimiter = createRateLimiter(10, 60_000);
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } },
-) {
+): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -73,7 +73,7 @@ export async function POST(
       return NextResponse.json({ ok: false, error: result.error }, { status: 422 });
     }
     return NextResponse.json({ ok: true, action, approvalId: params.id });
-  } catch (error) {
+  } catch (error: unknown) {
     const messageText = error instanceof Error ? error.message : String(error);
     console.error("FM approval decision failed:", messageText);
     return NextResponse.json(

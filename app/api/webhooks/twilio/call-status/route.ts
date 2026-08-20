@@ -30,7 +30,7 @@ function mapCallStatus(status: string): "delivered" | "failed" | "retrying" {
   return "retrying"; // initiated / ringing / answered / in-progress
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const raw = await request.text().catch(() => "");
   const form = parseSmsForm(raw);
 
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`[twilio] Call ${callSid} → ${mapped}`);
     return new NextResponse("<Response/>", { status: 200, headers: TWI_ML_HEADERS });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[twilio] Failed to process call-status:", error);
     // Never 5xx Twilio — it would retry a state we may already have applied.
     return new NextResponse("<Response/>", { status: 200, headers: TWI_ML_HEADERS });

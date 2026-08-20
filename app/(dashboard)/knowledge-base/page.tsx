@@ -68,8 +68,7 @@ export default function KnowledgeBasePage() {
       setResult({ ingested: 0, chunks: res.chunks, message });
     }
     setFile(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (inputRef.current) (inputRef.current as any).value = "";
+    if (inputRef.current) inputRef.current.value = "";
   }
 
   return (

@@ -109,7 +109,7 @@ function playCriticalBeep() {
       osc.start(start);
       osc.stop(start + 0.18);
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("Critical alert beep unavailable", error);
   }
 }
@@ -731,7 +731,7 @@ export default function DisasterMap({
           generateHazardPolygons(disasterType, lat, lng, riskLevel, effectiveHours),
         );
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("ML prediction fetch failed:", error);
     }
   }
@@ -774,7 +774,7 @@ export default function DisasterMap({
       if (Number.isFinite(rainfall)) {
         void fetchMlPrediction(lat, lng, rainfall);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Live conditions fetch failed:", error);
       setLiveConditions((prev) => (prev ? { ...prev, loading: false } : prev));
     }
@@ -2114,7 +2114,7 @@ function ShareAlert({
     if (!mapLib) return;
     try {
       setImageUrl(mapLib.getCanvas().toDataURL("image/png"));
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Screenshot failed:", error);
     }
     setOpen(true);

@@ -20,7 +20,7 @@ const triggerLimiter = createRateLimiter(30, 60_000);
  * Body: { disasterEventId, riskLevel, district, disasterType? }
  * Returns: { triggered, mode, severity?, approvalId?, reason? }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ ok: true, ...result });
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("FM auto-trigger failed:", message);
     return NextResponse.json(

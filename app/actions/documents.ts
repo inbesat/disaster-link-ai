@@ -149,7 +149,7 @@ export async function ingestDocument(
       `;
       ingested++;
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[documents] ingestDocument fell back to mock success.", error);
     return { ok: true, ingested, chunks: chunks.length, title, district, documentType, message: "DB bypassed — simulated ingestion." };
   }

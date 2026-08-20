@@ -137,7 +137,7 @@ async function liveRecall(): Promise<string> {
       if (c.expectedDocs.some((t) => rows.map((r) => r.title).includes(t))) hits++;
     }
     return `live pgvector recall@4: ${hits}/${CASES.length} = ${((hits / CASES.length) * 100).toFixed(0)}%`;
-  } catch (error) {
+  } catch (error: unknown) {
     return `live pgvector recall: skipped (${(error as Error).message})`;
   }
 }

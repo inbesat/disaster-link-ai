@@ -81,7 +81,7 @@ export default function ModelPreferencesCard() {
         );
       }
       setLastProbe(probe);
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "Unknown connection error";
       toast.error(`Connection failed — ${message}`);
       setLastProbe(null);

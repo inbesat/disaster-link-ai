@@ -141,7 +141,7 @@ export default function EvacuationPlanner({
         routeGeoJson:
           typeof route.geometry === "object" ? JSON.stringify(route.geometry) : undefined,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       setStatus({
         state: "error",
         message: error instanceof Error ? error.message : "Route calculation failed.",

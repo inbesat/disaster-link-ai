@@ -269,7 +269,7 @@ export async function processPredictionAlerts(
       smsResults,
       pushResult,
     };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[alert-engine] Failed to process prediction alert:", error);
     return { triggered: false, deduplicated: false };
   }

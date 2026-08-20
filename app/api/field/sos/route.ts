@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 // Simulated dispatch to the District Control Room. In the demo this echoes the
 // critical alert back so the SOS banner can confirm broadcast; a real build
 // would fan this out over WebSocket/SMS to nearby units.
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse> {
   try {
     const body = (await req.json()) as {
       type?: string;

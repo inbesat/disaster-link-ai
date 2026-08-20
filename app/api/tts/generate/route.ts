@@ -24,7 +24,7 @@ const ttsLimiter = createRateLimiter(30, 60_000);
  * audio in the `alert-audio` bucket (24 h cache by content hash), and
  * returns URLs plus the exact spoken script.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
       cached: stored.cached,
       recordId: record?.id ?? null,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("TTS generation failed:", message);
     return NextResponse.json(

@@ -12,7 +12,7 @@ type Params = { params: { id: string } };
  * Deactivate a road closure (road reopened). Keeps the row for audit but
  * marks is_active = false so the routing safety check ignores it.
  */
-export async function PATCH(request: NextRequest, { params }: Params) {
+export async function PATCH(request: NextRequest, { params }: Params): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -23,7 +23,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       data: { isActive: false },
     });
     return NextResponse.json({ ok: true, closure });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to resolve road closure:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to resolve closure." },
@@ -33,7 +33,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 }
 
 /** Hard-delete a road closure. */
-export async function DELETE(request: NextRequest, { params }: Params) {
+export async function DELETE(request: NextRequest, { params }: Params): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -41,7 +41,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
   try {
     await prisma.roadClosure.delete({ where: { id: params.id } });
     return NextResponse.json({ ok: true });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to delete road closure:", error);
     return NextResponse.json(
       { ok: false, error: "Failed to delete closure." },

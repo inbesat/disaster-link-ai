@@ -84,7 +84,7 @@ export async function sendWebPush(
       JSON.stringify({ title: "Disaster Alert", ...payload }),
     );
     return { ok: true, statusCode: result.statusCode };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[web-push] sendNotification failed:", error);
     return {
       ok: false,

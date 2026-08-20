@@ -147,7 +147,7 @@ export default function AvatarCropperModal({
           setError(err instanceof Error ? err.message : "Failed to save avatar.");
         })
         .finally(() => setSaving(false));
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Could not process the image.");
       setSaving(false);
     }

@@ -16,7 +16,7 @@ const PUSHABLE_PRIORITIES = ["CRITICAL", "HIGH"] as const;
  * Body:
  *   { title: string, priority: "CRITICAL" | "HIGH" | "ROUTINE", location?: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Security: this endpoint broadcasts Web Push to every subscribed responder
   // — an anonymous caller could spam all field staff with fake critical alerts.
   const auth = await requireRole(GOV_ROLES);

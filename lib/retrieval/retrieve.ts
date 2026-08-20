@@ -69,8 +69,15 @@ export async function retrieveRelevantDocuments(
   if (embedding) {
     try {
       const vector = `[${embedding.join(",")}]`;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const rows = await prisma.$queryRaw<Array<Record<string, any>>>`
+      interface VectorDocRow {
+        id: string;
+        title: string;
+        content: string;
+        docType: string | null;
+        score: number;
+      }
+
+      const rows = await prisma.$queryRaw<VectorDocRow[]>`
         SELECT id, title, content, doc_type AS "docType",
                1 - (embedding <=> ${vector}::vector) AS score
         FROM public.emergency_documents
@@ -87,7 +94,7 @@ export async function retrieveRelevantDocuments(
           score: Number(row.score),
         }));
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.warn("[retrieval] vector search failed, using keyword fallback.", error);
     }
   }

@@ -11,7 +11,7 @@ const predictLimiter = createRateLimiter(20, 60_000);
 // Floodplains typically sit ~25-40m ASL; used when the caller has no elevation.
 const DEFAULT_ELEVATION_M = 30;
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   // Rate limit check
   const forwarded = request.headers.get("x-forwarded-for");
   const ip = forwarded ? forwarded.split(",")[0].trim() : "anonymous";
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
   try {
     const prediction = await getFloodPrediction(lat, lng, rainfallMm, elevation, options);
     return NextResponse.json({ ok: true, disasterType, ...prediction });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("ML prediction failed:", error);
     return NextResponse.json({ error: "Failed to run ML prediction." }, { status: 500 });
   }

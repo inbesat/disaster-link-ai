@@ -122,7 +122,7 @@ export async function sendOTP(
 
     issueOtp(code, phone);
     return { ok: true, message: "OTP sent to your phone. It expires in 5 minutes." };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[getotp] API call failed — simulating success.", error);
     console.log(`[getotp] DEMO FALLBACK — OTP for ${phone}: ${code}`);
     issueOtp(code, phone);
@@ -170,7 +170,7 @@ export async function verifyOTP(code: string): Promise<{ ok: false; message: str
         type: "sms",
       });
       signedIn = !error;
-    } catch (error) {
+    } catch (error: unknown) {
       console.warn(
         "[getotp] Supabase OTP sign-in failed — falling back to guest demo.",
         error,
@@ -462,7 +462,7 @@ export async function signUpAction(formData: FormData) {
       options: { data: { full_name: fullName } },
     });
     failure = error?.message ?? null;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[auth] signUpAction failed:", error);
     failure = "Could not create your account. Please try again.";
   }
@@ -488,7 +488,7 @@ export async function signInAction(formData: FormData) {
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     failure = error?.message ?? null;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[auth] signInAction failed:", error);
     failure = "Could not sign you in. Please try again.";
   }

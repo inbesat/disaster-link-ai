@@ -13,7 +13,7 @@ function clientIp(request: NextRequest): string {
   return forwarded ? forwarded.split(",")[0].trim() : "anonymous";
 }
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const scope = resolveDemoScope();
     const records = await prisma.casualtyRecord.findMany({
@@ -22,13 +22,13 @@ export async function GET() {
       take: 200,
     });
     return NextResponse.json({ ok: true, records });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to load casualty records:", error);
     return NextResponse.json({ ok: true, records: [], source: "mock" });
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Security: triage/casualty records mutate the ops picture. Citizens and
   // demo guests may report (requireSession), anonymous callers are blocked,
   // and the write is rate-limited to stop DB flooding.
@@ -80,13 +80,13 @@ export async function POST(request: NextRequest) {
       },
     });
     return NextResponse.json({ ok: true, record });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to create casualty record:", error);
     return NextResponse.json({ ok: false, error: "Failed to save." }, { status: 500 });
   }
 }
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: NextRequest): Promise<NextResponse> {
   // Security: updating severity/status/notes on casualty records is a
   // gov/responder action. Anonymous callers must never edit the registry.
   const auth = await requireRole(GOV_ROLES);
@@ -116,7 +116,7 @@ export async function PATCH(request: NextRequest) {
       },
     });
     return NextResponse.json({ ok: true, record });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to update casualty record:", error);
     return NextResponse.json({ ok: false, error: "Update failed." }, { status: 500 });
   }

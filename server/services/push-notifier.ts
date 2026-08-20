@@ -93,7 +93,7 @@ export async function notifyAllSubscribers(
 
     result.ok = result.failed === 0;
     return result;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[push-notifier] Broadcast failed:", error);
     return { ...result, skipped: error instanceof Error ? error.message : String(error) };
   }

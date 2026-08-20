@@ -84,7 +84,7 @@ export default function FmStationsManager() {
       const res = await fetch("/api/fm/stations");
       const data = await res.json();
       if (data?.stations) setStations(data.stations);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to load FM stations:", error);
       toast.error("Failed to load FM stations.");
     } finally {
@@ -165,7 +165,7 @@ export default function FmStationsManager() {
       setEditingId(null);
       setForm(EMPTY_FORM);
       await loadStations();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to save FM station:", error);
       toast.error("Failed to save station.");
     } finally {
@@ -184,7 +184,7 @@ export default function FmStationsManager() {
       }
       toast.success("Station deleted.");
       setStations((prev) => prev.filter((s) => s.id !== id));
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to delete FM station:", error);
       toast.error("Failed to delete station.");
     }
@@ -206,7 +206,7 @@ export default function FmStationsManager() {
       setStations((prev) =>
         prev.map((s) => (s.id === station.id ? { ...s, isActive: !s.isActive } : s)),
       );
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to toggle FM station:", error);
       toast.error("Failed to update station.");
     }
@@ -236,7 +236,7 @@ export default function FmStationsManager() {
       setCsvOpen(false);
       setCsvText("");
       await loadStations();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to import FM stations:", error);
       toast.error("Import failed.");
     } finally {
@@ -253,7 +253,7 @@ export default function FmStationsManager() {
         return;
       }
       setTestResult({ point: { lat, lng }, covering: data.covering ?? [] });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to test coverage:", error);
       toast.error("Coverage test failed.");
     }

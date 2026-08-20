@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
  * BOTH dashboards render: guest mode with no role cookie. It mirrors the
  * cookie options used by setGuestCookie in app/actions/auth.ts.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   const response = NextResponse.json({ ok: true, mode: "demo-guest" });
 
   response.cookies.set("guest_mode", "true", {

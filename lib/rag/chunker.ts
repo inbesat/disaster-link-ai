@@ -54,7 +54,7 @@ export async function extractTextFromPDF(
   try {
     const result = await parser.getText();
     return result?.text ?? "";
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[rag] PDF text extraction failed:", error);
     return "";
   } finally {

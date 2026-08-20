@@ -46,7 +46,7 @@ export const runtime = "nodejs";
 /** Webhooks must never be statically cached or revalidated. */
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const rawBody = await request.text();
     const form = parseSmsForm(rawBody);
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
           data: { safetyStatus: "safe", lastSafeAt: new Date() },
         });
         return WHATSAPP_SAFE_REPLY;
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("[whatsapp-inbound] failed to record SAFE status:", error);
         return "Could not update your status right now. Call 1070 for help.";
       }
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
           });
         }
         return whatsappSosReply();
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("[whatsapp-inbound] failed to trigger SOS flow:", error);
         return "Could not raise your SOS right now. Call 1070 for help.";
       }
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
       status: 200,
       headers: TWI_ML_HEADERS,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[whatsapp-inbound] failed to handle WhatsApp message:", error);
     return new NextResponse(buildTwiML(whatsappMenuReply()), {
       status: 200,

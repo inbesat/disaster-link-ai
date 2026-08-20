@@ -30,7 +30,7 @@ const testLimiter = createRateLimiter(5, 60_000);
  * Results are logged to fm_broadcast_logs with test_mode=true when the
  * DB is reachable; otherwise the dry-run response still returns.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         }),
       ),
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[fm-test] DB log skipped (unreachable?) — dry-run only.", error);
   }
 
