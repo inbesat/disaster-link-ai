@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Search, ChevronDown, UserX, RotateCw } from "lucide-react";
 import { ROLES, type Role } from "@/lib/validations/user";
-import { changeUserRole,
+import {
+  changeUserRole,
   deactivateUser,
   listUsers,
   reactivateUser,
@@ -25,7 +26,7 @@ export default function UserManagementPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    listUsers().then((data) => {
+    void listUsers().then((data) => {
       setUsers(data);
       setLoading(false);
     });
@@ -150,7 +151,7 @@ export default function UserManagementPage() {
                             u.status === "active"
                               ? deactivateUser(u.id)
                               : reactivateUser(u.id);
-                          next.then(setUsers);
+                          void next.then(setUsers);
                           toast.success(
                             u.status === "active"
                               ? "Account deactivated"

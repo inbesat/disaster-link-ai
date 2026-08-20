@@ -36,19 +36,19 @@ export function Terrain3D({ sourceId = "gov-terrain-dem", exaggeration = 2 }: Te
       // Guarded: only call setTerrain once the source exists and terrain
       // isn't already active (sourcedata fires repeatedly as tiles load).
       if (map.getSource(sourceId) && !map.getTerrain()) {
-        map.setTerrain({ source: sourceId, exaggeration });
+        void map.setTerrain({ source: sourceId, exaggeration });
       }
     };
 
     if (map.loaded()) enable();
-    else map.once("load", enable);
+    else void map.once("load", enable);
 
     // DEM tiles arrive asynchronously after the source is added — the
     // re-check on sourcedata is cheap because of the getTerrain() guard.
-    map.on("sourcedata", enable);
+    void map.on("sourcedata", enable);
     return () => {
-      map.off("sourcedata", enable);
-      map.off("load", enable);
+      void map.off("sourcedata", enable);
+      void map.off("load", enable);
     };
   }, [mapRef, sourceId, exaggeration]);
 

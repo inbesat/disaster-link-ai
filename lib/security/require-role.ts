@@ -20,6 +20,7 @@
 
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { safeLog } from "@/lib/logger";
 
 export type RequireRoleResult =
   { ok: true; role: string } | { ok: false; status: 401 | 403; error: string };
@@ -92,7 +93,7 @@ export async function requireRole(
     if (!role) return deny(true);
     return allowedRoles.includes(role) ? { ok: true, role } : deny(true);
   } catch (error: unknown) {
-    console.error("[requireRole] Supabase lookup failed; denying access.", error);
+    safeLog("error", "[requireRole] Supabase lookup failed; denying access", { metadata: { error: String(error) } });
     return deny(false);
   }
 }
@@ -125,7 +126,7 @@ export async function requireSession(): Promise<RequireRoleResult> {
     } = await supabase.auth.getUser();
     return user ? { ok: true, role: user.id } : deny(false);
   } catch (error: unknown) {
-    console.error("[requireSession] Supabase lookup failed; denying access.", error);
+    safeLog("error", "[requireSession] Supabase lookup failed; denying access", { metadata: { error: String(error) } });
     return deny(false);
   }
 }

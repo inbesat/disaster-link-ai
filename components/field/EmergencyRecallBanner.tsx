@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Radio, ShieldCheck, Megaphone, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { playAlarm } from "@/lib/field-offline";
+import { safeParseJSON } from "@/lib/utils";
 
 const BROADCAST_KEY = "drip_emergency_broadcast_v1";
 
@@ -41,8 +42,10 @@ export default function EmergencyRecallBanner() {
         // Command center offline — rely on locally seeded broadcast (below).
       }
     };
-    check();
-    const timer = window.setInterval(check, 6000);
+    void check();
+    const timer = window.setInterval(() => {
+      void check();
+    }, 6000);
     return () => {
       cancelled = true;
       window.clearInterval(timer);
@@ -53,7 +56,8 @@ export default function EmergencyRecallBanner() {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(BROADCAST_KEY);
-      if (raw) setActive(JSON.parse(raw) as Broadcast);
+      const parsed = safeParseJSON<Broadcast>(raw);
+      if (parsed) setActive(parsed);
     } catch {
       /* ignore */
     }

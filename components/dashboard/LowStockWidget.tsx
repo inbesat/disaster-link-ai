@@ -25,9 +25,12 @@ export default function LowStockWidget() {
 
   useEffect(() => {
     let active = true;
-    getInventory()
+    void getInventory()
       .then((rows) => {
         if (active) setResources(rows);
+      })
+      .catch((error) => {
+        console.error("Failed to load inventory:", error);
       })
       .finally(() => {
         if (active) setLoading(false);

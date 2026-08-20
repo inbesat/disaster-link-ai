@@ -46,7 +46,7 @@ function useBattery(initial = 78) {
       getBattery?: () => Promise<{ level: number }>;
     };
     if (nav.getBattery) {
-      nav.getBattery().then((b) => setLevel(Math.round(b.level * 100)));
+      void nav.getBattery().then((b) => setLevel(Math.round(b.level * 100)));
     }
   }, []);
   return level;

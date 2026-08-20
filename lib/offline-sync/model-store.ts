@@ -305,7 +305,7 @@ export class ModelChunkStore {
   async deleteModel(modelId: string): Promise<void> {
     const db = this.getDb();
     if (!db) return;
-    this.pause();
+    await this.pause();
     try {
       const manifest = await this.readManifest(db);
       if (manifest?.modelId === modelId) await db.metadata.delete(MANIFEST_KEY);

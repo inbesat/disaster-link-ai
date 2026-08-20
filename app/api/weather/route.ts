@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
+import { handleApiError } from "@/app/api/error-handler";
+import { safeLog } from "@/lib/logger";
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const latParam = request.nextUrl.searchParams.get("lat");
@@ -17,10 +19,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   if (!apiKey) {
-    return NextResponse.json(
-      { error: "OPENWEATHER_API_KEY is not configured on the server." },
-      { status: 500 },
-    );
+    return handleApiError(new Error("OPENWEATHER_API_KEY is not configured on the server."), request, { status: 500 });
   }
 
   try {
@@ -40,9 +39,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const rainfallMm = data.rain?.["1h"] ?? data.rain?.["3h"] ?? 0;
 
-    // Persist to weather_data — best effort. A DB outage (e.g. a Vercel
-    // cold start) must never fail this route: log and continue serving the
-    // freshly fetched weather so the live-conditions chain keeps working.
     let recorded: {
       id: string;
       rainfallMm: number;
@@ -69,7 +65,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         lng: record.lng,
       };
     } catch (persistError: unknown) {
-      console.error("Failed to persist weather data (continuing):", persistError);
+      safeLog("warn", "Failed to persist weather data (continuing)", { metadata: { error: String(persistError) } });
     }
 
     return NextResponse.json({
@@ -83,7 +79,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       },
     });
   } catch (error: unknown) {
-    console.error("Weather fetch failed:", error);
-    return NextResponse.json({ error: "Failed to fetch weather data." }, { status: 500 });
+    return handleApiError(error, request);
   }
 }
