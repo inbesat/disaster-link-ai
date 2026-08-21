@@ -56,7 +56,8 @@ export default function Navbar() {
   }, [menuOpen]);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3 w-full">
+    <header className="fixed top-4 w-full z-50 flex flex-col items-center">
+      {/* Tier 1 — the main dark rounded pill (logo · links · CTAs) */}
       <div
         className={`w-full max-w-[98%] xl:max-w-7xl mx-auto backdrop-blur-[16px] border border-white/10 rounded-full px-4 py-3 flex items-center justify-between transition-all duration-300 ${
           scrolled
@@ -73,14 +74,15 @@ export default function Navbar() {
         </a>
 
         {/* Desktop Nav Links — xl+ only: below 1280px the full bar
-            (6 links + 4 buttons) physically cannot fit, so the hamburger
-            menu takes over and nothing overflows the pill. */}
-        <div className="hidden xl:flex gap-3 items-center">
+            physically cannot fit, so the hamburger menu takes over and
+            nothing overflows the pill. Breathing room restored now that
+            Request Demo lives on its own tier below. */}
+        <div className="hidden xl:flex gap-4 items-center">
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className={`whitespace-nowrap text-sm px-2 py-2 rounded-lg transition-all duration-200 ${
+              className={`whitespace-nowrap text-sm px-2.5 py-2 rounded-lg transition-all duration-200 ${
                 activeSection === link.href.replace("#", "")
                   ? "text-white bg-white/10"
                   : "text-[var(--text-on-navy)] hover:text-white hover:bg-white/5"
@@ -91,8 +93,8 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop CTAs — INSIDE the rounded pill container, Request Demo
-            last in the flex row next to Download App. xl+ only (see above). */}
+        {/* Desktop CTAs — INSIDE the rounded pill container. Request Demo
+            is NOT here anymore; it floats on its own tier below the bar. */}
         <div className="hidden xl:flex flex-row items-center gap-2 shrink-0 whitespace-nowrap">
           {/* Google Translate widget host — layout.tsx injects the real
               dropdown here and auto-translates the whole page on select.
@@ -111,9 +113,9 @@ export default function Navbar() {
           >
             Explore Platform
           </a>
-          {/* App download — outline (secondary) so it sits next to
-              the solid Request Demo CTA without competing with it. Routes to
-              the /download hub so users pick their platform. */}
+          {/* App download — outline (secondary) so it doesn't compete with
+              the floating Request Demo CTA below. Routes to the /download
+              hub so users pick their platform. */}
           <Link
             href="/download"
             className="whitespace-nowrap flex items-center gap-2 border border-white/20 text-white rounded-full px-3.5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
@@ -121,13 +123,6 @@ export default function Navbar() {
             <Download size={14} aria-hidden="true" />
             Download App
           </Link>
-          <a
-            href="#contact"
-            className="whitespace-nowrap bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full px-3.5 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
-          >
-            Request Demo
-            <ArrowRight size={14} />
-          </a>
         </div>
 
         {/* Mobile toggle — shown below xl (where the desktop bar hides) */}
@@ -140,6 +135,19 @@ export default function Navbar() {
         </button>
       </div>
 
+      {/* Tier 2 — floating Request Demo, right-aligned just below the bar.
+          Desktop only (xl+): below xl the hamburger menu carries its own
+          full-width Request Demo entry, so this row would be a duplicate. */}
+      <div className="w-full max-w-[98%] xl:max-w-7xl mx-auto hidden xl:flex justify-end mt-3 px-4">
+        <a
+          href="#contact"
+          className="whitespace-nowrap bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
+        >
+          Request Demo
+          <ArrowRight size={14} />
+        </a>
+      </div>
+
       {/* Mobile Overlay */}
       <AnimatePresence>
         {menuOpen && (
@@ -148,7 +156,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -12, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.2, 0.7, 0.2, 1] }}
-            className="xl:hidden max-w-7xl mx-auto bg-[rgba(11,31,58,0.95)] backdrop-blur-[20px] border border-white/10 rounded-2xl mt-2 p-4 flex flex-col gap-1"
+            className="xl:hidden w-full max-w-[98%] mx-auto bg-[rgba(11,31,58,0.95)] backdrop-blur-[20px] border border-white/10 rounded-2xl mt-2 p-4 flex flex-col gap-1"
           >
             {NAV_LINKS.map((link, i) => (
               <motion.a
@@ -203,6 +211,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 }
