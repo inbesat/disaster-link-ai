@@ -11,12 +11,20 @@ export type RoadClosureLike = {
  * Fetch the persisted road closures. Returns an empty array on any error so
  * the map degrades gracefully when the DB is unreachable.
  */
+import { fetchWithDedupeAndCache, STALE_TIMES } from "@/lib/api/request-cache";
+
 export async function fetchRoadClosures(): Promise<RoadClosureLike[]> {
   try {
-    const response = await fetch("/api/road-closures", { cache: "no-store" });
-    if (!response.ok) return [];
-    const data = (await response.json()) as { closures?: RoadClosureLike[] };
-    return data.closures ?? [];
+    return await fetchWithDedupeAndCache(
+      "road-closures",
+      async (signal) => {
+        const response = await fetch("/api/road-closures", { signal });
+        if (!response.ok) return [];
+        const data = (await response.json()) as { closures?: RoadClosureLike[] };
+        return data.closures ?? [];
+      },
+      STALE_TIMES.floodPredictions,
+    );
   } catch {
     return [];
   }

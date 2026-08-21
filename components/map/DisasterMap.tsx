@@ -567,13 +567,22 @@ export default function DisasterMap({
     showToast(`150 Evacuees assigned to ${nearest.name}. Route mapped.`);
   }
 
-  // Pulse the active evacuation route to signal movement.
+  // Pulse the active evacuation route to signal movement via rAF.
   const [routePulse, setRoutePulse] = useState(true);
   useEffect(() => {
     if (!evacRoute) return;
     setRoutePulse(true);
-    const id = setInterval(() => setRoutePulse((p) => !p), 700);
-    return () => clearInterval(id);
+    let rafId = 0;
+    let lastTime = performance.now();
+    const animatePulse = (now: number) => {
+      if (now - lastTime >= 700) {
+        lastTime = now;
+        setRoutePulse((p) => !p);
+      }
+      rafId = requestAnimationFrame(animatePulse);
+    };
+    rafId = requestAnimationFrame(animatePulse);
+    return () => cancelAnimationFrame(rafId);
   }, [evacRoute]);
 
   // Critical-alert ingress: flash the map frame red + beep when a new critical
@@ -593,6 +602,7 @@ export default function DisasterMap({
     let interval: ReturnType<typeof setInterval> | null = null;
 
     const poll = () => {
+      if (document.hidden) return;
       void fetch("/api/alerts?limit=5")
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
@@ -780,6 +790,8 @@ export default function DisasterMap({
     }
   }
 
+  const moveDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   function handleMoveEnd(e: { viewState: { latitude: number; longitude: number } }) {
     const { latitude, longitude } = e.viewState;
     const last = lastFetchedCoords.current;
@@ -788,9 +800,12 @@ export default function DisasterMap({
       return;
     }
 
-    lastFetchedCoords.current = { lat: latitude, lng: longitude };
-    setMapCenter({ lat: latitude, lng: longitude });
-    void fetchLiveData(latitude, longitude);
+    if (moveDebounceRef.current) clearTimeout(moveDebounceRef.current);
+    moveDebounceRef.current = setTimeout(() => {
+      lastFetchedCoords.current = { lat: latitude, lng: longitude };
+      setMapCenter({ lat: latitude, lng: longitude });
+      void fetchLiveData(latitude, longitude);
+    }, 200);
   }
 
   function handleMapClick(e: MapLayerMouseEvent) {
@@ -923,7 +938,7 @@ export default function DisasterMap({
       <Map
         mapLib={maplibregl}
         initialViewState={DEFAULT_INITIAL_VIEW}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%", minHeight: "400px" }}
         mapStyle={MAP_STYLE}
         onClick={handleMapClick}
         onMouseEnter={handleMouseEnter}
