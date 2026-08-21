@@ -304,7 +304,10 @@ export default function DisasterMap({
 
   useEffect(() => {
     try {
-      const supported = maplibregl.supported({ failIfMajorPerformanceCaveat: false });
+      const supported =
+        (maplibregl as unknown as { supported?: (opts?: object) => boolean }).supported?.({
+          failIfMajorPerformanceCaveat: false,
+        }) ?? true;
       setWebGlSupported(supported);
     } catch {
       setWebGlSupported(false);
