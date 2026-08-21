@@ -130,7 +130,7 @@ export async function initSentry(): Promise<void> {
   if (!dsn) return;
 
   try {
-    const Sentry = (await import("@sentry/nextjs" as string)) as unknown as SentryModule;
+    const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
     Sentry.init({
       dsn,
       environment: process.env.NODE_ENV ?? "development",
@@ -167,7 +167,7 @@ export async function initSentry(): Promise<void> {
 export async function captureException(error: unknown, context?: ErrorTagContext): Promise<void> {
   if (!isSentryEnabled()) return;
   try {
-    const Sentry = (await import("@sentry/nextjs" as string)) as unknown as SentryModule;
+    const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
     const sanitizedExtra = sanitizeContext(context ?? {});
 
     const tags: Record<string, string> = {};
@@ -228,7 +228,7 @@ export async function captureAPIError(error: unknown, context?: { route?: string
 export async function captureMessage(message: string, level: "info" | "warning" | "error" = "info"): Promise<void> {
   if (!isSentryEnabled()) return;
   try {
-    const Sentry = (await import("@sentry/nextjs" as string)) as unknown as SentryModule;
+    const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
     Sentry.captureMessage(message, level);
   } catch {
     // Silent
@@ -241,7 +241,7 @@ export async function captureMessage(message: string, level: "info" | "warning" 
 export async function setUserContext(userId: string | null, role?: string, district?: string): Promise<void> {
   if (!isSentryEnabled()) return;
   try {
-    const Sentry = (await import("@sentry/nextjs" as string)) as unknown as SentryModule;
+    const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
     Sentry.setUser(userId ? { id: userId, role, district } : null);
   } catch {
     // Silent
