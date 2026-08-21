@@ -17,11 +17,12 @@ function labelsFor(role: Role): string[] {
 
 describe("NAVIGATION_ROUTES", () => {
   it("defines the required routes (10 core + later-phase additions)", () => {
-    expect(NAVIGATION_ROUTES).toHaveLength(13);
+    expect(NAVIGATION_ROUTES).toHaveLength(14);
     const labels = NAVIGATION_ROUTES.map((route) => route.label);
     expect(labels).toEqual(
       expect.arrayContaining([
-        "Overview",
+        "Govt Dashboard",
+        "CMD Center Overview",
         "Command Center",
         "Alerts",
         "Shelters",
@@ -71,7 +72,8 @@ describe("filterRoutesByRole — role matrix", () => {
 
   it("district_admin adds Overview, Command Center, Shelters, Resources, Satellite", () => {
     expect(labelsFor("district_admin")).toEqual([
-      "Overview",
+      "Govt Dashboard",
+      "CMD Center Overview",
       "Command Center",
       "Alerts",
       "Evacuation Routes",

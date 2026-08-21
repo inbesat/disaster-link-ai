@@ -25,7 +25,7 @@ export async function logFeatureUsage(
 ): Promise<void> {
   // Respect 'Do Not Track' (DNT) browser settings & consent
   if (typeof window !== "undefined") {
-    const dnt = navigator.doNotTrack === "1" || (window as any).doNotTrack === "1";
+    const dnt = navigator.doNotTrack === "1" || (window as unknown as { doNotTrack?: string }).doNotTrack === "1";
     const consent = localStorage.getItem("safesphere_cookie_consent");
     if (dnt || consent === "declined") {
       // Analytics tracking bypassed due to DNT or declined consent

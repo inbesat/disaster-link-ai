@@ -33,7 +33,7 @@ describe("lib/admin/audit-logger", () => {
       createdAt: new Date(),
       isDemo: false,
       sessionId: null,
-    } as any);
+    } as unknown as Awaited<ReturnType<typeof prisma.auditLog.create>>);
 
     await logAuditEvent({
       userId: "user-123",
@@ -63,7 +63,7 @@ describe("lib/admin/audit-logger", () => {
   });
 
   it("backwards-compatible logAdminAction calls logAuditEvent", async () => {
-    vi.mocked(prisma.auditLog.create).mockResolvedValue({} as any);
+    vi.mocked(prisma.auditLog.create).mockResolvedValue({} as unknown as Awaited<ReturnType<typeof prisma.auditLog.create>>);
 
     await logAdminAction("role_changed", "user", "Role updated to district_admin");
 
