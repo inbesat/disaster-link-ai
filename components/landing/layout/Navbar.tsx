@@ -58,7 +58,7 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3 w-full">
       <div
-        className={`max-w-7xl mx-auto backdrop-blur-[16px] border border-white/10 rounded-full px-5 py-2.5 flex items-center justify-between transition-all duration-300 ${
+        className={`max-w-7xl w-full mx-auto backdrop-blur-[16px] border border-white/10 rounded-full px-4 sm:px-5 py-2.5 flex items-center justify-between transition-all duration-300 ${
           scrolled
             ? "bg-[rgba(11,31,58,0.85)] shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]"
             : "bg-[rgba(11,31,58,0.55)]"
@@ -67,18 +67,18 @@ export default function Navbar() {
         {/* Logo */}
         <a href="#" className="flex items-center gap-3 group">
           <Logo className="h-9 w-9 transition-transform duration-200 group-hover:scale-105" />
-          <span className="text-white font-bold text-lg tracking-tight">
+          <span className="whitespace-nowrap text-white font-bold text-lg tracking-tight">
             SafeSphere
           </span>
         </a>
 
         {/* Desktop Nav Links */}
-        <div className="hidden lg:flex gap-1 items-center">
+        <div className="hidden lg:flex gap-0.5 lg:gap-1 items-center">
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className={`text-sm px-3 py-2 rounded-lg transition-all duration-200 ${
+              className={`whitespace-nowrap text-sm px-2.5 py-2 rounded-lg transition-all duration-200 ${
                 activeSection === link.href.replace("#", "")
                   ? "text-white bg-white/10"
                   : "text-[var(--text-on-navy)] hover:text-white hover:bg-white/5"
@@ -89,22 +89,22 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop CTAs */}
-        <div className="hidden lg:flex flex-row items-center gap-2 md:gap-3 shrink-0 whitespace-nowrap">
+        {/* Desktop CTAs — kept inside the rounded pill container */}
+        <div className="hidden lg:flex flex-row items-center gap-2 shrink-0 whitespace-nowrap">
           {/* Google Translate widget host — layout.tsx injects the real
               dropdown here and auto-translates the whole page on select.
               Dark-themed via the GOOGLE TRANSLATE block in globals.css. */}
           <LanguageTranslator />
           <a
             href="/access"
-            className="flex items-center gap-2 border border-white/20 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+            className="flex items-center gap-2 border border-white/20 text-white rounded-full px-3.5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
           >
             <LogIn size={14} aria-hidden="true" />
             Sign In
           </a>
           <a
             href="#platform"
-            className="border border-white/20 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+            className="whitespace-nowrap border border-white/20 text-white rounded-full px-3.5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
           >
             Explore Platform
           </a>
@@ -113,14 +113,14 @@ export default function Navbar() {
               the /download hub so users pick their platform. */}
           <Link
             href="/download"
-            className="flex items-center gap-2 border border-white/20 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+            className="whitespace-nowrap flex items-center gap-2 border border-white/20 text-white rounded-full px-3.5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
           >
             <Download size={14} aria-hidden="true" />
             Download App
           </Link>
           <a
             href="#contact"
-            className="bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
+            className="whitespace-nowrap bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full px-3.5 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
           >
             Request Demo
             <ArrowRight size={14} />

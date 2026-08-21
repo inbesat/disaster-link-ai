@@ -35,7 +35,7 @@ export default function GuestModeBanner({ isGuest }: { isGuest: boolean }) {
 
         <div className="flex shrink-0 items-center gap-2">
           <Link
-            href="/public/login"
+            href="/login?mode=citizen"
             className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-3.5 py-1.5 text-xs font-bold text-[var(--dl-navy)] transition hover:bg-amber-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
           >
             <UserPlus aria-hidden="true" className="h-3.5 w-3.5" />

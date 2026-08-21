@@ -4,8 +4,8 @@ import { enableGuestMode } from "@/app/actions/auth";
 
 // ---------------------------------------------------------------------
 // app/(public)/access/page.tsx — dual-mode entry door.
-// Every visitor self-selects their path (Resident/Citizen → /public/login,
-// Responder/Official → /gov/login). Continue as Guest calls enableGuestMode
+// Every visitor self-selects their path (Resident/Citizen → /login?mode=citizen,
+// Responder/Official → /login?mode=gov). Continue as Guest calls enableGuestMode
 // (sets guest_mode + role=public cookies and redirects to /public/dashboard).
 // Reached from the marketing landing (/): header Sign In / footer links.
 // ---------------------------------------------------------------------
@@ -68,7 +68,7 @@ export default function ChooseAccessPage() {
               ------------------------------------------------------------ */}
           <div className="flex flex-col gap-4">
             <Link
-              href="/public/login"
+              href="/login?mode=citizen"
               className="group relative flex min-h-[340px] flex-1 flex-col justify-between overflow-hidden rounded-[var(--dl-radius)] border border-[var(--dl-blue)]/20 bg-gradient-to-br from-[var(--dl-gray)] via-white to-[#E3EEFF] p-8 text-[var(--dl-text-dark)] shadow-[var(--dl-shadow-soft)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[var(--dl-shadow-glow-orange)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] md:min-h-[400px] md:p-10"
             >
               {/* soft corner glow */}
@@ -126,7 +126,7 @@ export default function ChooseAccessPage() {
               CARD B — RESPONDER / OFFICIAL (dark, authoritative, navy)
               ------------------------------------------------------------ */}
           <Link
-            href="/gov/login"
+            href="/login?mode=gov"
             className="group relative flex min-h-[340px] h-full flex-col justify-between overflow-hidden rounded-[var(--dl-radius)] border border-white/10 bg-gradient-to-br from-[var(--dl-navy-3)] via-[var(--dl-navy-2)] to-[var(--dl-navy)] p-8 text-white shadow-[var(--dl-shadow-soft)] transition-all duration-300 hover:-translate-y-1.5 hover:border-[var(--dl-blue)]/50 hover:shadow-[var(--dl-shadow-glow-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-blue)] md:min-h-[400px] md:p-10"
           >
             <div

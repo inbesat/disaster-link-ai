@@ -110,7 +110,7 @@ export default function GovSignupPage() {
             </div>
 
             <Link
-              href="/gov/login"
+              href="/login?mode=gov"
               className="mt-7 flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[var(--dl-blue)] px-4 py-3.5 text-base font-bold text-white transition hover:bg-[var(--dl-blue-light)]"
             >
               <ShieldCheck aria-hidden="true" className="h-4 w-4" />
@@ -286,7 +286,7 @@ export default function GovSignupPage() {
             <p className="text-center text-xs text-[var(--dl-text-muted)]">
               Already approved?{" "}
               <Link
-                href="/gov/login"
+                href="/login?mode=gov"
                 className="font-semibold text-[var(--dl-blue-light)] transition hover:text-white"
               >
                 Sign in
