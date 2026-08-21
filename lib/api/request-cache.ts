@@ -82,7 +82,7 @@ export function clearRequestCache(prefix?: string) {
     cacheStore.clear();
     return;
   }
-  for (const k of cacheStore.keys()) {
+  for (const k of Array.from(cacheStore.keys())) {
     if (k.startsWith(prefix)) cacheStore.delete(k);
   }
 }

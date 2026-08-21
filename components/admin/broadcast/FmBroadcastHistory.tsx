@@ -10,7 +10,7 @@
 // view exports as CSV for DDMA/MIB reporting.
 // ---------------------------------------------------------------------
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
   AudioLines,
@@ -330,7 +330,7 @@ export default function FmBroadcastHistory() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1c2740]">
-              {visibleAlerts.map((alert) => {
+              {visibleAlerts.map((alert: HistoryAlert) => {
                 const expanded = expandedId === alert.id;
                 return (
                   <HistoryRow
