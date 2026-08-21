@@ -1,83 +1,85 @@
-import * as React from "react";
+"use client";
 
-import { cn } from "@/lib/utils";
+// ---------------------------------------------------------------------
+// components/ui/Card.tsx — UI/UX Phase 1 · Prompt 1.4
+//
+// Canonical card/panel component with:
+//   - Compact density (tighter padding for dashboards)
+//   - Comfortable density (standard padding for settings/forms)
+//   - Optional header with title + action slot
+//   - Optional footer
+//   - Framer Motion hover-lift effect
+//   - Consistent border, background, and shadow tokens
+// ---------------------------------------------------------------------
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow",
-      className
-    )}
-    {...props}
-  />
-));
-Card.displayName = "Card";
+import { type ReactNode } from "react";
+import { motion } from "framer-motion";
 
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
-    {...props}
-  />
-));
-CardHeader.displayName = "CardHeader";
+export interface CardProps {
+  /** Card content. */
+  children: ReactNode;
+  /** Card title — shown in the header. */
+  title?: string;
+  /** Optional action element (button, link) shown in the header. */
+  action?: ReactNode;
+  /** Optional footer content. */
+  footer?: ReactNode;
+  /** Padding density preset. */
+  density?: "compact" | "comfortable";
+  /** Whether to show the hover-lift effect. */
+  hoverable?: boolean;
+  /** Additional className for the card container. */
+  className?: string;
+  /** Additional className for the card body. */
+  bodyClassName?: string;
+}
 
-const CardTitle = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("font-semibold leading-none tracking-tight", className)}
-    {...props}
-  />
-));
-CardTitle.displayName = "CardTitle";
+const DENSITY_CLASSES = {
+  compact: "p-3",
+  comfortable: "p-5",
+} as const;
 
-const CardDescription = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
-));
-CardDescription.displayName = "CardDescription";
+export function Card({
+  children,
+  title,
+  action,
+  footer,
+  density = "comfortable",
+  hoverable = false,
+  className = "",
+  bodyClassName = "",
+}: CardProps) {
+  return (
+    <motion.div
+      whileHover={hoverable ? { y: -2 } : undefined}
+      transition={hoverable ? { type: "spring" as const, stiffness: 400, damping: 25 } : undefined}
+      className={`overflow-hidden rounded-xl border border-panel-border bg-[var(--bg-secondary)] shadow-card ${className}`}
+    >
+      {/* Header */}
+      {(title || action) && (
+        <div className="flex items-center justify-between border-b border-panel-border px-5 py-3">
+          {title && (
+            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
+              {title}
+            </h3>
+          )}
+          {action && <div>{action}</div>}
+        </div>
+      )}
 
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
-));
-CardContent.displayName = "CardContent";
+      {/* Body */}
+      <div className={`${DENSITY_CLASSES[density]} ${bodyClassName}`}>
+        {children}
+      </div>
 
-const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
-    {...props}
-  />
-));
-CardFooter.displayName = "CardFooter";
+      {/* Footer */}
+      {footer && (
+        <div className="border-t border-panel-border px-5 py-3">
+          {footer}
+        </div>
+      )}
+    </motion.div>
+  );
+}
 
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-};
+export default Card;

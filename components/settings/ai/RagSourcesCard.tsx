@@ -84,7 +84,7 @@ export default function RagSourcesCard() {
             Retrieval-Augmented Generation (RAG) Sources
           </h2>
         </div>
-        <span className="ml-auto rounded-full border border-teal-400/30 bg-teal-500/10 px-2.5 py-1 text-[10px] font-bold text-teal-200">
+        <span className="ml-auto rounded-full border border-teal-400/30 bg-teal-500/10 px-2.5 py-1 text-eoc-tiny font-bold text-teal-200">
           {enabledCount}/{SOURCES.length} sources
         </span>
       </div>
@@ -117,7 +117,7 @@ export default function RagSourcesCard() {
                   <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-200">
                     {label}
                     {badge && (
-                      <span className="rounded-full border border-amber-400/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300">
+                      <span className="rounded-full border border-amber-400/40 bg-amber-500/10 px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wide text-amber-300">
                         {badge}
                       </span>
                     )}

@@ -59,7 +59,7 @@ export default function ControlRoomCard() {
             Official District Control Room
           </h2>
         </div>
-        <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+        <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wider text-emerald-300">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
           Staffed 24×7
         </span>

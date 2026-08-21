@@ -1,6 +1,19 @@
 export {};
 
 declare global {
+  interface Window {
+    dataLayer: unknown[];
+    gtag: (...args: unknown[]) => void;
+    posthog: {
+      capture: (event: string, properties?: Record<string, unknown>) => void;
+      identify: (userId: string, traits?: Record<string, unknown>) => void;
+      reset: () => void;
+      init: (key: string, config?: Record<string, unknown>) => void;
+    };
+    va: (event: string, ...args: unknown[]) => void;
+  }
+
+  function gtag(...args: unknown[]): void;
   /**
    * Universal API response shape for SafeSphere endpoints.
    */

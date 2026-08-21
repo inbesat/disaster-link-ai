@@ -60,10 +60,10 @@ export function RAGSourcesPanel({
         onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
         aria-controls={panelId}
-        className="flex w-full items-center justify-between gap-2 rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-left transition hover:border-accent-purple/40"
+        className="flex w-full items-center justify-between gap-2 rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-left transition hover:border-purple-400/40"
       >
         <span className="flex min-w-0 items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-slate-300">
-          <FileText className="h-3 w-3 shrink-0 text-accent-purple" aria-hidden />
+          <FileText className="h-3 w-3 shrink-0 text-purple-400" aria-hidden />
           <span className="truncate">References &amp; Grounding</span>
           <ChevronDown
             className={`h-3 w-3 shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
@@ -74,8 +74,8 @@ export function RAGSourcesPanel({
         <span
           className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-1.5 py-0.5 text-[0.5625rem] font-bold uppercase tracking-wider ${
             highConfidence
-              ? "border-accent-success/40 bg-accent-success/10 text-accent-success"
-              : "border-accent-warning/40 bg-accent-warning/10 text-accent-warning"
+              ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-400"
+              : "border-amber-400/40 bg-amber-400/10 text-amber-400"
           }`}
         >
           <ShieldCheck className="h-2.5 w-2.5" aria-hidden />

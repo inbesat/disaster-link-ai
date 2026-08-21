@@ -167,7 +167,7 @@ export default function LayerVisibilityCard() {
           <div key={group.key} role="gridcell">
             <div className="flex items-center justify-between gap-2">
               <p className="eoc-label text-slate-500">{group.label}</p>
-              <span className="text-[10px] uppercase tracking-wider text-slate-600">
+              <span className="text-eoc-tiny uppercase tracking-wider text-slate-600">
                 {group.blurb}
               </span>
             </div>
@@ -245,7 +245,7 @@ export default function LayerVisibilityCard() {
         <button
           type="button"
           onClick={resetToDefault}
-          className="inline-flex items-center gap-2 rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-cyan-300"
+          className="inline-flex items-center gap-2 rounded-md border border-panel-borderHover bg-[#0a0f1a] px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-cyan-300"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden />
           Reset to Default Tactical View

@@ -137,15 +137,15 @@ export default function PredictionChart() {
           {isReal ? "MODEL OUTPUT · FLOOD RISK TREND" : "FLOOD FORECAST TREND"}
         </p>
         {isReal ? (
-          <span className="rounded-full border border-severity-green-600 bg-severity-green-600/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-severity-green-400">
+          <span className="rounded-full border border-severity-green-600 bg-severity-green-600/10 px-2 py-0.5 text-eoc-tiny font-semibold uppercase text-severity-green-400">
             Live
           </span>
         ) : (
           <span className="flex items-center gap-2">
-            <span className="rounded-full border border-severity-amber-600 bg-severity-amber-600/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-severity-amber-400">
+            <span className="rounded-full border border-severity-amber-600 bg-severity-amber-600/10 px-2 py-0.5 text-eoc-tiny font-semibold uppercase text-severity-amber-400">
               Demo Data
             </span>
-            <span className="text-[10px] uppercase tracking-wider text-slate-500">
+            <span className="text-eoc-tiny uppercase tracking-wider text-slate-500">
               runs off flood_predictions
             </span>
           </span>

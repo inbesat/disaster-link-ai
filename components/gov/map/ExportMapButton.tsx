@@ -160,9 +160,9 @@ export function ExportMapButton({ getMap, district = "Patna" }: ExportMapButtonP
       disabled={exporting}
       aria-label="Export situation report"
       title="Export situation report (PNG)"
-      className="inline-flex h-10 items-center gap-2 rounded-xl border border-white/15 bg-panel-deep/85 px-3.5 text-sm font-semibold text-white shadow-[var(--shadow-float-md)] backdrop-blur transition hover:scale-[1.03] hover:bg-panel-deep active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex h-9 items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 text-xs font-semibold text-white transition hover:scale-[1.02] hover:bg-white/10 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
     >
-      <FileDown aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
+      <FileDown aria-hidden="true" className="h-3.5 w-3.5 text-blue-400" />
       {exporting ? "Exporting…" : "Export"}
     </button>
   );

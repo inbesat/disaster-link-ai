@@ -98,7 +98,7 @@ export default function QuickDialCard() {
           <p className="eoc-label text-amber-400/80">TACTICAL SPEED DIAL</p>
           <h2 className="mt-0.5 text-lg font-bold">Tactical Quick Dial</h2>
         </div>
-        <span className="ml-auto rounded-full border border-amber-400/30 bg-amber-500/10 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-amber-200">
+        <span className="ml-auto rounded-full border border-amber-400/30 bg-amber-500/10 px-2.5 py-1 font-mono text-eoc-tiny font-bold tabular-nums text-amber-200">
           {TARGETS.length} targets
         </span>
       </div>

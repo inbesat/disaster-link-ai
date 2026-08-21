@@ -89,7 +89,7 @@ export function WhatIfSimulator() {
   };
 
   return (
-    <section className="shrink-0 rounded-xl border border-white/10 bg-panel-deep">
+    <section className="shrink-0 rounded-xl border border-white/10 bg-[#111827]">
       {/* Panel header (collapsible) */}
       <button
         type="button"
@@ -99,20 +99,20 @@ export function WhatIfSimulator() {
         className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition hover:bg-white/[0.03]"
       >
         <span className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-purple/15 text-accent-purple">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/15 text-purple-400">
             <FlaskConical className="h-3.5 w-3.5" aria-hidden />
           </span>
           <span>
             <span className="block text-xs font-bold uppercase tracking-wider text-white">
               What-If Scenario Simulator
             </span>
-            <span className="block text-[0.625rem] uppercase tracking-wider text-muted">
+            <span className="block text-[0.625rem] uppercase tracking-wider text-slate-500">
               Stress-test the plan before execution
             </span>
           </span>
         </span>
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 shrink-0 text-slate-500 transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden
         />
       </button>
@@ -198,7 +198,7 @@ export function WhatIfSimulator() {
             type="button"
             onClick={handleRerun}
             disabled={running}
-            className="flex h-10 items-center justify-center gap-2 rounded-lg bg-accent-purple px-3 text-xs font-black uppercase tracking-wider text-white shadow-[0_0_16px_rgba(139,92,246,0.4)] transition hover:bg-accent-purple/90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex h-10 items-center justify-center gap-2 rounded-lg bg-purple-600 px-3 text-xs font-black uppercase tracking-wider text-white shadow-[0_0_16px_rgba(139,92,246,0.4)] transition hover:bg-purple-500 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {running ? (
               <>

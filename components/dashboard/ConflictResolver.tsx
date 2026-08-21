@@ -123,7 +123,7 @@ export default function ConflictResolver() {
             <div className="mt-4 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-amber-400/30 text-left text-[10px] uppercase tracking-wider text-amber-300/80">
+                <tr className="border-b border-amber-400/30 text-left text-eoc-tiny uppercase tracking-wider text-amber-300/80">
                   <th className="py-1 pr-2">Field</th>
                   <th className="py-1 pr-2">You</th>
                   <th className="py-1 pr-2">Them</th>

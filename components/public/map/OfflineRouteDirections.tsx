@@ -60,7 +60,7 @@ export default function OfflineRouteDirections({
   if (!offline || !shelter || steps.length === 0) return null;
 
   return (
-    <div className="absolute left-4 top-[calc(140px+env(safe-area-inset-top))] z-10 w-[16rem] rounded-xl border border-severity-amber-500/30 bg-[#0a1120]/90 p-3 shadow-[0_8px_28px_rgba(0,0,0,0.5)] backdrop-blur-sm">
+    <div className="absolute left-4 top-[calc(140px+env(safe-area-inset-top))] z-10 w-[16rem] rounded-xl border border-severity-amber-500/30 bg-[#0b1120]/90 p-3 shadow-[0_8px_28px_rgba(0,0,0,0.5)] backdrop-blur-sm">
       <div className="flex items-center gap-1.5">
         <Database aria-hidden="true" className="h-3.5 w-3.5 text-severity-amber-300" />
         <p className="min-w-0 text-xs font-bold leading-tight text-white">

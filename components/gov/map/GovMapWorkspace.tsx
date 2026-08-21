@@ -4,43 +4,39 @@
 // components/gov/map/GovMapWorkspace.tsx — Phase 8 · Steps 1–4.
 //
 // The full-screen Gov Map Workspace: h-screen/w-screen, zero dashboard
-// chrome (no sidebar, no top/bottom nav — this route deliberately has
-// no shell layout), a floating "Back to Dashboard" button top-left, the
-// 100% MapLibre canvas, the AdvancedLayerControl docked right, and the
-// MeasurementToolbar + MapboxDraw annotation tools (Steps 3–4).
-//
-// Measurement state lives here (lifted) so the toolbar and the canvas
-// share it: the toolbar toggles the active tool, the canvas consumes
-// clicks and renders the live shape + readout.
-//
-// Loaded client-only from app/gov/map/page.tsx via next/dynamic (ssr:
-// false) because maplibre-gl touches `window`.
+// chrome, glassmorphism header overlay, floating layer control, legend
+// panel, measurement toolbar, time slider, and export button.
 // ---------------------------------------------------------------------
 
 import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import type maplibregl from "maplibre-gl";
-import { ArrowLeft, Mountain, ShieldCheck } from "lucide-react";
+import {
+  ArrowLeft,
+  Layers,
+  MapPin,
+  Mountain,
+  Search,
+  ShieldCheck,
+  Signal,
+  Info,
+} from "lucide-react";
 import type { MeasureMode } from "@/lib/map/gov-measurements";
 import { GovMapLayersProvider } from "./GovMapLayersContext";
 import GovMapCanvas from "./GovMapCanvas";
 import AdvancedLayerControl from "./AdvancedLayerControl";
+import LegendPanel from "./LegendPanel";
 import MeasurementToolbar from "./MeasurementToolbar";
 import TimeSliderControl from "./TimeSliderControl";
 import ExportMapButton from "./ExportMapButton";
 
 export function GovMapWorkspace() {
-  // Step 4 — active measurement tool + collected waypoints (shared with
-  // the canvas via props; switching tool or clearing resets the points).
   const [measureMode, setMeasureMode] = useState<MeasureMode | null>(null);
   const [measurePoints, setMeasurePoints] = useState<[number, number][]>([]);
-  // Step 5 — 72-hour forecast cursor (owned here, shared with the canvas
-  // which scales the flood polygons; starts at t24 = base extent).
   const [forecastHour, setForecastHour] = useState(24);
-  // Step 7 — live map instance (set on load; used by the 3D toggle and
-  // the Step 8 export button).
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [is3D, setIs3D] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
 
   const handleMapReady = useCallback((map: maplibregl.Map) => {
     mapRef.current = map;
@@ -65,7 +61,7 @@ export function GovMapWorkspace() {
 
   return (
     <GovMapLayersProvider>
-      <div className="gov-ops-map relative h-screen w-screen overflow-hidden bg-primary">
+      <div className="gov-ops-map relative h-screen w-screen overflow-hidden bg-[#0a0f1a]">
         {/* 100% screen map canvas */}
         <div className="absolute inset-0">
           <GovMapCanvas
@@ -77,14 +73,57 @@ export function GovMapWorkspace() {
           />
         </div>
 
-        {/* Floating "Back to Dashboard" — top left */}
-        <Link
-          href="/gov/dashboard"
-          className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-xl border border-white/15 bg-panel-deep/85 px-3.5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-float-md)] backdrop-blur transition hover:bg-panel-deep hover:scale-[1.03] active:scale-95"
-        >
-          <ArrowLeft aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
-          Back to Dashboard
-        </Link>
+        {/* ── Glassmorphism Header (Task 1) ── */}
+        <header className="absolute top-0 left-0 right-0 z-40 flex h-14 items-center gap-3 border-b border-white/10 bg-[#0a0f1a]/80 px-4 backdrop-blur-md">
+          {/* Back button */}
+          <Link
+            href="/gov/dashboard"
+            className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/10 hover:scale-[1.02] active:scale-95"
+          >
+            <ArrowLeft aria-hidden="true" className="h-4 w-4 text-blue-400" />
+            <span className="hidden sm:inline">Back</span>
+          </Link>
+
+          {/* District name + live badge */}
+          <div className="flex items-center gap-2.5">
+            <ShieldCheck aria-hidden="true" className="h-4 w-4 text-blue-400" />
+            <span className="text-sm font-bold text-white">Patna District</span>
+            <span className="flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[0.625rem] font-semibold text-emerald-300">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+              LIVE
+            </span>
+          </div>
+
+          {/* Search bar */}
+          <div className="relative ml-auto hidden md:block">
+            <Search aria-hidden="true" className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" />
+            <input
+              type="text"
+              placeholder="Search locations…"
+              className="h-9 w-56 rounded-lg border border-white/10 bg-white/5 pl-9 pr-3 text-xs text-white placeholder-slate-500 outline-none transition focus:border-blue-400/50 focus:bg-white/10 focus:ring-1 focus:ring-blue-400/30"
+            />
+          </div>
+
+          {/* Layer toggle + 3D + Export */}
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={toggle3D}
+              aria-pressed={is3D}
+              aria-label="Toggle 3D view"
+              title="Toggle 3D view"
+              className={`inline-flex h-9 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold transition ${
+                is3D
+                  ? "border-blue-400/50 bg-blue-500/20 text-blue-300 shadow-[0_0_12px_rgba(59,130,246,0.25)]"
+                  : "border-white/10 bg-white/5 text-white hover:bg-white/10"
+              }`}
+            >
+              <Mountain aria-hidden="true" className="h-3.5 w-3.5" />
+              3D
+            </button>
+            <ExportMapButton getMap={() => mapRef.current} />
+          </div>
+        </header>
 
         {/* Step 4 — measurement toolbar (left, vertical). */}
         <MeasurementToolbar
@@ -94,36 +133,30 @@ export function GovMapWorkspace() {
           onClear={() => setMeasurePoints([])}
         />
 
-        {/* Steps 7–8 — top-right toolbar: 3D pitch toggle + export. */}
-        <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
-          <button
-            type="button"
-            onClick={toggle3D}
-            aria-pressed={is3D}
-            aria-label="Toggle 3D view"
-            title="Toggle 3D view (60° pitch)"
-            className={`inline-flex h-10 items-center gap-2 rounded-xl border px-3.5 text-sm font-semibold backdrop-blur transition hover:scale-[1.03] active:scale-95 ${
-              is3D
-                ? "border-[var(--dl-blue-light)] bg-[var(--dl-blue)]/30 text-[var(--dl-blue-light)] shadow-[0_0_16px_rgba(91,141,246,0.4)]"
-                : "border-white/15 bg-panel-deep/85 text-white hover:bg-panel-deep"
-            }`}
-          >
-            <Mountain aria-hidden="true" className="h-4 w-4" />
-            3D
-          </button>
-          <ExportMapButton getMap={() => mapRef.current} />
-        </div>
-
         {/* Step 5 — the 72-hour predictive time slider (bottom centre). */}
         <TimeSliderControl hour={forecastHour} onChange={setForecastHour} />
 
         {/* Step 2 — the data layer control panel (right, collapsible). */}
         <AdvancedLayerControl />
 
-        {/* Title chip — bottom left, over the attribution. */}
-        <div className="pointer-events-none absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-full bg-panel-deep/80 px-3 py-1.5 text-[0.6875rem] font-medium text-white/80 backdrop-blur">
-          <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 text-[var(--dl-blue-light)]" />
-          GOV OPERATIONS MAP · PATNA
+        {/* Legend toggle button (bottom-left) */}
+        <button
+          type="button"
+          onClick={() => setShowLegend((v) => !v)}
+          aria-label="Toggle legend"
+          className="absolute bottom-4 left-4 z-30 inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#111827]/90 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-[#111827] hover:scale-[1.02] active:scale-95"
+        >
+          <Info aria-hidden="true" className="h-3.5 w-3.5 text-blue-400" />
+          Legend
+        </button>
+
+        {/* Legend Panel (Task 3) */}
+        {showLegend && <LegendPanel onClose={() => setShowLegend(false)} />}
+
+        {/* Title chip — bottom right */}
+        <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex items-center gap-2 rounded-full bg-[#0a0f1a]/80 px-3 py-1.5 text-[0.6875rem] font-medium text-white/80 backdrop-blur">
+          <Signal aria-hidden="true" className="h-3.5 w-3.5 text-blue-400" />
+          GOV OPERATIONS MAP
         </div>
       </div>
     </GovMapLayersProvider>

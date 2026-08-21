@@ -131,7 +131,7 @@ function VisibilityRow<T extends string>({
         <div
           role="group"
           aria-label={`Visibility for ${kind}`}
-          className="flex flex-wrap items-center gap-1 rounded-md border border-panel-border bg-[#0a0f1d] p-1"
+          className="flex flex-wrap items-center gap-1 rounded-md border border-panel-border bg-[#0a0f1a] p-1"
         >
           {options.map((option) => {
             const selected = option.value === value;

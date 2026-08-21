@@ -189,7 +189,7 @@ function MapMarker({ marker, delay }: { marker: (typeof MARKERS)[0]; delay: numb
       {/* Emoji pin */}
       <span className="text-lg relative z-10 drop-shadow-md">{marker.emoji}</span>
       {/* Tooltip */}
-      <div className="absolute -top-9 bg-[rgba(11,31,58,0.92)] backdrop-blur-sm text-white text-[10px] font-medium px-2.5 py-1 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 pointer-events-none border border-white/10 shadow-lg">
+      <div className="absolute -top-9 bg-[rgba(11,31,58,0.92)] backdrop-blur-sm text-white text-eoc-tiny font-medium px-2.5 py-1 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 pointer-events-none border border-white/10 shadow-lg">
         {marker.label}
       </div>
     </motion.div>
@@ -268,14 +268,14 @@ export default function LiveMapStats() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
             </span>
-            <span className="text-[10px] text-white/50 font-medium">
+            <span className="text-eoc-tiny text-white/50 font-medium">
               Live · Demo Data
             </span>
           </div>
 
           {/* Live feed ticker */}
           <div className="absolute bottom-0 inset-x-0 h-8 bg-[rgba(8,20,40,0.8)] border-t border-white/[0.06] flex items-center px-4 gap-3 overflow-hidden">
-            <span className="flex items-center gap-1.5 text-[10px] text-red-400 font-bold whitespace-nowrap flex-shrink-0">
+            <span className="flex items-center gap-1.5 text-eoc-tiny text-red-400 font-bold whitespace-nowrap flex-shrink-0">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-red-400" />
@@ -283,7 +283,7 @@ export default function LiveMapStats() {
               LIVE FEED
             </span>
             <div
-              className="animate-marquee flex gap-10 text-[10px] text-white/40 whitespace-nowrap"
+              className="animate-marquee flex gap-10 text-eoc-tiny text-white/40 whitespace-nowrap"
             >
               <span>[14:02:33] FLASH FLOOD WARNING ISSUED FOR BIHAR REGION.</span>
               <span>[14:00:12] CYCLONE TRACK UPDATED: LANDFALL EXPECTED ODISHA COAST 18:00 IST.</span>

@@ -88,7 +88,7 @@ export default function AlertRadiusCard({
               key={option.label}
               type="button"
               onClick={() => onRadiusIndexChange(i)}
-              className={`rounded px-0.5 text-[10px] font-bold transition ${
+              className={`rounded px-0.5 text-eoc-tiny font-bold transition ${
                 i === radiusIndex
                   ? "text-emerald-300"
                   : "text-slate-500 hover:text-slate-300"

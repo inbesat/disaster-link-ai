@@ -101,7 +101,7 @@ export default function MessageTemplatesCard() {
       </p>
 
       {/* Variable pills — click or drag to insert */}
-      <div className="mt-4 rounded-md border border-panel-border bg-[#0a0f1d] p-3">
+      <div className="mt-4 rounded-md border border-panel-border bg-[#0a0f1a] p-3">
         <p className="eoc-label flex items-center gap-1.5 text-slate-400">
           <Braces className="h-3 w-3" aria-hidden />
           INSERT VARIABLES
@@ -123,7 +123,7 @@ export default function MessageTemplatesCard() {
               {value}
             </button>
           ))}
-          <span className="ml-auto inline-flex items-center gap-1 text-[10px] text-slate-500">
+          <span className="ml-auto inline-flex items-center gap-1 text-eoc-tiny text-slate-500">
             <MousePointerClick className="h-3 w-3" aria-hidden />
             Click or drag into a template
           </span>
@@ -157,7 +157,7 @@ export default function MessageTemplatesCard() {
               onDrop={(e) => handleDrop(e, index)}
               rows={2}
               aria-label={`${template.name} template text`}
-              className="mt-2 w-full resize-y rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 text-[13px] leading-relaxed text-slate-100 outline-none transition focus:border-blue-400/60"
+              className="mt-2 w-full resize-y rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2.5 text-[13px] leading-relaxed text-slate-100 outline-none transition focus:border-blue-400/60"
             />
           </div>
         ))}

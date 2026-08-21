@@ -164,7 +164,7 @@ export default function AuditLogsPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <span
-                          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${SEVERITY_STYLES[event.severity]}`}
+                          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${SEVERITY_STYLES[event.severity]}`}
                         >
                           <span
                             className={`h-1.5 w-1.5 rounded-full ${

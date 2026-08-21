@@ -63,7 +63,7 @@ export default function SourcesAccordion({
           Sources &amp; Telemetry
         </span>
         <span className="flex items-center gap-2">
-          <span className="rounded-full bg-slate-800 px-2 py-0.5 font-mono text-[10px] tabular-nums text-slate-300">
+          <span className="rounded-full bg-slate-800 px-2 py-0.5 font-mono text-eoc-tiny tabular-nums text-slate-300">
             {invocations.length}
           </span>
           <svg
@@ -89,7 +89,7 @@ export default function SourcesAccordion({
                   {inv.toolName}
                 </code>
                 <span
-                  className={`font-mono text-[10px] font-bold ${isLabel(inv.state).tone}`}
+                  className={`font-mono text-eoc-tiny font-bold ${isLabel(inv.state).tone}`}
                 >
                   {isLabel(inv.state).text}
                 </span>
@@ -100,7 +100,7 @@ export default function SourcesAccordion({
                   <p className="font-mono text-[9px] uppercase tracking-wider text-slate-600">
                     input
                   </p>
-                  <pre className="max-h-32 overflow-auto rounded border border-slate-800 bg-slate-950 px-2 py-1.5 font-mono text-[10px] leading-relaxed text-slate-400">
+                  <pre className="max-h-32 overflow-auto rounded border border-slate-800 bg-slate-950 px-2 py-1.5 font-mono text-eoc-tiny leading-relaxed text-slate-400">
                     {formatJson(inv.input)}
                   </pre>
                 </div>
@@ -110,15 +110,15 @@ export default function SourcesAccordion({
                     output
                   </p>
                   {inv.errorText ? (
-                    <pre className="max-h-32 overflow-auto rounded border border-red-900/60 bg-red-950/40 px-2 py-1.5 font-mono text-[10px] leading-relaxed text-red-300">
+                    <pre className="max-h-32 overflow-auto rounded border border-red-900/60 bg-red-950/40 px-2 py-1.5 font-mono text-eoc-tiny leading-relaxed text-red-300">
                       {inv.errorText}
                     </pre>
                   ) : inv.output !== undefined ? (
-                    <pre className="max-h-32 overflow-auto rounded border border-slate-800 bg-slate-950 px-2 py-1.5 font-mono text-[10px] leading-relaxed text-emerald-200/90">
+                    <pre className="max-h-32 overflow-auto rounded border border-slate-800 bg-slate-950 px-2 py-1.5 font-mono text-eoc-tiny leading-relaxed text-emerald-200/90">
                       {formatJson(inv.output)}
                     </pre>
                   ) : (
-                    <pre className="px-1 font-mono text-[10px] text-slate-600">
+                    <pre className="px-1 font-mono text-eoc-tiny text-slate-600">
                       {inv.state === "input-streaming" || inv.state === "partial-call"
                         ? "waiting for tool output…"
                         : "no output returned"}

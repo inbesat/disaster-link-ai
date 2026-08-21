@@ -96,7 +96,7 @@ export default function SettingsSearchBar({
 
   return (
     <div ref={rootRef} className="relative z-30">
-      <div className="flex items-center gap-3 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 shadow-sm">
+      <div className="flex items-center gap-3 rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2.5 shadow-sm">
         <Search className="h-4 w-4 shrink-0 text-slate-500" aria-hidden />
         <input
           ref={inputRef}
@@ -115,7 +115,7 @@ export default function SettingsSearchBar({
           onFocus={() => setOpen(true)}
           className="w-full bg-transparent text-sm text-foreground placeholder:text-slate-500 focus:outline-none"
         />
-        <kbd className="hidden shrink-0 rounded-sm border border-panel-borderHover bg-surface-muted px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 sm:inline-block">
+        <kbd className="hidden shrink-0 rounded-sm border border-panel-borderHover bg-surface-muted px-1.5 py-0.5 text-eoc-tiny font-semibold text-slate-400 sm:inline-block">
           ⌘/Ctrl K
         </kbd>
       </div>
@@ -153,7 +153,7 @@ export default function SettingsSearchBar({
                     <span className="block truncate text-sm font-medium text-slate-200">
                       {entry.label}
                     </span>
-                    <span className="eoc-label mt-0.5 block truncate text-[10px] uppercase tracking-wider text-slate-500">
+                    <span className="eoc-label mt-0.5 block truncate text-eoc-tiny uppercase tracking-wider text-slate-500">
                       {entry.sectionHref.replace(/^\/settings\//, "Settings / ")}
                     </span>
                   </span>

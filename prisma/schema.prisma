@@ -65,6 +65,13 @@ model User {
   // stores the specific mobility/accessibility need (e.g. "Wheelchair user").
   isPwd             Boolean  @default(false) @map("is_pwd")
   pwdDetails        String?  @map("pwd_details")
+  // Stripe Billing — subscription lifecycle fields
+  stripeCustomerId  String?  @unique @map("stripe_customer_id")
+  stripeSubscriptionId String? @unique @map("stripe_subscription_id")
+  stripePriceId     String?  @map("stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map("stripe_current_period_end")
+  subscriptionStatus String   @default("free") @map("subscription_status") // free | active | past_due | canceled | trialing
+  cancelAtPeriodEnd Boolean  @default(false) @map("cancel_at_period_end")
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -823,4 +830,26 @@ model AuditLog {
   @@index([resource])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ---------------------------------------------------------------------
+// bug_reports (Phase 2) — user-submitted bug reports and feature requests.
+// ---------------------------------------------------------------------
+model BugReport {
+  id          String   @id @default(uuid()) @db.Uuid
+  type        String   // bug | feature | performance | accessibility | other
+  description String
+  email       String?  // optional contact email
+  url         String   // page where issue was reported
+  userAgent   String   // browser/device info
+  status      String   @default("open") // open | in_progress | resolved | closed
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  isDemo      Boolean  @default(false) @map("is_demo")
+  sessionId   String?  @map("session_id")
+
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+  @@map("bug_reports")
 }

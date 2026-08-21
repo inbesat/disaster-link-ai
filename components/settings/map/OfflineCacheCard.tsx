@@ -185,7 +185,7 @@ export default function OfflineCacheCard() {
                 className={`rounded-md border px-2 py-2 text-xs font-semibold transition ${
                   active
                     ? "border-emerald-400/60 bg-emerald-500/10 text-emerald-200"
-                    : "border-panel-border bg-[#0a0f1d] text-slate-400 hover:border-emerald-400/40"
+                    : "border-panel-border bg-[#0a0f1a] text-slate-400 hover:border-emerald-400/40"
                 }`}
               >
                 {option.label}
@@ -222,7 +222,7 @@ export default function OfflineCacheCard() {
                     <p className="text-sm font-semibold text-slate-200">
                       {district.name}
                     </p>
-                    <p className="text-[10px] text-slate-500">
+                    <p className="text-eoc-tiny text-slate-500">
                       {formatMb(district.sizeMb)}
                     </p>
                   </div>
@@ -233,7 +233,7 @@ export default function OfflineCacheCard() {
                     type="button"
                     onClick={() => removeDistrict(district.name, district.sizeMb)}
                     aria-label={`Remove ${district.name} from offline cache`}
-                    className="inline-flex items-center gap-1 rounded-md border border-panel-borderHover bg-[#0a0f1d] px-2.5 py-1.5 text-[11px] font-semibold text-emerald-300 transition hover:border-red-400/60 hover:text-red-300"
+                    className="inline-flex items-center gap-1 rounded-md border border-panel-borderHover bg-[#0a0f1a] px-2.5 py-1.5 text-[11px] font-semibold text-emerald-300 transition hover:border-red-400/60 hover:text-red-300"
                   >
                     <Check className="h-3 w-3" aria-hidden />
                     Ready

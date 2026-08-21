@@ -179,7 +179,7 @@ export function DashboardHeader({
             <span className="max-w-[150px] truncate text-sm font-semibold leading-tight text-slate-100">
               {displayName}
             </span>
-            <span className="rounded-sm border border-accent/30 bg-accent/10 px-1.5 py-px text-[10px] font-semibold uppercase tracking-wider text-accent">
+            <span className="rounded-sm border border-accent/30 bg-accent/10 px-1.5 py-px text-eoc-tiny font-semibold uppercase tracking-wider text-accent">
               {roleLabel}
             </span>
           </div>

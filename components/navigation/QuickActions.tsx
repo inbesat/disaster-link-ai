@@ -4,17 +4,12 @@
 //
 // Floating (in-shell) panel that sits above the collapse footer in the
 // sidebar — one-click shortcuts for the highest-priority emergency tasks.
-// Only visible while the sidebar is expanded (self-hides at the 64px rail
-// via the shared sidebar context), subtle --bg-tertiary surface with soft
-// rounded corners, and two high-contrast accent buttons that confirm
-// their dispatch with the roadmap toast card.
-//
-// Icons are Lucide (Siren / Zap) to match the design system — no emoji.
+// Expanded: 3 full-width buttons. Collapsed: 3 stacked icon buttons.
 // ---------------------------------------------------------------------
 
 "use client";
 
-import { Siren, Zap } from "lucide-react";
+import { AlertTriangle, Bot, Siren } from "lucide-react";
 import { useSidebar } from "./sidebar-context";
 import useToast from "@/hooks/useToast";
 
@@ -22,42 +17,79 @@ export function QuickActions() {
   const { collapsed } = useSidebar();
   const toast = useToast();
 
-  // Only meaningful in the expanded sidebar — hide entirely in the
-  // 64px icon rail (the collapse toggle + tooltips already cover that).
-  if (collapsed) return null;
+  const actions = [
+    {
+      label: "Send Alert",
+      icon: Siren,
+      color: "bg-blue-500/15 text-blue-400 hover:bg-blue-500/25",
+      collapsedColor: "bg-blue-500/15 text-blue-400 hover:bg-blue-500/25",
+      onClick: () =>
+        toast.warning({
+          title: "Emergency alert queued",
+          description: "Broadcast dispatched to the EOC for review.",
+        }),
+    },
+    {
+      label: "Run AI Plan",
+      icon: Bot,
+      color: "bg-purple-500/15 text-purple-400 hover:bg-purple-500/25",
+      collapsedColor: "bg-purple-500/15 text-purple-400 hover:bg-purple-500/25",
+      onClick: () =>
+        toast.info({
+          title: "Run AI Plan",
+          description: "Planner started — generating response plan.",
+        }),
+    },
+    {
+      label: "Report Incident",
+      icon: AlertTriangle,
+      color: "bg-red-500/15 text-red-400 hover:bg-red-500/25",
+      collapsedColor: "bg-red-500/15 text-red-400 hover:bg-red-500/25",
+      onClick: () =>
+        toast.error({
+          title: "Incident report",
+          description: "Opening incident report form.",
+        }),
+    },
+  ];
 
+  // Collapsed mode: stacked icon buttons
+  if (collapsed) {
+    return (
+      <div className="mx-2 mb-1 flex flex-col gap-1">
+        {actions.map((action) => (
+          <button
+            key={action.label}
+            type="button"
+            aria-label={action.label}
+            onClick={action.onClick}
+            className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-150 ${action.collapsedColor}`}
+          >
+            <action.icon className="h-4 w-4" aria-hidden />
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  // Expanded mode: full-width buttons
   return (
-    <div className="mx-2 mb-1 rounded-lg border border-subtle bg-tertiary p-2">
-      <p className="px-1 pb-2 text-[0.625rem] font-semibold uppercase tracking-wider text-muted">
+    <div className="mx-2 mb-1 rounded-lg border border-white/5 bg-[#111827] p-2">
+      <p className="px-1 pb-2 text-[0.625rem] font-semibold uppercase tracking-wider text-slate-500">
         Quick actions
       </p>
       <div className="space-y-1">
-        <button
-          type="button"
-          onClick={() =>
-            toast.warning({
-              title: "Emergency alert queued",
-              description: "Broadcast dispatched to the EOC for review.",
-            })
-          }
-          className="flex h-11 w-full items-center gap-2 rounded-md bg-accent-danger/15 px-3 text-sm font-semibold text-accent-danger transition-colors duration-150 hover:bg-accent-danger/25 motion-reduce:transition-none"
-        >
-          <Siren className="h-4 w-4 shrink-0" aria-hidden />
-          Send Alert
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            toast.info({
-              title: "Run AI Plan",
-              description: "Planner started — generating response plan.",
-            })
-          }
-          className="flex h-11 w-full items-center gap-2 rounded-md bg-accent-primary/15 px-3 text-sm font-semibold text-accent-primary transition-colors duration-150 hover:bg-accent-primary/25 motion-reduce:transition-none"
-        >
-          <Zap className="h-4 w-4 shrink-0" aria-hidden />
-          Run AI Plan
-        </button>
+        {actions.map((action) => (
+          <button
+            key={action.label}
+            type="button"
+            onClick={action.onClick}
+            className={`flex h-11 w-full items-center gap-2 rounded-lg px-3 text-sm font-semibold transition-all duration-150 hover:shadow-[0_0_12px_rgba(255,255,255,0.05)] ${action.color}`}
+          >
+            <action.icon className="h-4 w-4 shrink-0" aria-hidden />
+            {action.label}
+          </button>
+        ))}
       </div>
     </div>
   );

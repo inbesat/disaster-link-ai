@@ -59,12 +59,12 @@ export const colors = {
     active: "#3b82f6",
   },
 
-  /** Severity background tints (alert banners / badges) */
+  /** Severity background tints — SeverityConfig primary colors */
   severity: {
-    critical: "#7f1d1d",
-    warning: "#78350f",
-    watch: "#854d0e",
-    safe: "#064e3b",
+    critical: "#ef4444",
+    warning: "#f97316",
+    watch: "#f59e0b",
+    safe: "#10b981",
   },
 
   /** Legacy severity scale (safe/low → critical/evacuate) */
@@ -258,10 +258,10 @@ export const rgbChannels = {
     active: "59 130 246",
   },
   severity: {
-    critical: "127 29 29",
-    warning: "120 53 15",
-    watch: "133 77 14",
-    safe: "6 78 59",
+    critical: "239 68 68",
+    warning: "249 115 22",
+    watch: "245 158 11",
+    safe: "16 185 129",
   },
   severityScale: {
     green: {
@@ -418,12 +418,64 @@ export const spacing = {
 
 /** Layout / component size constants used across the shell (px). */
 export const sizes = {
-  topBar: 56, // h-14 DashboardTopBar
-  navWidth: 256, // w-64 sidebar / drawer
-  bottomNav: 72, // bottom nav (72px) + safe-area inset
+  topBar: 56, // h-14 DashboardTopBar — FIXED 56px
+  navWidth: 260, // w-[260px] sidebar — FIXED 260px (canonical)
+  bottomNav: 72, // bottom nav (72px) + safe-area inset — FIXED 72px
   touchTarget: 48, // coarse-pointer min-height (buttons)
   touchTargetInput: 44, // coarse-pointer min-height (inputs)
   scrollbar: 10,
+} as const;
+
+/* =============================================================================
+ * 8px GRID SYSTEM — Spacing Scale
+ * -----------------------------------------------------------------------------
+ * All spacing must be multiples of 4px. The 8px grid is the base rhythm.
+ * These values are the ONLY allowed spacing tokens for padding, margin,
+ * gap, and positioning. Use these instead of arbitrary values like p-[13px].
+ *
+ * Scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96
+ * ============================================================================= */
+export const grid = {
+  /** 4px — micro spacing (inline gaps, icon offsets) */
+  "0.5": 4,
+  /** 8px — base unit (tight component spacing) */
+  "1": 8,
+  /** 12px — small spacing (between related elements) */
+  "1.5": 12,
+  /** 16px — standard spacing (card padding, list gaps) */
+  "2": 16,
+  /** 20px — medium spacing (section gaps on mobile) */
+  "2.5": 20,
+  /** 24px — large spacing (dashboard gaps, card padding) */
+  "3": 24,
+  /** 32px — extra large spacing (section margins) */
+  "4": 32,
+  /** 40px — wide spacing (page section gaps) */
+  "5": 40,
+  /** 48px — extra wide spacing (hero sections) */
+  "6": 48,
+  /** 64px — massive spacing (page margins, hero gaps) */
+  "8": 64,
+  /** 80px — section spacing (landing page sections) */
+  "10": 80,
+  /** 96px — page-level spacing (major section dividers) */
+  "12": 96,
+} as const;
+
+/* =============================================================================
+ * DASHBOARD GRID — Responsive Breakpoints
+ * -----------------------------------------------------------------------------
+ * Standard responsive grid for dashboard layouts:
+ *   Mobile:  1 column,  gap 16px
+ *   Tablet:  2 columns, gap 20px
+ *   Desktop: 3 columns, gap 24px
+ *   Wide:    4 columns, gap 24px
+ * ============================================================================= */
+export const dashboardGrid = {
+  mobile: { columns: 1, gap: 16 },
+  tablet: { columns: 2, gap: 20 },
+  desktop: { columns: 3, gap: 24 },
+  wide: { columns: 4, gap: 24 },
 } as const;
 
 /* =============================================================================
@@ -558,6 +610,109 @@ export const zIndex = {
 } as const;
 
 /* =============================================================================
+ * SEVERITY CONFIGURATION
+ * -----------------------------------------------------------------------------
+ * Single source of truth for the 4 disaster severity levels. Every component
+ * that displays severity (badges, map polygons, status cards, alert banners,
+ * toasts, safety hero) MUST use these exact values.
+ *
+ * SAFE   = emerald-500 (#10b981) — no action needed
+ * WATCH  = amber-500 (#f59e0b) — monitor conditions
+ * WARNING = orange-500 (#f97316) — take precautionary action
+ * CRITICAL = red-500 (#ef4444) — immediate danger, evacuate
+ * ============================================================================= */
+export const severityConfig = {
+  safe: {
+    /** Primary color — emerald-500 */
+    color: "#10b981",
+    /** Background tint — emerald-500 at 10% opacity */
+    bg: "bg-emerald-500/10",
+    /** Text color — emerald-400 */
+    text: "text-emerald-400",
+    /** Border color — emerald-500 at 40% opacity */
+    border: "border-emerald-500/40",
+    /** Badge dot — emerald-500 */
+    dot: "bg-emerald-500",
+    /** Map polygon fill — emerald-500 at 25% opacity */
+    polygonFill: "rgba(16, 185, 129, 0.25)",
+    /** Map polygon stroke — emerald-500 */
+    polygonStroke: "#10b981",
+    /** RGB channel for rgba() usage */
+    rgb: "16 185 129",
+    /** Label text */
+    label: "Safe",
+  },
+  watch: {
+    /** Primary color — amber-500 */
+    color: "#f59e0b",
+    /** Background tint — amber-500 at 10% opacity */
+    bg: "bg-amber-500/10",
+    /** Text color — amber-400 */
+    text: "text-amber-400",
+    /** Border color — amber-500 at 40% opacity */
+    border: "border-amber-500/40",
+    /** Badge dot — amber-500 */
+    dot: "bg-amber-500",
+    /** Map polygon fill — amber-500 at 25% opacity */
+    polygonFill: "rgba(245, 158, 11, 0.25)",
+    /** Map polygon stroke — amber-500 */
+    polygonStroke: "#f59e0b",
+    /** RGB channel for rgba() usage */
+    rgb: "245 158 11",
+    /** Label text */
+    label: "Watch",
+  },
+  warning: {
+    /** Primary color — orange-500 */
+    color: "#f97316",
+    /** Background tint — orange-500 at 10% opacity */
+    bg: "bg-orange-500/10",
+    /** Text color — orange-400 */
+    text: "text-orange-400",
+    /** Border color — orange-500 at 40% opacity */
+    border: "border-orange-500/40",
+    /** Badge dot — orange-500 */
+    dot: "bg-orange-500",
+    /** Map polygon fill — orange-500 at 25% opacity */
+    polygonFill: "rgba(249, 115, 22, 0.25)",
+    /** Map polygon stroke — orange-500 */
+    polygonStroke: "#f97316",
+    /** RGB channel for rgba() usage */
+    rgb: "249 115 22",
+    /** Label text */
+    label: "Warning",
+  },
+  critical: {
+    /** Primary color — red-500 */
+    color: "#ef4444",
+    /** Background tint — red-500 at 10% opacity */
+    bg: "bg-red-500/10",
+    /** Text color — red-400 */
+    text: "text-red-400",
+    /** Border color — red-500 at 40% opacity */
+    border: "border-red-500/40",
+    /** Badge dot — red-500 */
+    dot: "bg-red-500",
+    /** Map polygon fill — red-500 at 25% opacity */
+    polygonFill: "rgba(239, 68, 68, 0.25)",
+    /** Map polygon stroke — red-500 */
+    polygonStroke: "#ef4444",
+    /** RGB channel for rgba() usage */
+    rgb: "239 68 68",
+    /** Label text */
+    label: "Critical",
+    /** Pulsing animation class for critical badges/banners */
+    pulse: "animate-pulse",
+  },
+} as const;
+
+/** Ordered severity levels from lowest to highest urgency */
+export const severityLevels = ["safe", "watch", "warning", "critical", "info"] as const;
+
+/** Type for severity level keys */
+export type SeverityLevel = (typeof severityLevels)[number];
+
+/* =============================================================================
  * ANIMATION DURATIONS
  * ============================================================================= */
 export const durations = {
@@ -590,6 +745,108 @@ export const animations = {
   gradientShift: "gradient-shift 6s ease infinite",
   shimmer: "shimmer 2.5s ease-in-out infinite",
 } as const;
+
+/* =============================================================================
+ * TYPOGRAPHY SCALE
+ * -----------------------------------------------------------------------------
+ * Nine levels: text-xs (badges/timestamps) → text-5xl (critical alerts).
+ * Each entry stores the font-size in rem and the line-height ratio.
+ * The scale aligns with Tailwind's default text-* utilities but adds
+ * explicit line-height guidance for components using inline styles.
+ * ============================================================================= */
+export const typography = {
+  /** Badges, timestamps, tiny labels (12px / 0.75rem) */
+  xs: { size: "0.75rem", lineHeight: 1.5 },
+  /** Labels, nav items, metadata (14px / 0.875rem) */
+  sm: { size: "0.875rem", lineHeight: 1.5 },
+  /** Body text, descriptions (16px / 1rem) */
+  base: { size: "1rem", lineHeight: 1.5 },
+  /** Card titles, subheadings (18px / 1.125rem) */
+  lg: { size: "1.125rem", lineHeight: 1.25 },
+  /** Section headers (20px / 1.25rem) */
+  xl: { size: "1.25rem", lineHeight: 1.25 },
+  /** Page titles (24px / 1.5rem) */
+  "2xl": { size: "1.5rem", lineHeight: 1.25 },
+  /** Gov KPIs, hero stats (30px / 1.875rem) */
+  "3xl": { size: "1.875rem", lineHeight: 1.25 },
+  /** Public status headings (36px / 2.25rem) */
+  "4xl": { size: "2.25rem", lineHeight: 1.25 },
+  /** Critical alerts, hero display (48px / 3rem) */
+  "5xl": { size: "3rem", lineHeight: 1.1 },
+  /* -------------------------------------------------------------------
+     EOC-specific micro scale (mono, for data readouts / system labels)
+     ------------------------------------------------------------------- */
+  /** EOC label — JetBrains Mono 11px (0.6875rem) */
+  "eoc-label": { size: "0.6875rem", lineHeight: 1.5 },
+  /** EOC tiny — 10px (0.625rem) for dense tables */
+  "eoc-tiny": { size: "0.625rem", lineHeight: 1.5 },
+} as const;
+
+/* =============================================================================
+ * FONT FAMILIES
+ * -------------------------------------------------------------------
+ * Canonical font stacks. Components should reference these instead of
+ * hardcoding font-family strings.
+ * ============================================================================= */
+export const fontFamilies = {
+  /** Primary UI font — Inter for all interface text */
+  sans: [
+    "var(--font-sans)",
+    "Inter",
+    "ui-sans-serif",
+    "system-ui",
+    "-apple-system",
+    "sans-serif",
+  ],
+  /** Data / coordinates / code — JetBrains Mono */
+  mono: [
+    "var(--font-mono)",
+    "JetBrains Mono",
+    "ui-monospace",
+    "SFMono-Regular",
+    "Menlo",
+    "monospace",
+  ],
+  /** Landing display headings — Poppins */
+  display: [
+    "var(--font-display)",
+    "Poppins",
+    "var(--font-sans)",
+    "sans-serif",
+  ],
+} as const;
+
+/* =============================================================================
+ * CHART COLOR PALETTE
+ * -------------------------------------------------------------------
+ * Shared palette for Recharts / data-viz components. Each entry is a
+ * complete color object (base + light + dark variants) so charts
+ * re-theme automatically with light/dark mode.
+ * ============================================================================= */
+export const chartPalette = {
+  blue: { base: "#3b82f6", light: "#60a5fa", dark: "#2563eb" },
+  orange: { base: "#f97316", light: "#fb923c", dark: "#ea580c" },
+  green: { base: "#10b981", light: "#34d399", dark: "#059669" },
+  red: { base: "#ef4444", light: "#f87171", dark: "#dc2626" },
+  purple: { base: "#8b5cf6", light: "#a78bfa", dark: "#7c3aed" },
+  amber: { base: "#f59e0b", light: "#fbbf24", dark: "#d97706" },
+  cyan: { base: "#06b6d4", light: "#22d3ee", dark: "#0891b2" },
+  pink: { base: "#ec4899", light: "#f472b6", dark: "#db2777" },
+  slate: { base: "#64748b", light: "#94a3b8", dark: "#475569" },
+} as const;
+
+/** Ordered array of chart colors for sequential use in data series. */
+export const chartColors = [
+  chartPalette.blue.base,
+  chartPalette.orange.base,
+  chartPalette.green.base,
+  chartPalette.red.base,
+  chartPalette.purple.base,
+  chartPalette.amber.base,
+  chartPalette.cyan.base,
+  chartPalette.pink.base,
+  chartPalette.slate.base,
+] as const;
 
 /* =============================================================================
  * TYPED EXPORT

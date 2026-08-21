@@ -107,7 +107,7 @@ export function PlanVisualization({ override }: PlanVisualizationProps) {
           </p>
         </div>
         {live ? (
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-accent-success">
+          <span className="inline-flex items-center gap-1.5 text-eoc-tiny font-bold uppercase tracking-wider text-accent-success">
             <span
               className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-success"
               aria-hidden
@@ -115,7 +115,7 @@ export function PlanVisualization({ override }: PlanVisualizationProps) {
             Monitoring — Plan Active
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-accent-purple">
+          <span className="inline-flex items-center gap-1.5 text-eoc-tiny font-bold uppercase tracking-wider text-accent-purple">
             <span
               className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-purple"
               aria-hidden

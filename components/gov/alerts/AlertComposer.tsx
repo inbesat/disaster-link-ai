@@ -84,6 +84,8 @@ const CHANNEL_ICONS: Record<GovAlertChannel, LucideIcon> = {
   sms: MessageSquare,
   whatsapp: MessageCircle,
   voice: Phone,
+  fm_radio: Radio,
+  social: MessageCircle,
 };
 
 const TARGET_TABS: Array<{ mode: AlertTargetMode; label: string }> = [
@@ -556,6 +558,28 @@ export function AlertComposer() {
                 : `${message.length} / 500 characters`}
             </p>
             <div className="flex flex-wrap items-center gap-2">
+              <div className="relative">
+                <select
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      const quick = QUICK_ALERT_TEMPLATES.find((t) => t.id === e.target.value);
+                      if (quick) {
+                        setMessage(quick.body);
+                        setTranslations(null);
+                      }
+                      e.target.value = "";
+                    }
+                  }}
+                  defaultValue=""
+                  className="h-8 appearance-none rounded-md border border-white/10 bg-white/5 px-2.5 pr-7 text-[0.6875rem] font-bold text-slate-300 transition hover:bg-white/10 hover:text-white [&>option]:bg-[#111827]"
+                >
+                  <option value="" disabled>Insert Template</option>
+                  {QUICK_ALERT_TEMPLATES.map((t) => (
+                    <option key={t.id} value={t.id}>{t.label}</option>
+                  ))}
+                </select>
+                <BookOpen className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-500" aria-hidden />
+              </div>
               <button
                 type="button"
                 role="switch"
@@ -563,7 +587,7 @@ export function AlertComposer() {
                 onClick={() => setAbEnabled((v) => !v)}
                 className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-[0.6875rem] font-bold transition ${
                   abEnabled
-                    ? "border-accent-primary/50 bg-accent-primary/10 text-[var(--dl-blue-light)]"
+                    ? "border-blue-400/50 bg-blue-400/10 text-blue-400"
                     : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
                 }`}
               >
@@ -573,17 +597,10 @@ export function AlertComposer() {
               <button
                 type="button"
                 onClick={() => setShowLibrary(true)}
-                className="inline-flex items-center gap-1.5 rounded-md border border-accent-purple/40 bg-accent-purple/10 px-2.5 py-1.5 text-[0.6875rem] font-bold text-accent-purple transition hover:bg-accent-purple/20"
+                className="inline-flex items-center gap-1.5 rounded-md border border-purple-400/40 bg-purple-400/10 px-2.5 py-1.5 text-[0.6875rem] font-bold text-purple-400 transition hover:bg-purple-400/20"
               >
                 <BookOpen className="h-3.5 w-3.5" aria-hidden />
                 Template Library
-              </button>
-              <button
-                type="button"
-                onClick={useTemplate}
-                className="rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-[0.6875rem] font-bold text-slate-300 transition hover:bg-white/10 hover:text-white"
-              >
-                Official template
               </button>
             </div>
           </div>
@@ -657,13 +674,96 @@ export function AlertComposer() {
               onStartEdit={(lang) => setEditingLang(lang)}
               onSaveEdit={(lang, text) => saveTranslation(lang, text)}
               onCancelEdit={() => setEditingLang(null)}
+              originalText={message}
             />
           )}
         </Card>
       </div>
 
-      {/* ── Right column (1/3): channels → schedule → send ────────────── */}
+      {/* ── Right column (1/3): preview → channels → schedule → send ────── */}
       <div className="space-y-5">
+        {/* Live Preview — how the alert looks on the public app. */}
+        <section className="rounded-xl border border-white/10 bg-[#111827] p-5">
+          <header className="mb-3 flex items-center gap-2.5">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-purple-400/30 bg-purple-400/10 text-purple-400">
+              <FileText className="h-4 w-4" aria-hidden />
+            </span>
+            <div>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+                Live Preview
+              </h2>
+              <p className="text-xs text-slate-500">How it looks on the public app</p>
+            </div>
+          </header>
+
+          {/* Phone frame mockup */}
+          <div className="rounded-xl border border-white/10 bg-[#0a0f1a] p-3">
+            <div className="flex items-center gap-2 border-b border-white/10 pb-2 mb-2">
+              <div className="h-2 w-2 rounded-full bg-red-400" />
+              <div className="h-2 w-2 rounded-full bg-amber-400" />
+              <div className="h-2 w-2 rounded-full bg-emerald-400" />
+              <span className="ml-auto text-[0.5rem] font-mono text-slate-600">DisasterLink</span>
+            </div>
+
+            {/* Alert header */}
+            <div className={`rounded-lg p-3 mb-2 ${
+              severity === "critical"
+                ? "bg-red-400/10 border border-red-400/30"
+                : severity === "warning"
+                  ? "bg-amber-400/10 border border-amber-400/30"
+                  : "bg-blue-400/10 border border-blue-400/30"
+            }`}>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-lg">{selectedTypeMeta.emoji}</span>
+                <span className={`text-xs font-bold uppercase tracking-wider ${
+                  severity === "critical"
+                    ? "text-red-400"
+                    : severity === "warning"
+                      ? "text-amber-400"
+                      : "text-blue-400"
+                }`}>
+                  {selectedSeverityMeta.label}
+                </span>
+              </div>
+              <p className="text-xs font-bold text-white">{selectedTypeMeta.label}</p>
+            </div>
+
+            {/* Message preview */}
+            <div className="rounded-lg bg-white/5 p-2.5 mb-2">
+              {message ? (
+                <p className="text-xs leading-relaxed text-slate-300 whitespace-pre-wrap line-clamp-6">
+                  {message}
+                </p>
+              ) : (
+                <p className="text-xs text-slate-600 italic">Your message will appear here…</p>
+              )}
+            </div>
+
+            {/* Meta */}
+            <div className="flex items-center justify-between text-[0.5rem] text-slate-600">
+              <span>{estimate.targetLabel}</span>
+              <span>Just now</span>
+            </div>
+          </div>
+
+          {/* Channel badges */}
+          {channels.size > 0 && (
+            <div className="mt-2.5 flex flex-wrap gap-1.5">
+              {Array.from(channels).map((ch) => {
+                const meta = GOV_ALERT_CHANNELS.find((c) => c.value === ch);
+                return (
+                  <span
+                    key={ch}
+                    className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[0.5625rem] font-semibold text-slate-400"
+                  >
+                    {meta?.label}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
         {/* Step 1 — Channels multi-select. */}
         <Card icon={Radio} title="Channels" subtitle="Where the alert gets delivered.">
           <div className="space-y-2">

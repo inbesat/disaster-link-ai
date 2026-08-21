@@ -3,6 +3,10 @@ import Script from "next/script";
 import { Inter, JetBrains_Mono, Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import ToastViewport from "@/components/ui/Toast";
+import CookieConsent from "@/components/ui/CookieConsent";
+import SupportButton from "@/components/ui/SupportButton";
+import AnalyticsProvider from "@/components/AnalyticsProvider";
+import LocalBusinessSchema from "@/components/seo/LocalBusinessSchema";
 import SimulationToggle from "@/components/admin/SimulationToggle";
 import DemoController from "@/components/demo/DemoController";
 import DemoHotkeysHost from "@/components/demo/DemoHotkeysHost";
@@ -49,9 +53,67 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "SafeSphere Platform",
+  title: {
+    default: "SafeSphere Platform",
+    template: "%s | SafeSphere Platform",
+  },
   description:
-    "Flood prediction, emergency planning, and resource allocation for the Bharat Shakti Hackathon.",
+    "AI-powered disaster response platform with flood prediction, emergency planning, real-time alerts, and resource allocation for communities across India.",
+  keywords: [
+    "disaster management",
+    "flood prediction",
+    "emergency response",
+    "crisis management",
+    "real-time alerts",
+    "resource allocation",
+    "disaster preparedness",
+    "India",
+  ],
+  authors: [{ name: "SafeSphere Team" }],
+  creator: "SafeSphere",
+  publisher: "SafeSphere",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://safesphere.app"
+  ),
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "/",
+    siteName: "SafeSphere Platform",
+    title: "SafeSphere Platform - AI-Powered Disaster Response",
+    description:
+      "Flood prediction, emergency planning, and resource allocation. Protecting communities with AI-driven early warnings and coordinated response.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "SafeSphere Platform - Disaster Response Dashboard",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SafeSphere Platform - AI-Powered Disaster Response",
+    description:
+      "Flood prediction, emergency planning, and resource allocation. Protecting communities with AI-driven early warnings.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    // Add your Google Search Console verification token here
+    // google: "your-verification-token",
+  },
   // Phase 13 · Step 1 — PWA hooks: manifest + installable web app metadata.
   manifest: "/manifest.json",
   appleWebApp: {
@@ -89,6 +151,10 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} ${poppins.variable} bg-[var(--brand-navy)] text-primary antialiased scroll-smooth`}
       >
+        {/* Phase 1 · SEO & Analytics — Local Business Schema + GA tracking */}
+        <LocalBusinessSchema />
+        <AnalyticsProvider />
+
         {simulationActive && (
           <div
             role="alert"
@@ -195,6 +261,12 @@ export default function RootLayout({
         <ShortcutModal />
 
         <ToastViewport />
+
+        {/* Phase 2 — Cookie Consent Banner (GDPR/DPDP compliance) */}
+        <CookieConsent />
+
+        {/* Phase 2 — Floating Support / Report Bug Button */}
+        <SupportButton />
 
         {/* Instant app-wide translation (Google Translate widget). The
             placeholder div lives in the landing Navbar

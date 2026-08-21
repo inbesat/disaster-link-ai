@@ -158,11 +158,11 @@ export default function TrendingIssues({
             <li key={item.label} className="group">
               <div className="flex items-center justify-between gap-2">
                 <span className="flex items-center gap-2 text-sm">
-                  <span className="font-mono text-[10px] text-slate-500">
+                  <span className="font-mono text-eoc-tiny text-slate-500">
                     {index + 1}.
                   </span>
                   <span className="font-semibold text-foreground">{item.label}</span>
-                  <span className="rounded-full bg-surface-muted px-1.5 py-0.5 text-[10px] font-bold text-slate-300">
+                  <span className="rounded-full bg-surface-muted px-1.5 py-0.5 text-eoc-tiny font-bold text-slate-300">
                     {item.count}
                     <span className="ml-0.5 text-slate-500">
                       {item.count === 1 ? "report" : "reports"}
@@ -170,15 +170,15 @@ export default function TrendingIssues({
                   </span>
                 </span>
                 {item.trend === "up" ? (
-                  <span className="flex items-center gap-1 text-[10px] font-bold uppercase text-severity-green-400">
+                  <span className="flex items-center gap-1 text-eoc-tiny font-bold uppercase text-severity-green-400">
                     <TrendingUp className="h-3.5 w-3.5" /> Up
                   </span>
                 ) : item.trend === "down" ? (
-                  <span className="flex items-center gap-1 text-[10px] font-bold uppercase text-severity-red-400">
+                  <span className="flex items-center gap-1 text-eoc-tiny font-bold uppercase text-severity-red-400">
                     <TrendingDown className="h-3.5 w-3.5" /> Down
                   </span>
                 ) : (
-                  <span className="text-[10px] font-bold uppercase text-slate-400">
+                  <span className="text-eoc-tiny font-bold uppercase text-slate-400">
                     Steady
                   </span>
                 )}
@@ -201,7 +201,7 @@ export default function TrendingIssues({
                   <LineChart data={item.series.map((v, i) => ({ i, v }))}>
                     <Tooltip
                       content={({ payload, label }) => (
-                        <div className="rounded border border-border bg-surface-elevated px-2 py-1 text-[10px] text-slate-300">
+                        <div className="rounded border border-border bg-surface-elevated px-2 py-1 text-eoc-tiny text-slate-300">
                           ago {String(label)}:{" "}
                           <span className="font-bold">{payload?.[0]?.value}</span>
                         </div>

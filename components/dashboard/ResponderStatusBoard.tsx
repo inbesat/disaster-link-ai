@@ -59,7 +59,7 @@ export function ResponderStatusBoard() {
                 <StatusDot status={unit.status} name={unit.name} />
               </span>
             </span>
-            <span className="max-w-14 truncate text-[10px] text-muted">{unit.name}</span>
+            <span className="max-w-14 truncate text-eoc-tiny text-muted">{unit.name}</span>
           </li>
         ))}
 
@@ -68,10 +68,10 @@ export function ResponderStatusBoard() {
           className="flex h-11 flex-col items-center justify-center gap-1 px-1"
           title="12 units have no open comms channel"
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-full border border-dashed border-border text-[10px] font-semibold tabular-nums text-muted">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full border border-dashed border-border text-eoc-tiny font-semibold tabular-nums text-muted">
             +12
           </span>
-          <span className="text-[10px] text-muted">offline</span>
+          <span className="text-eoc-tiny text-muted">offline</span>
         </li>
       </ul>
     </Panel>

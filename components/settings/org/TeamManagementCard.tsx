@@ -194,7 +194,7 @@ setMembers((prev) => [
         {ROLES.map((role) => (
           <span
             key={role}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-bold ${ROLE_STYLE[role].ring} ${ROLE_STYLE[role].text}`}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-eoc-tiny font-bold ${ROLE_STYLE[role].ring} ${ROLE_STYLE[role].text}`}
           >
             <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />
             {role}
@@ -206,7 +206,7 @@ setMembers((prev) => [
       <div className="mt-5 overflow-x-auto rounded-md border border-panel-border">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead>
-            <tr className="border-b border-panel-border bg-surface-muted/40 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            <tr className="border-b border-panel-border bg-surface-muted/40 text-eoc-tiny font-bold uppercase tracking-widest text-slate-500">
               <th className="px-4 py-2.5">Name</th>
               <th className="px-4 py-2.5">Email</th>
               <th className="px-4 py-2.5">Organization</th>
@@ -219,7 +219,7 @@ setMembers((prev) => [
               <tr
                 key={member.id}
                 className={`border-b border-[#152033] transition last:border-b-0 ${
-                  index % 2 === 0 ? "bg-[#0a0f1d]" : "bg-surface-muted/20"
+                  index % 2 === 0 ? "bg-[#0a0f1a]" : "bg-surface-muted/20"
                 } ${member.active ? "" : "opacity-50"}`}
               >
                 <td className="px-4 py-3">
@@ -242,7 +242,7 @@ setMembers((prev) => [
                         {member.name}
                       </p>
                       {!member.active && (
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-red-400">
+                        <p className="text-eoc-tiny font-semibold uppercase tracking-wider text-red-400">
                           Deactivated
                         </p>
                       )}
@@ -266,7 +266,7 @@ setMembers((prev) => [
                     } ${ROLE_STYLE[member.role].text} disabled:cursor-not-allowed disabled:opacity-60`}
                   >
                     {ROLES.map((role) => (
-                      <option key={role} value={role} className="bg-[#0a0f1d]">
+                      <option key={role} value={role} className="bg-[#0a0f1a]">
                         {role}
                       </option>
                     ))}
@@ -331,7 +331,7 @@ setMembers((prev) => [
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="responder@org.gov.in"
-                  className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
+                  className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
                 />
               </label>
 
@@ -349,7 +349,7 @@ setMembers((prev) => [
                         className={`flex items-center gap-2 rounded-md border px-3 py-2 text-xs font-semibold transition ${
                           selected
                             ? "border-amber-400/60 bg-amber-500/10 text-amber-200"
-                            : "border-panel-border bg-[#0a0f1d] text-slate-400 hover:border-amber-400/40"
+                            : "border-panel-border bg-[#0a0f1a] text-slate-400 hover:border-amber-400/40"
                         }`}
                       >
                         <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />

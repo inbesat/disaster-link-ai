@@ -27,14 +27,14 @@ export function SidebarSection({ label, children, className = "" }: SidebarSecti
 
   return (
     <div
-      className={`${collapsed ? "mt-3 border-t border-subtle pt-3 first:mt-0 first:border-t-0 first:pt-0" : ""} ${className}`}
+      className={`${collapsed ? "mt-3 border-t border-white/5 pt-3 first:mt-0 first:border-t-0 first:pt-0" : ""} ${className}`}
     >
       {!collapsed && (
-        <p className="px-3 pb-2 pt-4 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted">
+        <p className="px-3 pb-2 pt-4 text-[0.625rem] font-bold uppercase tracking-widest text-slate-500">
           {label}
         </p>
       )}
-      <div className="space-y-1">{children}</div>
+      <div className="space-y-0.5">{children}</div>
     </div>
   );
 }

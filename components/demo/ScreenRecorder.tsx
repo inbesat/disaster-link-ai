@@ -164,7 +164,7 @@ export default function ScreenRecorder() {
           }`}
         />
       </span>
-      <span className="font-mono text-[10px] font-bold tabular-nums">
+      <span className="font-mono text-eoc-tiny font-bold tabular-nums">
         {isRecording ? formatElapsed(elapsed) : "REC"}
       </span>
     </button>

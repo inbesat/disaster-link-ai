@@ -174,7 +174,7 @@ export default function OutgoingWebhooksCard() {
             <p className="eoc-label text-amber-300/80">OUTBOUND EVENT CALLBACKS</p>
             <h2 className="mt-0.5 text-lg font-bold">Outgoing Event Webhooks</h2>
           </div>
-          <span className="rounded-full border border-amber-400/30 bg-amber-500/10 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-amber-200">
+          <span className="rounded-full border border-amber-400/30 bg-amber-500/10 px-2.5 py-1 font-mono text-eoc-tiny font-bold tabular-nums text-amber-200">
             {webhooks.length} active
           </span>
           <button
@@ -218,7 +218,7 @@ export default function OutgoingWebhooksCard() {
                   <Link2 className="h-3 w-3 shrink-0" aria-hidden />
                   <span className="truncate">{hook.endpoint}</span>
                 </p>
-                <p className="mt-0.5 text-[10px] text-slate-600">
+                <p className="mt-0.5 text-eoc-tiny text-slate-600">
                   Last ping: {hook.lastPing ?? "never"}
                 </p>
               </div>
@@ -227,14 +227,14 @@ export default function OutgoingWebhooksCard() {
                 {hook.triggers.map((id) => (
                   <span
                     key={id}
-                    className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${TRIGGER_STYLES[id]}`}
+                    className={`rounded-full border px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${TRIGGER_STYLES[id]}`}
                   >
                     {TRIGGER_LABELS[id]}
                   </span>
                 ))}
                 <span
                   title="Stored server-side — never logged"
-                  className="flex items-center gap-1 rounded-full border border-panel-borderHover bg-[#0a0f1d] px-2 py-0.5 font-mono text-[10px] text-slate-500"
+                  className="flex items-center gap-1 rounded-full border border-panel-borderHover bg-[#0a0f1a] px-2 py-0.5 font-mono text-eoc-tiny text-slate-500"
                 >
                   <KeyRound className="h-3 w-3" aria-hidden />
                   {maskSecret(hook.secret)}
@@ -337,7 +337,7 @@ export default function OutgoingWebhooksCard() {
               placeholder="e.g. Slack Command Center Channel"
               maxLength={80}
               autoFocus
-              className="mt-2 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
+              className="mt-2 w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
             />
 
             <label
@@ -359,7 +359,7 @@ export default function OutgoingWebhooksCard() {
                 placeholder="https://your-system.example.com/hooks/drip"
                 autoComplete="off"
                 spellCheck={false}
-                className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-3 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
+                className="w-full rounded-md border border-panel-border bg-[#0a0f1a] py-2 pl-9 pr-3 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
               />
             </div>
 
@@ -382,7 +382,7 @@ export default function OutgoingWebhooksCard() {
                 placeholder="whsec_••••••••••"
                 autoComplete="off"
                 spellCheck={false}
-                className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
+                className="w-full rounded-md border border-panel-border bg-[#0a0f1a] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-amber-400/60"
               />
               <button
                 type="button"
@@ -426,7 +426,7 @@ export default function OutgoingWebhooksCard() {
                       />
                       {trigger.label}
                     </p>
-                    <p className="mt-1 text-[10px] leading-relaxed text-slate-500">
+                    <p className="mt-1 text-eoc-tiny leading-relaxed text-slate-500">
                       {trigger.hint}
                     </p>
                   </button>

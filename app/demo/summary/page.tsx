@@ -101,7 +101,7 @@ export default function DemoSummaryPage() {
         {/* Masthead */}
         <header className="relative z-10 flex items-end justify-between gap-6 border-b border-white/10 pb-4 print:border-slate-300">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-300 print:text-cyan-800">
+            <p className="text-eoc-tiny font-bold uppercase tracking-[0.3em] text-cyan-300 print:text-cyan-800">
               SafeSphere · National Hackathon
             </p>
             <h1 className="mt-1.5 text-4xl font-black leading-tight tracking-tight">
@@ -112,7 +112,7 @@ export default function DemoSummaryPage() {
               multi-channel alerting, and coordinated resource dispatch for district EOCs.
             </p>
           </div>
-          <p className="shrink-0 pb-1 text-right text-[10px] font-semibold uppercase tracking-widest text-slate-500 print:text-slate-400">
+          <p className="shrink-0 pb-1 text-right text-eoc-tiny font-semibold uppercase tracking-widest text-slate-500 print:text-slate-400">
             Team DRIP
             <span className="mt-0.5 block font-normal normal-case tracking-normal">
               {new Date().toLocaleDateString("en-IN", {
@@ -128,7 +128,7 @@ export default function DemoSummaryPage() {
         <div className="relative z-10 grid flex-1 grid-cols-5 gap-4 py-5">
           {/* The Problem */}
           <section className="col-span-2 flex flex-col gap-2.5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 print:border-slate-300 print:bg-slate-50">
-            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-red-300 print:text-red-700">
+            <p className="text-eoc-tiny font-bold uppercase tracking-[0.25em] text-red-300 print:text-red-700">
               The Problem
             </p>
             <p className="text-xl font-black leading-tight">
@@ -152,7 +152,7 @@ export default function DemoSummaryPage() {
 
           {/* The Solution */}
           <section className="col-span-3 flex flex-col gap-2.5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 print:border-slate-300 print:bg-slate-50">
-            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-300 print:text-emerald-700">
+            <p className="text-eoc-tiny font-bold uppercase tracking-[0.25em] text-emerald-300 print:text-emerald-700">
               The SafeSphere Solution
             </p>
             <div className="grid flex-1 grid-cols-2 gap-2.5">
@@ -174,7 +174,7 @@ export default function DemoSummaryPage() {
 
           {/* The Tech Stack */}
           <section className="col-span-3 flex flex-col gap-2.5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 print:border-slate-300 print:bg-slate-50">
-            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-sky-300 print:text-sky-700">
+            <p className="text-eoc-tiny font-bold uppercase tracking-[0.25em] text-sky-300 print:text-sky-700">
               The Tech Stack
             </p>
             <div className="grid grid-cols-4 gap-2.5">
@@ -197,7 +197,7 @@ export default function DemoSummaryPage() {
 
           {/* The Team */}
           <section className="col-span-2 flex flex-col gap-2.5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 print:border-slate-300 print:bg-slate-50">
-            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-amber-300 print:text-amber-700">
+            <p className="text-eoc-tiny font-bold uppercase tracking-[0.25em] text-amber-300 print:text-amber-700">
               The Team
             </p>
             <p className="text-xl font-black leading-tight">Team SafeSphere</p>
@@ -209,7 +209,7 @@ export default function DemoSummaryPage() {
               {TEAM.map((role) => (
                 <span
                   key={role}
-                  className="rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-300 print:border-slate-300 print:bg-white print:text-slate-700"
+                  className="rounded-full border border-white/15 bg-black/20 px-2.5 py-1 text-eoc-tiny font-semibold uppercase tracking-wider text-slate-300 print:border-slate-300 print:bg-white print:text-slate-700"
                 >
                   {role}
                 </span>

@@ -132,7 +132,7 @@ export default function PlanApprovalCard() {
                   />
                   <p className="text-sm font-bold text-slate-200">{label}</p>
                   {recommended && (
-                    <span className="rounded-full border border-green-400/40 bg-green-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-green-300">
+                    <span className="rounded-full border border-green-400/40 bg-green-500/10 px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wide text-green-300">
                       Recommended · Org standard
                     </span>
                   )}
@@ -153,7 +153,7 @@ export default function PlanApprovalCard() {
             ? "border-red-400/40 bg-red-500/[0.07]"
             : mode === "suggest"
               ? "border-green-400/40 bg-green-500/[0.07]"
-              : "border-panel-border bg-[#0a0f1d]"
+              : "border-panel-border bg-[#0a0f1a]"
         }`}
       >
         <IconByMode mode={mode} />

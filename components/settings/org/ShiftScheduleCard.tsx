@@ -121,7 +121,7 @@ export default function ShiftScheduleCard() {
       <div className="mt-5 overflow-x-auto rounded-md border border-panel-border">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-panel-border bg-surface-muted/40 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            <tr className="border-b border-panel-border bg-surface-muted/40 text-eoc-tiny font-bold uppercase tracking-widest text-slate-500">
               <th className="px-4 py-2.5">Shift</th>
               <th className="px-4 py-2.5">Start</th>
               <th className="px-4 py-2.5">End</th>
@@ -136,7 +136,7 @@ export default function ShiftScheduleCard() {
                 <tr
                   key={shift.id}
                   className={`border-b border-[#152033] last:border-b-0 ${
-                    index % 2 === 0 ? "bg-[#0a0f1d]" : "bg-surface-muted/20"
+                    index % 2 === 0 ? "bg-[#0a0f1a]" : "bg-surface-muted/20"
                   } ${isActiveShift ? "bg-teal-500/[0.06]" : ""}`}
                 >
                   <td className="px-4 py-3">
@@ -171,7 +171,7 @@ export default function ShiftScheduleCard() {
                       value={shift.start}
                       onChange={(e) => setTime(shift.id, "start", e.target.value)}
                       aria-label={`${shift.name} shift start time`}
-                      className="rounded-md border border-panel-border bg-[#0a0f1d] px-2 py-1.5 font-mono text-xs text-slate-200 outline-none focus:border-teal-400/60"
+                      className="rounded-md border border-panel-border bg-[#0a0f1a] px-2 py-1.5 font-mono text-xs text-slate-200 outline-none focus:border-teal-400/60"
                     />
                   </td>
                   <td className="px-4 py-3">
@@ -180,7 +180,7 @@ export default function ShiftScheduleCard() {
                       value={shift.end}
                       onChange={(e) => setTime(shift.id, "end", e.target.value)}
                       aria-label={`${shift.name} shift end time`}
-                      className="rounded-md border border-panel-border bg-[#0a0f1d] px-2 py-1.5 font-mono text-xs text-slate-200 outline-none focus:border-teal-400/60"
+                      className="rounded-md border border-panel-border bg-[#0a0f1a] px-2 py-1.5 font-mono text-xs text-slate-200 outline-none focus:border-teal-400/60"
                     />
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -235,7 +235,7 @@ export default function ShiftScheduleCard() {
             >
               Assign members
               <span className="flex items-center gap-1">
-                <span className="rounded-full bg-teal-500/20 px-1.5 py-0.5 text-[10px] font-bold">
+                <span className="rounded-full bg-teal-500/20 px-1.5 py-0.5 text-eoc-tiny font-bold">
                   {activeRoster.length}
                 </span>
                 <ChevronDown
@@ -274,7 +274,7 @@ export default function ShiftScheduleCard() {
                         <span className="flex-1 text-slate-200">
                           {member.name}
                         </span>
-                        <span className="text-[10px] uppercase tracking-wide text-slate-500">
+                        <span className="text-eoc-tiny uppercase tracking-wide text-slate-500">
                           {member.role}
                         </span>
                       </label>

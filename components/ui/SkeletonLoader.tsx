@@ -159,3 +159,23 @@ export function SkeletonRow({ trailing = true, className = "" }: SkeletonRowProp
 }
 
 export default SkeletonLoader;
+
+// ---------------------------------------------------------------------
+// Skeleton — simple pulse animation for loading placeholders.
+// This is a compatibility export for components that import
+// `import { Skeleton } from "@/components/ui/Skeleton"`.
+// New code should use SkeletonLoader directly.
+// ---------------------------------------------------------------------
+
+type SkeletonProps = {
+  className?: string;
+};
+
+export function Skeleton({ className = "" }: SkeletonProps) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`animate-pulse rounded-md bg-[var(--skeleton-base, #1e293b)] ${className}`}
+    />
+  );
+}

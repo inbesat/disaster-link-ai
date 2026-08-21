@@ -80,10 +80,10 @@ export default function EscalationChainCard() {
               id="escalation-level-1"
               value={level1}
               onChange={(e) => setLevel1(e.target.value)}
-              className="w-full rounded-md border border-amber-400/30 bg-[#0a0f1d] px-3 py-2 text-sm text-slate-200 outline-none focus:border-amber-400/60"
+              className="w-full rounded-md border border-amber-400/30 bg-[#0a0f1a] px-3 py-2 text-sm text-slate-200 outline-none focus:border-amber-400/60"
             >
               {DISTRICT_ADMINS.map((user) => (
-                <option key={user} value={user} className="bg-[#0a0f1d]">
+                <option key={user} value={user} className="bg-[#0a0f1a]">
                   {user}
                 </option>
               ))}
@@ -116,10 +116,10 @@ export default function EscalationChainCard() {
               id="escalation-level-2"
               value={level2}
               onChange={(e) => setLevel2(e.target.value)}
-              className="w-full rounded-md border border-red-400/30 bg-[#0a0f1d] px-3 py-2 text-sm text-slate-200 outline-none focus:border-red-400/60"
+              className="w-full rounded-md border border-red-400/30 bg-[#0a0f1a] px-3 py-2 text-sm text-slate-200 outline-none focus:border-red-400/60"
             >
               {SUPER_ADMINS.map((user) => (
-                <option key={user} value={user} className="bg-[#0a0f1d]">
+                <option key={user} value={user} className="bg-[#0a0f1a]">
                   {user}
                 </option>
               ))}
@@ -154,7 +154,7 @@ export default function EscalationChainCard() {
               value={controlRoom}
               onChange={(e) => setControlRoom(e.target.value)}
               placeholder="e.g. 1070 or +91 …"
-              className="w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-200 outline-none focus:border-orange-400/60"
+              className="w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 font-mono text-sm text-slate-200 outline-none focus:border-orange-400/60"
             />
           </div>
           <p className="mt-2 text-[11px] text-slate-500">
@@ -187,10 +187,10 @@ function EscalArrow({ label }: { label: string }) {
       className="flex flex-col items-center gap-1 py-2"
       role="presentation"
     >
-      <div className="flex h-7 w-9 items-center justify-center rounded-full border border-panel-border bg-[#0a0f1d]">
+      <div className="flex h-7 w-9 items-center justify-center rounded-full border border-panel-border bg-[#0a0f1a]">
         <ChevronDown className="h-4 w-4 text-slate-400" aria-hidden />
       </div>
-      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+      <span className="text-eoc-tiny font-bold uppercase tracking-wider text-slate-500">
         {label}
       </span>
     </div>

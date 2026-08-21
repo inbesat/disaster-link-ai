@@ -157,7 +157,7 @@ function StatusCards() {
             }}
           />
         </div>
-        <div className="text-[10px] text-white/30 mt-1.5">18% — Low</div>
+        <div className="text-eoc-tiny text-white/30 mt-1.5">18% — Low</div>
       </motion.div>
 
       {/* Avg Response Time */}

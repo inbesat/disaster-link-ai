@@ -32,14 +32,14 @@ export function MapLegend({ className = "" }: { className?: string }) {
   if (collapsed) {
     return (
       <div className={className}>
-        <button
-          type="button"
-          onClick={() => setCollapsed(false)}
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated/95 px-3 py-2 text-xs font-semibold text-slate-200 shadow-lg backdrop-blur transition hover:border-accent hover:text-accent"
-        >
-          <Layers className="h-4 w-4 text-accent" aria-hidden />
-          Legend
-        </button>
+          <button
+            type="button"
+            onClick={() => setCollapsed(false)}
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated/95 px-3 py-2.5 text-xs font-semibold text-slate-200 shadow-lg backdrop-blur transition hover:border-accent hover:text-accent active:scale-[0.97]"
+          >
+            <Layers className="h-4 w-4 text-accent" aria-hidden />
+            Legend
+          </button>
       </div>
     );
   }
@@ -58,9 +58,9 @@ export function MapLegend({ className = "" }: { className?: string }) {
             type="button"
             onClick={() => setCollapsed(true)}
             aria-label="Minimize map legend"
-            className="flex h-6 w-6 items-center justify-center rounded-md border border-border text-muted transition hover:border-accent hover:text-accent"
+            className="flex h-10 w-10 items-center justify-center rounded-md border border-border text-muted transition hover:border-accent hover:text-accent active:scale-[0.97]"
           >
-            <Minus className="h-3.5 w-3.5" aria-hidden />
+            <Minus className="h-4 w-4" aria-hidden />
           </button>
         </div>
 

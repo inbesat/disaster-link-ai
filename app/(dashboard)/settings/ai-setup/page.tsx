@@ -224,7 +224,7 @@ function ChooseStep({
               }`}
             >
               {recommended && (
-                <span className="absolute right-3 top-3 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
+                <span className="absolute right-3 top-3 rounded-full bg-emerald-500/15 px-2 py-0.5 text-eoc-tiny font-bold text-emerald-300">
                   Recommended
                 </span>
               )}
@@ -237,7 +237,7 @@ function ChooseStep({
               </span>
               <div>
                 <p className="text-base font-bold text-slate-100">{tier.label}</p>
-                <p className="mt-0.5 font-mono text-[10px] text-muted">{tier.badge}</p>
+                <p className="mt-0.5 font-mono text-eoc-tiny text-muted">{tier.badge}</p>
               </div>
               <p className="text-xs leading-relaxed text-slate-400">{tier.description}</p>
               {selected && (

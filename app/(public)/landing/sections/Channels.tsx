@@ -84,7 +84,7 @@ export default function Channels() {
             <br />
             Agent
           </span>
-          <span className="text-white/70 text-[10px] mt-1 uppercase tracking-wider">
+          <span className="text-white/70 text-eoc-tiny mt-1 uppercase tracking-wider">
             Multilingual · Redundant
           </span>
         </div>

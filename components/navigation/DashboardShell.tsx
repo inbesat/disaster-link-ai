@@ -29,6 +29,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardTopBar from "./DashboardTopBar";
 import BottomNav from "./BottomNav";
+import ShortcutsModal from "./ShortcutsModal";
 import { readSidebarCollapsed } from "./Sidebar";
 import { useDemoSimulation } from "@/hooks/useDemoSimulation";
 import type { Role } from "@/lib/validations/user";
@@ -99,6 +100,8 @@ export function DashboardShell({
         guest={guest}
         isOpenMobile={mobileOpen}
         onCloseMobile={closeMobile}
+        displayName={displayName}
+        avatarUrl={avatarUrl}
       />
 
       {/* Content column — margin animates 260px ⇄ 64px at md+; full-width
@@ -127,6 +130,9 @@ export function DashboardShell({
         oneHanded={oneHanded}
         onToggleOneHanded={() => setOneHanded((v) => !v)}
       />
+
+      {/* Keyboard shortcuts cheat sheet (Prompt 9.6) */}
+      <ShortcutsModal />
     </div>
   );
 }

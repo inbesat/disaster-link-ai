@@ -143,10 +143,10 @@ export default function AlertSoundCard({
               id="critical-tone"
               value={tone}
               onChange={(e) => onToneChange(e.target.value as ToneId)}
-              className="mt-1.5 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-rose-400"
+              className="mt-1.5 w-full rounded-md border border-panel-borderHover bg-[#0a0f1a] px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-rose-400"
             >
               {TONE_OPTIONS.map((option) => (
-                <option key={option.id} value={option.id} className="bg-[#0a0f1d] text-slate-300">
+                <option key={option.id} value={option.id} className="bg-[#0a0f1a] text-slate-300">
                   {option.label}
                 </option>
               ))}

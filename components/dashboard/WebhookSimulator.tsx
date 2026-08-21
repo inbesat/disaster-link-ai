@@ -108,10 +108,10 @@ export default function WebhookSimulator({
       {/* Phone UI mock */}
       <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-slate-900">
         <div className="flex items-center justify-between border-b border-border bg-surface-elevated px-3 py-2">
-          <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-300">
+          <span className="flex items-center gap-1.5 text-eoc-tiny font-semibold uppercase tracking-wider text-slate-300">
             <MessageCircle className="h-3.5 w-3.5 text-severity-green-400" /> WhatsApp SOS
           </span>
-          <span className="text-[10px] text-slate-500">Control Room</span>
+          <span className="text-eoc-tiny text-slate-500">Control Room</span>
         </div>
 
         {/* Chat bubble */}

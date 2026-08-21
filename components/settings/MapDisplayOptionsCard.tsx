@@ -110,7 +110,7 @@ export default function MapDisplayOptionsCard() {
                 <div
                   className={`mx-auto h-8 w-12 rounded-sm bg-gradient-to-br ${option.square}`}
                 />
-                <p className={`mt-1.5 text-[10px] font-semibold ${active ? "text-amber-200" : "text-slate-400"}`}>
+                <p className={`mt-1.5 text-eoc-tiny font-semibold ${active ? "text-amber-200" : "text-slate-400"}`}>
                   {option.label}
                 </p>
               </button>

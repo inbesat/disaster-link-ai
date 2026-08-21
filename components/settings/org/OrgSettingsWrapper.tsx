@@ -91,7 +91,7 @@ function OrgSettingsShell() {
             <h1 className="text-2xl font-bold tracking-tight">
               Organization &amp; District Management
             </h1>
-            <span className="inline-flex items-center gap-1 rounded-full border border-red-400/50 bg-red-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-red-300">
+            <span className="inline-flex items-center gap-1 rounded-full border border-red-400/50 bg-red-500/10 px-2.5 py-0.5 text-eoc-tiny font-bold uppercase tracking-widest text-red-300">
               <ShieldAlertIcon className="h-3 w-3" aria-hidden />
               Admin Only
             </span>

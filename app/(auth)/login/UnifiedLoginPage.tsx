@@ -61,7 +61,15 @@ export default function UnifiedLoginPage() {
   }, [modeParam]);
 
   return (
-    <main className="landing-page relative flex min-h-screen flex-col overflow-hidden bg-[var(--dl-navy)]">
+    <main className="landing-page relative flex min-h-screen flex-col overflow-hidden bg-[#0a0f1a]">
+      {/* Floating particles background */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="particle particle-1" />
+        <div className="particle particle-2" />
+        <div className="particle particle-3" />
+        <div className="particle particle-4" />
+        <div className="particle particle-5" />
+      </div>
       {/* Ambient glow */}
       <div
         aria-hidden="true"
@@ -72,30 +80,32 @@ export default function UnifiedLoginPage() {
         {/* Back to landing */}
         <Link
           href="/"
-          className="mb-6 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-[var(--dl-text-muted)] transition hover:text-white"
+          className="mb-6 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-slate-400 transition hover:text-white"
         >
           ← Back to SafeSphere
         </Link>
 
-        <div className="rounded-[var(--dl-radius)] border border-white/10 bg-white/5 p-7 backdrop-blur-md md:p-8">
-          {/* Brand header */}
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--dl-blue)]/30 to-[var(--dl-orange)]/30 ring-1 ring-white/20">
-              <ShieldCheck aria-hidden className="h-5 w-5 text-white" />
-            </span>
-            <div className="min-w-0">
-              <p className="eoc-label text-[var(--dl-blue-light)]">SAFESPHERE · SIGN IN</p>
-              <h1 className="text-xl font-bold tracking-tight text-white">
-                Emergency Portal
-              </h1>
+        <div className="rounded-2xl border border-white/10 bg-[#111827] shadow-2xl p-7 backdrop-blur-md md:p-8">
+          {/* Brand header with glowing shield */}
+          <div className="flex flex-col items-center text-center">
+            <div className="relative mb-4">
+              <div className="absolute inset-0 rounded-full bg-blue-500/30 blur-xl animate-pulse" />
+              <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-500 ring-1 ring-blue-400/50 shadow-[0_0_30px_rgba(59,130,246,0.5)]">
+                <ShieldCheck aria-hidden className="h-8 w-8 text-white" />
+              </span>
             </div>
+            <p className="eoc-label text-blue-400">SECURE ACCESS</p>
+            <h1 className="text-2xl font-bold tracking-tight text-white mt-1">
+              SafeSphere
+            </h1>
+            <p className="text-sm text-slate-400 mt-1">Emergency Command Center</p>
           </div>
 
           {/* ---- Mode switcher (segmented tabs) ---- */}
           <div
             role="tablist"
             aria-label="Login mode"
-            className="mt-6 grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-white/5 p-1"
+            className="mt-6 grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-[#0a0f1a] p-1"
           >
             <button
               type="button"
@@ -105,8 +115,8 @@ export default function UnifiedLoginPage() {
               onClick={() => setMode("citizen")}
               className={`flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${
                 mode === "citizen"
-                  ? "bg-[var(--dl-orange)] text-white shadow"
-                  : "text-[var(--dl-text-muted)] hover:text-white"
+                  ? "bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-[0_0_20px_rgba(249,115,22,0.3)]"
+                  : "text-slate-400 hover:text-white"
               }`}
             >
               <Home aria-hidden className="h-4 w-4" />
@@ -120,8 +130,8 @@ export default function UnifiedLoginPage() {
               onClick={() => setMode("gov")}
               className={`flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${
                 mode === "gov"
-                  ? "bg-[var(--dl-blue)] text-white shadow"
-                  : "text-[var(--dl-text-muted)] hover:text-white"
+                  ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                  : "text-slate-400 hover:text-white"
               }`}
             >
               <ShieldCheck aria-hidden className="h-4 w-4" />
@@ -137,7 +147,7 @@ export default function UnifiedLoginPage() {
           {/* ---- Divider ---- */}
           <div className="my-5 flex items-center gap-3">
             <div className="h-px flex-1 bg-white/10" />
-            <span className="text-xs uppercase tracking-widest text-[var(--dl-text-muted)]">or</span>
+            <span className="text-xs uppercase tracking-widest text-slate-500">or</span>
             <div className="h-px flex-1 bg-white/10" />
           </div>
 
@@ -146,22 +156,22 @@ export default function UnifiedLoginPage() {
             <button
               type="submit"
               data-testid="guest-login"
-              className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] border-2 border-dashed border-[var(--dl-blue)]/40 bg-transparent px-4 py-3 text-sm font-semibold text-[var(--dl-blue-light)] transition hover:border-[var(--dl-blue)] hover:bg-white/5 hover:text-white"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-blue-500/30 bg-transparent px-4 py-3 text-sm font-semibold text-blue-400 transition hover:border-blue-500 hover:bg-blue-500/10 hover:text-white hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
             >
               <User aria-hidden className="h-4 w-4" />
               Continue as Guest
             </button>
           </form>
-          <p className="mt-1.5 text-center text-[11px] text-[var(--dl-text-muted)]">
+          <p className="mt-1.5 text-center text-[11px] text-slate-500">
             (Explore the platform with view-only permissions)
           </p>
         </div>
 
-        <p className="mt-6 text-center text-xs text-[var(--dl-text-muted)]">
+        <p className="mt-6 text-center text-xs text-slate-500">
           Emergency? Call the District Control Room{" "}
           <a
             href="tel:1070"
-            className="font-semibold text-[var(--dl-orange-light)] hover:underline"
+            className="font-semibold text-orange-400 hover:underline"
           >
             1070
           </a>
@@ -246,35 +256,35 @@ function CitizenForm() {
   }
 
   const inputClass =
-    "w-full rounded-[var(--dl-radius-sm)] border border-white/15 bg-white/5 px-4 py-3.5 text-base text-white placeholder:text-[var(--dl-text-muted)] transition focus:border-[var(--dl-orange)] focus:outline-none";
+    "w-full rounded-xl border border-white/15 bg-[#0a0f1a] px-4 py-3.5 text-base text-white placeholder:text-slate-500 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:shadow-[0_0_15px_rgba(59,130,246,0.2)]";
 
   if (step === "phone") {
     return (
       <>
-        <p className="eoc-label mb-2 text-[var(--dl-orange-light)]">CITIZEN ACCESS</p>
+        <p className="eoc-label mb-2 text-orange-400">CITIZEN ACCESS</p>
         <span
           aria-hidden="true"
-          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--dl-orange)]/20 text-3xl ring-1 ring-[var(--dl-orange)]/40"
+          className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/20 text-3xl ring-1 ring-orange-500/40"
         >
           🏠
         </span>
         <h2 className="mt-4 text-xl font-bold tracking-tight text-white">
           Welcome, neighbor
         </h2>
-        <p className="mt-1 text-sm leading-relaxed text-[var(--dl-text-on-navy)]">
+        <p className="mt-1 text-sm leading-relaxed text-slate-400">
           No passwords here. Enter your phone number and we&apos;ll send a
           one-time code — it takes seconds.
         </p>
 
         <form onSubmit={handlePhoneSubmit} className="mt-5 space-y-4">
           <div>
-            <label htmlFor="citizen-phone" className="eoc-label mb-1.5 block text-[var(--dl-text-on-navy)]">
+            <label htmlFor="citizen-phone" className="eoc-label mb-1.5 block text-slate-300">
               Phone Number
             </label>
             <div className="relative">
               <Phone
                 aria-hidden="true"
-                className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--dl-text-muted)]"
+                className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
               />
               <input
                 id="citizen-phone"
@@ -292,7 +302,7 @@ function CitizenForm() {
           </div>
 
           {error && (
-            <p className="rounded-[var(--dl-radius-sm)] border border-[var(--dl-orange)]/40 bg-[var(--dl-orange)]/10 px-3 py-2 text-sm text-[var(--dl-orange-light)]">
+            <p className="rounded-xl border border-orange-500/40 bg-orange-500/10 px-3 py-2 text-sm text-orange-400">
               {error}
             </p>
           )}
@@ -301,12 +311,12 @@ function CitizenForm() {
             type="submit"
             disabled={loading}
             data-testid="citizen-send-otp"
-            className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[var(--dl-orange)] px-4 py-3.5 text-base font-bold text-white transition hover:bg-[#EA5B0C] disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-orange-500 px-4 py-3.5 text-base font-bold text-white transition hover:shadow-[0_0_30px_rgba(249,115,22,0.4)] hover:-translate-y-0.5 disabled:opacity-60"
           >
             Send OTP
             <ArrowRight aria-hidden="true" className="h-4 w-4" />
           </button>
-          <p className="text-center text-xs text-[var(--dl-text-muted)]">
+          <p className="text-center text-xs text-slate-500">
             Free of charge. Your number is only used for emergency alerts.
           </p>
         </form>
@@ -317,19 +327,19 @@ function CitizenForm() {
   // OTP step
   return (
     <>
-      <p className="eoc-label mb-2 text-[var(--dl-orange-light)]">CITIZEN ACCESS</p>
+      <p className="eoc-label mb-2 text-orange-400">CITIZEN ACCESS</p>
       <span
         aria-hidden="true"
-        className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--dl-blue)]/20 ring-1 ring-[var(--dl-blue)]/40"
+        className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/20 ring-1 ring-blue-500/40"
       >
-        <KeyRound aria-hidden="true" className="h-7 w-7 text-[var(--dl-blue-light)]" />
+        <KeyRound aria-hidden="true" className="h-7 w-7 text-blue-400" />
       </span>
       <h2 className="mt-4 text-xl font-bold tracking-tight text-white">
         Enter the 6-digit code
       </h2>
-      <p className="mt-1 text-sm leading-relaxed text-[var(--dl-text-on-navy)]">
+      <p className="mt-1 text-sm leading-relaxed text-slate-400">
         Sent to <span className="font-semibold text-white">{phone}</span>.{" "}
-        <span className="text-[var(--dl-orange-light)]">Demo:</span> any 6
+        <span className="text-orange-400">Demo:</span> any 6
         digits work — no SMS is sent.
       </p>
 
@@ -355,13 +365,13 @@ function CitizenForm() {
               onChange={(e) => handleDigit(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={(e) => handlePaste(index, e)}
-              className="h-14 w-11 rounded-[var(--dl-radius-sm)] border border-white/15 bg-white/5 text-center text-xl font-bold text-white transition focus:border-[var(--dl-orange)] focus:outline-none sm:w-12"
+              className="h-14 w-12 rounded-xl border-2 border-slate-700 bg-[#0a0f1a] text-center text-2xl font-bold text-white transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:shadow-[0_0_15px_rgba(59,130,246,0.3)] sm:w-13"
             />
           ))}
         </div>
 
         {error && (
-          <p className="rounded-[var(--dl-radius-sm)] border border-[var(--dl-orange)]/40 bg-[var(--dl-orange)]/10 px-3 py-2 text-sm text-[var(--dl-orange-light)]">
+          <p className="rounded-xl border border-orange-500/40 bg-orange-500/10 px-3 py-2 text-sm text-orange-400 animate-shake">
             {error}
           </p>
         )}
@@ -370,7 +380,7 @@ function CitizenForm() {
           type="submit"
           disabled={loading}
           data-testid="citizen-verify"
-          className="w-full rounded-[var(--dl-radius-sm)] bg-[var(--dl-orange)] px-4 py-3.5 text-base font-bold text-white transition hover:bg-[#EA5B0C] disabled:opacity-60"
+          className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-3.5 text-base font-bold text-white transition hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 disabled:opacity-60"
         >
           {loading ? "Signing in…" : "Verify & Continue"}
         </button>
@@ -382,7 +392,7 @@ function CitizenForm() {
             setOtp("");
             setError(null);
           }}
-          className="w-full text-center text-sm text-[var(--dl-text-muted)] transition hover:text-white"
+          className="w-full text-center text-sm text-slate-500 transition hover:text-white"
         >
           ← Use a different number
         </button>
@@ -424,21 +434,21 @@ function GovForm() {
   }
 
   const inputClass =
-    "w-full rounded-[var(--dl-radius-sm)] border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-[var(--dl-text-muted)] transition focus:border-[var(--dl-blue)] focus:outline-none";
+    "w-full rounded-xl border border-white/15 bg-[#0a0f1a] px-4 py-3 text-sm text-white placeholder:text-slate-500 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:shadow-[0_0_15px_rgba(59,130,246,0.2)]";
 
   return (
     <>
-      <p className="eoc-label mb-2 text-[var(--dl-blue-light)]">GOV ACCESS · SECURE CHANNEL</p>
+      <p className="eoc-label mb-2 text-blue-400">GOV ACCESS · SECURE CHANNEL</p>
       <span
         aria-hidden="true"
-        className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--dl-blue)]/20 ring-1 ring-[var(--dl-blue)]/40"
+        className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/20 ring-1 ring-blue-500/40"
       >
         🛡️
       </span>
       <h2 className="mt-4 text-xl font-bold tracking-tight text-white">
         Responder / Official Sign In
       </h2>
-      <p className="mt-1 text-sm text-[var(--dl-text-on-navy)]">
+      <p className="mt-1 text-sm text-slate-400">
         Role-assigned credentials required. Contact your district admin for access.
       </p>
 
@@ -446,14 +456,14 @@ function GovForm() {
         <div>
           <label
             htmlFor="gov-email"
-            className="eoc-label mb-1.5 block text-[var(--dl-text-on-navy)]"
+            className="eoc-label mb-1.5 block text-slate-300"
           >
             Official Email
           </label>
           <div className="relative">
             <Mail
               aria-hidden="true"
-              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--dl-text-muted)]"
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
             />
             <input
               id="gov-email"
@@ -470,7 +480,7 @@ function GovForm() {
         </div>
 
         <div>
-          <p className="eoc-label mb-1.5 block text-[var(--dl-text-on-navy)]">
+          <p className="eoc-label mb-1.5 block text-slate-300">
             Demo Role
           </p>
           <div
@@ -488,10 +498,10 @@ function GovForm() {
                   aria-checked={active}
                   data-testid={`role-${option.key}`}
                   onClick={() => setRole(option.key)}
-                  className={`rounded-[var(--dl-radius-sm)] px-3 py-2.5 text-left transition-all duration-200 ease-in-out ${
+                  className={`rounded-xl px-3 py-2.5 text-left transition-all duration-200 ease-in-out ${
                     active
-                      ? "border-2 border-blue-500 bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.15)]"
-                      : "cursor-pointer border-2 border-slate-700/50 bg-slate-800/30 hover:bg-slate-800 hover:border-slate-600"
+                      ? "border-2 border-blue-500 bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+                      : "cursor-pointer border-2 border-slate-700/50 bg-[#0a0f1a] hover:bg-slate-800 hover:border-slate-600"
                   }`}
                 >
                   <span
@@ -500,7 +510,7 @@ function GovForm() {
                     {option.label}
                   </span>
                   <span
-                    className={`mt-0.5 block text-[0.6875rem] ${active ? "text-blue-200/70" : "text-slate-500"}`}
+                    className={`mt-0.5 block text-xs ${active ? "text-blue-200/70" : "text-slate-500"}`}
                   >
                     {option.description}
                   </span>
@@ -513,14 +523,14 @@ function GovForm() {
         <div>
           <label
             htmlFor="gov-password"
-            className="eoc-label mb-1.5 block text-[var(--dl-text-on-navy)]"
+            className="eoc-label mb-1.5 block text-slate-300"
           >
             Password
           </label>
           <div className="relative">
             <Lock
               aria-hidden="true"
-              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--dl-text-muted)]"
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
             />
             <input
               id="gov-password"
@@ -537,7 +547,7 @@ function GovForm() {
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? "Hide password" : "Show password"}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--dl-text-muted)] transition hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition hover:text-white"
             >
               {showPassword ? (
                 <EyeOff aria-hidden="true" className="h-4 w-4" />
@@ -549,7 +559,7 @@ function GovForm() {
         </div>
 
         {error && (
-          <p className="rounded-[var(--dl-radius-sm)] border border-[var(--dl-orange)]/40 bg-[var(--dl-orange)]/10 px-3 py-2 text-sm text-[var(--dl-orange-light)]">
+          <p className="rounded-xl border border-orange-500/40 bg-orange-500/10 px-3 py-2 text-sm text-orange-400">
             {error}
           </p>
         )}
@@ -558,19 +568,19 @@ function GovForm() {
           type="submit"
           disabled={loading}
           data-testid="gov-submit"
-          className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[var(--dl-blue)] px-4 py-3.5 text-base font-bold text-white transition hover:bg-[var(--dl-blue-light)] disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-3.5 text-base font-bold text-white transition hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] hover:-translate-y-0.5 disabled:opacity-60"
         >
           <ShieldCheck aria-hidden="true" className="h-4 w-4" />
           {loading ? "Authenticating…" : "Sign In"}
         </button>
 
         <div className="flex items-center justify-between text-xs">
-          <span className="text-[var(--dl-text-muted)]">
+          <span className="text-slate-500">
             Demo: any credentials work
           </span>
           <Link
             href="/gov/signup"
-            className="font-semibold text-[var(--dl-blue-light)] transition hover:text-white"
+            className="font-semibold text-blue-400 transition hover:text-white"
           >
             Request access →
           </Link>

@@ -77,7 +77,7 @@ export default function EvacuationRoutes({ classification, isPwd = false }: Evac
         type="line"
         layout={{ "line-cap": "round", "line-join": "round" }}
         paint={{
-          "line-color": "#0a1120",
+          "line-color": "#0b1120",
           "line-opacity": 0.9,
           "line-width": 9,
         }}

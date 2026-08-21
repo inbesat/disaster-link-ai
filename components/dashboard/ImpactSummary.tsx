@@ -61,19 +61,19 @@ export default function ImpactSummary({
 
       <div className="mt-5 grid grid-cols-3 gap-2 border-t border-border pt-4">
         <div>
-          <p className="eoc-label text-[10px] text-slate-500">CHILDREN</p>
+          <p className="eoc-label text-eoc-tiny text-slate-500">CHILDREN</p>
           <p className="mt-1 text-xl font-bold text-severity-amber-400">
             {impact.children.toLocaleString()}
           </p>
         </div>
         <div>
-          <p className="eoc-label text-[10px] text-slate-500">ELDERLY</p>
+          <p className="eoc-label text-eoc-tiny text-slate-500">ELDERLY</p>
           <p className="mt-1 text-xl font-bold text-severity-purple-400">
             {impact.elderly.toLocaleString()}
           </p>
         </div>
         <div>
-          <p className="eoc-label text-[10px] text-slate-500">ADULTS</p>
+          <p className="eoc-label text-eoc-tiny text-slate-500">ADULTS</p>
           <p className="mt-1 text-xl font-bold text-severity-green-400">
             {impact.adults.toLocaleString()}
           </p>

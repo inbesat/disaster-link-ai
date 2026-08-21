@@ -334,6 +334,12 @@ export async function signUpAction(formData: FormData) {
     );
   }
 
+  // Rate limit: max 5 signups per email per hour
+  const signupBudget = rateLimit(`signup:${email}`, 5, 60 * 60 * 1000);
+  if (!signupBudget.success) {
+    redirect(`/login?error=${encodeURIComponent("Too many signup attempts. Please wait before trying again.")}`);
+  }
+
   let failure: string | null = null;
   try {
     const supabase = createClient();
@@ -363,6 +369,12 @@ export async function signInAction(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent("Email and password are required.")}`);
   }
 
+  // Rate limit: max 10 login attempts per email per 15 minutes
+  const loginBudget = rateLimit(`login:${email}`, 10, 15 * 60 * 1000);
+  if (!loginBudget.success) {
+    redirect(`/login?error=${encodeURIComponent("Too many login attempts. Please wait before trying again.")}`);
+  }
+
   let failure: string | null = null;
   try {
     const supabase = createClient();
@@ -382,4 +394,43 @@ export async function signInAction(formData: FormData) {
 
 export async function guestLoginAction() {
   await enableGuestMode();
+}
+
+// ---------------------------------------------------------------------
+// Password Reset Flow
+// ---------------------------------------------------------------------
+
+/**
+ * Send a password reset email using Supabase's built-in flow.
+ * The email contains a link to /auth/update-password with a code parameter.
+ */
+export async function forgotPasswordAction(formData: FormData) {
+  const email = String(formData.get("email") ?? "").trim();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    redirect(`/login?error=${encodeURIComponent("Please enter a valid email address.")}`);
+  }
+
+  // Rate limit: max 3 reset requests per email per hour
+  const resetBudget = rateLimit(`pwd_reset:${email}`, 3, 60 * 60 * 1000);
+  if (!resetBudget.success) {
+    redirect(`/login?error=${encodeURIComponent("Too many reset requests. Please wait before trying again.")}`);
+  }
+
+  try {
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/auth/update-password`,
+    });
+
+    if (error) {
+      safeLog("error", "[auth] forgotPasswordAction failed", { metadata: { error: error.message, email } });
+      // Don't reveal if email exists — always show success for security
+    }
+  } catch (error: unknown) {
+    safeLog("error", "[auth] forgotPasswordAction exception", { metadata: { error: String(error), email } });
+  }
+
+  // Always redirect to login with success message (don't reveal if account exists)
+  redirect(`/login?reset=sent`);
 }

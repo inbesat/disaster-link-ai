@@ -88,7 +88,7 @@ export default function PerformanceSettingsCard() {
           <h2 className="mt-0.5 text-lg font-bold">Map Animation &amp; Performance</h2>
         </div>
         {performance.ecoMode && (
-          <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
+          <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wide text-emerald-300">
             <BatteryMedium className="h-3.5 w-3.5" aria-hidden />
             Battery Saver
           </span>

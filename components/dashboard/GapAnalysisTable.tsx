@@ -28,7 +28,7 @@ export default function GapAnalysisTable() {
 
       <div className="overflow-x-auto">
       <table className="w-full text-left text-xs">
-        <thead className="border-b border-border bg-surface-muted/60 text-[10px] uppercase tracking-wider text-slate-400">
+        <thead className="border-b border-border bg-surface-muted/60 text-eoc-tiny uppercase tracking-wider text-slate-400">
           <tr>
             <th className="px-4 py-2.5 font-semibold">Category</th>
             <th className="px-3 py-2.5 text-right font-semibold">Required</th>

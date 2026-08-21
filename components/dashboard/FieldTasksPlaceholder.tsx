@@ -34,11 +34,11 @@ export default function FieldTasksPlaceholder() {
         {TASKS.map((task) => (
           <li key={task.id} className="rounded-eoc border border-border bg-surface p-3">
             <div className="flex items-center justify-between gap-2">
-              <span className="font-mono text-[10px] font-bold text-slate-500">
+              <span className="font-mono text-eoc-tiny font-bold text-slate-500">
                 {task.id}
               </span>
               <span
-                className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${STATUS_STYLES[task.status]}`}
+                className={`rounded-full border px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${STATUS_STYLES[task.status]}`}
               >
                 {task.status}
               </span>

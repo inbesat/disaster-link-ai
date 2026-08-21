@@ -13,24 +13,14 @@ import {
 } from "lucide-react";
 
 // ---------------------------------------------------------------------
-// components/gov/ai/AgentCard.tsx — Phase 9 · Step 2 · Agent Visual
-// Identity & Status Cards.
+// components/gov/ai/AgentCard.tsx — Agent Visual Identity & Status Cards.
 //
 // A reusable card for one AI agent in the Government Emergency Planner
-// swarm. Props: name, icon, colorAccent, status (thinking / complete /
-// error) and latestOutput.
-//
-//   • colorAccent is a closed union (blue | green | amber | red | teal)
-//     mapped to a tone table of FULL class strings — never constructed
-//     at runtime — so Tailwind's purge keeps every generated utility.
-//   • status renders a color-coded pill with a spinner (thinking), a
-//     check (complete), a cross (error) or a muted clock (idle).
-//   • thinking agents get the .agent-thinking-glow pulsing ring + glow
-//     (keyframes in app/globals.css), colored by the inline
-//     --agent-accent-rgb var so each agent's accent drives its own glow.
-//
-// The five-member swarm configuration is exported as EMERGENCY_AGENTS
-// so later Phase 9 steps can render the roster with one map() call.
+// swarm. Each card has:
+//   • Colored left border (3px) matching agent accent
+//   • 32px icon chip with glow
+//   • Agent name + status text
+//   • Status: Thinking (pulsing dot), Complete (green check), Error (red X)
 // ---------------------------------------------------------------------
 
 export type AgentStatus = "idle" | "thinking" | "complete" | "error";
@@ -38,47 +28,52 @@ export type AgentStatus = "idle" | "thinking" | "complete" | "error";
 export type AgentAccent = "blue" | "green" | "amber" | "red" | "teal";
 
 export type AgentCardProps = {
-  /** Display name, e.g. "FloodPredictor". */
   name: string;
-  /** Lucide icon marking the agent's specialty. */
   icon: LucideIcon;
-  /** Accent key → tone table (drives icon chip, glow and ring color). */
   colorAccent: AgentAccent;
-  /** Lifecycle state of the agent's current task. */
   status: AgentStatus;
-  /** One-line summary of what the agent last produced. */
   latestOutput: string;
-  /** Extra classes merged onto the card root (sizing in grids/pipelines). */
   className?: string;
 };
 
-/** Static, purge-safe tone table. `rgb` feeds the --agent-accent-rgb CSS
-    var used by the .agent-thinking-glow keyframes (globals.css). */
-const TONES: Record<AgentAccent, { rgb: string; chip: string; glow: string }> = {
+const TONES: Record<
+  AgentAccent,
+  { rgb: string; chip: string; glow: string; border: string; pulse: string }
+> = {
   blue: {
     rgb: "59 130 246",
-    chip: "bg-accent-primary/15 text-accent-primary",
+    chip: "bg-blue-500/15 text-blue-400",
     glow: "shadow-[0_0_16px_rgba(59,130,246,0.35)]",
+    border: "border-l-blue-400",
+    pulse: "bg-blue-400",
   },
   green: {
     rgb: "52 211 153",
-    chip: "bg-severity-green-400/15 text-severity-green-400",
+    chip: "bg-emerald-500/15 text-emerald-400",
     glow: "shadow-[0_0_16px_rgba(52,211,153,0.35)]",
+    border: "border-l-emerald-400",
+    pulse: "bg-emerald-400",
   },
   amber: {
     rgb: "245 158 11",
-    chip: "bg-accent-warning/15 text-accent-warning",
+    chip: "bg-amber-500/15 text-amber-400",
     glow: "shadow-[0_0_16px_rgba(245,158,11,0.35)]",
+    border: "border-l-amber-400",
+    pulse: "bg-amber-400",
   },
   red: {
     rgb: "239 68 68",
-    chip: "bg-accent-danger/15 text-accent-danger",
+    chip: "bg-red-500/15 text-red-400",
     glow: "shadow-[0_0_16px_rgba(239,68,68,0.35)]",
+    border: "border-l-red-400",
+    pulse: "bg-red-400",
   },
   teal: {
     rgb: "45 212 191",
-    chip: "bg-teal-400/15 text-teal-300",
+    chip: "bg-teal-500/15 text-teal-400",
     glow: "shadow-[0_0_16px_rgba(45,212,191,0.35)]",
+    border: "border-l-teal-400",
+    pulse: "bg-teal-400",
   },
 };
 
@@ -92,19 +87,19 @@ const STATUS_META: Record<
     icon: Clock,
   },
   thinking: {
-    label: "Thinking",
-    classes: "border-accent-warning/40 bg-accent-warning/10 text-accent-warning",
+    label: "Thinking…",
+    classes: "border-amber-400/40 bg-amber-400/10 text-amber-400",
     icon: Loader2,
     spin: true,
   },
   complete: {
     label: "Complete",
-    classes: "border-accent-success/40 bg-accent-success/10 text-accent-success",
+    classes: "border-emerald-400/40 bg-emerald-400/10 text-emerald-400",
     icon: CheckCircle2,
   },
   error: {
     label: "Error",
-    classes: "border-accent-danger/40 bg-accent-danger/10 text-accent-danger",
+    classes: "border-red-400/40 bg-red-400/10 text-red-400",
     icon: XCircle,
   },
 };
@@ -122,35 +117,42 @@ export function AgentCard({
   const StatusIcon = meta.icon;
   const thinking = status === "thinking";
   const idle = status === "idle";
+  const complete = status === "complete";
 
   return (
     <div
-      className={`relative flex items-start gap-3 rounded-xl border bg-secondary p-3 transition-colors ${
+      className={`relative flex items-start gap-3 rounded-xl border border-l-4 bg-[#111827] p-3 transition-all duration-300 ${tone.border} ${
         thinking
-          ? "border-transparent agent-thinking-glow"
+          ? "agent-thinking-glow border-transparent"
           : idle
-            ? "border-white/10 opacity-80"
+            ? "border-white/10 opacity-60"
             : "border-white/10 hover:border-white/20"
       } ${className}`}
       style={thinking ? ({ "--agent-accent-rgb": tone.rgb } as CSSProperties) : undefined}
     >
-      {/* Specialty icon chip — tinted in the agent's accent + glow */}
+      {/* 32px icon chip */}
       <span
-        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${tone.chip} ${tone.glow}`}
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${tone.chip} ${tone.glow}`}
       >
-        <Icon className="h-5 w-5" aria-hidden />
+        <Icon className="h-4 w-4" aria-hidden />
       </span>
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
           <h3 className="truncate text-sm font-bold text-white">{name}</h3>
+          {/* Status indicator */}
           <span
-            className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider ${meta.classes}`}
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider ${meta.classes}`}
           >
-            <StatusIcon
-              className={`h-3 w-3 ${meta.spin ? "animate-spin" : ""}`}
-              aria-hidden
-            />
+            {thinking && (
+              <span className="relative flex h-2 w-2">
+                <span className={`absolute inline-flex h-full w-full animate-ping rounded-full ${tone.pulse} opacity-60`} />
+                <span className={`relative inline-flex h-2 w-2 rounded-full ${tone.pulse}`} />
+              </span>
+            )}
+            {complete && <CheckCircle2 className="h-3 w-3" aria-hidden />}
+            {status === "error" && <XCircle className="h-3 w-3" aria-hidden />}
+            {idle && <Clock className="h-3 w-3" aria-hidden />}
             {meta.label}
           </span>
         </div>
@@ -172,7 +174,7 @@ export type AgentConfig = {
   latestOutput: string;
 };
 
-/** The five-agent swarm configuration (Phase 9 · Step 2). */
+/** The five-agent swarm configuration. */
 export const EMERGENCY_AGENTS: AgentConfig[] = [
   {
     id: "flood-predictor",

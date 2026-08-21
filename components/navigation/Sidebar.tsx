@@ -56,6 +56,13 @@ type SidebarProps = {
   isOpenMobile?: boolean;
   /** Close the mobile drawer (backdrop click / Escape). */
   onCloseMobile?: () => void;
+  /** Props passed to SidebarHeader (display name, role, avatar, etc.). */
+  headerProps?: {
+    displayName?: string;
+    roleLabel?: string;
+    districtStatus?: "critical" | "safe";
+    avatarUrl?: string | null;
+  };
   className?: string;
 };
 
@@ -109,6 +116,7 @@ export function Sidebar({
   variant = "fixed",
   isOpenMobile = false,
   onCloseMobile,
+  headerProps,
   className = "",
 }: SidebarProps) {
   const isControlled = collapsed !== undefined;
@@ -188,7 +196,13 @@ export function Sidebar({
             : "relative h-full"
         } ${effectiveCollapsed ? COLLAPSED_WIDTH : EXPANDED_WIDTH} ${className}`}
       >
-        <SidebarHeader expanded={!effectiveCollapsed} />
+        <SidebarHeader
+          expanded={!effectiveCollapsed}
+          displayName={headerProps?.displayName}
+          roleLabel={headerProps?.roleLabel}
+          districtStatus={headerProps?.districtStatus}
+          avatarUrl={headerProps?.avatarUrl}
+        />
 
         {/* Scrollable middle region — nav links mount here (Phase 2 · Step 2). */}
         <nav className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 py-3">

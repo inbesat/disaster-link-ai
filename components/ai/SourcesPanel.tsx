@@ -26,7 +26,7 @@ export function SourcesPanel({ sources }: SourcesPanelProps) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2 rounded-md border border-border bg-[var(--bg-tertiary)] px-2.5 py-1.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted transition hover:border-accent-success/40 hover:text-slate-200"
+        className="flex w-full items-center gap-2 rounded-md border border-border bg-[var(--bg-tertiary)] px-2.5 py-1.5 text-left text-eoc-tiny font-semibold uppercase tracking-wider text-muted transition hover:border-accent-success/40 hover:text-slate-200"
       >
         <Terminal className="h-3 w-3 shrink-0 text-accent-success" aria-hidden />
         <span className="flex-1 truncate">Sources grounding this plan</span>
@@ -54,7 +54,7 @@ export function SourcesPanel({ sources }: SourcesPanelProps) {
               </li>
             ))}
           </ul>
-          <p className="mt-2 border-t border-border pt-1.5 text-[10px] text-muted">
+          <p className="mt-2 border-t border-border pt-1.5 text-eoc-tiny text-muted">
             audited · 99.2% citation confidence
           </p>
         </div>

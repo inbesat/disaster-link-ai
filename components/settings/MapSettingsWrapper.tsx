@@ -80,7 +80,7 @@ export default function MapSettingsWrapper() {
         <button
           type="button"
           onClick={reset}
-          className="inline-flex items-center gap-1.5 rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-cyan-300"
+          className="inline-flex items-center gap-1.5 rounded-md border border-panel-borderHover bg-[#0a0f1a] px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-cyan-300"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden />
           Reset all map settings

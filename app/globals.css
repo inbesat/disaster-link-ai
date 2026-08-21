@@ -37,11 +37,30 @@
     --border-subtle: #1e293b;
     --border-active: #3b82f6;
 
-    /* Severity background tints (for alert banners / badges) */
-    --severity-critical: #7f1d1d;
-    --severity-warning: #78350f;
-    --severity-watch: #854d0e;
-    --severity-safe: #064e3b;
+    /* Severity background tints — SeverityConfig primary colors.
+       These are the canonical 4-level severity colors used across the app:
+       SAFE = emerald-500, WATCH = amber-500, WARNING = orange-500, CRITICAL = red-500 */
+    --severity-critical: #ef4444;
+    --severity-warning: #f97316;
+    --severity-watch: #f59e0b;
+    --severity-safe: #10b981;
+
+    /* =========================================================================
+       LAYOUT CONSTANTS — 8px Grid System
+       -----------------------------------------------------------------------
+       Fixed dimensions used across the app shell. These MUST be consistent
+       everywhere. Use var(--layout-*) in CSS or import from styles/tokens.ts.
+       ========================================================================= */
+    --layout-topbar: 56px;        /* DashboardTopBar — h-14 */
+    --layout-sidebar: 260px;      /* Sidebar expanded — w-[260px] */
+    --layout-sidebar-collapsed: 64px; /* Sidebar collapsed — w-16 */
+    --layout-bottomnav: 72px;     /* Bottom navigation — h-[72px] */
+
+    /* Dashboard grid gap scale (8px base) */
+    --gap-mobile: 16px;           /* 1 col, gap-4 */
+    --gap-tablet: 20px;           /* 2 col, gap-5 */
+    --gap-desktop: 24px;          /* 3-4 col, gap-6 */
+    --gap-wide: 24px;             /* 4 col, gap-6 */
 
     /* Radii — buttons 6 / cards 10 / modals 14 / floating 18 */
     --radius-sm: 6px;
@@ -186,10 +205,10 @@
     --border-subtle-rgb: 30 41 59;
     --border-active-rgb: 59 130 246;
 
-    --severity-critical-rgb: 127 29 29;
-    --severity-warning-rgb: 120 53 15;
-    --severity-watch-rgb: 133 77 14;
-    --severity-safe-rgb: 6 78 59;
+    --severity-critical-rgb: 239 68 68;
+    --severity-warning-rgb: 249 115 22;
+    --severity-watch-rgb: 245 158 11;
+    --severity-safe-rgb: 16 185 129;
 
     --severity-green-300-rgb: 110 231 183;
     --severity-green-400-rgb: 52 211 153;
@@ -667,8 +686,82 @@
   .toast:focus-within .toast-progress {
     animation-play-state: paused;
   }
+
+  /* SOS FAB critical glow — red box-shadow pulsing 2s infinite */
+  @keyframes sos-glow {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6), 0 0 20px rgba(239, 68, 68, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(239, 68, 68, 0), 0 0 40px rgba(239, 68, 68, 0.15);
+    }
+  }
+  .animate-sos-glow {
+    animation: sos-glow 2s ease-in-out infinite;
+  }
+
+  /* Severity badge pulse — gentle scale + opacity for active alerts */
+  @keyframes severity-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.05);
+    }
+  }
+  .animate-severity-pulse {
+    animation: severity-pulse 2s ease-in-out infinite;
+  }
+
+  /* AI thinking shimmer — gradient sweep across text */
+  @keyframes ai-thinking-shimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+  .animate-ai-thinking {
+    background: linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.3) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: ai-thinking-shimmer 2s linear infinite;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Icon bounce — on action completion */
+  @keyframes icon-bounce {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.25); }
+    50% { transform: scale(0.95); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  .animate-icon-bounce {
+    animation: icon-bounce 0.5s ease-in-out;
+  }
+
+  /* Icon rotate — on action completion */
+  @keyframes icon-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-icon-spin {
+    animation: icon-spin 0.6s ease-in-out;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .toast-progress {
+      animation: none;
+    }
+    .animate-sos-glow,
+    .animate-severity-pulse,
+    .animate-ai-thinking,
+    .animate-icon-bounce,
+    .animate-icon-spin {
       animation: none;
     }
   }
@@ -734,6 +827,29 @@
 }
 .glow-purple-soft {
   box-shadow: var(--glow-purple);
+}
+
+/* ---------------------------------------------------------------------
+   TYPOGRAPHY SCALE UTILITIES (Phase 1 · Prompt 1.2)
+   Named utilities that replace the 240+ arbitrary text-[Xpx] and
+   text-[Xrem] values scattered across the codebase. These use rem
+   values so they scale with the user's OS font-size preference.
+   --------------------------------------------------------------------- */
+.text-eoc-label {
+  font-family: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.6875rem; /* 11px */
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+.text-eoc-tiny {
+  font-family: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.625rem; /* 10px */
+  line-height: 1.5;
+}
+.text-display {
+  font-family: var(--font-display), "Poppins", var(--font-sans), sans-serif;
 }
 
 /* =====================================================================
@@ -1030,6 +1146,55 @@ html.high-contrast [class*="border-white/"] {
   }
 }
 
+/* Phase 2 · Prompt 2.1 — Mesh gradient drift animations (20s infinite) */
+@keyframes mesh-drift-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(60px, 30px) scale(1.05);
+  }
+  50% {
+    transform: translate(20px, -40px) scale(0.95);
+  }
+  75% {
+    transform: translate(-40px, 20px) scale(1.02);
+  }
+}
+@keyframes mesh-drift-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-50px, -30px) scale(0.98);
+  }
+  50% {
+    transform: translate(40px, 50px) scale(1.06);
+  }
+  75% {
+    transform: translate(30px, -20px) scale(0.97);
+  }
+}
+@keyframes mesh-drift-3 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -50px) scale(1.03);
+  }
+  50% {
+    transform: translate(-60px, 20px) scale(0.96);
+  }
+  75% {
+    transform: translate(-20px, 40px) scale(1.04);
+  }
+}
+
+@keyframes scroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
 .animate-floaty {
   animation: floaty 5s ease-in-out infinite;
 }
@@ -1054,6 +1219,92 @@ html.high-contrast [class*="border-white/"] {
 }
 .animate-shimmer {
   animation: shimmer 2.5s ease-in-out infinite;
+}
+.animate-mesh-drift-1 {
+  animation: mesh-drift-1 20s ease-in-out infinite;
+}
+.animate-mesh-drift-2 {
+  animation: mesh-drift-2 20s ease-in-out infinite;
+}
+.animate-mesh-drift-3 {
+  animation: mesh-drift-3 20s ease-in-out infinite;
+}
+
+/* Phase 3 · Login page — Floating particles */
+@keyframes particle-float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(20px);
+    opacity: 0;
+  }
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(59, 130, 246, 0.4);
+  border-radius: 50%;
+  animation: particle-float 15s ease-in-out infinite;
+}
+
+.particle-1 {
+  left: 10%;
+  bottom: -10px;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.particle-2 {
+  left: 25%;
+  bottom: -10px;
+  animation-delay: 3s;
+  animation-duration: 22s;
+  background: rgba(139, 92, 246, 0.3);
+}
+
+.particle-3 {
+  left: 50%;
+  bottom: -10px;
+  animation-delay: 6s;
+  animation-duration: 20s;
+  background: rgba(59, 130, 246, 0.3);
+}
+
+.particle-4 {
+  left: 70%;
+  bottom: -10px;
+  animation-delay: 9s;
+  animation-duration: 24s;
+  background: rgba(249, 115, 22, 0.2);
+}
+
+.particle-5 {
+  left: 85%;
+  bottom: -10px;
+  animation-delay: 12s;
+  animation-duration: 19s;
+  background: rgba(59, 130, 246, 0.25);
+}
+
+/* Phase 3 · OTP error shake */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
 }
 
 /* Landing page typography — Poppins for display headings */

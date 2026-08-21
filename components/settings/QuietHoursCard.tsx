@@ -151,7 +151,7 @@ export default function QuietHoursCard({
                   type="time"
                   value={quietStart}
                   onChange={(e) => onQuietStartChange(e.target.value)}
-                  className="mt-1.5 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-400 [color-scheme:dark]"
+                  className="mt-1.5 w-full rounded-md border border-panel-borderHover bg-[#0a0f1a] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-400 [color-scheme:dark]"
                 />
               </div>
               <div>
@@ -166,7 +166,7 @@ export default function QuietHoursCard({
                   type="time"
                   value={quietEnd}
                   onChange={(e) => onQuietEndChange(e.target.value)}
-                  className="mt-1.5 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-400 [color-scheme:dark]"
+                  className="mt-1.5 w-full rounded-md border border-panel-borderHover bg-[#0a0f1a] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-indigo-400 [color-scheme:dark]"
                 />
               </div>
             </div>

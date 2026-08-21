@@ -102,7 +102,7 @@ export default function TimeSlider({ value, onChange }: TimeSliderProps) {
         />
       </div>
 
-      <div className="mt-1.5 flex justify-between px-0 text-[10px] font-medium uppercase tracking-wider text-slate-400">
+      <div className="mt-1.5 flex justify-between px-0 text-eoc-tiny font-medium uppercase tracking-wider text-slate-400">
         {TICKS.map((tick) => (
           <span key={tick.h}>{tick.label}</span>
         ))}

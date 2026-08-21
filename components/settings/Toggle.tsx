@@ -23,14 +23,14 @@ export function Toggle({ checked, onChange, label, disabled }: ToggleProps) {
       aria-label={label}
       disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition ${
-        checked ? "bg-accent" : "bg-tertiary"
+      className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition active:scale-[0.97] ${
+        checked ? "bg-purple-500" : "bg-white/10"
       } ${disabled ? "cursor-not-allowed opacity-40" : ""}`}
     >
       <span
         aria-hidden
-        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition ${
-          checked ? "translate-x-[18px]" : "translate-x-[3px]"
+        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+          checked ? "translate-x-[22px]" : "translate-x-[4px]"
         }`}
       />
     </button>

@@ -125,7 +125,7 @@ export default function PermissionMatrixCard() {
             <tr className="border-b border-panel-border bg-surface-muted/40">
               <th
                 scope="col"
-                className="px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-slate-500"
+                className="px-4 py-2.5 text-eoc-tiny font-bold uppercase tracking-widest text-slate-500"
               >
                 Action
               </th>
@@ -133,7 +133,7 @@ export default function PermissionMatrixCard() {
                 <th
                   key={role.key}
                   scope="col"
-                  className={`px-3 py-2.5 text-center text-[10px] font-bold uppercase tracking-widest ${
+                  className={`px-3 py-2.5 text-center text-eoc-tiny font-bold uppercase tracking-widest ${
                     role.key === "superAdmin"
                       ? "text-blue-300"
                       : "text-slate-400"
@@ -154,7 +154,7 @@ export default function PermissionMatrixCard() {
               <tr
                 key={row.key}
                 className={`border-b border-[#152033] transition last:border-b-0 ${
-                  index % 2 === 0 ? "bg-[#0a0f1d]" : "bg-surface-muted/20"
+                  index % 2 === 0 ? "bg-[#0a0f1a]" : "bg-surface-muted/20"
                 }`}
               >
                 <td className="px-4 py-3">
@@ -189,7 +189,7 @@ export default function PermissionMatrixCard() {
           </tbody>
           <tfoot>
             <tr className="border-t border-panel-border bg-surface-muted/30">
-              <td className="px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <td className="px-4 py-2.5 text-eoc-tiny font-bold uppercase tracking-widest text-slate-500">
                 Granted count
               </td>
               {ROLES.map((role) => (

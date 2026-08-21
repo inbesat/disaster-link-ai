@@ -40,7 +40,7 @@ export function MeasurementToolbar({
   onClear,
 }: MeasurementToolbarProps) {
   return (
-    <div className="absolute left-3 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-2">
+    <div className="absolute left-3 top-20 z-50 flex flex-col gap-2">
       {TOOLS.map((tool) => {
         const active = mode === tool.id;
         return (
@@ -51,19 +51,19 @@ export function MeasurementToolbar({
               aria-label={tool.label}
               title={tool.label}
               onClick={() => onChange(active ? null : tool.id)}
-              className={`flex h-11 w-11 items-center justify-center rounded-xl border backdrop-blur transition hover:scale-105 active:scale-95 ${
+              className={`flex h-11 w-11 items-center justify-center rounded-xl border backdrop-blur-md transition hover:scale-105 active:scale-95 ${
                 active
-                  ? "border-[var(--dl-blue-light)] bg-[var(--dl-blue)]/30 text-[var(--dl-blue-light)] shadow-[0_0_16px_rgba(91,141,246,0.4)]"
-                  : "border-white/15 bg-panel-deep/85 text-white/70 hover:bg-panel-deep hover:text-white"
+                  ? "border-blue-400/50 bg-blue-500/20 text-blue-300 shadow-[0_0_12px_rgba(59,130,246,0.25)]"
+                  : "border-white/10 bg-[#111827]/90 text-slate-400 hover:bg-[#111827] hover:text-white"
               }`}
             >
               <tool.icon aria-hidden="true" className="h-5 w-5" />
             </button>
 
-            {/* Tooltip — right side of the left-edge toolbar */}
-            <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-lg border border-white/10 bg-panel-deep/95 px-3 py-1.5 opacity-0 shadow-lg backdrop-blur transition-opacity duration-150 group-hover:opacity-100">
+            {/* Tooltip */}
+            <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-lg border border-white/10 bg-[#111827]/95 px-3 py-1.5 opacity-0 shadow-xl backdrop-blur-md transition-opacity duration-150 group-hover:opacity-100">
               <span className="block text-xs font-semibold text-white">{tool.label}</span>
-              <span className="block text-[0.625rem] text-[var(--dl-text-muted)]">{tool.hint}</span>
+              <span className="block text-[0.625rem] text-slate-500">{tool.hint}</span>
             </span>
           </span>
         );
@@ -75,7 +75,7 @@ export function MeasurementToolbar({
           onClick={onClear}
           aria-label="Clear measurement"
           title="Clear measurement"
-          className="flex h-11 w-11 items-center justify-center rounded-xl border border-severity-red-400/40 bg-severity-red-400/15 text-severity-red-300 backdrop-blur transition hover:bg-severity-red-400/25 active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-xl border border-red-400/40 bg-red-400/15 text-red-300 backdrop-blur-md transition hover:bg-red-400/25 active:scale-95"
         >
           <X aria-hidden="true" className="h-5 w-5" />
         </button>

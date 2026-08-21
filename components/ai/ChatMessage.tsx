@@ -59,7 +59,7 @@ export function ChatMessage({ role, content, timestamp, sources }: ChatMessagePr
         }`}
       >
         {isAI && (
-          <p className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-accent-purple">
+          <p className="mb-1.5 flex items-center gap-1.5 text-eoc-tiny font-bold uppercase tracking-wider text-accent-purple">
             <Bot className="h-3 w-3" aria-hidden />
             AI Advisor
           </p>
@@ -79,7 +79,7 @@ export function ChatMessage({ role, content, timestamp, sources }: ChatMessagePr
         {isAI &&
           (thanks ? (
             <span
-              className={`text-[10px] font-semibold italic text-accent-success transition-opacity duration-500 ${
+              className={`text-eoc-tiny font-semibold italic text-accent-success transition-opacity duration-500 ${
                 fading ? "opacity-0" : "opacity-100"
               }`}
             >
@@ -125,7 +125,7 @@ export function ChatMessage({ role, content, timestamp, sources }: ChatMessagePr
               </button>
             </span>
           ))}
-        <span className="text-[10px] tabular-nums text-muted">{timestamp}</span>
+        <span className="text-eoc-tiny tabular-nums text-muted">{timestamp}</span>
       </div>
     </div>
   );

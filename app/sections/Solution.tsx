@@ -72,7 +72,7 @@ export default function Solution() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop"
-                  alt="Emergency Command Center"
+                  alt="Data analytics dashboard showing real-time disaster metrics, flood risk indicators, and emergency response coordination charts"
                   loading="lazy"
                   decoding="async"
                   className="object-cover w-full h-full rounded-2xl opacity-90"

@@ -199,7 +199,7 @@ export default function DownloadPage() {
               className="flex flex-col rounded-2xl border border-slate-800 bg-slate-900/40 p-6 transition-colors duration-200 hover:border-slate-600"
             >
               <span
-                className={`self-start rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${platform.badgeClass}`}
+                className={`self-start rounded-full border px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wider ${platform.badgeClass}`}
               >
                 {platform.badge}
               </span>

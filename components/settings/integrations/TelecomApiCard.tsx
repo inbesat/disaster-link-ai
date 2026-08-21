@@ -143,7 +143,7 @@ export default function TelecomApiCard() {
               Telecom &amp; Broadcast Gateways
             </h2>
           </div>
-          <span className="ml-auto rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-emerald-200">
+          <span className="ml-auto rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-1 font-mono text-eoc-tiny font-bold tabular-nums text-emerald-200">
             2 gateways
           </span>
         </div>
@@ -170,7 +170,7 @@ export default function TelecomApiCard() {
                     <p className="text-sm font-bold text-slate-100">{gateway.name}</p>
                     <p className="mt-0.5 text-[11px] text-slate-500">{gateway.hint}</p>
                   </div>
-                  <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+                  <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wider text-emerald-300">
                     <ShieldCheck className="h-3 w-3" aria-hidden />
                     Encrypted
                   </span>
@@ -189,7 +189,7 @@ export default function TelecomApiCard() {
                         >
                           {field.label}
                         </label>
-                        <p className="mb-1.5 text-[10px] text-slate-500">
+                        <p className="mb-1.5 text-eoc-tiny text-slate-500">
                           {field.hint}
                         </p>
                         <div className="relative">
@@ -206,7 +206,7 @@ export default function TelecomApiCard() {
                             aria-label={`${gateway.name} ${field.label}`}
                             autoComplete="off"
                             spellCheck={false}
-                            className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
+                            className="w-full rounded-md border border-panel-border bg-[#0a0f1a] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
                           />
                           <button
                             type="button"
@@ -317,7 +317,7 @@ export default function TelecomApiCard() {
                 autoFocus
                 required
                 pattern="[0-9]{10}"
-                className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2.5 pl-14 pr-3 font-mono text-sm font-semibold text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
+                className="w-full rounded-md border border-panel-border bg-[#0a0f1a] py-2.5 pl-14 pr-3 font-mono text-sm font-semibold text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
               />
             </div>
 
@@ -348,7 +348,7 @@ export default function TelecomApiCard() {
                       <span className="block text-xs font-bold text-slate-200">
                         {g.name}
                       </span>
-                      <span className="block truncate text-[10px] text-slate-500">
+                      <span className="block truncate text-eoc-tiny text-slate-500">
                         {g.hint}
                       </span>
                     </span>
@@ -358,7 +358,7 @@ export default function TelecomApiCard() {
             </fieldset>
 
             {/* Message preview */}
-            <div className="mt-4 rounded-md border border-panel-border bg-[#0a0f1d] p-3">
+            <div className="mt-4 rounded-md border border-panel-border bg-[#0a0f1a] p-3">
               <p className="eoc-label text-emerald-300/70">MESSAGE PREVIEW</p>
               <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
                 {TEST_MESSAGE}

@@ -80,7 +80,7 @@ export default function AccuracyMetrics({
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-2xl font-bold text-foreground">{pct}%</span>
-            <span className="text-[10px] uppercase tracking-wider text-slate-400">match</span>
+            <span className="text-eoc-tiny uppercase tracking-wider text-slate-400">match</span>
           </div>
         </div>
 
@@ -123,7 +123,7 @@ function Stat({
   return (
     <div className="rounded-md bg-surface-muted px-2 py-2">
       <p className={`text-lg font-bold ${tone}`}>{value}</p>
-      <p className="text-[10px] uppercase tracking-wider text-slate-500">{label}</p>
+      <p className="text-eoc-tiny uppercase tracking-wider text-slate-500">{label}</p>
     </div>
   );
 }

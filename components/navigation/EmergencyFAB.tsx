@@ -43,7 +43,7 @@ export function EmergencyFAB() {
       onClick={triggerSOS}
       aria-label="Send emergency SOS with your current location"
       title="Emergency SOS"
-      className="absolute -top-6 left-1/2 z-10 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-[var(--accent-danger)] shadow-[0_0_15px_rgba(239,68,68,0.5)] transition-transform duration-150 motion-reduce:transition-none hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a]"
+      className="absolute -top-6 left-1/2 z-10 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-[var(--accent-danger)] animate-sos-glow transition-transform duration-150 motion-reduce:transition-none hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a]"
     >
       {/* Subtle pulse — slow ping halo behind the disc so the button reads "live". */}
       <span

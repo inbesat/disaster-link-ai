@@ -1,67 +1,128 @@
 "use client";
 
 import { useState } from "react";
-import { Compass, Layers, Minus, Plus } from "lucide-react";
+import { Compass, Layers, Minus, Plus, Maximize2, Clock } from "lucide-react";
 
 // ---------------------------------------------------------------------
 // components/gov/dashboard/LiveMapWidget.tsx — Phase 7 · Step 3.
 //
-// The 2×2 tactical map canvas of the Command Center. A pure CSS/SVG
+// The 2x2 tactical map canvas of the Command Center. A pure CSS/SVG
 // placeholder for now — the header chip marks it as the MapLibre GL
 // injection target (Phase 7 · Step 7 will swap the SVG canvas for a real
 // MapLibre instance). The decorative zoom controls scale the SVG canvas
 // so commanders get the "live ops map" feel before the real tiles load.
+//
+// Phase 8: Added layer toggle panel, last updated timestamp, expand button,
+// and hover tooltips on markers.
 // ---------------------------------------------------------------------
 
 const ZOOM_LEVELS = [1, 1.25, 1.6] as const;
 
 /** HTML-overlay live markers — % coordinates over the SVG canvas. */
 const LIVE_MARKERS = [
-  { label: "SOS · Sector 4", x: "34%", y: "30%", tone: "bg-severity-red-400" },
-  { label: "Responder 12", x: "56%", y: "52%", tone: "bg-[var(--dl-blue-light)]" },
-  { label: "Shelter · KHS", x: "72%", y: "38%", tone: "bg-severity-green-400" },
-  { label: "Road closed", x: "46%", y: "72%", tone: "bg-severity-amber-400" },
+  { label: "SOS · Sector 4", status: "Critical", x: "34%", y: "30%", tone: "bg-red-400" },
+  { label: "Responder 12", status: "En route", x: "56%", y: "52%", tone: "bg-blue-400" },
+  { label: "Shelter · KHS", status: "75% full", x: "72%", y: "38%", tone: "bg-emerald-400" },
+  { label: "Road closed", status: "Blocked", x: "46%", y: "72%", tone: "bg-amber-400" },
+] as const;
+
+/** Layer toggle definitions. */
+const LAYERS = [
+  { id: "flood", label: "Flood Zones", color: "bg-red-400" },
+  { id: "shelters", label: "Shelters", color: "bg-emerald-400" },
+  { id: "responders", label: "Responders", color: "bg-blue-400" },
+  { id: "routes", label: "Routes", color: "bg-amber-400" },
 ] as const;
 
 export function LiveMapWidget() {
   const [zoomIdx, setZoomIdx] = useState(0);
+  const [hoveredMarker, setHoveredMarker] = useState<string | null>(null);
+  const [activeLayers, setActiveLayers] = useState<Set<string>>(
+    new Set(LAYERS.map((l) => l.id))
+  );
+
   const zoom = ZOOM_LEVELS[zoomIdx];
 
+  const toggleLayer = (id: string) => {
+    setActiveLayers((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
   return (
-    <section className="flex h-full min-h-[440px] flex-col rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/[0.04] backdrop-blur transition hover:border-white/20">
+    <section className="flex h-full min-h-[440px] flex-col rounded-xl border border-white/10 bg-[#111827] backdrop-blur transition hover:border-white/20">
       {/* Header */}
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-5 py-4">
         <div className="flex items-center gap-2.5">
-          <Layers aria-hidden="true" className="h-4 w-4 text-[var(--dl-blue-light)]" />
+          <Layers aria-hidden="true" className="h-4 w-4 text-blue-400" />
           <h2 className="eoc-label text-white">Live Operations Map</h2>
-          <span className="rounded-full border border-[var(--dl-blue-light)]/30 bg-[var(--dl-blue)]/15 px-2 py-0.5 text-[0.625rem] font-semibold tracking-wide text-[var(--dl-blue-light)]">
+          <span className="rounded-full border border-blue-400/30 bg-blue-500/15 px-2 py-0.5 text-[0.625rem] font-semibold tracking-wide text-blue-400">
             MAPLIBRE READY
           </span>
         </div>
 
-        {/* Decorative zoom controls */}
-        <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-black/30 p-0.5">
+        <div className="flex items-center gap-2">
+          {/* Layer toggle mini-panel */}
+          <div className="hidden lg:flex items-center gap-1 rounded-lg border border-white/10 bg-black/30 px-2 py-1">
+            {LAYERS.map((layer) => (
+              <button
+                key={layer.id}
+                type="button"
+                aria-label={`Toggle ${layer.label} layer`}
+                onClick={() => toggleLayer(layer.id)}
+                className={`flex items-center gap-1 rounded-md px-2 py-1 text-[0.625rem] font-semibold transition ${
+                  activeLayers.has(layer.id)
+                    ? "bg-white/10 text-white"
+                    : "text-slate-500 hover:text-slate-300"
+                }`}
+              >
+                <span className={`h-2 w-2 rounded-full ${layer.color} ${
+                  activeLayers.has(layer.id) ? "opacity-100" : "opacity-30"
+                }`} />
+                {layer.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Expand button */}
           <button
             type="button"
-            aria-label="Zoom out"
-            disabled={zoomIdx === 0}
-            onClick={() => setZoomIdx((i) => Math.max(0, i - 1))}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-white/70 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+            aria-label="Expand to full map"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-400 transition hover:border-white/20 hover:bg-white/10 hover:text-white"
           >
-            <Minus className="h-3.5 w-3.5" />
+            <Maximize2 className="h-4 w-4" />
           </button>
-          <span className="eoc-label w-9 text-center text-[var(--dl-text-muted)]">
-            {Math.round(zoom * 100)}%
-          </span>
-          <button
-            type="button"
-            aria-label="Zoom in"
-            disabled={zoomIdx === ZOOM_LEVELS.length - 1}
-            onClick={() => setZoomIdx((i) => Math.min(ZOOM_LEVELS.length - 1, i + 1))}
-            className="flex h-7 w-7 items-center justify-center rounded-md text-white/70 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
-          >
-            <Plus className="h-3.5 w-3.5" />
-          </button>
+
+          {/* Decorative zoom controls */}
+          <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-black/30 p-0.5">
+            <button
+              type="button"
+              aria-label="Zoom out"
+              disabled={zoomIdx === 0}
+              onClick={() => setZoomIdx((i) => Math.max(0, i - 1))}
+              className="flex h-7 w-7 items-center justify-center rounded-md text-white/70 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <Minus className="h-3.5 w-3.5" />
+            </button>
+            <span className="eoc-label w-9 text-center text-slate-400">
+              {Math.round(zoom * 100)}%
+            </span>
+            <button
+              type="button"
+              aria-label="Zoom in"
+              disabled={zoomIdx === ZOOM_LEVELS.length - 1}
+              onClick={() => setZoomIdx((i) => Math.min(ZOOM_LEVELS.length - 1, i + 1))}
+              className="flex h-7 w-7 items-center justify-center rounded-md text-white/70 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <Plus className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -88,7 +149,7 @@ export function LiveMapWidget() {
             </pattern>
           </defs>
 
-          {/* Ganga river — broad band sweeping through the district */}
+          {/* Ganga river */}
           <path
             d="M-20 340 C 120 300, 200 260, 300 240 C 420 216, 520 250, 660 190"
             fill="none"
@@ -134,38 +195,50 @@ export function LiveMapWidget() {
           </g>
         </svg>
 
-        {/* Live overlay markers (HTML — animate-ping works on these) */}
+        {/* Live overlay markers with hover tooltips */}
         {LIVE_MARKERS.map((m) => (
           <div
             key={m.label}
             className="absolute -translate-x-1/2 -translate-y-1/2"
             style={{ left: m.x, top: m.y }}
+            onMouseEnter={() => setHoveredMarker(m.label)}
+            onMouseLeave={() => setHoveredMarker(null)}
           >
             <span className="relative flex h-3 w-3">
               <span className={`absolute inline-flex h-full w-full animate-ping rounded-full ${m.tone} opacity-60`} />
-              <span className={`relative inline-flex h-3 w-3 rounded-full ${m.tone}`} />
+              <span className={`relative inline-flex h-3 w-3 rounded-full ${m.tone} cursor-pointer`} />
             </span>
-            <span className="absolute left-1/2 top-3 -translate-x-1/2 whitespace-nowrap rounded bg-black/70 px-1.5 py-0.5 text-[0.5625rem] font-semibold tracking-wide text-white/90">
-              {m.label}
-            </span>
+            {/* Tooltip */}
+            {hoveredMarker === m.label && (
+              <div className="absolute left-1/2 top-4 -translate-x-1/2 whitespace-nowrap rounded-lg border border-white/10 bg-slate-800 px-3 py-2 shadow-xl z-10">
+                <p className="text-xs font-semibold text-white">{m.label}</p>
+                <p className="text-[0.625rem] text-slate-400">{m.status}</p>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
-      {/* Legend */}
-      <footer className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-white/10 px-5 py-3">
-        <span className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--dl-text-muted)]">
-          <span className="h-2.5 w-2.5 rounded-sm bg-severity-red-400/70" /> Flood zone
-        </span>
-        <span className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--dl-text-muted)]">
-          <span className="h-2.5 w-2.5 rounded-sm bg-severity-amber-400/70" /> Road closed
-        </span>
-        <span className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--dl-text-muted)]">
-          <span className="h-2.5 w-2.5 rounded-sm bg-severity-green-400/70" /> Shelter
-        </span>
-        <span className="flex items-center gap-1.5 text-[0.6875rem] text-[var(--dl-text-muted)]">
-          <Compass aria-hidden="true" className="h-3 w-3 text-[var(--dl-blue-light)]" /> MapLibre GL target
-        </span>
+      {/* Footer */}
+      <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 px-5 py-3">
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1.5 text-xs text-slate-400">
+            <span className="h-2.5 w-2.5 rounded-sm bg-red-400/70" /> Flood zone
+          </span>
+          <span className="flex items-center gap-1.5 text-xs text-slate-400">
+            <span className="h-2.5 w-2.5 rounded-sm bg-amber-400/70" /> Road closed
+          </span>
+          <span className="flex items-center gap-1.5 text-xs text-slate-400">
+            <span className="h-2.5 w-2.5 rounded-sm bg-emerald-400/70" /> Shelter
+          </span>
+          <span className="flex items-center gap-1.5 text-xs text-slate-400">
+            <Compass aria-hidden="true" className="h-3 w-3 text-blue-400" /> MapLibre GL
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-slate-500">
+          <Clock className="h-3 w-3" />
+          Last updated 2 min ago
+        </div>
       </footer>
     </section>
   );

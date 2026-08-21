@@ -93,7 +93,7 @@ export default function BrandingCard() {
               <img
                 src={logoPreview}
                 alt="Agency logo preview"
-                className="h-12 w-12 shrink-0 rounded-md border border-panel-border object-contain bg-[#0a0f1d]"
+                className="h-12 w-12 shrink-0 rounded-md border border-panel-border object-contain bg-[#0a0f1a]"
               />
               <div>
                 <p className="text-sm font-semibold text-slate-200">
@@ -137,7 +137,7 @@ export default function BrandingCard() {
             className={`mt-2 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-dashed px-4 py-8 text-center transition ${
               dragOver
                 ? "border-violet-400 bg-violet-500/10"
-                : "border-panel-border bg-[#0a0f1d] hover:border-violet-400/40"
+                : "border-panel-border bg-[#0a0f1a] hover:border-violet-400/40"
             }`}
           >
             <ImageIcon className="h-6 w-6 text-slate-500" aria-hidden />
@@ -169,7 +169,7 @@ export default function BrandingCard() {
           onChange={(e) => setLegalText(e.target.value)}
           rows={3}
           placeholder="e.g. CONFIDENTIAL: NDRF Internal Operations Use Only"
-          className="mt-2 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-violet-400/60"
+          className="mt-2 w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2.5 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-violet-400/60"
         />
         <div className="mt-1 flex items-center justify-between">
           <p className="text-[11px] text-slate-500">

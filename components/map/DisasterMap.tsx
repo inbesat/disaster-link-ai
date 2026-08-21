@@ -56,15 +56,18 @@ import { getEvacuationRoute } from "@/lib/map/routing";
 import { getInventory, type InventoryResource } from "@/app/actions/resources";
 import { groundReportColor, type GroundReport } from "@/lib/crowdsourced/report";
 import { redactReportText } from "@/lib/security/sanitize";
+import { severityConfig } from "@/styles/tokens";
 
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
-// Matches the severity-green/amber/red/purple-500 theme tokens
+// SeverityConfig canonical colors — maps disaster risk levels to standardized colors.
+// LOW → safe (emerald-500), MEDIUM → watch (amber-500), HIGH → warning (orange-500),
+// CRITICAL → critical (red-500).
 const SEVERITY_COLORS: Record<string, string> = {
-  low: "#10b981",
-  medium: "#f59e0b",
-  high: "#ef4444",
-  critical: "#a855f7",
+  low: severityConfig.safe.color,
+  medium: severityConfig.watch.color,
+  high: severityConfig.warning.color,
+  critical: severityConfig.critical.color,
 };
 
 // Loose district matching so simulator labels like "Patna (Ganga)" resolve to
@@ -1319,7 +1322,7 @@ export default function DisasterMap({
 
         {route && (
           <Marker longitude={mockVillage.lng} latitude={mockVillage.lat} anchor="bottom">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black/30 bg-severity-red-600 text-[10px] font-black text-white shadow-lg transition-all duration-300 ease-out">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black/30 bg-severity-red-600 text-eoc-tiny font-black text-white shadow-lg transition-all duration-300 ease-out">
               V
             </div>
           </Marker>
@@ -1447,7 +1450,7 @@ export default function DisasterMap({
         <button
           type="button"
           onClick={toggleMeasure}
-          className={`rounded-md border px-3 py-2 text-xs font-semibold transition ${
+          className={`rounded-md border px-3 py-2.5 text-xs font-semibold transition active:scale-[0.97] ${
             measuring
               ? "border-accent bg-accent text-slate-950"
               : "border-border bg-surface-elevated/95 text-foreground shadow-glow-accent backdrop-blur hover:border-accent"
@@ -1462,7 +1465,7 @@ export default function DisasterMap({
               setPoints([]);
               setCursor(null);
             }}
-            className="rounded-md border border-border bg-surface-elevated/95 px-3 py-2 text-xs font-semibold text-severity-red-400 shadow-glow-red backdrop-blur transition hover:border-severity-red-500"
+            className="rounded-md border border-border bg-surface-elevated/95 px-3 py-2.5 text-xs font-semibold text-severity-red-400 shadow-glow-red backdrop-blur transition hover:border-severity-red-500 active:scale-[0.97]"
           >
             Clear Measurement
           </button>
@@ -1475,7 +1478,7 @@ export default function DisasterMap({
         <button
           type="button"
           onClick={toggleDrawingRisk}
-          className={`rounded-md border px-3 py-2 text-xs font-semibold transition ${
+          className={`rounded-md border px-3 py-2.5 text-xs font-semibold transition active:scale-[0.97] ${
             drawingRisk
               ? "border-amber-400 bg-amber-400 text-slate-950"
               : "border-border bg-surface-elevated/95 text-foreground shadow-glow-accent backdrop-blur hover:border-amber-400"
@@ -1488,7 +1491,7 @@ export default function DisasterMap({
             <button
               type="button"
               onClick={clearDrawing}
-              className="rounded-md border border-border bg-surface-elevated/95 px-3 py-2 text-xs font-semibold text-severity-red-400 shadow-glow-red backdrop-blur transition hover:border-severity-red-500"
+              className="rounded-md border border-border bg-surface-elevated/95 px-3 py-2.5 text-xs font-semibold text-severity-red-400 shadow-glow-red backdrop-blur transition hover:border-severity-red-500 active:scale-[0.97]"
             >
               Clear Drawing
             </button>
@@ -1496,7 +1499,7 @@ export default function DisasterMap({
               type="button"
               disabled={drawPoints.length < 3}
               onClick={broadcastDrawing}
-              className="rounded-md border border-amber-400 bg-amber-400/15 px-3 py-2 text-xs font-bold text-amber-300 shadow-glow transition hover:bg-amber-400 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-md border border-amber-400 bg-amber-400/15 px-3 py-2.5 text-xs font-bold text-amber-300 shadow-glow transition hover:bg-amber-400 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.97]"
             >
               Broadcast Drawing
             </button>
@@ -1628,7 +1631,7 @@ function AiRiskBanner({
         <span className="text-xs text-slate-400">Confidence: {pct}%</span>
       </div>
       {prediction.source === "fallback" && (
-        <p className="mt-1 text-[10px] uppercase text-slate-500">
+        <p className="mt-1 text-eoc-tiny uppercase text-slate-500">
           Model offline · defaulted
         </p>
       )}
@@ -1650,7 +1653,7 @@ function LiveConditionsPanel({ conditions }: { conditions: LiveConditions }) {
       <div className="flex items-center justify-between">
         <p className="eoc-label text-accent">LIVE CONDITIONS</p>
         {conditions.source === "synthetic" && (
-          <span className="rounded-full border border-severity-amber-600 bg-severity-amber-600/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-severity-amber-400">
+          <span className="rounded-full border border-severity-amber-600 bg-severity-amber-600/10 px-2 py-0.5 text-eoc-tiny font-semibold uppercase text-severity-amber-400">
             Fallback
           </span>
         )}
@@ -1891,7 +1894,7 @@ function GroundReportPopupContent({ report }: { report: GroundReport }) {
         <p className="eoc-label" style={{ color }}>
           {report.source.toUpperCase()} REPORT
         </p>
-        <span className="rounded-full bg-black/30 px-2 py-0.5 text-[10px] font-bold uppercase text-slate-300">
+        <span className="rounded-full bg-black/30 px-2 py-0.5 text-eoc-tiny font-bold uppercase text-slate-300">
           {report.verification_status}
         </span>
       </div>
@@ -2023,7 +2026,7 @@ function ShelterPopupContent({ shelter }: { shelter: MapShelter }) {
       <div className="flex items-start justify-between gap-2">
         <p className="eoc-label text-accent">SHELTER</p>
         <span
-          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${statusChip}`}
+          className={`rounded-full px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${statusChip}`}
         >
           {shelter.status}
         </span>
@@ -2053,7 +2056,7 @@ function ShelterPopupContent({ shelter }: { shelter: MapShelter }) {
             shelter.facilities?.[key] ? (
               <span
                 key={key}
-                className="inline-flex items-center gap-1 rounded border border-border bg-surface-muted px-1.5 py-0.5 text-[10px] font-medium text-slate-300"
+                className="inline-flex items-center gap-1 rounded border border-border bg-surface-muted px-1.5 py-0.5 text-eoc-tiny font-medium text-slate-300"
               >
                 <span>{meta.icon}</span>
                 {meta.label}

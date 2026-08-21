@@ -245,7 +245,7 @@ export default function AdminDashboardPage() {
             className="rounded-lg border border-panel-border bg-panel p-4"
           >
             <div className="flex items-center justify-between">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <p className="text-eoc-tiny font-bold uppercase tracking-widest text-slate-500">
                 {label}
               </p>
               <Icon className={`h-4 w-4 ${tint}`} aria-hidden />
@@ -406,7 +406,7 @@ export default function AdminDashboardPage() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="bg-panel text-[10px] uppercase tracking-widest text-slate-500">
+              <tr className="bg-panel text-eoc-tiny uppercase tracking-widest text-slate-500">
                 <th className="w-9 border-b border-b-slate-700 px-3 py-2">
                   <input
                     type="checkbox"
@@ -452,7 +452,7 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="px-4 py-2">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-sm border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${PRIORITY[row.priority].badge}`}
+                        className={`inline-flex items-center gap-1.5 rounded-sm border px-1.5 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${PRIORITY[row.priority].badge}`}
                       >
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${PRIORITY[row.priority].dot}`}
@@ -463,7 +463,7 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="px-4 py-2">
                       <span
-                        className={`inline-flex rounded-sm px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ${STATUS_BADGE[row.status]}`}
+                        className={`inline-flex rounded-sm px-1.5 py-0.5 font-mono text-eoc-tiny font-bold uppercase tracking-wider ${STATUS_BADGE[row.status]}`}
                       >
                         {row.status}
                       </span>

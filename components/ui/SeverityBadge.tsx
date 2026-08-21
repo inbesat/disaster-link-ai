@@ -6,31 +6,34 @@ import {
   TriangleAlert,
   type LucideIcon,
 } from "lucide-react";
+import { severityConfig, type SeverityLevel } from "@/styles/tokens";
 
 // ---------------------------------------------------------------------
 // components/ui/SeverityBadge.tsx
-// UI/UX Phase 1 · Step 3 — roadmap design-system severity indicator.
+// UI/UX Phase 1 · Prompt 1.3 — Standardized severity indicator.
 //
-// Each variant maps to the roadmap tokens:
-//   • background tint  → var(--severity-*)   (bg-severity-safe / watch / …)
-//   • border + text    → var(--accent-*)     (accent-success / warning / …)
+// Each variant maps to the SeverityConfig canonical colors:
+//   SAFE     = emerald-500 (#10b981)
+//   WATCH    = amber-500 (#f59e0b)
+//   WARNING  = orange-500 (#f97316)
+//   CRITICAL = red-500 (#ef4444) with pulsing animation
 //
 // Disaster platforms must be usable by colorblind responders (red/green
 // deficiency is common), so severity is conveyed through THREE redundant
 // channels:
-//   1. Color            — tinted chip + accent border/text
+//   1. Color            — tinted chip + border/text
 //   2. Icon             — ✔ / 👁 / ⚠ / 🛑-style octagon / ℹ
-//   3. Text label       — "Safe" / "Watch" / "Warning" / "Evacuate"
-// plus a pulsing animation + red glow on the most severe tiers and an
+//   3. Text label       — "Safe" / "Watch" / "Warning" / "Critical"
+// plus a pulsing animation on the most severe tiers and an
 // aria-label for screen readers.
 // ---------------------------------------------------------------------
 
-export type SeverityLevel = "safe" | "watch" | "warning" | "critical" | "info";
+export type { SeverityLevel };
 
 type SeverityMeta = {
   label: string;
   icon: LucideIcon;
-  /** Roadmap tokens: severity-* background tint + accent-* border/text. */
+  /** Tailwind classes from SeverityConfig. */
   chip: string;
   dot: string;
   /** Pulsing background draws attention to the dangerous tiers. */
@@ -41,37 +44,36 @@ type SeverityMeta = {
 
 export const SEVERITY_META: Record<SeverityLevel, SeverityMeta> = {
   safe: {
-    label: "Safe",
+    label: severityConfig.safe.label,
     icon: CheckCircle2,
-    chip: "bg-severity-safe text-accent-success border-accent-success/40",
-    dot: "bg-accent-success",
+    chip: `${severityConfig.safe.bg} ${severityConfig.safe.text} ${severityConfig.safe.border}`,
+    dot: severityConfig.safe.dot,
     pulse: false,
     a11y: "safe",
   },
   watch: {
-    label: "Watch",
+    label: severityConfig.watch.label,
     icon: Eye,
-    chip: "bg-severity-watch text-accent-warning border-accent-warning/40",
-    dot: "bg-accent-warning",
+    chip: `${severityConfig.watch.bg} ${severityConfig.watch.text} ${severityConfig.watch.border}`,
+    dot: severityConfig.watch.dot,
     pulse: false,
     a11y: "watch",
   },
   warning: {
-    label: "Warning",
+    label: severityConfig.warning.label,
     icon: TriangleAlert,
-    chip: "bg-severity-warning text-accent-danger border-accent-danger/40",
-    dot: "bg-accent-danger",
+    chip: `${severityConfig.warning.bg} ${severityConfig.warning.text} ${severityConfig.warning.border}`,
+    dot: severityConfig.warning.dot,
     pulse: true,
     a11y: "warning",
   },
   critical: {
-    label: "Evacuate",
+    label: severityConfig.critical.label,
     icon: OctagonAlert,
-    // glow-red-soft = the roadmap --glow-red; pulses attention via animate-pulse.
-    chip: "bg-severity-critical text-accent-danger border-accent-danger/60 glow-red-soft",
-    dot: "bg-accent-danger",
+    chip: `${severityConfig.critical.bg} ${severityConfig.critical.text} ${severityConfig.critical.border} glow-red-soft`,
+    dot: severityConfig.critical.dot,
     pulse: true,
-    a11y: "critical / evacuate",
+    a11y: "critical",
   },
   info: {
     label: "Info",
@@ -122,7 +124,7 @@ type SeverityBadgeProps = {
 
 /**
  * Accessible severity badge — color + icon + text so it never relies on
- * color alone. Screen readers hear e.g. "Severity: critical / evacuate".
+ * color alone. Screen readers hear e.g. "Severity: critical".
  */
 export function SeverityBadge({
   variant,
@@ -142,7 +144,7 @@ export function SeverityBadge({
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border font-bold uppercase tracking-wider ${meta.chip} ${
         doPulse ? "animate-pulse" : ""
-      } ${size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-1 text-xs"} ${className}`}
+      } ${size === "sm" ? "px-2 py-0.5 text-eoc-tiny" : "px-2.5 py-1 text-xs"} ${className}`}
       aria-label={`Severity: ${meta.a11y}`}
     >
       {showIcon && <Icon className={size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5"} aria-hidden />}

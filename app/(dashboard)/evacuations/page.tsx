@@ -218,19 +218,19 @@ export default function EvacuationsPage() {
                           <p className="text-sm font-bold tabular-nums">
                             {plan.evacuees}
                           </p>
-                          <p className="text-[10px] uppercase text-slate-400">Evacuees</p>
+                          <p className="text-eoc-tiny uppercase text-slate-400">Evacuees</p>
                         </div>
                         <div className="rounded border border-border bg-surface-muted p-1.5">
                           <p className="text-sm font-bold tabular-nums">
                             {fleet.busesNeeded}
                           </p>
-                          <p className="text-[10px] uppercase text-slate-400">Buses</p>
+                          <p className="text-eoc-tiny uppercase text-slate-400">Buses</p>
                         </div>
                         <div className="rounded border border-border bg-surface-muted p-1.5">
                           <p className="text-sm font-bold tabular-nums">
                             {fleet.boatsNeeded}
                           </p>
-                          <p className="text-[10px] uppercase text-slate-400">Boats</p>
+                          <p className="text-eoc-tiny uppercase text-slate-400">Boats</p>
                         </div>
                       </div>
 

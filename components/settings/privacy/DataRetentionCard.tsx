@@ -200,13 +200,13 @@ export default function DataRetentionCard({
                   id={`retention-${policy.key}`}
                   value={selectValue(policy, retention[policy.key])}
                   onChange={(e) => updatePolicy(policy.key, e.target.value)}
-                  className="rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm font-semibold text-slate-100 outline-none transition focus:border-emerald-400/60"
+                  className="rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 text-sm font-semibold text-slate-100 outline-none transition focus:border-emerald-400/60"
                 >
                   {policy.options.map((option) => (
                     <option
                       key={option.value}
                       value={option.value}
-                      className="bg-[#0a0f1d]"
+                      className="bg-[#0a0f1a]"
                     >
                       {option.label}
                     </option>
@@ -219,7 +219,7 @@ export default function DataRetentionCard({
                     ? "No auto-deletion configured"
                     : "Automated cleanup is active"}
                 </p>
-                <span className="rounded-full border border-panel-borderHover bg-[#1c2740] px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-300">
+                <span className="rounded-full border border-panel-borderHover bg-[#1c2740] px-2 py-0.5 font-mono text-eoc-tiny font-semibold text-slate-300">
                   {mounted ? scheduleLabel(policy, retention[policy.key]) : "—"}
                 </span>
               </div>

@@ -172,7 +172,7 @@ export default function IncomingWebhooksCard() {
             Incoming Data &amp; IoT Pipelines
           </h2>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wider text-emerald-300">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
           {payloads.length} payloads / 60 min
         </span>
@@ -185,14 +185,14 @@ export default function IncomingWebhooksCard() {
       </p>
 
       {/* Sensor ingest endpoint */}
-      <div className="mt-5 rounded-md border border-panel-border bg-[#0a0f1d] p-4">
+      <div className="mt-5 rounded-md border border-panel-border bg-[#0a0f1a] p-4">
         <p className="eoc-label flex items-center gap-1.5 text-violet-300/80">
           <Cpu className="h-3 w-3" aria-hidden />
           SENSOR INGEST ENDPOINT
         </p>
         <p className="mt-1 text-xs text-slate-500">
           Devices POST JSON to this URL with{" "}
-          <code className="rounded bg-[#1c2740] px-1 py-0.5 font-mono text-[10px] text-slate-400">
+          <code className="rounded bg-[#1c2740] px-1 py-0.5 font-mono text-eoc-tiny text-slate-400">
             Content-Type: application/json
           </code>
           .
@@ -251,17 +251,17 @@ export default function IncomingWebhooksCard() {
           <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
           <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
           <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
-          <p className="ml-2 font-mono text-[10px] font-bold uppercase tracking-widest text-slate-500">
+          <p className="ml-2 font-mono text-eoc-tiny font-bold uppercase tracking-widest text-slate-500">
             Recent Payloads · Last 60 min
           </p>
-          <span className="ml-auto flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+          <span className="ml-auto flex items-center gap-1.5 font-mono text-eoc-tiny font-bold uppercase tracking-wider text-emerald-300">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
             Live
           </span>
           <button
             type="button"
             onClick={handleSimulate}
-            className="inline-flex items-center gap-1 rounded-md border border-panel-border px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-violet-300 transition hover:border-violet-400/50 hover:bg-violet-500/10"
+            className="inline-flex items-center gap-1 rounded-md border border-panel-border px-2 py-1 text-eoc-tiny font-bold uppercase tracking-wider text-violet-300 transition hover:border-violet-400/50 hover:bg-violet-500/10"
           >
             <Activity className="h-3 w-3" aria-hidden />
             Simulate
@@ -299,7 +299,7 @@ export default function IncomingWebhooksCard() {
                     newest ? "bg-violet-500/[0.07]" : "hover:bg-surface-muted/30"
                   }`}
                 >
-                  <span className="w-20 shrink-0 pt-0.5 text-[10px] tabular-nums text-slate-600">
+                  <span className="w-20 shrink-0 pt-0.5 text-eoc-tiny tabular-nums text-slate-600">
                     {relativeTime(payload.receivedAt, now)}
                   </span>
                   {newest && (
