@@ -126,10 +126,7 @@ export class AIBridge {
 
   private offlineReply(): AIResponse {
     return {
-      text:
-        "I'm offline and the local safety model isn't ready yet. " +
-        "Please reconnect to the internet, or start the local model download from " +
-        "Settings · Offline AI so emergency planning keeps working in blackouts.",
+      text: "AI assistant is temporarily unavailable. For emergencies, use the SOS button or call 108.",
       mode: "error",
       durationMs: 0,
       error: true,
