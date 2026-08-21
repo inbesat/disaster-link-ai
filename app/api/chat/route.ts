@@ -14,6 +14,7 @@ import { createClient } from "@/lib/supabase/server";
 import { buildKnowledgeContext } from "@/lib/retrieval/retrieve";
 import { searchSimilarDocuments } from "@/lib/rag/vector-search";
 import { checkAiChatRateLimit, logAiUsage } from "@/lib/security/ai-rate-limit";
+import { guardPromptInput, logAiAudit } from "@/lib/ai/llm-guard";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import {
   assertDistrictAccess,
@@ -203,13 +204,35 @@ export async function POST(req: Request): Promise<Response> {
 
   const queryText = lastUserMessage?.content?.toString().trim() ?? "";
 
+  // Phase 9 · Prompt injection prevention & input sanitization
+  const promptGuard = guardPromptInput(queryText, userKey);
+  if (!promptGuard.safe) {
+    logAiAudit(userKey, queryText, "", true, promptGuard.flaggedReason);
+    return NextResponse.json(
+      { error: promptGuard.flaggedReason || "Request flagged for safety reasons." },
+      { status: 400 },
+    );
+  }
+
+  if (promptGuard.offTopic) {
+    logAiAudit(userKey, queryText, "Off-topic query blocked", true, "off_topic");
+    return NextResponse.json(
+      {
+        message:
+          "I'm designed to help with disaster response. For other topics, please consult appropriate resources.",
+      },
+      { status: 200 },
+    );
+  }
+
   // Step 8 · Vector retrieval (cosine similarity via pgvector). The district is
   // scoped to the commander's own district so they only get their SOPs. On any
   // retrieval failure this degrades to the wider keyword-aware context builder.
   let officialContext = "";
-  if (queryText) {
+  const sanitizedQuery = promptGuard.sanitizedInput;
+  if (sanitizedQuery) {
     try {
-      const hits = await searchSimilarDocuments(queryText, district, 3);
+      const hits = await searchSimilarDocuments(sanitizedQuery, district, 3);
       if (hits.length) {
         officialContext = hits
           .map(
@@ -244,19 +267,14 @@ export async function POST(req: Request): Promise<Response> {
     role,
   );
 
-  const system = BASE_PROMPT.replace("ROLE", role)
-    .replace("DISTRICT", district)
-    .replace(
-      "{SOP_CONTEXT}",
-      knowledge ||
-        "No official SOPs matched this query — answer using your tools and general emergency-management best practice (NDMA/state Disaster Management Act guidelines).",
-    )
-    .concat(viewingContext ? `\n\n${viewingContext}` : "")
-    .concat(
-      isCommander
-        ? ""
-        : "\n\nNOTE: You do NOT have evacuation tool access. If the user asks for evacuation plans or routes, explain that this requires commander clearance and direct them to the District Control Room.",
-    );
+  // Prompt 9.1: Structured system prompt with clear delimiters and safety boundaries
+  const system = `SYSTEM: You are a disaster response AI. You ONLY answer questions about floods, evacuation, and safety.
+ROLE: ${role} | DISTRICT: ${district}
+USER_INPUT: [Sanitized user message]
+CONTEXT: ${knowledge || "No official SOPs matched this query — answer using tools and NDMA guidelines."}
+INSTRUCTION: Answer based ONLY on verified disaster management facts. If the query is off-topic, reply: "I can only help with disaster-related questions."
+${viewingContext ? `\nVIEWING_CONTEXT: ${viewingContext}` : ""}
+${isCommander ? "" : "\nNOTE: You do NOT have evacuation tool access. Explain commander clearance is required."}`;
 
   const commanderTools = {
     ...emergencyPlanTools,
