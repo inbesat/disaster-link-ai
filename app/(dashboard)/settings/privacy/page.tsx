@@ -15,14 +15,55 @@ import {
   Download,
   FileJson,
   FileSpreadsheet,
+  KeyRound,
+  Laptop,
+  LogOut,
   QrCode,
   ShieldAlert,
   ShieldEllipsis,
+  Smartphone,
   Trash2,
 } from "lucide-react";
 import SettingsSection from "@/components/settings/SettingsSection";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { showToast } from "@/components/ui/Toast";
+import PasswordStrengthMeter from "@/components/auth/PasswordStrengthMeter";
+
+type ActiveSession = {
+  id: string;
+  ip: string;
+  device: string;
+  location: string;
+  lastActive: string;
+  isCurrent: boolean;
+};
+
+const MOCK_ACTIVE_SESSIONS: ActiveSession[] = [
+  {
+    id: "sess_1",
+    ip: "203.0.113.9",
+    device: "Chrome on macOS (Current)",
+    location: "Patna, Bihar",
+    lastActive: "Just now",
+    isCurrent: true,
+  },
+  {
+    id: "sess_2",
+    ip: "198.51.100.42",
+    device: "Capacitor Mobile (Android)",
+    location: "Muzaffarpur, Bihar",
+    lastActive: "12 min ago",
+    isCurrent: false,
+  },
+  {
+    id: "sess_3",
+    ip: "10.0.4.2",
+    device: "Firefox on Linux",
+    location: "Sitamarhi, Bihar",
+    lastActive: "2 hours ago",
+    isCurrent: false,
+  },
+];
 
 // --- Deterministic mock QR (21×21 with finder patterns) -----------------
 const SEED = 20260809;
@@ -97,13 +138,78 @@ export default function PrivacySecurityPage() {
   const [page, setPage] = useState(0);
   const [format, setFormat] = useState<"json" | "csv">("json");
   const [confirmText, setConfirmText] = useState("");
+  const [sessions, setSessions] = useState<ActiveSession[]>(MOCK_ACTIVE_SESSIONS);
+  const [newPassword, setNewPassword] = useState("");
+  const [isDemoUser] = useState(true); // Demo user safeguard flag
   const qr = qrModules();
+
+  const handleRevokeSession = (id: string) => {
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+    showToast("success", {
+      title: "Session revoked",
+      description: "The session has been terminated.",
+    });
+  };
+
+  const handleRevokeAll = () => {
+    setSessions((prev) => prev.filter((s) => s.isCurrent));
+    showToast("success", {
+      title: "All other sessions logged out",
+      description: "Only your current device remains logged in.",
+    });
+  };
 
   const totalPages = Math.ceil(EVENTS.length / PAGE_SIZE);
   const rows = EVENTS.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
 
   return (
     <div className="flex flex-col gap-6">
+      {/* DEMO ACCOUNT WATERMARK / BANNER */}
+      {isDemoUser && (
+        <div className="rounded-lg border border-accent/40 bg-accent/10 px-4 py-3 font-mono text-xs text-accent">
+          ⚡ DEMO ACCOUNT ACTIVE — Password changes and account deletion are restricted for read-only stability.
+        </div>
+      )}
+
+      {/* Password Change Section */}
+      <ScrollReveal>
+        <SettingsSection
+          title="Change Password"
+          description="Update your account password with strong complexity."
+          icon={KeyRound}
+        >
+          <div className="flex max-w-md flex-col gap-3">
+            <div>
+              <label className="mb-1 block text-xs text-slate-300">New Password</label>
+              <input
+                type="password"
+                disabled={isDemoUser}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+                className="w-full rounded-md border border-subtle bg-[var(--bg-tertiary)] px-3 py-2 text-sm text-slate-100 outline-none focus:border-accent disabled:opacity-50"
+              />
+              <PasswordStrengthMeter password={newPassword} />
+            </div>
+
+            <button
+              type="button"
+              disabled={isDemoUser || !newPassword}
+              onClick={() => {
+                showToast("success", {
+                  title: "Password updated",
+                  description: "Your password has been changed.",
+                });
+                setNewPassword("");
+              }}
+              className="mt-1 rounded-md bg-accent px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-accent/85 disabled:opacity-40"
+            >
+              Update Password
+            </button>
+          </div>
+        </SettingsSection>
+      </ScrollReveal>
+
       {/* 2FA */}
       <ScrollReveal>
         <SettingsSection
@@ -176,6 +282,77 @@ export default function PrivacySecurityPage() {
               <p className="font-mono text-[11px] text-muted">
                 Secret: <span className="text-slate-400">JBSW Y3DP EHPK R3DHWZ DQMZ</span>
               </p>
+            </div>
+          </div>
+        </SettingsSection>
+      </ScrollReveal>
+
+      {/* Active Sessions */}
+      <ScrollReveal delay={0.03}>
+        <SettingsSection
+          title="Active Sessions"
+          description="Manage active logins and revoke access across devices."
+          icon={Laptop}
+        >
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted">
+                Showing {sessions.length} active session{sessions.length === 1 ? "" : "s"}
+              </p>
+              {sessions.length > 1 && (
+                <button
+                  type="button"
+                  onClick={handleRevokeAll}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-severity-critical/40 bg-severity-critical/10 px-3 py-1.5 text-xs font-semibold text-accent-danger transition hover:bg-severity-critical/20"
+                >
+                  <LogOut className="h-3.5 w-3.5" aria-hidden />
+                  Log Out All Devices
+                </button>
+              )}
+            </div>
+
+            <div className="divide-y divide-subtle rounded-lg border border-border bg-secondary">
+              {sessions.map((sess) => (
+                <div
+                  key={sess.id}
+                  className="flex flex-col gap-2 p-3.5 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 rounded-md bg-[var(--bg-tertiary)] p-2 text-slate-300">
+                      {sess.device.includes("Mobile") ? (
+                        <Smartphone className="h-4 w-4" aria-hidden />
+                      ) : (
+                        <Laptop className="h-4 w-4" aria-hidden />
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-slate-200">
+                          {sess.device}
+                        </span>
+                        {sess.isCurrent && (
+                          <span className="rounded bg-accent/20 px-1.5 py-0.5 text-[10px] font-bold text-accent">
+                            Current
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-0.5 font-mono text-[11px] text-muted">
+                        {sess.ip} · {sess.location} · Last active {sess.lastActive}
+                      </p>
+                    </div>
+                  </div>
+
+                  {!sess.isCurrent && (
+                    <button
+                      type="button"
+                      onClick={() => handleRevokeSession(sess.id)}
+                      className="mt-2 self-start rounded-md border border-border px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-accent-danger hover:text-accent-danger sm:mt-0 sm:self-center"
+                    >
+                      Revoke
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </SettingsSection>

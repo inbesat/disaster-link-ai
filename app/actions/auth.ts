@@ -326,9 +326,11 @@ export async function signUpAction(formData: FormData) {
   if (fullName.length < 2) {
     redirect(`/login?error=${encodeURIComponent("Please enter your full name.")}`);
   }
-  if (password.length < 8) {
+  if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
     redirect(
-      `/login?error=${encodeURIComponent("Password must be at least 8 characters long.")}`,
+      `/signup?error=${encodeURIComponent(
+        "Password must be at least 8 characters long and contain at least one uppercase letter and one number.",
+      )}`,
     );
   }
 

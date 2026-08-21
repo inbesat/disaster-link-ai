@@ -1,4 +1,5 @@
 import { createBrowserClient } from "@supabase/ssr";
+import { SUPABASE_AUTH_CONFIG } from "./config";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -16,5 +17,11 @@ function getEnv() {
 export function createClient() {
   const { supabaseUrl, supabaseAnonKey } = getEnv();
 
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  return createBrowserClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: SUPABASE_AUTH_CONFIG.autoRefreshToken,
+      persistSession: SUPABASE_AUTH_CONFIG.persistSession,
+      detectSessionInUrl: SUPABASE_AUTH_CONFIG.detectSessionInUrl,
+    },
+  });
 }

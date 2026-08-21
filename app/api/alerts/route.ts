@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
 import { requireRole } from "@/lib/security/require-role";
+import { alertSchemas } from "@/lib/validations/api-schemas";
+import { sanitizeInput } from "@/lib/security/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -80,6 +82,35 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       alerts: mockAlerts,
       unreadCount: mockAlerts.filter((alert) => !alert.isAcknowledged).length,
     });
+  }
+}
+
+// Create new alert with Zod input validation (Prompt 5.1).
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
+  try {
+    const json = await request.json();
+    const body = alertSchemas.create.parse(json);
+
+    const alert = await prisma.alertLog.create({
+      data: {
+        severity: body.severity,
+        message: sanitizeInput(body.message),
+        district: body.district,
+        channel: "in_app",
+      },
+    });
+
+    return NextResponse.json({ ok: true, alert });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { ok: false, error: error instanceof Error ? error.message : "Invalid payload." },
+      { status: 400 },
+    );
   }
 }
 

@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { requireRole } from "@/lib/security/require-role";
+import { GOV_ROLES } from "@/lib/validations/user";
 
 export const runtime = "nodejs";
 
@@ -7,6 +9,11 @@ export const runtime = "nodejs";
 // if the fetch fails (or the device is offline), the client falls back to
 // queuing the base64 report locally in the offline report queue.
 export async function POST(req: Request): Promise<NextResponse> {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
+  }
+
   try {
     const body = (await req.json()) as {
       name?: string;
