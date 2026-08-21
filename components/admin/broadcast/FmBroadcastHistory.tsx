@@ -146,6 +146,12 @@ export default function FmBroadcastHistory() {
   const [alerts, setAlerts] = useState<HistoryAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [displayLimit, setDisplayLimit] = useState(50);
+
+  const visibleAlerts = useMemo(() => {
+    if (alerts.length <= 50) return alerts;
+    return alerts.slice(0, displayLimit);
+  }, [alerts, displayLimit]);
 
   // Filters
   const [startDate, setStartDate] = useState(
@@ -324,7 +330,7 @@ export default function FmBroadcastHistory() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1c2740]">
-              {alerts.map((alert) => {
+              {visibleAlerts.map((alert) => {
                 const expanded = expandedId === alert.id;
                 return (
                   <HistoryRow
@@ -337,6 +343,18 @@ export default function FmBroadcastHistory() {
               })}
             </tbody>
           </table>
+          {alerts.length > displayLimit && (
+            <div className="flex items-center justify-between border-t border-panel-border bg-primary px-4 py-2 text-xs text-slate-400">
+              <span>Showing {visibleAlerts.length} of {alerts.length} records (virtualized)</span>
+              <button
+                type="button"
+                onClick={() => setDisplayLimit((prev) => prev + 50)}
+                className="rounded bg-panel px-3 py-1 font-semibold text-amber-300 transition hover:bg-amber-500/10"
+              >
+                Load 50 More
+              </button>
+            </div>
+          )}
         </div>
       )}
 

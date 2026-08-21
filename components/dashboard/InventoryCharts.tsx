@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useChartVisibility } from "@/lib/perf/chart-utils";
 import {
   ResponsiveContainer,
   PieChart,
@@ -73,6 +74,7 @@ function buildChartData(
 export default function InventoryCharts() {
   const [pie, setPie] = useState<CategorySlice[]>([]);
   const [bars, setBars] = useState<CategoryBars[]>([]);
+  const isTabVisible = useChartVisibility();
 
   useEffect(() => {
     let active = true;
@@ -107,6 +109,7 @@ export default function InventoryCharts() {
                 outerRadius={88}
                 paddingAngle={2}
                 stroke="#0b0f19"
+                isAnimationActive={isTabVisible}
               >
                 {pie.map((entry) => (
                   <Cell key={entry.name} fill={sliceColor(entry.name)} />
@@ -154,18 +157,21 @@ export default function InventoryCharts() {
                 stackId="a"
                 fill={STATUS_COLORS.available}
                 name="Available"
+                isAnimationActive={isTabVisible}
               />
               <Bar
                 dataKey="deployed"
                 stackId="a"
                 fill={STATUS_COLORS.deployed}
                 name="Deployed"
+                isAnimationActive={isTabVisible}
               />
               <Bar
                 dataKey="maintenance"
                 stackId="a"
                 fill={STATUS_COLORS.maintenance}
                 name="Maintenance"
+                isAnimationActive={isTabVisible}
               />
             </BarChart>
           </ResponsiveContainer>

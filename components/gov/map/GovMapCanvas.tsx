@@ -143,7 +143,7 @@ export function GovMapCanvas({
       mapLib={maplibregl}
       mapStyle={CARTO_DARK_STYLE}
       initialViewState={GOV_MAP_INITIAL_VIEW}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%", height: "100%", minHeight: "400px" }}
       attributionControl={false}
       interactiveLayerIds={["gov-crowd-cluster"]}
       onClick={(e) => {

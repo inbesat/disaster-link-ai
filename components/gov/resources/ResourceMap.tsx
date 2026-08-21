@@ -76,7 +76,7 @@ export function ResourceMap() {
         mapLib={maplibregl}
         mapStyle={MAP_STYLE}
         initialViewState={INITIAL_VIEW}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%", minHeight: "350px" }}
         attributionControl={false}
         onClick={() => setSelectedId(null)}
       >
