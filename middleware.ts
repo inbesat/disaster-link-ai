@@ -1,5 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  rateLimitByRole,
+  clientIpFromRequest,
+  checkAuthLoginRateLimit,
+  checkPasswordResetRateLimit,
+  checkSmsRateLimit,
+  checkIpAbuseBlock,
+} from "@/lib/security/rate-limiter";
 
 // Roles (mirrors lib/validations/user.ts). Keep in sync.
 const ROLES = ["super_admin", "district_admin", "field_responder", "viewer"] as const;
@@ -198,7 +206,75 @@ export async function middleware(request: NextRequest) {
   const role = request.cookies.get("role")?.value ?? "";
   const viewAsPublic = request.cookies.get("view_as_public")?.value === "true";
   const isSandbox = request.cookies.get("sandbox")?.value === "true";
+  const isDemo = request.cookies.get("demo_mode")?.value === "true";
   const adminRequested = isAdminRoute(pathname);
+
+  // Prompt 7.3: Request payload size limits (10MB for uploads, 1MB for JSON)
+  if (["POST", "PUT", "PATCH"].includes(request.method)) {
+    const contentLength = parseInt(request.headers.get("content-length") || "0", 10);
+    const contentType = request.headers.get("content-type") || "";
+
+    if (contentType.includes("multipart/form-data") && contentLength > 10 * 1024 * 1024) {
+      return NextResponse.json(
+        { ok: false, error: "Payload Too Large: File upload exceeds 10MB limit." },
+        { status: 413 },
+      );
+    }
+    if (contentType.includes("application/json") && contentLength > 1 * 1024 * 1024) {
+      return NextResponse.json(
+        { ok: false, error: "Payload Too Large: JSON payload exceeds 1MB limit." },
+        { status: 413 },
+      );
+    }
+  }
+
+  // Prompt 7.1: API Rate Limiting for /api/* routes (except /api/health)
+  if (pathname.startsWith("/api/") && pathname !== "/api/health") {
+    const ip = clientIpFromRequest(request);
+
+    // IP Abuse block check (>100 requests / min for unauthenticated requests)
+    if (!role && !isGuest) {
+      const ipLimit = checkIpAbuseBlock(ip);
+      if (!ipLimit.success) {
+        const retryAfter = Math.max(1, Math.ceil((ipLimit.resetTime - Date.now()) / 1000));
+        return NextResponse.json(
+          { ok: false, error: "Too many requests from this IP. Please try again later." },
+          { status: 429, headers: { "Retry-After": String(retryAfter) } },
+        );
+      }
+    }
+
+    // Specialized auth & SMS endpoint limits
+    if (pathname === "/api/auth/reset-password") {
+      const resetLimit = checkPasswordResetRateLimit(ip);
+      if (!resetLimit.success) {
+        const retryAfter = Math.max(1, Math.ceil((resetLimit.resetTime - Date.now()) / 1000));
+        return NextResponse.json(
+          { ok: false, error: "Too many password reset attempts. Try again in an hour." },
+          { status: 429, headers: { "Retry-After": String(retryAfter) } },
+        );
+      }
+    } else if (pathname === "/api/webhooks/sms" && request.method === "POST") {
+      const smsLimit = checkSmsRateLimit(ip);
+      if (!smsLimit.success) {
+        const retryAfter = Math.max(1, Math.ceil((smsLimit.resetTime - Date.now()) / 1000));
+        return NextResponse.json(
+          { ok: false, error: "SMS sending rate limit exceeded." },
+          { status: 429, headers: { "Retry-After": String(retryAfter) } },
+        );
+      }
+    }
+
+    // Role-based API rate limiting
+    const rateResult = rateLimitByRole(role || (isGuest ? "anonymous" : undefined), ip, isDemo);
+    if (!rateResult.success) {
+      const retryAfter = Math.max(1, Math.ceil((rateResult.resetTime - Date.now()) / 1000));
+      return NextResponse.json(
+        { ok: false, error: "Rate limit exceeded. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(retryAfter) } },
+      );
+    }
+  }
 
   const isPublicRole = role === PUBLIC_ROLE;
   const isGovRole = (GOV_ROLES as readonly string[]).includes(role);

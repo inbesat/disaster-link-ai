@@ -13,6 +13,7 @@ import { evacuationPlanTools } from "@/lib/ai/tools/evacuation-tools";
 import { createClient } from "@/lib/supabase/server";
 import { buildKnowledgeContext } from "@/lib/retrieval/retrieve";
 import { searchSimilarDocuments } from "@/lib/rag/vector-search";
+import { checkAiChatRateLimit, logAiUsage } from "@/lib/security/ai-rate-limit";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import {
   assertDistrictAccess,
@@ -140,21 +141,27 @@ async function resolveAccessContext(): Promise<AccessContext> {
 }
 
 export async function POST(req: Request): Promise<Response> {
-  // Phase 21 · Enforce the server-side rate limit before doing any work.
-  const rate = chatLimiter(clientKey(req));
-  if (!rate.success) {
-    const retryAfterMs = Math.max(0, rate.resetTime - Date.now());
+  // Phase 21 & Phase 7 · Enforce the server-side rate limit before doing any work.
+  const cookieStore = await cookies();
+  const isDemo = cookieStore.get("demo_mode")?.value === "true";
+  const userKey = clientKey(req);
+
+  const aiLimit = checkAiChatRateLimit(userKey, isDemo);
+  if (!aiLimit.allowed) {
+    const retryAfterSec = Math.max(1, Math.ceil(aiLimit.resetInMs / 1000));
     return NextResponse.json(
       {
-        error: "Rate limit exceeded. Please wait before sending another request.",
-        retryAfterMs,
+        error: aiLimit.message || "AI assistant is busy. Please try again later.",
+        retryAfterMs: aiLimit.resetInMs,
       },
       {
         status: 429,
-        headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) },
+        headers: { "Retry-After": String(retryAfterSec) },
       },
     );
   }
+
+  logAiUsage(userKey, "chat");
 
   // Input validation
   let messages: Array<{ role?: string; content?: string }>; // eslint-disable-line @typescript-eslint/no-explicit-any

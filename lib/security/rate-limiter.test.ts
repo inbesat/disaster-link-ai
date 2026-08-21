@@ -19,22 +19,29 @@ afterEach(() => {
 });
 
 describe("rateLimitTierForRole", () => {
-  it("maps admin roles to the 300 req/min tier", () => {
-    expect(rateLimitTierForRole("super_admin")).toBe("admin");
-    expect(rateLimitTierForRole("district_admin")).toBe("admin");
-    expect(rateLimitTierForRole("admin")).toBe("admin");
+  it("maps super_admin to 600 req/min tier", () => {
+    expect(rateLimitTierForRole("super_admin")).toBe("super_admin");
+  });
+
+  it("maps district_admin and admin to 300 req/min tier", () => {
+    expect(rateLimitTierForRole("district_admin")).toBe("district_admin");
+    expect(rateLimitTierForRole("admin")).toBe("district_admin");
   });
 
   it("maps field_responder to the 100 req/min tier", () => {
     expect(rateLimitTierForRole("field_responder")).toBe("field_responder");
   });
 
-  it("errs to the strictest (public) tier for unknown/guest roles", () => {
+  it("maps demo mode to demo tier", () => {
+    expect(rateLimitTierForRole("public", true)).toBe("demo");
+  });
+
+  it("maps public role to public tier and guests to anonymous tier", () => {
     expect(rateLimitTierForRole("public")).toBe("public");
-    expect(rateLimitTierForRole("viewer")).toBe("public");
-    expect(rateLimitTierForRole("")).toBe("public");
-    expect(rateLimitTierForRole(null)).toBe("public");
-    expect(rateLimitTierForRole(undefined)).toBe("public");
+    expect(rateLimitTierForRole("viewer")).toBe("anonymous");
+    expect(rateLimitTierForRole("")).toBe("anonymous");
+    expect(rateLimitTierForRole(null)).toBe("anonymous");
+    expect(rateLimitTierForRole(undefined)).toBe("anonymous");
   });
 });
 
