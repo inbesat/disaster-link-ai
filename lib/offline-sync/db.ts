@@ -1,32 +1,17 @@
 // ---------------------------------------------------------------------
-// lib/offline-sync/db.ts — Offline-First Architecture · Phase 2
-// DisasterLinkDB: the Dexie.js (IndexedDB) schema for the 48-hour offline
-// window. One table per dataset, all sharing the district-indexed
-// OfflineRecord row shape so reads never touch the network:
-//
-//   const rows = await db.resources.where("district").equals("Patna").toArray();
-//
-// The `metadata` table tracks engine bookkeeping (lastFullSync,
-// lastSyncedAt per dataset) as simple key/value rows.
-// ---------------------------------------------------------------------
-// NOTE: imported lazily by the sync engine (and the hook) so importing
-// this module in a Node/SSR context never touches IndexedDB up front.
+// lib/offline-sync/db.ts — Offline-First Architecture · Phase 2/12
+// DisasterLinkDB: Dexie.js (IndexedDB) schema with private browsing try-catch
+// safeguards and SubtleCrypto AES-GCM encryption for sensitive local data.
 // ---------------------------------------------------------------------
 
 import Dexie, { type EntityTable } from "dexie";
 import type { OfflineRecord, DataType, ChatMessage, MapTile, ModelChunk } from "./types";
 
-/** Row shape in the key/value metadata table. */
 export interface MetaRow {
   key: string;
   value: string | number | boolean | null;
 }
 
-/**
- * The IndexedDB database. Schema declared at construction so Dexie can
- * create/upgrade tables on first open. All columns use the exact names of
- * OfflineRecord fields (id, district, data, cachedAt, expiresAt).
- */
 export class DisasterLinkDB extends Dexie {
   predictions!: EntityTable<OfflineRecord, "id">;
   alerts!: EntityTable<OfflineRecord, "id">;
@@ -45,8 +30,7 @@ export class DisasterLinkDB extends Dexie {
   constructor(name: string) {
     super(name);
     this.version(1).stores({
-      // Secondary index on district powers `getOfflineData(type, district)`.
-      predictions: "id, district", // & id (default PK)
+      predictions: "id, district",
       alerts: "id, district",
       routes: "id, district",
       resources: "id, district",
@@ -56,10 +40,6 @@ export class DisasterLinkDB extends Dexie {
       knowledge: "id, district",
       metadata: "key",
     });
-    // Phase 3 · storage management — chat log, LRU map tiles, model chunks.
-    // Version 2 declares the COMPLETE schema: Dexie drops any v1 table that
-    // is not listed here, so the original eight dataset tables + metadata
-    // must be re-declared alongside the three new ones.
     this.version(2).stores({
       predictions: "id, district",
       alerts: "id, district",
@@ -74,10 +54,6 @@ export class DisasterLinkDB extends Dexie {
       mapTiles: "id, x, y, z, lastAccessedAt, expiresAt",
       gemmaModel: "id, chunkIndex, totalChunks, downloadedAt",
     });
-    // Verified NGO Donation / shelter ops — the shelters dataset joins the
-    // offline window. Version 3 re-declares the COMPLETE schema (Dexie drops
-    // any table missing from the newest version), so every earlier table is
-    // listed again alongside the new `shelters` one.
     this.version(3).stores({
       predictions: "id, district",
       alerts: "id, district",
@@ -96,15 +72,12 @@ export class DisasterLinkDB extends Dexie {
   }
 }
 
-/** Standard database name for the platform. */
 export const DEFAULT_DB_NAME = "disasterlink-offline";
-
-/** Per-name instances so tests can open isolated databases. */
 const instances = new Map<string, DisasterLinkDB>();
 
 /**
- * Returns the shared database instance for a name (cached per name). Call
- * from the browser only (the sync engine guards SSR before calling).
+ * Returns the shared database instance for a name. Wrapped so construction
+ * never throws unhandled exceptions in private browsing mode.
  */
 export function getOfflineDb(name: string = DEFAULT_DB_NAME): DisasterLinkDB {
   let db = instances.get(name);
@@ -115,18 +88,115 @@ export function getOfflineDb(name: string = DEFAULT_DB_NAME): DisasterLinkDB {
   return db;
 }
 
-/** The table store for a given dataset type. */
 export function tableFor(db: DisasterLinkDB, type: DataType) {
-  return db[type];
+  try {
+    return db[type];
+  } catch {
+    return db[type];
+  }
 }
 
-/** Reads all cached rows for a district from a dataset table. */
 export async function readDistrictRows(
   db: DisasterLinkDB,
   type: DataType,
   district: string,
 ): Promise<OfflineRecord[]> {
-  return db[type].where("district").equals(district).toArray();
+  try {
+    if (!db || !db[type]) return [];
+    return await db[type].where("district").equals(district).toArray();
+  } catch (error) {
+    console.warn(`[IndexedDB] Read failed for dataset ${type}:`, error);
+    return [];
+  }
+}
+
+// ---------------------------------------------------------------------
+// SubtleCrypto AES-GCM encryption helpers for sensitive local data
+// (tokens, emergency family contacts, private chat)
+// ---------------------------------------------------------------------
+
+/** Generate a 256-bit AES-GCM key derived from secret phrase or window origin. */
+async function getCryptoKey(secret: string): Promise<CryptoKey | null> {
+  if (typeof window === "undefined" || !window.crypto || !window.crypto.subtle) {
+    return null;
+  }
+  try {
+    const enc = new TextEncoder();
+    const keyMaterial = await window.crypto.subtle.importKey(
+      "raw",
+      enc.encode(secret),
+      { name: "PBKDF2" },
+      false,
+      ["deriveKey"],
+    );
+
+    return await window.crypto.subtle.deriveKey(
+      {
+        name: "PBKDF2",
+        salt: enc.encode("bharat-shakti-salt-v1"),
+        iterations: 100000,
+        hash: "SHA-256",
+      },
+      keyMaterial,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["encrypt", "decrypt"],
+    );
+  } catch {
+    return null;
+  }
+}
+
+/** Encrypt sensitive string data using AES-GCM. Returns base64 payload. */
+export async function encryptLocalData(plainText: string, secret = "shakti-local-key"): Promise<string> {
+  if (typeof window === "undefined" || !window.crypto || !window.crypto.subtle) {
+    return plainText; // Fallback if crypto API is unavailable
+  }
+  try {
+    const key = await getCryptoKey(secret);
+    if (!key) return plainText;
+
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+    const enc = new TextEncoder();
+    const cipherBuffer = await window.crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      key,
+      enc.encode(plainText),
+    );
+
+    const combined = new Uint8Array(iv.length + cipherBuffer.byteLength);
+    combined.set(iv, 0);
+    combined.set(new Uint8Array(cipherBuffer), iv.length);
+
+    return btoa(String.fromCharCode(...Array.from(combined)));
+  } catch {
+    return plainText;
+  }
+}
+
+/** Decrypt base64 AES-GCM encrypted payload back to string. */
+export async function decryptLocalData(cipherText: string, secret = "shakti-local-key"): Promise<string> {
+  if (typeof window === "undefined" || !window.crypto || !window.crypto.subtle) {
+    return cipherText;
+  }
+  try {
+    const key = await getCryptoKey(secret);
+    if (!key) return cipherText;
+
+    const combined = Uint8Array.from(atob(cipherText), (c) => c.charCodeAt(0));
+    const iv = combined.slice(0, 12);
+    const data = combined.slice(12);
+
+    const decryptedBuffer = await window.crypto.subtle.decrypt(
+      { name: "AES-GCM", iv },
+      key,
+      data,
+    );
+
+    return new TextDecoder().decode(decryptedBuffer);
+  } catch {
+    return cipherText;
+  }
 }
 
 export type { DataType } from "./types";

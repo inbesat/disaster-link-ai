@@ -3,17 +3,16 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, ChevronLeft, LocateFixed, MapPin } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronLeft, LocateFixed, MapPin, AlertTriangle } from "lucide-react";
 
 // ---------------------------------------------------------------------
-// app/public/setup/location/page.tsx — Phase 1 · Step 6 · Location
-// Permission Flow. Citizens grant GPS (HTML5 Geolocation API) or pick a
-// district/village manually. Either way the choice is persisted to
-// localStorage (`citizen_location`) and the flow advances to the next
-// setup step.
+// app/public/setup/location/page.tsx — Phase 1/12 · Location Setup
+// Citizens grant GPS or pick a district/village manually. Handles GPS
+// permission denial, 10s timeouts, last-known location fallbacks, and >100m
+// accuracy warnings. Choice saved to localStorage (`citizen_location`).
 // ---------------------------------------------------------------------
 
-const NEXT_STEP_URL = "/public/setup/family"; // next setup step (Phase 1 · Step 7)
+const NEXT_STEP_URL = "/public/setup/family";
 
 const DISTRICTS: Record<string, string[]> = {
   Patna: ["Kankarbagh", "Danapur", "Phulwari Sharif", "Fatuha", "Barh"],
@@ -26,8 +25,8 @@ const DISTRICTS: Record<string, string[]> = {
 
 const STORAGE_KEY = "citizen_location";
 
-type SavedLocation =
-  | { type: "gps"; lat: number; lng: number; savedAt: string }
+export type SavedLocation =
+  | { type: "gps"; lat: number; lng: number; accuracy?: number; savedAt: string }
   | { type: "manual"; district: string; village: string; savedAt: string };
 
 export default function LocationSetupPage() {
@@ -37,8 +36,20 @@ export default function LocationSetupPage() {
   const [village, setVillage] = useState("");
   const [locating, setLocating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [accuracyWarning, setAccuracyWarning] = useState<string | null>(null);
 
   const villages = useMemo(() => (district ? DISTRICTS[district] : []), [district]);
+
+  // Read last known location from localStorage if available
+  const lastKnown = useMemo<SavedLocation | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  }, []);
 
   function finish(location: SavedLocation) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(location));
@@ -47,29 +58,49 @@ export default function LocationSetupPage() {
 
   function enableGps() {
     setError(null);
+    setAccuracyWarning(null);
+
     if (!("geolocation" in navigator)) {
       setError("GPS is not available in this browser — enter your location manually below.");
       setManualOpen(true);
       return;
     }
+
     setLocating(true);
+
+    const timer = setTimeout(() => {
+      setLocating(false);
+      setError("GPS request timed out after 10 seconds. Select location manually or use last known location.");
+      setManualOpen(true);
+    }, 10000);
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        clearTimeout(timer);
         setLocating(false);
+
+        const acc = pos.coords.accuracy;
+        if (acc && acc > 100) {
+          setAccuracyWarning(`Low GPS accuracy (±${Math.round(acc)}m) — check sky view or verify manually.`);
+        }
+
         finish({
           type: "gps",
           lat: +pos.coords.latitude.toFixed(6),
           lng: +pos.coords.longitude.toFixed(6),
+          accuracy: acc ? Math.round(acc) : undefined,
           savedAt: new Date().toISOString(),
         });
       },
       (err) => {
+        clearTimeout(timer);
         setLocating(false);
-        // 1 = permission denied, 2 = position unavailable, 3 = timeout.
         const message =
           err.code === err.PERMISSION_DENIED
-            ? "Location permission was denied — you can enter it manually below."
-            : "Couldn't get your location — enter it manually below.";
+            ? "Location permission denied — enter your location manually below."
+            : err.code === err.TIMEOUT
+            ? "GPS timed out after 10 seconds — enter your location manually below."
+            : "Couldn't get your location — enter your location manually below.";
         setError(message);
         setManualOpen(true);
       },
@@ -86,19 +117,23 @@ export default function LocationSetupPage() {
     finish({ type: "manual", district, village, savedAt: new Date().toISOString() });
   }
 
+  function useLastKnownLocation() {
+    if (lastKnown) {
+      finish(lastKnown);
+    }
+  }
+
   const selectClass =
     "w-full appearance-none rounded-[var(--dl-radius-sm)] border border-white/15 bg-white/5 px-4 py-3.5 text-base text-white transition focus:border-[var(--dl-orange)] focus:outline-none";
 
   return (
     <main className="landing-page relative flex min-h-screen flex-col overflow-hidden bg-[var(--dl-navy)]">
-      {/* Ambient glow */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_80%_-10%,rgba(249,115,22,0.16),transparent),radial-gradient(ellipse_50%_40%_at_0%_110%,rgba(37,99,235,0.18),transparent)]"
       />
 
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-8">
-        {/* Progress bar — Location (2 of 4) */}
         <div className="mb-6 flex items-center gap-1.5" aria-hidden="true">
           <span className="h-1 flex-1 rounded-full bg-[var(--dl-orange)]" />
           <span className="h-1 flex-1 rounded-full bg-white/15" />
@@ -114,7 +149,6 @@ export default function LocationSetupPage() {
           Back
         </Link>
 
-        {/* Illustration — radar with pulsing pin */}
         <div className="relative mx-auto mt-4 h-52 w-52" aria-hidden="true">
           <div className="absolute inset-0 rounded-full border border-white/10" />
           <div className="absolute inset-6 rounded-full border border-white/10" />
@@ -131,11 +165,9 @@ export default function LocationSetupPage() {
           Where should we alert you?
         </h1>
         <p className="mx-auto mt-3 max-w-sm text-center text-sm leading-relaxed text-[var(--dl-text-on-navy)]">
-          We need your location to send you life-saving alerts and show nearby
-          shelters.
+          We need your location to send you life-saving alerts and show nearby shelters.
         </p>
 
-        {/* Massive GPS button */}
         <button
           type="button"
           onClick={enableGps}
@@ -149,6 +181,13 @@ export default function LocationSetupPage() {
           Precise · private · never shared
         </p>
 
+        {accuracyWarning && (
+          <div className="mt-4 flex items-center gap-2 rounded-[var(--dl-radius-sm)] border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-300">
+            <AlertTriangle className="h-4 w-4 shrink-0 text-amber-400" />
+            <span>{accuracyWarning}</span>
+          </div>
+        )}
+
         {error && (
           <p
             role="alert"
@@ -158,7 +197,24 @@ export default function LocationSetupPage() {
           </p>
         )}
 
-        {/* Manual fallback */}
+        {/* Fallback to Last Known Location if present */}
+        {lastKnown && (
+          <button
+            type="button"
+            onClick={useLastKnownLocation}
+            className="mt-4 flex w-full items-center justify-between rounded-[var(--dl-radius-sm)] border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-sm text-blue-200 transition hover:bg-blue-500/20"
+          >
+            <span>
+              Use Last Known Location (
+              {lastKnown.type === "gps"
+                ? `${lastKnown.lat}, ${lastKnown.lng}`
+                : `${lastKnown.district}, ${lastKnown.village}`}
+              )
+            </span>
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        )}
+
         {!manualOpen ? (
           <button
             type="button"
@@ -167,7 +223,7 @@ export default function LocationSetupPage() {
               setError(null);
             }}
             aria-expanded={manualOpen}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 px-4 py-3.5 text-base font-semibold text-[var(--dl-text-on-navy)] transition hover:border-[var(--dl-orange)]/50 hover:text-white"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 px-4 py-3.5 text-base font-semibold text-[var(--dl-text-on-navy)] transition hover:border-[var(--dl-orange)]/50 hover:text-white"
           >
             <MapPin aria-hidden="true" className="h-5 w-5" />
             Enter Location Manually
@@ -185,22 +241,22 @@ export default function LocationSetupPage() {
                 <select
                   id="setup-district"
                   aria-label="District"
-                value={district}
-                onChange={(e) => {
-                  setDistrict(e.target.value);
-                  setVillage("");
-                }}
-                className={`${selectClass} pr-10`}
-              >
-                <option value="" className="bg-[var(--dl-navy-2)]">
-                  Select District
-                </option>
-                {Object.keys(DISTRICTS).map((d) => (
-                  <option key={d} value={d} className="bg-[var(--dl-navy-2)]">
-                    {d}
+                  value={district}
+                  onChange={(e) => {
+                    setDistrict(e.target.value);
+                    setVillage("");
+                  }}
+                  className={`${selectClass} pr-10`}
+                >
+                  <option value="" className="bg-[var(--dl-navy-2)]">
+                    Select District
                   </option>
-                ))}
-              </select>
+                  {Object.keys(DISTRICTS).map((d) => (
+                    <option key={d} value={d} className="bg-[var(--dl-navy-2)]">
+                      {d}
+                    </option>
+                  ))}
+                </select>
                 <ChevronDown
                   aria-hidden="true"
                   className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--dl-text-muted)]"
@@ -219,20 +275,20 @@ export default function LocationSetupPage() {
                 <select
                   id="setup-village"
                   aria-label="Village"
-                value={village}
-                onChange={(e) => setVillage(e.target.value)}
-                disabled={!district}
-                className={`${selectClass} pr-10 disabled:opacity-40`}
-              >
-                <option value="" className="bg-[var(--dl-navy-2)]">
-                  {district ? "Select Village" : "Choose a district first"}
-                </option>
-                {villages.map((v) => (
-                  <option key={v} value={v} className="bg-[var(--dl-navy-2)]">
-                    {v}
+                  value={village}
+                  onChange={(e) => setVillage(e.target.value)}
+                  disabled={!district}
+                  className={`${selectClass} pr-10 disabled:opacity-40`}
+                >
+                  <option value="" className="bg-[var(--dl-navy-2)]">
+                    {district ? "Select Village" : "Choose a district first"}
                   </option>
-                ))}
-              </select>
+                  {villages.map((v) => (
+                    <option key={v} value={v} className="bg-[var(--dl-navy-2)]">
+                      {v}
+                    </option>
+                  ))}
+                </select>
                 <ChevronDown
                   aria-hidden="true"
                   className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--dl-text-muted)]"

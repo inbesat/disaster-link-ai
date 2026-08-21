@@ -1,21 +1,6 @@
 // ---------------------------------------------------------------------
 // lib/alerts/web-push.ts — SERVER-ONLY. VAPID signing + delivery utilities
-// for Web Push (browser) notifications.
-//
-// IMPORTANT: this module reads VAPID_PRIVATE_KEY (a server secret). It must
-// NEVER be imported from a "use client" component or any client-reachable
-// file — the private key reference would then be inlined into the client
-// bundle. Browser-side service-worker registration lives in
-// components/pwa/ServiceWorkerRegister.tsx (which only uses the public
-// NEXT_PUBLIC_VAPID_PUBLIC_KEY).
-//
-// Env contract:
-//   NEXT_PUBLIC_VAPID_PUBLIC_KEY  - public key (exposed to the browser)
-//   VAPID_PRIVATE_KEY             - private key (server-only)
-//   VAPID_SUBJECT                 - contact (mailto:) for the push service
-//
-// If any key is missing or still a placeholder, sendWebPush() degrades to
-// { ok: false } and never throws, so the app keeps working without push.
+// for Web Push (browser) notifications with high-priority flags and tag grouping.
 // ---------------------------------------------------------------------
 
 import webpush from "web-push";
@@ -37,13 +22,13 @@ export type WebPushPayload = {
   url?: string;
   tag?: string;
   renotify?: boolean;
+  isCritical?: boolean;
   [key: string]: unknown;
 };
 
 export type SendWebPushResult =
   { ok: true; statusCode?: number } | { ok: false; error: string };
 
-// True when VAPID keys exist and are not "<your-...>" placeholders.
 export function isWebPushConfigured(): boolean {
   const isPlaceholder = (value: string | undefined) =>
     !value || value.includes("<") || value.includes("your-");
@@ -69,9 +54,8 @@ function ensureConfigured() {
 }
 
 /**
- * Sends a Web Push notification to a single subscription. Never throws —
- * failed / expired subscriptions are reported as { ok: false } so callers
- * can drop the row from their push_subscriptions table.
+ * Sends a Web Push notification to a single subscription.
+ * Critical alerts use high urgency and requireInteraction flags.
  */
 export async function sendWebPush(
   subscription: WebPushSubscription,
@@ -79,10 +63,33 @@ export async function sendWebPush(
 ): Promise<SendWebPushResult> {
   try {
     ensureConfigured();
+
+    const isCritical = payload.isCritical ?? true;
+
+    // Build payload with grouping tag and high priority options
+    const fullPayload = {
+      title: "Disaster Alert",
+      body: "Emergency alert update",
+      icon: "/icons/icon-192.png",
+      badge: "/icons/icon-192.png",
+      url: "/public/alerts",
+      tag: payload.tag || "disaster-alert",
+      renotify: payload.renotify ?? false, // Prevents alert spam for same group
+      requireInteraction: isCritical,
+      ...payload,
+    };
+
+    const options: webpush.RequestOptions = {
+      TTL: 86400, // 24 hours
+      urgency: isCritical ? "high" : "normal",
+    };
+
     const result = await webpush.sendNotification(
       subscription,
-      JSON.stringify({ title: "Disaster Alert", ...payload }),
+      JSON.stringify(fullPayload),
+      options,
     );
+
     return { ok: true, statusCode: result.statusCode };
   } catch (error: unknown) {
     console.error("[web-push] sendNotification failed:", error);

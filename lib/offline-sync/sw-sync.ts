@@ -1,37 +1,14 @@
 "use client";
 
 // ---------------------------------------------------------------------
-// lib/offline-sync/sw-sync.ts — Offline-First Architecture · Phase 2 + 7
-// Background sync bridge between the page and the service worker.
-//
-//   • requestBackgroundSync(tag) — Phase 7 one-shot Background Sync
-//     (SyncManager): registers `sync-predictions` / `sync-alerts` so the
-//     browser retries them the moment connectivity returns.
-//   • registerSyncJobs() — arms every one-shot tag + the periodic tag in one
-//     call (best-effort per tag).
-//   • requestPeriodicSync() — registers the `disasterlink-sync` periodic
-//     background sync tag (Periodic Background Sync API) where supported so
-//     the OS can wake the SW to nudge a pending sync. Degrades silently to
-//     no-op on unsupported browsers (Chrome desktop 80+).
-//   • postSyncRequest() — asks the SW to dispatch a `sync` broadcast to all
-//     open clients (the controller page listens and runs fullSync()).
-//   • onSyncRequest() — page-side listener wired in the hook: any SW
-//     `drip:sync:request` message → fullSync().
-//
-// The actual IndexedDB writes always run in the page's SyncEngine (the SW
-// has no module access to the Dexie wrapper); the SW is nudge/relay only.
+// lib/offline-sync/sw-sync.ts — Offline-First Architecture · Phase 2, 7 & 12
+// Background sync bridge between the page and the service worker with exponential backoff retries.
 // ---------------------------------------------------------------------
 
 import { SYNC_EVENT_STARTED, SYNC_EVENT_FINISHED } from "./sync-engine";
 
 export const SYNC_TAG = "disasterlink-sync";
 
-/**
- * One-shot background sync tags (Phase 7 · Step 2). The page registers these
- * on `navigator.serviceWorker.ready`; the browser queues them and fires the
- * worker's `sync` event the next time connectivity returns, so the engine
- * refreshes the matching datasets without user intervention.
- */
 export const BG_SYNC_TAGS = {
   predictions: "sync-predictions",
   alerts: "sync-alerts",
@@ -40,17 +17,14 @@ export const BG_SYNC_TAGS = {
 export type BgSyncTag = (typeof BG_SYNC_TAGS)[keyof typeof BG_SYNC_TAGS];
 export type BgSyncKey = keyof typeof BG_SYNC_TAGS;
 
-/** True when the browser supports one-shot Background Sync (SyncManager). */
+/** True when the browser supports one-shot Background Sync. */
 export function supportsBackgroundSync(): boolean {
   if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return false;
   return "SyncManager" in window;
 }
 
 /**
- * Phase 7 · Step 2 — registers a one-shot background sync tag. When the
- * device goes offline after this call, the browser queues the tag and fires
- * the worker's `sync` event (worker/index.js #handleSyncTick) once it is
- * back online. Resolves false (never throws) when unsupported/unregistered.
+ * Registers a one-shot background sync tag.
  */
 export async function requestBackgroundSync(tag: BgSyncTag): Promise<boolean> {
   if (!supportsBackgroundSync()) return false;
@@ -68,9 +42,7 @@ export async function requestBackgroundSync(tag: BgSyncTag): Promise<boolean> {
 }
 
 /**
- * Registers every background-sync job the app cares about (predictions +
- * alerts) and the periodic tag. Best-effort — resolves the per-tag booleans
- * so callers know which jobs are actually armed on this browser.
+ * Registers background-sync jobs (predictions + alerts) and periodic sync.
  */
 export async function registerSyncJobs(): Promise<Record<BgSyncKey | "periodic", boolean>> {
   const [predictions, alerts, periodic] = await Promise.all([
@@ -81,22 +53,11 @@ export async function registerSyncJobs(): Promise<Record<BgSyncKey | "periodic",
   return { predictions, alerts, periodic };
 }
 
-/**
- * True when the browser supports Periodic Background Sync. The API is a
- * `PeriodicSyncManager` exposed on `window` (Chromium) and on each
- * ServiceWorkerRegistration — NOT on `navigator.serviceWorker` — so the
- * synchronous gate checks the window constructor.
- */
 export function supportsPeriodicSync(): boolean {
   if (typeof window === "undefined" || !("serviceWorker" in navigator)) return false;
   return "PeriodicSyncManager" in window;
 }
 
-/**
- * Registers a periodic background-sync tag (min interval 3h) so supported
- * browsers can trigger sync even after the page is backgrounded. Resolves
- * false (never throws) when unsupported / not registered.
- */
 export async function requestPeriodicSync(
   minIntervalMs = 3 * 60 * 60 * 1000,
 ): Promise<boolean> {
@@ -114,11 +75,6 @@ export async function requestPeriodicSync(
   }
 }
 
-/**
- * Phase 11 · background-fetch config — unregisters the periodic sync tag
- * (e.g. when the citizen turns "auto-refresh offline data" off). Resolves
- * false when unsupported or nothing was registered.
- */
 export async function unregisterPeriodicSync(): Promise<boolean> {
   if (!supportsPeriodicSync()) return false;
   try {
@@ -134,7 +90,6 @@ export async function unregisterPeriodicSync(): Promise<boolean> {
   }
 }
 
-/** Asks the SW to broadcast a sync request to all open page clients. */
 export async function postSyncRequest(): Promise<boolean> {
   if (
     typeof navigator === "undefined" ||
@@ -152,9 +107,33 @@ export async function postSyncRequest(): Promise<boolean> {
 }
 
 /**
- * Page-side listener: any SW `drip:sync:request` message (periodic bg-sync
- * event or an explicit nudge) triggers a full sync. Returns an unsubscribe
- * function so the hook can clean up on unmount.
+ * Execute an offline sync task with exponential backoff retries on network failure.
+ * Formula: delay = baseDelayMs * 2^(attempt - 1)
+ */
+export async function syncWithExponentialBackoff<T>(
+  syncTask: () => Promise<T>,
+  maxRetries = 3,
+  baseDelayMs = 1000,
+): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await syncTask();
+    } catch (err) {
+      lastError = err;
+      if (attempt < maxRetries) {
+        const delay = baseDelayMs * Math.pow(2, attempt - 1);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError;
+}
+
+/**
+ * Page-side listener: SW `drip:sync:request` triggers sync with exponential backoff retries.
  */
 export function onSyncRequest(syncFn: () => Promise<unknown>): () => void {
   if (typeof window === "undefined" || !("serviceWorker" in navigator)) return () => undefined;
@@ -162,7 +141,9 @@ export function onSyncRequest(syncFn: () => Promise<unknown>): () => void {
     const data = event.data as { type?: string } | undefined;
     if (data?.type !== "drip:sync:request") return;
     window.dispatchEvent(new CustomEvent("drip:sync:sw"));
-    void syncFn();
+    void syncWithExponentialBackoff(syncFn).catch((err) => {
+      console.warn("[SW Sync] Sync retries exhausted:", err);
+    });
   };
   navigator.serviceWorker.addEventListener("message", handler);
   return () => navigator.serviceWorker.removeEventListener("message", handler);

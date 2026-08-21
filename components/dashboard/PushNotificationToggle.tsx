@@ -20,14 +20,9 @@ type PushState =
   | { status: "unconfigured" }
   | { status: "idle" }
   | { status: "enabled" }
+  | { status: "denied"; instructions: string }
   | { status: "error"; message: string };
 
-/**
- * Toggle for browser Web Push alerts. Registers the service worker,
- * requests Notification permission and persists the subscription via
- * POST /api/push/subscribe. Works in guest (demo) mode too — the API
- * stores the subscription without a user id.
- */
 export default function PushNotificationToggle() {
   const [state, setState] = useState<PushState>({ status: "idle" });
   const [busy, setBusy] = useState(false);
@@ -47,6 +42,15 @@ export default function PushNotificationToggle() {
       setState({ status: "unconfigured" });
       return;
     }
+
+    if (typeof Notification !== "undefined" && Notification.permission === "denied") {
+      setState({
+        status: "denied",
+        instructions: "Notifications blocked. Enable in browser site settings to receive critical disaster alerts.",
+      });
+      return;
+    }
+
     setState({ status: "idle" });
   }, [supportsPush]);
 
@@ -63,8 +67,9 @@ export default function PushNotificationToggle() {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") {
         setState({
-          status: "error",
-          message: "Notification permission was not granted.",
+          status: "denied",
+          instructions:
+            "Permission denied. To enable: Click lock icon in browser address bar -> Site settings -> Notifications -> Allow.",
         });
         return;
       }
@@ -131,28 +136,36 @@ export default function PushNotificationToggle() {
   const enabled = state.status === "enabled";
 
   return (
-    <div className="flex items-center gap-2">
-      <button
-        type="button"
-        disabled={busy || state.status === "unconfigured"}
-        onClick={enabled ? () => void unsubscribe() : () => void subscribe()}
-        className={`rounded-md border px-3 py-1.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
-          enabled
-            ? "border-severity-green-600 bg-severity-green-600/10 text-severity-green-400 hover:bg-severity-green-600/20"
-            : "border-border bg-surface-elevated text-foreground hover:border-accent hover:text-accent"
-        }`}
-        title={
-          state.status === "unconfigured"
-            ? "Browser alerts are not configured (VAPID keys missing)."
-            : undefined
-        }
-      >
-        {enabled ? "🔔 Browser alerts ON" : "🔕 Enable browser alerts"}
-      </button>
-      {state.status === "error" && (
-        <span className="hidden text-[11px] text-severity-red-400 lg:inline">
-          {state.message}
-        </span>
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          disabled={busy || state.status === "unconfigured" || state.status === "denied"}
+          onClick={enabled ? () => void unsubscribe() : () => void subscribe()}
+          className={`rounded-md border px-3 py-1.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
+            enabled
+              ? "border-severity-green-600 bg-severity-green-600/10 text-severity-green-400 hover:bg-severity-green-600/20"
+              : "border-border bg-surface-elevated text-foreground hover:border-accent hover:text-accent"
+          }`}
+          title={
+            state.status === "unconfigured"
+              ? "Browser alerts are not configured (VAPID keys missing)."
+              : undefined
+          }
+        >
+          {enabled ? "🔔 Browser alerts ON" : "🔕 Enable browser alerts"}
+        </button>
+        {state.status === "error" && (
+          <span className="hidden text-[11px] text-severity-red-400 lg:inline">
+            {state.message}
+          </span>
+        )}
+      </div>
+
+      {state.status === "denied" && (
+        <p className="mt-1 rounded border border-amber-500/30 bg-amber-500/10 p-2 text-[11px] text-amber-300">
+          ⚠️ {state.instructions}
+        </p>
       )}
     </div>
   );
