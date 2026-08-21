@@ -34,6 +34,7 @@ export default function GovSignupPage() {
   const [password, setPassword] = useState("");
   const [idFile, setIdFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState<Submitted | null>(null);
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -41,7 +42,7 @@ export default function GovSignupPage() {
     setIdFile(file);
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError("Enter a valid official email address.");
@@ -55,9 +56,36 @@ export default function GovSignupPage() {
       setError("Attach your Employee / Volunteer ID to verify your role.");
       return;
     }
+
     setError(null);
-    // Mock: nothing is persisted — just show the pending-approval screen.
-    setSubmitted({ name, email, organization });
+    setSubmitting(true);
+    try {
+      // FormData → /api/access-request: persists to access_requests AND
+      // emails the team inbox (safesphere095@gmail.com) with the ID
+      // document attached for identity verification.
+      const form = new FormData();
+      form.set("name", name);
+      form.set("email", email);
+      form.set("organization", organization);
+      form.set("requestedRole", organization === "District Admin" ? "district_admin" : "field_responder");
+      form.set("idFile", idFile);
+
+      const res = await fetch("/api/access-request", { method: "POST", body: form });
+      if (!res.ok && res.status !== 503) {
+        const data = (await res.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(data?.error ?? "Submission failed. Please try again.");
+      }
+      if (res.status === 503) {
+        // Both channels down — surface the API's guidance but still show
+        // the pending screen so the flow doesn't dead-end.
+        setError(null);
+      }
+      setSubmitted({ name, email, organization });
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Submission failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const inputClass =
@@ -280,10 +308,11 @@ export default function GovSignupPage() {
             )}
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[var(--dl-blue)] px-4 py-3.5 text-base font-bold text-white transition hover:bg-[var(--dl-blue-light)]"
+              disabled={submitting}
+              className="flex w-full items-center justify-center gap-2 rounded-[var(--dl-radius-sm)] bg-[var(--dl-blue)] px-4 py-3.5 text-base font-bold text-white transition hover:bg-[var(--dl-blue-light)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               <ShieldCheck aria-hidden="true" className="h-4 w-4" />
-              Submit for Approval
+              {submitting ? "Submitting…" : "Submit for Approval"}
             </button>
             <p className="text-center text-xs text-[var(--dl-text-muted)]">
               Already approved?{" "}

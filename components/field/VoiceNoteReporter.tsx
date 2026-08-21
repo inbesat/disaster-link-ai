@@ -178,7 +178,7 @@ export default function VoiceNoteReporter() {
         readOnly
         value={transcript}
         placeholder="Your dictated note will appear here…"
-        className="mt-4 min-h-[120px] w-full resize-y rounded-2xl border-2 border-panel-border bg-[#080e1c] px-4 py-3 text-base leading-relaxed text-gray-100 placeholder:text-gray-500 focus:border-cyan-400 focus:outline-none"
+        className="mt-4 min-h-[120px] w-full resize-y rounded-2xl border-2 border-panel-border bg-[#080e1c] px-4 py-3 text-base leading-relaxed text-gray-100 placeholder:text-gray-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 focus:outline-none"
       />
 
       {/* Demo helper */}

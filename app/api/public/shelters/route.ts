@@ -21,6 +21,7 @@ import {
 import { sanitizeShelterForPublic } from "@/lib/security/sanitize";
 import { CITIZEN_SHELTERS } from "@/lib/map/citizen-shelters";
 import { PUBLIC_SHELTERS_CACHE_TAG } from "@/lib/cache-tags";
+import { warnDbUnavailableOnce } from "@/lib/server/db-fallback";
 
 /**
  * Edge cache floor for the data below (5 minutes).
@@ -72,7 +73,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   } catch (error: unknown) {
     // Prisma can be unreachable on cold starts — never 500 the Citizen App;
     // serve the demo district's shelters so the public map still renders.
-    console.error("[public/shelters] Prisma unavailable; serving mock shelters.", error);
+    warnDbUnavailableOnce("public/shelters", error);
     const now = new Date();
     const shelters = CITIZEN_SHELTERS.map((s) =>
       sanitizeShelterForPublic({

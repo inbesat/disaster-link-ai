@@ -38,6 +38,7 @@ import {
   TriangleAlert,
   UserSearch,
   Users,
+  UserCheck,
   UserX,
   Stethoscope,
 } from "lucide-react";
@@ -184,6 +185,15 @@ export const NAVIGATION_ROUTES: NavRoute[] = [
     icon: Users,
     section: "admin",
     allowedRoles: ["field_responder", "district_admin", "super_admin"],
+  },
+  {
+    label: "Access Requests",
+    href: "/access-requests",
+    icon: UserCheck,
+    section: "admin",
+    allowedRoles: ["district_admin", "super_admin"],
+    badgeCount: 1,
+    badgeColor: "bg-amber-400/15 text-amber-300",
   },
   {
     label: "Settings",

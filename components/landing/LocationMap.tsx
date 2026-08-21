@@ -16,7 +16,7 @@ const OFFICE = {
   address: "Koramangala, Bengaluru, Karnataka 560034, India",
   lat: 12.9352,
   lng: 77.6245,
-  phone: "+91-80-1234-5678",
+  phone: "+91-9625130964",
   email: "safesphere095@gmail.com",
   hours: "Mon – Fri, 9:00 AM – 6:00 PM IST",
 };

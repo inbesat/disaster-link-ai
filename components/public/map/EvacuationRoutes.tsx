@@ -50,15 +50,25 @@ export default function EvacuationRoutes({ classification, isPwd = false }: Evac
     const mlMap = map?.getMap();
     if (!mlMap || !classification || reduceMotion) return;
     let step = 0;
-    const timer = window.setInterval(() => {
-      if (!mlMap.getLayer(FLOODED_LAYER_ID)) return;
-      step = (step + 1) % 6;
-      mlMap.setPaintProperty(FLOODED_LAYER_ID, "line-dasharray", [
-        BASE_DASH[0] + step,
-        BASE_DASH[1],
-      ]);
-    }, 160);
-    return () => window.clearInterval(timer);
+    let rafId = 0;
+    let lastTime = performance.now();
+
+    const animate = (now: number) => {
+      if (now - lastTime >= 160) {
+        lastTime = now;
+        if (mlMap.getLayer(FLOODED_LAYER_ID)) {
+          step = (step + 1) % 6;
+          mlMap.setPaintProperty(FLOODED_LAYER_ID, "line-dasharray", [
+            BASE_DASH[0] + step,
+            BASE_DASH[1],
+          ]);
+        }
+      }
+      rafId = requestAnimationFrame(animate);
+    };
+
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
   }, [map, classification, reduceMotion]);
 
   if (!classification) return null;

@@ -248,7 +248,7 @@ function CreateTaskModal({
               onChange={(e) => setTitle(e.target.value)}
               required
               placeholder="e.g. Evacuate Zone A"
-              className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:outline-none"
+              className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none"
             />
           </div>
           <div>
@@ -258,7 +258,7 @@ function CreateTaskModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief task description..."
-              className="w-full resize-none rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:outline-none"
+              className="w-full resize-none rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -270,7 +270,7 @@ function CreateTaskModal({
                 onChange={(e) => setAssignee(e.target.value)}
                 required
                 placeholder="Responder name"
-                className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none"
               />
             </div>
             <div>
@@ -278,7 +278,7 @@ function CreateTaskModal({
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white focus:border-purple-400/60 focus:outline-none [&>option]:bg-[#111827]"
+                className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none [&>option]:bg-[#111827]"
               >
                 <option value="urgent">Urgent</option>
                 <option value="high">High</option>
@@ -295,7 +295,7 @@ function CreateTaskModal({
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
                 placeholder="e.g. Today 14:00"
-                className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none"
               />
             </div>
             <div>
@@ -305,7 +305,7 @@ function CreateTaskModal({
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. Punpun Ghat"
-                className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none"
               />
             </div>
           </div>

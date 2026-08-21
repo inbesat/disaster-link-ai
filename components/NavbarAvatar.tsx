@@ -10,6 +10,7 @@
 // ---------------------------------------------------------------------
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   getStoredAvatar,
   initialsFor,
@@ -38,10 +39,15 @@ export default function NavbarAvatar({
 
   if (avatarSrc) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      // unoptimized: src is a client-cropped data URI or Supabase URL —
+      // the image optimizer can't add value and data:/blob: aren't routable.
+      <Image
         src={avatarSrc}
         alt={displayName}
+        width={36}
+        height={36}
+        priority
+        unoptimized
         className="h-9 w-9 rounded-full border border-border object-cover"
       />
     );

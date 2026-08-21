@@ -261,13 +261,13 @@ export function TeamRoster() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name…"
-            className="h-9 w-full rounded-lg border border-white/10 bg-[#0a0f1a] pl-9 pr-3 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:outline-none"
+            className="h-9 w-full rounded-lg border border-white/10 bg-[#0a0f1a] pl-9 pr-3 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none"
           />
         </div>
         <select
           value={filterRole}
           onChange={(e) => setFilterRole(e.target.value)}
-          className="h-9 rounded-lg border border-white/10 bg-[#0a0f1a] px-3 text-sm text-white focus:border-purple-400/60 focus:outline-none [&>option]:bg-[#111827]"
+          className="h-9 rounded-lg border border-white/10 bg-[#0a0f1a] px-3 text-sm text-white focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none [&>option]:bg-[#111827]"
         >
           <option value="">All roles</option>
           {roles.map((role) => (
@@ -277,7 +277,7 @@ export function TeamRoster() {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value as ResponderStatus | "")}
-          className="h-9 rounded-lg border border-white/10 bg-[#0a0f1a] px-3 text-sm text-white focus:border-purple-400/60 focus:outline-none [&>option]:bg-[#111827]"
+          className="h-9 rounded-lg border border-white/10 bg-[#0a0f1a] px-3 text-sm text-white focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none [&>option]:bg-[#111827]"
         >
           <option value="">All statuses</option>
           <option value="online">Online</option>
@@ -287,7 +287,7 @@ export function TeamRoster() {
         <select
           value={filterLocation}
           onChange={(e) => setFilterLocation(e.target.value)}
-          className="h-9 rounded-lg border border-white/10 bg-[#0a0f1a] px-3 text-sm text-white focus:border-purple-400/60 focus:outline-none [&>option]:bg-[#111827]"
+          className="h-9 rounded-lg border border-white/10 bg-[#0a0f1a] px-3 text-sm text-white focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none [&>option]:bg-[#111827]"
         >
           <option value="">All locations</option>
           {locations.map((loc) => (

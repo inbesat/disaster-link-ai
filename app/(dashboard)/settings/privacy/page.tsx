@@ -255,7 +255,7 @@ export default function PrivacySecurityPage() {
                     onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
                     placeholder="000 000"
                     aria-label="Authenticator code"
-                    className="w-full bg-transparent font-mono text-sm tracking-[0.3em] text-slate-100 outline-none placeholder:text-slate-500"
+                    className="w-full bg-transparent font-mono text-sm tracking-[0.3em] text-slate-100 outline-none focus:ring-2 focus:ring-accent/30 placeholder:text-slate-500"
                   />
                 </div>
                 <button

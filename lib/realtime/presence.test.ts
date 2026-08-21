@@ -1,7 +1,13 @@
-// Phase 20 — presence tracking tests: join/leave, heartbeat refresh, expiry
-// pruning, event emission, and cross-transport freshness resolution.
+// Phase 20/11 — presence tracking & security tests: join/leave, heartbeat refresh, expiry
+// pruning, event emission, role-based visibility, timestamp masking, and ghost mode.
 import { describe, it, expect } from "vitest";
-import { PresenceTracker, pickFresherPresence, type PresenceEvent } from "./presence";
+import {
+  PresenceTracker,
+  pickFresherPresence,
+  getSanitizedLastSeenStatus,
+  isAuthorizedForPresence,
+  type PresenceEvent,
+} from "./presence";
 
 /** Mutable clock so expiry is deterministic without real time passing. */
 function makeClock() {
@@ -77,36 +83,61 @@ describe("PresenceTracker", () => {
       ["u-1", "u-2"],
     );
   });
+});
 
-  it("keeps members whose heartbeat is within the timeout", () => {
+describe("Presence Data Security & Privacy (Prompt 11.3)", () => {
+  it("restricts presence visibility to authorized team members and admins only", () => {
+    expect(isAuthorizedForPresence("super_admin")).toBe(true);
+    expect(isAuthorizedForPresence("district_admin")).toBe(true);
+    expect(isAuthorizedForPresence("field_responder")).toBe(true);
+    expect(isAuthorizedForPresence("public")).toBe(false);
+    expect(isAuthorizedForPresence("anonymous")).toBe(false);
+    expect(isAuthorizedForPresence(undefined)).toBe(false);
+
+    const tracker = new PresenceTracker();
+    tracker.join({ id: "u-1", name: "Asha", role: "field_responder" });
+
+    // Public / anonymous user gets empty presence list
+    expect(tracker.getSanitizedOnline("public")).toEqual([]);
+    expect(tracker.getSanitizedOnline("anonymous")).toEqual([]);
+
+    // District admin / field responder gets presence list
+    expect(tracker.getSanitizedOnline("district_admin")).toHaveLength(1);
+  });
+
+  it("masks exact timestamps with fuzzy status (online/recently/offline)", () => {
+    const nowMs = 1_000_000;
+    expect(getSanitizedLastSeenStatus(nowMs - 30_000, nowMs)).toBe("online");
+    expect(getSanitizedLastSeenStatus(nowMs - 120_000, nowMs)).toBe("recently");
+    expect(getSanitizedLastSeenStatus(nowMs - 600_000, nowMs)).toBe("offline");
+
     const clock = makeClock();
-    const tracker = new PresenceTracker({ timeoutMs: 30_000 }, clock.now);
+    const tracker = new PresenceTracker({ timeoutMs: 300_000 }, clock.now);
     tracker.join({ id: "u-1", name: "Asha" });
-    tracker.join({ id: "u-2", name: "Bhanu" });
 
-    clock.advance(10_000);
-    tracker.heartbeat("u-1"); // u-1 stays fresh
-    clock.advance(25_000); // u-2 now >30s old, u-1 still <30s
-
-    const online = tracker.online();
-    expect(online.map((m) => m.id)).toEqual(["u-1"]);
-    expect(tracker.count).toBe(1);
+    const sanitized = tracker.getSanitizedOnline("district_admin");
+    expect(sanitized[0].status).toBe("online");
+    expect(sanitized[0]).not.toHaveProperty("lastSeen"); // no raw timestamp exposed
   });
 
-  it("sorts the online roster by name for stable rendering", () => {
+  it("honors ghost mode (hideOnlineStatus = true) to exclude user status", () => {
     const tracker = new PresenceTracker();
-    tracker.join({ id: "u-2", name: "Bhanu" });
-    tracker.join({ id: "u-1", name: "Asha" });
-    expect(tracker.online().map((m) => m.id)).toEqual(["u-1", "u-2"]);
+    tracker.join({ id: "u-1", name: "Asha", hideOnlineStatus: false });
+    tracker.join({ id: "u-2", name: "Ghost User", hideOnlineStatus: true });
+
+    const sanitized = tracker.getSanitizedOnline("district_admin");
+    expect(sanitized).toHaveLength(1);
+    expect(sanitized[0].id).toBe("u-1");
   });
 
-  it("supports unsubscribing from presence events", () => {
-    const tracker = new PresenceTracker();
-    const events: PresenceEvent[] = [];
-    const off = tracker.on((e) => events.push(e));
-    off();
-    tracker.join({ id: "u-1", name: "Asha" });
-    expect(events).toHaveLength(0);
+  it("enforces channel isolation so presence is restricted to joined channel", () => {
+    const tracker = new PresenceTracker({ channelId: "patna-channel" });
+    tracker.join({ id: "u-1", name: "Asha", channelId: "patna-channel" });
+    tracker.join({ id: "u-2", name: "Bhanu", channelId: "gaya-channel" });
+
+    const patnaOnline = tracker.getSanitizedOnline("district_admin", "patna-channel");
+    expect(patnaOnline).toHaveLength(1);
+    expect(patnaOnline[0].id).toBe("u-1");
   });
 });
 

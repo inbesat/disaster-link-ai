@@ -155,7 +155,7 @@ export default function Footer() {
                 <Mail size={14} className="text-white/40 mt-0.5" />
                 <div>
                   <span className="text-sm text-slate-400 block">
-                    disasterlink095@gmail.com
+                    safesphere095@gmail.com
                   </span>
                   <span className="text-xs text-slate-500">(General)</span>
                 </div>

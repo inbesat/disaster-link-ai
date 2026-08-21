@@ -59,7 +59,7 @@ export default function GovDashboardPage() {
   const previewing = cookies().get("view_as_public")?.value === "true";
 
   return (
-    <main className="min-h-screen bg-primary text-foreground">
+    <main id="main-content" className="min-h-screen bg-primary text-foreground">
       {/* Phase 7 · Step 2 — persistent situation-awareness top bar. */}
       <SituationHeader />
 

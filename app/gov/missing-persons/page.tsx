@@ -9,6 +9,10 @@ import {
   Plus,
   Filter,
   User,
+  AlertTriangle,
+  CheckCircle2,
+  ShieldCheck,
+  Circle,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------
@@ -32,17 +36,22 @@ interface MissingPerson {
   status: "missing" | "found" | "safe";
 }
 
-const STAT_CARDS = [
-  { label: "Total", value: 0, tone: "text-white" },
-  { label: "Missing", value: 0, tone: "text-red-400" },
-  { label: "Found", value: 0, tone: "text-emerald-400" },
-  { label: "Safe", value: 0, tone: "text-sky-400" },
+const STAT_CARDS: Array<{
+  label: string;
+  value: number;
+  tone: string;
+  icon: React.ReactNode;
+}> = [
+  { label: "Total", value: 0, tone: "text-white", icon: <Users size={18} /> },
+  { label: "Missing", value: 0, tone: "text-red-400", icon: <AlertTriangle size={18} /> },
+  { label: "Found", value: 0, tone: "text-emerald-400", icon: <CheckCircle2 size={18} /> },
+  { label: "Safe", value: 0, tone: "text-sky-400", icon: <ShieldCheck size={18} /> },
 ];
 
-const STATUS_STYLES: Record<string, string> = {
-  missing: "bg-red-500/15 text-red-400 border border-red-500/20",
-  found: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20",
-  safe: "bg-sky-500/15 text-sky-400 border border-sky-500/20",
+const STATUS_CONFIG: Record<string, { style: string; icon: React.ReactNode }> = {
+  missing: { style: "bg-red-500/15 text-red-400 border border-red-500/20", icon: <AlertTriangle size={12} /> },
+  found: { style: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20", icon: <CheckCircle2 size={12} /> },
+  safe: { style: "bg-sky-500/15 text-sky-400 border border-sky-500/20", icon: <ShieldCheck size={12} /> },
 };
 
 export default function MissingPersonsPage() {
@@ -91,7 +100,10 @@ export default function MissingPersonsPage() {
               key={stat.label}
               className="rounded-xl border border-white/10 bg-[#111827] p-5"
             >
-              <p className="eoc-label text-slate-400">{stat.label}</p>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">{stat.icon}</span>
+                <p className="eoc-label text-slate-400">{stat.label}</p>
+              </div>
               <p className={`mt-2 font-mono text-3xl font-bold ${stat.tone}`}>
                 {stat.value}
               </p>
@@ -104,7 +116,7 @@ export default function MissingPersonsPage() {
           <div className="relative flex-1">
             <Search
               size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
             <input
               type="text"
@@ -133,11 +145,11 @@ export default function MissingPersonsPage() {
         <div className="mt-6 space-y-3">
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center rounded-xl border border-white/10 bg-[#111827] py-16 text-center">
-              <Users size={40} className="mb-3 text-slate-600" />
+              <Users size={40} className="mb-3 text-slate-500" />
               <p className="text-sm font-medium text-slate-400">
                 No missing persons reported
               </p>
-              <p className="mt-1 text-xs text-slate-600">
+              <p className="mt-1 text-xs text-slate-500">
                 Click &quot;Report Missing Person&quot; to add a new entry
               </p>
             </div>
@@ -169,8 +181,9 @@ export default function MissingPersonsPage() {
                   </span>
                 </div>
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${STATUS_STYLES[person.status]}`}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${STATUS_CONFIG[person.status]?.style ?? ""}`}
                 >
+                  {STATUS_CONFIG[person.status]?.icon}
                   {person.status.charAt(0).toUpperCase() + person.status.slice(1)}
                 </span>
               </div>
@@ -197,7 +210,7 @@ export default function MissingPersonsPage() {
               <input
                 type="text"
                 placeholder="Full name"
-                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -209,7 +222,7 @@ export default function MissingPersonsPage() {
                 placeholder="Age"
                 min={0}
                 max={120}
-                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -232,7 +245,7 @@ export default function MissingPersonsPage() {
               <input
                 type="text"
                 placeholder="Area or location"
-                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -242,7 +255,7 @@ export default function MissingPersonsPage() {
               <input
                 type="text"
                 placeholder="Reporter name"
-                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -254,7 +267,7 @@ export default function MissingPersonsPage() {
               <input
                 type="tel"
                 placeholder="Phone number"
-                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -264,7 +277,7 @@ export default function MissingPersonsPage() {
               <input
                 type="text"
                 placeholder="e.g. Parent, Sibling, Friend"
-                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -274,7 +287,7 @@ export default function MissingPersonsPage() {
               <textarea
                 rows={4}
                 placeholder="Physical description, clothing, last seen circumstances..."
-                className="mt-1.5 w-full resize-none rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-600 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="mt-1.5 w-full resize-none rounded-lg border border-white/10 bg-[#0a0f1a] px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 

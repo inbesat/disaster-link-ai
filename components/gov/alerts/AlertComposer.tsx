@@ -910,6 +910,11 @@ export function AlertComposer() {
           <button
             type="button"
             onClick={handleSubmit}
+            aria-label={
+              scheduleMode === "scheduled"
+                ? `Schedule ${severity} ${type} alert for ${district} district`
+                : `Send ${severity} ${type} alert now to ${district} district`
+            }
             className={`mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-lg text-sm font-bold uppercase tracking-wider transition active:scale-[0.99] ${
               severity === "critical"
                 ? "bg-severity-red-600 text-white shadow-[0_4px_18px_rgba(220,38,38,0.45)] hover:bg-severity-red-500"

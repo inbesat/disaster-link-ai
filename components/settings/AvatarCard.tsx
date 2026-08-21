@@ -15,6 +15,7 @@
 // ---------------------------------------------------------------------
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Camera, Loader2, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import AvatarCropperModal from "@/components/settings/AvatarCropperModal";
@@ -164,12 +165,13 @@ export default function AvatarCard({
       <div className="flex flex-wrap items-center gap-6">
         <div className="relative shrink-0">
           {avatarSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={avatarSrc}
               alt="Your avatar"
+              width={88}
+              height={88}
+              unoptimized
               className="h-22 w-22 rounded-full border-2 border-cyan-400/40 object-cover"
-              style={{ width: 88, height: 88 }}
             />
           ) : (
             <AvatarFallback displayName={displayName} />

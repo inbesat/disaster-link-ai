@@ -102,7 +102,7 @@ export default function RequestResourcesPage() {
           id="category-select"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="w-full rounded-xl border-2 border-border bg-surface px-4 py-4 text-base font-semibold text-foreground focus:border-accent focus:outline-none"
+          className="w-full rounded-xl border-2 border-border bg-surface px-4 py-4 text-base font-semibold text-foreground focus:border-accent focus:ring-2 focus:ring-accent/30 focus:outline-none"
         >
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>
@@ -123,7 +123,7 @@ export default function RequestResourcesPage() {
           placeholder="e.g. 6"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
-          className="w-full rounded-xl border-2 border-border bg-surface px-4 py-4 text-2xl font-bold text-foreground focus:border-accent focus:outline-none"
+          className="w-full rounded-xl border-2 border-border bg-surface px-4 py-4 text-2xl font-bold text-foreground focus:border-accent focus:ring-2 focus:ring-accent/30 focus:outline-none"
         />
 
         {/* Urgency toggle */}
@@ -178,7 +178,7 @@ export default function RequestResourcesPage() {
             placeholder="Describe what you need — speak into the mic, or type…"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="mt-2 w-full resize-y rounded-xl border-2 border-border bg-surface px-4 py-3 text-base text-foreground placeholder:text-slate-500 focus:border-accent focus:outline-none"
+            className="mt-2 w-full resize-y rounded-xl border-2 border-border bg-surface px-4 py-3 text-base text-foreground placeholder:text-slate-500 focus:border-accent focus:ring-2 focus:ring-accent/30 focus:outline-none"
           />
         </div>
 

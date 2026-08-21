@@ -11,9 +11,12 @@
 //   • sticky "Save Changes" footer — only appears once inputs are dirty
 // ---------------------------------------------------------------------
 
+import Image from "next/image";
 import { useRef, useState } from "react";
 import { Building2, Camera, Shield, UserRound } from "lucide-react";
 import SettingsSection from "@/components/settings/SettingsSection";
+import ColorblindToggle from "@/components/settings/ColorblindToggle";
+import ReducedMotionToggle from "@/components/settings/ReducedMotionToggle";
 import { showToast } from "@/components/ui/Toast";
 import { ROLE_LABELS, type Role } from "@/lib/validations/user";
 import {
@@ -132,10 +135,12 @@ export default function ProfileIdentityPage() {
               className="group relative h-28 w-28 rounded-full border-2 border-white/20 bg-white/5 shadow-lg transition hover:border-purple-400 hover:shadow-[0_0_16px_rgba(139,92,246,0.4)]"
             >
               {avatar ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={avatar}
                   alt="Your profile photo"
+                  width={112}
+                  height={112}
+                  unoptimized
                   className="h-full w-full rounded-full object-cover"
                 />
               ) : (
@@ -284,6 +289,15 @@ export default function ProfileIdentityPage() {
           >
             ✓ Enabled
           </button>
+        </div>
+      </div>
+
+      {/* Accessibility Settings */}
+      <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-purple-400/90">Accessibility</p>
+        <div className="space-y-3">
+          <ColorblindToggle />
+          <ReducedMotionToggle />
         </div>
       </div>
 

@@ -129,7 +129,7 @@ export default function ProfileSetupPage() {
   }
 
   const inputClass =
-    "w-full rounded-md border border-border bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:outline-none";
+    "w-full rounded-md border border-border bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:ring-2 focus:ring-accent/30 focus:outline-none";
   const labelClass = "eoc-label block mb-1.5";
   const errorClass = "mt-1 text-xs text-severity-red-400";
 

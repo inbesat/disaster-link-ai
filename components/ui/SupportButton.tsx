@@ -39,6 +39,12 @@ export default function SupportButton() {
       icon: MessageCircle,
       action: () => window.open("tel:+919625130964", "_blank"),
     },
+    {
+      label: "Alternate Contact",
+      description: "+91-7251014013",
+      icon: MessageCircle,
+      action: () => window.open("tel:+917251014013", "_blank"),
+    },
   ];
 
   return (

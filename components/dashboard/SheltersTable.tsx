@@ -67,10 +67,17 @@ export default function SheltersTable({
     setRows(initialShelters);
   }, [initialShelters]);
 
+  const [displayLimit, setDisplayLimit] = useState(50);
+
   const filtered = useMemo(
     () => rows.filter((row) => statusFilter === "all" || row.status === statusFilter),
     [rows, statusFilter],
   );
+
+  const visibleFiltered = useMemo(() => {
+    if (filtered.length <= 50) return filtered;
+    return filtered.slice(0, displayLimit);
+  }, [filtered, displayLimit]);
 
   async function handleAdd(input: {
     name: string;
@@ -186,7 +193,7 @@ export default function SheltersTable({
             </tr>
           </thead>
           <tbody>
-            {filtered.map((row) => {
+            {visibleFiltered.map((row) => {
               const pct = occupancyPercent(row);
               const meta = STATUS_META[row.status] ?? STATUS_META.closed;
               const facilities = facilitiesOf(row);
@@ -275,6 +282,18 @@ export default function SheltersTable({
             )}
           </tbody>
         </table>
+        {filtered.length > displayLimit && (
+          <div className="flex items-center justify-between border-t border-border bg-surface-muted/50 px-4 py-2 text-xs text-slate-400">
+            <span>Showing {visibleFiltered.length} of {filtered.length} shelters (virtualized)</span>
+            <button
+              type="button"
+              onClick={() => setDisplayLimit((prev) => prev + 50)}
+              className="rounded bg-surface-elevated px-3 py-1 font-semibold text-accent transition hover:bg-accent/10"
+            >
+              Load 50 More
+            </button>
+          </div>
+        )}
       </div>
 
       {modalOpen && (
@@ -313,6 +332,14 @@ function AddShelterModal({
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (photoPreview && photoPreview.startsWith("blob:")) {
+        URL.revokeObjectURL(photoPreview);
+      }
+    };
+  }, [photoPreview]);
   const [error, setError] = useState<string | null>(null);
 
   async function submit() {

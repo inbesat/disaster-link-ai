@@ -1507,3 +1507,73 @@ body { top: 0px !important; }
     color: #f1f5f9 !important;
     padding: 8px !important;
 }
+
+/* =====================================================================
+   REDUCED MOTION OVERRIDES (Phase 17 · Step 6)
+   ---------------------------------------------------------------------
+   When .reduced-motion is on <html> (via ReducedMotionContext) OR the
+   system prefers-reduced-motion: reduce, disable all non-essential
+   animations and transitions.
+   ===================================================================== */
+
+/* System-level preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-pulse,
+  .animate-ping,
+  .animate-spin,
+  .animate-bounce,
+  .animate-alert-pulse,
+  .animate-sos-glow,
+  .animate-severity-pulse,
+  .animate-ai-thinking,
+  .animate-icon-bounce,
+  .animate-icon-spin {
+    animation: none !important;
+  }
+
+  /* Framer Motion: disable all transforms */
+  [style*="transform"] {
+    transform: none !important;
+  }
+}
+
+/* Manual toggle via settings */
+html.reduced-motion *,
+html.reduced-motion *::before,
+html.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.reduced-motion .animate-pulse,
+html.reduced-motion .animate-ping,
+html.reduced-motion .animate-spin,
+html.reduced-motion .animate-bounce,
+html.reduced-motion .animate-alert-pulse,
+html.reduced-motion .animate-sos-glow,
+html.reduced-motion .animate-severity-pulse,
+html.reduced-motion .animate-ai-thinking,
+html.reduced-motion .animate-icon-bounce,
+html.reduced-motion .animate-icon-spin {
+  animation: none !important;
+}
+
+/* Keep essential transitions (form focus, hover feedback) */
+html.reduced-motion button,
+html.reduced-motion a,
+html.reduced-motion input,
+html.reduced-motion select,
+html.reduced-motion textarea {
+  transition: box-shadow 100ms ease, border-color 100ms ease !important;
+}

@@ -12,6 +12,7 @@
 
 "use client";
 
+import Image from "next/image";
 import { Shield } from "lucide-react";
 import { useSidebar } from "./sidebar-context";
 
@@ -77,9 +78,13 @@ export function SidebarHeader({
         {/* Avatar */}
         <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-blue-800 text-xs font-bold text-white ring-2 ring-white/10">
           {avatarUrl ? (
-            <img
+            <Image
               src={avatarUrl}
               alt=""
+              width={32}
+              height={32}
+              priority
+              unoptimized
               className="h-full w-full rounded-full object-cover"
             />
           ) : (

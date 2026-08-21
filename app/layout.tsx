@@ -29,6 +29,10 @@ import StoragePressureCard from "@/components/offline/StoragePressureCard";
 import { HighContrastProvider } from "@/lib/contexts/HighContrastContext";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { MapSettingsProvider } from "@/lib/settings/MapSettingsContext";
+import { ColorblindProvider } from "@/components/providers/ColorblindContext";
+import { ReducedMotionProvider } from "@/components/providers/ReducedMotionContext";
+import { LiveRegionProvider } from "@/components/ui/LiveRegion";
+import SkipToContent from "@/components/ui/SkipToContent";
 import { SIMULATION_COOKIE } from "@/lib/admin/simulation";
 import "./globals.css";
 
@@ -201,13 +205,20 @@ export default function RootLayout({
         {/* Phase 13 · Step 10 — high-contrast mode (a11y). Applies the
             `high-contrast` class to <html> for every surface. */}
         <HighContrastProvider>
+        <ColorblindProvider>
+        <ReducedMotionProvider>
+        <LiveRegionProvider>
         <ThemeProvider>
           <LanguageProvider>
             <MapSettingsProvider>
+              <SkipToContent />
               {children}
             </MapSettingsProvider>
           </LanguageProvider>
         </ThemeProvider>
+        </LiveRegionProvider>
+        </ReducedMotionProvider>
+        </ColorblindProvider>
         </HighContrastProvider>
 
         {/* Phase 10 · Step 4 — secret pitch-day controller: renders nothing

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import ScrollReveal from "@/components/landing/ui/ScrollReveal";
 import Eyebrow from "@/components/landing/ui/Eyebrow";
 
@@ -59,10 +60,11 @@ export default function Solution() {
 
           <ScrollReveal delay={0.2}>
             <div className="relative rounded-[var(--radius-xl2)] overflow-hidden h-[500px] bg-[var(--navy)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop"
                 alt="Data analytics dashboard showing real-time disaster metrics, flood risk indicators, and emergency response coordination charts"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover w-full h-full rounded-2xl opacity-90"
               />
               <div className="absolute bottom-6 left-6 right-6 bg-[rgba(11,31,58,0.75)] backdrop-blur-[10px] rounded-lg p-4 flex items-center gap-3">

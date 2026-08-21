@@ -20,8 +20,11 @@
 import toast from "react-hot-toast";
 import { Zap } from "lucide-react";
 import { triggerHeavyHaptic } from "@/hooks/useHaptics";
+import { useLiveRegion } from "@/components/ui/LiveRegion";
 
 export function EmergencyFAB() {
+  const { announce } = useLiveRegion();
+
   const triggerSOS = () => {
     // The location read is mocked — the toast stands in for sharing GPS.
     toast("🚨 SOS Triggered: Location Shared", {
@@ -32,6 +35,10 @@ export function EmergencyFAB() {
         fontWeight: 600,
       },
     });
+
+    // Assertive announcement — screen readers interrupt current speech
+    // for emergency confirmations (Phase 17 · Step 5).
+    announce("Emergency SOS triggered. Your location has been shared with responders.", "assertive");
 
     // Heavy SOS vibration pattern [50, 50, 50] — field hardware feedback.
     triggerHeavyHaptic();

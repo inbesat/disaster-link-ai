@@ -172,7 +172,7 @@ export default function ProfileForm({ initial }: { initial: ProfileSettingsIniti
   }
 
   const inputClass =
-    "w-full rounded-md border border-panel-borderHover bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
+    "w-full rounded-md border border-panel-borderHover bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 focus:outline-none";
   const labelClass = "eoc-label block mb-1.5 text-slate-400";
   const errorClass = "mt-1 text-xs text-severity-red-400";
 
@@ -249,7 +249,7 @@ export default function ProfileForm({ initial }: { initial: ProfileSettingsIniti
                 value={email}
                 readOnly
                 disabled
-                className="w-full rounded-md border border-panel-borderHover bg-surface-muted/50 px-3 py-2.5 text-sm text-slate-400 focus:outline-none"
+                className="w-full rounded-md border border-panel-borderHover bg-surface-muted/50 px-3 py-2.5 text-sm text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
               />
               {isVerified ? (
                 <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-severity-green-500/40 bg-severity-green-500/10 px-2.5 py-1 text-[11px] font-semibold text-severity-green-400">

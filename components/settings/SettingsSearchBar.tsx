@@ -113,7 +113,7 @@ export default function SettingsSearchBar({
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          className="w-full bg-transparent text-sm text-foreground placeholder:text-slate-500 focus:outline-none"
+          className="w-full bg-transparent text-sm text-foreground placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]"
         />
         <kbd className="hidden shrink-0 rounded-sm border border-panel-borderHover bg-surface-muted px-1.5 py-0.5 text-eoc-tiny font-semibold text-slate-400 sm:inline-block">
           ⌘/Ctrl K

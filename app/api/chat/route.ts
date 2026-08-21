@@ -13,6 +13,8 @@ import { evacuationPlanTools } from "@/lib/ai/tools/evacuation-tools";
 import { createClient } from "@/lib/supabase/server";
 import { buildKnowledgeContext } from "@/lib/retrieval/retrieve";
 import { searchSimilarDocuments } from "@/lib/rag/vector-search";
+import { checkAiChatRateLimit, logAiUsage } from "@/lib/security/ai-rate-limit";
+import { guardPromptInput, logAiAudit } from "@/lib/ai/llm-guard";
 import { createRateLimiter } from "@/lib/security/rate-limit";
 import {
   assertDistrictAccess,
@@ -139,7 +141,7 @@ async function resolveAccessContext(): Promise<AccessContext> {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<Response> {
   // ---------------------------------------------------------------------
   // HARD GUARDRAIL — fail fast and loud when no LLM key is configured.
   // Without this, every chat request burns rate-limit budget, runs RAG,
@@ -156,21 +158,27 @@ export async function POST(req: Request) {
     );
   }
 
-  // Phase 21 · Enforce the server-side rate limit before doing any work.
-  const rate = chatLimiter(clientKey(req));
-  if (!rate.success) {
-    const retryAfterMs = Math.max(0, rate.resetTime - Date.now());
+  // Phase 21 & Phase 7 · Enforce the server-side rate limit before doing any work.
+  const cookieStore = await cookies();
+  const isDemo = cookieStore.get("demo_mode")?.value === "true";
+  const userKey = clientKey(req);
+
+  const aiLimit = checkAiChatRateLimit(userKey, isDemo);
+  if (!aiLimit.allowed) {
+    const retryAfterSec = Math.max(1, Math.ceil(aiLimit.resetInMs / 1000));
     return NextResponse.json(
       {
-        error: "Rate limit exceeded. Please wait before sending another request.",
-        retryAfterMs,
+        error: aiLimit.message || "AI assistant is busy. Please try again later.",
+        retryAfterMs: aiLimit.resetInMs,
       },
       {
         status: 429,
-        headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) },
+        headers: { "Retry-After": String(retryAfterSec) },
       },
     );
   }
+
+  logAiUsage(userKey, "chat");
 
   // Input validation
   let messages: Array<{ role?: string; content?: string }>; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -212,13 +220,35 @@ export async function POST(req: Request) {
 
   const queryText = lastUserMessage?.content?.toString().trim() ?? "";
 
+  // Phase 9 · Prompt injection prevention & input sanitization
+  const promptGuard = guardPromptInput(queryText, userKey);
+  if (!promptGuard.safe) {
+    logAiAudit(userKey, queryText, "", true, promptGuard.flaggedReason);
+    return NextResponse.json(
+      { error: promptGuard.flaggedReason || "Request flagged for safety reasons." },
+      { status: 400 },
+    );
+  }
+
+  if (promptGuard.offTopic) {
+    logAiAudit(userKey, queryText, "Off-topic query blocked", true, "off_topic");
+    return NextResponse.json(
+      {
+        message:
+          "I'm designed to help with disaster response. For other topics, please consult appropriate resources.",
+      },
+      { status: 200 },
+    );
+  }
+
   // Step 8 · Vector retrieval (cosine similarity via pgvector). The district is
   // scoped to the commander's own district so they only get their SOPs. On any
   // retrieval failure this degrades to the wider keyword-aware context builder.
   let officialContext = "";
-  if (queryText) {
+  const sanitizedQuery = promptGuard.sanitizedInput;
+  if (sanitizedQuery) {
     try {
-      const hits = await searchSimilarDocuments(queryText, district, 3);
+      const hits = await searchSimilarDocuments(sanitizedQuery, district, 3);
       if (hits.length) {
         officialContext = hits
           .map(
@@ -253,19 +283,14 @@ export async function POST(req: Request) {
     role,
   );
 
-  const system = BASE_PROMPT.replace("ROLE", role)
-    .replace("DISTRICT", district)
-    .replace(
-      "{SOP_CONTEXT}",
-      knowledge ||
-        "No official SOPs matched this query — answer using your tools and general emergency-management best practice (NDMA/state Disaster Management Act guidelines).",
-    )
-    .concat(viewingContext ? `\n\n${viewingContext}` : "")
-    .concat(
-      isCommander
-        ? ""
-        : "\n\nNOTE: You do NOT have evacuation tool access. If the user asks for evacuation plans or routes, explain that this requires commander clearance and direct them to the District Control Room.",
-    );
+  // Prompt 9.1: Structured system prompt with clear delimiters and safety boundaries
+  const system = `SYSTEM: You are a disaster response AI. You ONLY answer questions about floods, evacuation, and safety.
+ROLE: ${role} | DISTRICT: ${district}
+USER_INPUT: [Sanitized user message]
+CONTEXT: ${knowledge || "No official SOPs matched this query — answer using tools and NDMA guidelines."}
+INSTRUCTION: Answer based ONLY on verified disaster management facts. If the query is off-topic, reply: "I can only help with disaster-related questions."
+${viewingContext ? `\nVIEWING_CONTEXT: ${viewingContext}` : ""}
+${isCommander ? "" : "\nNOTE: You do NOT have evacuation tool access. Explain commander clearance is required."}`;
 
   const commanderTools = {
     ...emergencyPlanTools,

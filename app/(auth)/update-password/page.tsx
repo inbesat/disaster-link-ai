@@ -170,7 +170,7 @@ export default function UpdatePasswordPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Minimum 8 characters"
-                className="w-full rounded-md border border-border bg-surface-muted py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:outline-none"
+                className="w-full rounded-md border border-border bg-surface-muted py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:ring-2 focus:ring-accent/30 focus:outline-none"
                 disabled={loading}
               />
             </div>
@@ -194,7 +194,7 @@ export default function UpdatePasswordPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Repeat password"
-                className="w-full rounded-md border border-border bg-surface-muted py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:outline-none"
+                className="w-full rounded-md border border-border bg-surface-muted py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:ring-2 focus:ring-accent/30 focus:outline-none"
                 disabled={loading}
               />
             </div>

@@ -44,7 +44,7 @@ function getSupabase() {
 type AuthTab = "signin" | "signup";
 
 const inputClass =
-  "w-full rounded-md border border-border bg-surface-muted py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:outline-none";
+  "w-full rounded-md border border-border bg-surface-muted py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:ring-2 focus:ring-accent/30 focus:outline-none";
 
 export default function UnifiedAuthCard() {
   const searchParams = useSearchParams();

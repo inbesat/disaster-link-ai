@@ -11,6 +11,7 @@
 
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { PDFParse } from "pdf-parse";
+import { sanitizeRagText } from "@/lib/ai/llm-guard";
 
 const splitter = new RecursiveCharacterTextSplitter({
   chunkSize: 1000,
@@ -53,7 +54,8 @@ export async function extractTextFromPDF(
   const parser = new PDFParse({ data: buffer });
   try {
     const result = await parser.getText();
-    return result?.text ?? "";
+    const rawText = result?.text ?? "";
+    return sanitizeRagText(rawText);
   } catch (error: unknown) {
     console.warn("[rag] PDF text extraction failed:", error);
     return "";

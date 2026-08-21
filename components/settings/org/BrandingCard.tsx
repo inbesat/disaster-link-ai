@@ -10,6 +10,7 @@
 //     and Dispatch Manifests.
 // ---------------------------------------------------------------------
 
+import Image from "next/image";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { FileText, Image as ImageIcon, Save, X } from "lucide-react";
@@ -89,10 +90,12 @@ export default function BrandingCard() {
         {logoPreview ? (
           <div className="mt-2 flex items-center justify-between gap-3 rounded-md border border-violet-400/40 bg-violet-500/[0.06] px-3 py-3">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={logoPreview}
                 alt="Agency logo preview"
+                width={48}
+                height={48}
+                unoptimized
                 className="h-12 w-12 shrink-0 rounded-md border border-panel-border object-contain bg-[#0a0f1a]"
               />
               <div>

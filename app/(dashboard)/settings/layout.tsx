@@ -132,7 +132,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
         </aside>
 
         {/* Content column */}
-        <main className="min-h-0 flex-1 overflow-y-auto">
+        <main id="main-content" className="min-h-0 flex-1 overflow-y-auto">
           <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 p-4 sm:p-6 lg:p-8">
             {children}
           </div>

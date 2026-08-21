@@ -123,7 +123,7 @@ export default function AuditLogsPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search action, actor, IP…"
-            className="w-full rounded-md border border-panel-border bg-panel py-2 pl-9 pr-3 text-sm text-foreground outline-none transition placeholder:text-slate-500 focus:border-amber-400/60"
+            className="w-full rounded-md border border-panel-border bg-panel py-2 pl-9 pr-3 text-sm text-foreground outline-none transition placeholder:text-slate-500 focus:border-amber-400/60 focus:ring-2 focus:ring-amber-400/30"
           />
         </div>
 

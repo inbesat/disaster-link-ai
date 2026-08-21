@@ -150,7 +150,7 @@ function GlobalSearch({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search resources…"
-        className="h-10 w-full rounded-lg border border-white/10 bg-[#0a0f1a] pl-9 pr-3 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:outline-none"
+        className="h-10 w-full rounded-lg border border-white/10 bg-[#0a0f1a] pl-9 pr-3 text-sm text-white placeholder:text-slate-500 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none"
       />
     </label>
   );
@@ -173,7 +173,7 @@ function SelectColumnFilter<T>({
       aria-label={`Filter by ${String(column.columnDef.header).toLowerCase()}`}
       value={filterValue}
       onChange={(e) => column.setFilterValue(e.target.value || undefined)}
-      className="h-10 rounded-lg border border-white/10 bg-[#0a0f1a] px-3 text-sm text-white focus:border-purple-400/60 focus:outline-none [&>option]:bg-[#111827]"
+      className="h-10 rounded-lg border border-white/10 bg-[#0a0f1a] px-3 text-sm text-white focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/30 focus:outline-none [&>option]:bg-[#111827]"
     >
       <option value="">{allOptionLabel}</option>
       {options.map((option) => (

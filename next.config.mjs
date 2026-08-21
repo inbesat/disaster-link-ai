@@ -74,13 +74,17 @@ const withPWA = withPWAInit({
 // When a concrete origin is used, `Access-Control-Allow-Credentials: true`
 // is also emitted so cookie/session auth can work cross-origin. When the
 // value is "*", that header is omitted — browsers reject "*" + credentials.
-const allowedOrigin =
+const envOrigin =
   process.env.ALLOWED_ORIGIN ??
   process.env.NEXT_PUBLIC_SITE_URL ??
-  process.env.VERCEL_PROJECT_PRODUCTION_URL ??
-  (isDev ? "http://localhost:3000" : "https://safesphere.vercel.app");
+  process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
-const isWildcard = allowedOrigin === "*";
+const allowedOrigin =
+  envOrigin && envOrigin !== "*"
+    ? envOrigin
+    : isDev
+      ? "http://localhost:3000"
+      : "https://safesphere.vercel.app";
 
 const nextConfig = {
   // Hackathon deadline: skip TypeScript checking at build time
@@ -93,14 +97,20 @@ const nextConfig = {
   },
 
   // Remote image hosts the app renders via next/image (QR codes are generated
-  // on-demand by qrserver.com; donate flows embed them). Local + PWA assets
-  // need no config.
+  // on-demand by qrserver.com; donate flows embed them). Landing section
+  // photography comes from Unsplash. Local + PWA assets need no config.
+  // NOTE: adding hosts here requires a dev-server restart.
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "api.qrserver.com",
         pathname: "/v1/create-qr-code/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
       },
     ],
   },
@@ -117,18 +127,15 @@ const nextConfig = {
           },
           {
             key: "Access-Control-Allow-Headers",
-            value: "Content-Type, Authorization",
+            value: "Content-Type, Authorization, X-CSRF-Token",
           },
+          { key: "Access-Control-Allow-Credentials", value: "true" },
           // Cache preflight responses for a day to cut redundant OPTIONS calls.
           { key: "Access-Control-Max-Age", value: "86400" },
           // Caches must vary on Origin when CORS headers depend on the
           // request's Origin — otherwise a shared cache can replay one
           // origin's ACAO to another.
           { key: "Vary", value: "Origin" },
-          // Only send the credentials flag for a concrete origin (never "*").
-          ...(isWildcard
-            ? []
-            : [{ key: "Access-Control-Allow-Credentials", value: "true" }]),
           // Security headers
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },

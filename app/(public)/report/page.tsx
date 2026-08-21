@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { LocateFixed, MapPin, MessageSquareText, Upload } from "lucide-react";
 import { submitCitizenReport, type CitizenReportInput } from "@/app/actions/reports";
@@ -230,10 +231,12 @@ export default function ReportPage() {
               />
             </label>
             {imageDataUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={imageDataUrl}
                 alt="Report preview"
+                width={640}
+                height={160}
+                unoptimized
                 className="mt-3 h-40 w-full rounded-eoc border border-border object-cover"
               />
             )}

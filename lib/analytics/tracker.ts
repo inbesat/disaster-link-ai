@@ -174,7 +174,20 @@ export async function logFeatureUsage(
   role: string,
   district: string,
 ): Promise<void> {
-  trackEvent("feature_used", { feature: featureName, role, district });
+  // Respect 'Do Not Track' (DNT) browser settings & consent
+  if (typeof window !== "undefined") {
+    const dnt = navigator.doNotTrack === "1" || (window as any).doNotTrack === "1";
+    const consent = localStorage.getItem("safesphere_cookie_consent");
+    if (dnt || consent === "declined") {
+      // Analytics tracking bypassed due to DNT or declined consent
+      return;
+    }
+  }
+
+  // Mock for the hackathon — console only, no DB writes.
+  console.log(
+    `${role.toUpperCase()} user in ${district} triggered ${featureName.toUpperCase()}`,
+  );
 }
 
 export function getAnalyticsSummary(): string {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
 import { requireRole } from "@/lib/security/require-role";
+import { warnDbUnavailableOnce } from "@/lib/server/db-fallback";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,7 @@ export async function GET(): Promise<NextResponse> {
   } catch (error: unknown) {
     // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
     // serve an empty list (source: "mock") so the tracker still renders.
-    console.error("Failed to load evacuation plans (serving empty list):", error);
+    warnDbUnavailableOnce("evacuation-plans", error);
     return NextResponse.json({ ok: true, plans: [], source: "mock" });
   }
 }

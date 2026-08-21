@@ -17,6 +17,7 @@ import AIPlannerWidget from "@/components/dashboard/AIPlannerWidget";
 import ResponderStatusBoard from "@/components/dashboard/ResponderStatusBoard";
 import FloodPredictionChart from "@/components/dashboard/FloodPredictionChart";
 import ResourceDonutChart from "@/components/dashboard/ResourceDonutChart";
+import GlobalWorldMap from "@/components/dashboard/GlobalWorldMap";
 
 export default function DashboardPage() {
   return (
@@ -65,6 +66,9 @@ export default function DashboardPage() {
             },
           ]}
         />
+
+        {/* ── Global Flood Response world map (Phase 2) ──────────── */}
+        <GlobalWorldMap />
       </section>
     </DashboardLayout>
   );

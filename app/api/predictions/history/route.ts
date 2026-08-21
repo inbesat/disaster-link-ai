@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
+import { warnDbUnavailableOnce } from "@/lib/server/db-fallback";
 
 export const dynamic = "force-dynamic";
 
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   } catch (error: unknown) {
     // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
     // serve realistic mock points so the Recharts graph still renders.
-    console.error("Failed to load prediction history (serving mock points):", error);
+    warnDbUnavailableOnce("predictions/history", error);
     return NextResponse.json({ source: "mock", points: buildMockPoints(days) });
   }
 }

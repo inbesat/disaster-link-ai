@@ -163,7 +163,7 @@ export default function ProfessionalDetailsCard() {
   }
 
   const inputClass =
-    "w-full rounded-md border border-panel-borderHover bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
+    "w-full rounded-md border border-panel-borderHover bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 focus:outline-none";
   const labelClass = "eoc-label block mb-1.5 text-slate-400";
 
   return (

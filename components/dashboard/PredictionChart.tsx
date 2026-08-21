@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { downsampleDataset, useChartVisibility } from "@/lib/perf/chart-utils";
 import {
   ResponsiveContainer,
   LineChart,
@@ -39,10 +40,13 @@ type HistoryResponse = {
 
 // Recharts line for the real "risk index" (0 Safe → 3 Evacuate) series.
 function RiskChart({ points }: { points: HistoryResponse["points"] }) {
+  const isTabVisible = useChartVisibility();
+  const sampledPoints = useMemo(() => downsampleDataset(points, 500), [points]);
+
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={points} margin={{ top: 6, right: 12, left: -16, bottom: 0 }}>
+        <LineChart data={sampledPoints} margin={{ top: 6, right: 12, left: -16, bottom: 0 }}>
           <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
           <XAxis
             dataKey="day"
@@ -103,6 +107,7 @@ function RiskChart({ points }: { points: HistoryResponse["points"] }) {
             strokeWidth={2.5}
             dot={{ r: 3, fill: ACCENT, strokeWidth: 0 }}
             activeDot={{ r: 5 }}
+            isAnimationActive={isTabVisible}
           />
         </LineChart>
       </ResponsiveContainer>

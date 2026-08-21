@@ -56,23 +56,31 @@ export default function NotificationCenter() {
   const [loading, setLoading] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const loadAlerts = useCallback(async () => {
+  const loadAlerts = useCallback(async (signal?: AbortSignal) => {
     try {
-      const response = await fetch("/api/alerts?limit=20");
+      const response = await fetch("/api/alerts?limit=20", { signal });
       if (!response.ok) throw new Error(`Status ${response.status}`);
       const data = await response.json();
-      setAlerts(data.alerts ?? []);
-      setUnreadCount(data.unreadCount ?? 0);
+      if (!signal?.aborted) {
+        setAlerts(data.alerts ?? []);
+        setUnreadCount(data.unreadCount ?? 0);
+      }
     } catch (error: unknown) {
-      console.error("Failed to load alerts:", error);
+      if ((error as { name?: string })?.name !== "AbortError") {
+        console.error("Failed to load alerts:", error);
+      }
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) {
+        setLoading(false);
+      }
     }
   }, []);
 
   // Fetch on mount and whenever the dropdown opens.
   useEffect(() => {
-    void loadAlerts();
+    const controller = new AbortController();
+    void loadAlerts(controller.signal);
+    return () => controller.abort();
   }, [loadAlerts]);
 
   useEffect(() => {

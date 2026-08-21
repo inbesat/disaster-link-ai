@@ -406,12 +406,19 @@ function CitizenForm() {
 // =====================================================================
 
 function GovForm() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<"district_admin" | "super_admin">("district_admin");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    // Set by the govLogin approval gate when a non-approved email is
+    // bounced back here (?error=access_pending).
+    searchParams.get("error") === "access_pending"
+      ? "Your access request is pending admin approval. You'll be able to sign in once an admin approves it at their desk."
+      : null,
+  );
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -426,7 +433,7 @@ function GovForm() {
     setError(null);
     setLoading(true);
     try {
-      await govLogin(role);
+      await govLogin(email, role);
     } catch (err) {
       setLoading(false);
       setError(err instanceof Error ? err.message : "Sign-in failed. Try again.");

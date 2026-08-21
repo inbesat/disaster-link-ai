@@ -116,7 +116,7 @@ export default function LocalizationSettingsCard() {
             id="language"
             value={language}
             onChange={(e) => handleLanguageChange(e.target.value as Locale)}
-            className="w-full appearance-none rounded-md border border-panel-borderHover bg-surface-muted py-2.5 pl-10 pr-10 text-sm text-foreground focus:border-cyan-400 focus:outline-none"
+              className="w-full appearance-none rounded-md border border-panel-borderHover bg-surface-muted py-2.5 pl-10 pr-10 text-sm text-foreground focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 focus:outline-none"
           >
             {LANGUAGE_OPTIONS.map((option) => (
               <option key={option.code} value={option.code}>
@@ -157,7 +157,7 @@ export default function LocalizationSettingsCard() {
               id="timezone"
               value={timezone}
               onChange={(e) => setTimezone(e.target.value)}
-              className="w-full appearance-none rounded-md border border-panel-borderHover bg-surface-muted py-2.5 pl-10 pr-10 text-sm text-foreground focus:border-cyan-400 focus:outline-none"
+            className="w-full appearance-none rounded-md border border-panel-borderHover bg-surface-muted py-2.5 pl-10 pr-10 text-sm text-foreground focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 focus:outline-none"
             >
               {TIMEZONE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>

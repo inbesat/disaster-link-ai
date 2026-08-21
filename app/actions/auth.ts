@@ -239,7 +239,52 @@ export async function exitGuestMode() {
   redirect("/");
 }
 
-export async function govLogin(role: "district_admin" | "super_admin" = "district_admin") {
+export async function govLogin(email: string, role: "district_admin" | "super_admin" = "district_admin") {
+  // -----------------------------------------------------------------
+  // Gov access approval gate (strict mode).
+  //
+  // An email may sign in to the gov portal only when:
+  //   1. It is listed in GOV_ACCESS_WHITELIST (comma-separated env var —
+  //      the owner's/demo accounts, checked FIRST so the gate can never
+  //      lock the team out even if the database is unreachable), OR
+  //   2. access_requests has a row for it with status = 'approved'
+  //      (created via /gov/signup → /api/access-request, approved at
+  //      /access-requests).
+  //
+  // If the DB lookup itself fails (placeholder DATABASE_URL, table not
+  // migrated yet), we degrade to whitelist-only and log loudly — the
+  // strict story still holds because every non-whitelisted email is
+  // bounced either way.
+  // -----------------------------------------------------------------
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const whitelist = (process.env.GOV_ACCESS_WHITELIST ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  let approved = whitelist.includes(normalizedEmail);
+
+  if (!approved) {
+    try {
+      const { prisma } = await import("@/server/prisma");
+      const request = await prisma.accessRequest.findUnique({
+        where: { email: normalizedEmail },
+        select: { status: true },
+      });
+      approved = request?.status === "approved";
+    } catch (error) {
+      // DB unavailable — fail closed for non-whitelisted emails.
+      safeLog("warn", "[gov-login] access_requests lookup failed; whitelist-only gate active", {
+        metadata: { error: error instanceof Error ? error.message : String(error) },
+      });
+    }
+  }
+
+  if (!approved) {
+    redirect("/login?mode=gov&error=access_pending");
+  }
+
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
   cookies().delete("demo_mode");
@@ -247,6 +292,7 @@ export async function govLogin(role: "district_admin" | "super_admin" = "distric
   cookies().delete("citizen_phone");
   cookies().delete("sandbox");
   setSessionCookie("role", role, 60 * 60 * 24 * 7);
+  setSessionCookie("gov_email", normalizedEmail, 60 * 60 * 24 * 7);
   redirect(role === "super_admin" ? "/gov/overview" : "/gov/dashboard");
 }
 
