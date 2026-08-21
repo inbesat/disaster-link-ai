@@ -38,7 +38,7 @@ describe("lib/settings/data-minimization", () => {
   });
 
   it("purges chat history older than 30 days", async () => {
-    vi.mocked(prisma.chatSession.findMany).mockResolvedValue([{ id: "session-1" }] as any);
+    vi.mocked(prisma.chatSession.findMany).mockResolvedValue([{ id: "session-1" }] as unknown as Awaited<ReturnType<typeof prisma.chatSession.findMany>>);
     vi.mocked(prisma.chatMessage.deleteMany).mockResolvedValue({ count: 5 });
     vi.mocked(prisma.chatSession.deleteMany).mockResolvedValue({ count: 1 });
 
@@ -52,8 +52,8 @@ describe("lib/settings/data-minimization", () => {
   it("anonymizes crowdsourced reports older than 90 days", async () => {
     vi.mocked(prisma.crowdsourcedReport.findMany).mockResolvedValue([
       { id: "report-1", lat: 25.594094, lng: 85.137566 },
-    ] as any);
-    vi.mocked(prisma.crowdsourcedReport.update).mockResolvedValue({} as any);
+    ] as unknown as Awaited<ReturnType<typeof prisma.crowdsourcedReport.findMany>>);
+    vi.mocked(prisma.crowdsourcedReport.update).mockResolvedValue({} as unknown as Awaited<ReturnType<typeof prisma.crowdsourcedReport.update>>);
 
     const count = await anonymizeOldCrowdsourcedReports(90);
 

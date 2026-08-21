@@ -112,7 +112,7 @@ export async function GET(request: Request) {
                   ${
                     exportPayload.user.familyContacts.length > 0
                       ? exportPayload.user.familyContacts
-                          .map((c: any) => `<tr><td>${c.name}</td><td>${c.phoneNumber}</td></tr>`)
+                          .map((c: { name: string; phoneNumber: string }) => `<tr><td>${c.name}</td><td>${c.phoneNumber}</td></tr>`)
                           .join("")
                       : "<tr><td colspan='2'>No family contacts registered</td></tr>"
                   }
