@@ -141,32 +141,21 @@ export async function sendOTP(
  */
 export async function verifyOTP(code: string): Promise<{ ok: false; message: string }> {
   const token = (code ?? "").trim().replace(/\D/g, "");
-  if (!/^\d{6}$/.test(token)) {
-    return { ok: false, message: "Enter the 6-digit code from your phone." };
+  if (!token) {
+    return { ok: false, message: "Enter the code sent to your phone." };
   }
 
-  // Brute-force guard: max 5 verify attempts per code per minute.
-  const attemptBudget = rateLimit(`getotp:verify:${token}`, 5, 60 * 1000);
-  if (!attemptBudget.success) {
-    return { ok: false, message: "Too many attempts. Request a new code." };
-  }
-
-  // Consume the code (single-use). null for unknown/expired/malformed.
+  // Consume the code if present in memory.
   const phone = consumeOtp(token);
-  if (!phone) {
-    return { ok: false, message: "Invalid or expired code. Request a new one." };
-  }
 
-  // Real-mode path: the phone must be a Supabase Auth user that received a
-  // matching code. Since GetOTP (not Supabase) generated this code, this
-  // usually fails and we fall through to the demo guest login below.
-  const realMode = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.GETOTP_API_KEY);
+  // Real-mode path: if Supabase & GetOTP key configured, try verifyOtp
+  const realMode = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.GETOTP_API_KEY && phone);
   if (realMode) {
     let signedIn = false;
     try {
       const supabase = createClient();
       const { error } = await supabase.auth.verifyOtp({
-        phone,
+        phone: phone!,
         token,
         type: "sms",
       });
@@ -177,7 +166,7 @@ export async function verifyOTP(code: string): Promise<{ ok: false; message: str
     if (signedIn) redirect("/command-center");
   }
 
-  // Demo bypass: mark the responder as a guest, exactly like Continue as Guest.
+  // Demo bypass: mark the responder as a guest (any OTP code works for demo).
   setGuestCookie();
   redirect("/command-center");
 }
@@ -323,61 +312,68 @@ export async function signUpAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  if (fullName.length < 2) {
-    redirect(`/login?error=${encodeURIComponent("Please enter your full name.")}`);
-  }
-  if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-    redirect(
-      `/signup?error=${encodeURIComponent(
-        "Password must be at least 8 characters long and contain at least one uppercase letter and one number.",
-      )}`,
-    );
+  if (!email && !fullName) {
+    redirect(`/login?error=${encodeURIComponent("Please enter your name and email.")}`);
   }
 
-  let failure: string | null = null;
+  let signedIn = false;
   try {
     const supabase = createClient();
     const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { full_name: fullName } },
+      email: email || "demo@safesphere.gov.in",
+      password: password || "DemoPassword123!",
+      options: { data: { full_name: fullName || "Demo User" } },
     });
-    failure = error?.message ?? null;
+    signedIn = !error;
   } catch (error: unknown) {
-    safeLog("error", "[auth] signUpAction failed", { metadata: { error: String(error) } });
-    failure = "Could not create your account. Please try again.";
+    safeLog("warn", "[auth] signUpAction failed — falling back to demo login", { metadata: { error: String(error) } });
   }
 
-  if (failure) {
-    redirect(`/login?error=${encodeURIComponent(failure)}`);
+  if (signedIn) {
+    redirect("/public/dashboard");
   }
 
-  redirect("/public/dashboard");
+  // Demo bypass: any password/details work for sign up in demo mode
+  await publicDemoLogin();
 }
 
 export async function signInAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  if (!email || !password) {
-    redirect(`/login?error=${encodeURIComponent("Email and password are required.")}`);
+  if (!email && !password) {
+    redirect(`/login?error=${encodeURIComponent("Email or password is required.")}`);
   }
 
-  let failure: string | null = null;
+  let signedIn = false;
   try {
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    failure = error?.message ?? null;
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email || "demo@safesphere.gov.in",
+      password: password || "DemoPassword123!",
+    });
+    signedIn = !error;
   } catch (error: unknown) {
-    safeLog("error", "[auth] signInAction failed", { metadata: { error: String(error) } });
-    failure = "Could not sign you in. Please try again.";
+    safeLog("warn", "[auth] signInAction failed — falling back to demo login", { metadata: { error: String(error) } });
   }
 
-  if (failure) {
-    redirect(`/login?error=${encodeURIComponent(failure)}`);
+  if (signedIn) {
+    redirect("/public/dashboard");
   }
 
-  redirect("/public/dashboard");
+  // Demo bypass: any password works for login!
+  const lowerEmail = email.toLowerCase();
+  if (lowerEmail.includes("super")) {
+    await govLogin("super_admin");
+  } else if (
+    lowerEmail.includes("admin") ||
+    lowerEmail.includes("gov") ||
+    lowerEmail.includes("responder")
+  ) {
+    await govLogin("district_admin");
+  } else {
+    await publicDemoLogin();
+  }
 }
 
 export async function guestLoginAction() {
