@@ -46,7 +46,7 @@ FOR SELECT USING (
 DROP POLICY IF EXISTS public_shelters ON public.shelters;
 CREATE POLICY public_shelters ON public.shelters
 FOR SELECT USING (
-  auth.uid() IS NULL OR district = public.current_user_district()
+  district = public.current_user_district()
 );
 
 -- alert_logs / alerts: public sees ONLY alerts targeting their district with 'sent' status

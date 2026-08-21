@@ -10,9 +10,9 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get("next") ?? "/command-center";
   const ip = clientIpFromRequest(request);
 
-  // Verify state parameter if present to prevent CSRF attacks
+  // Verify state parameter to prevent CSRF attacks
   const storedState = request.cookies.get("oauth_state")?.value;
-  if (state && storedState && state !== storedState) {
+  if (storedState && (!state || state !== storedState)) {
     safeLog("error", "[auth/callback] OAuth CSRF state mismatch detected", { metadata: { ip } });
     return NextResponse.redirect(`${origin}/login?error=csrf_state_mismatch`);
   }
