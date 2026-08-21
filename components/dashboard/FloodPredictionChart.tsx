@@ -127,7 +127,13 @@ export function FloodPredictionChart({ useMock = false }: Props) {
 
         if (!res.ok) throw new Error(`ML API returned ${res.status}`);
 
-        const result = await res.json();
+        const result = (await res.json()) as {
+          ok?: boolean;
+          riskLevel?: string;
+          confidenceScore?: number;
+          predicted_riskClass?: number;
+          probabilities?: number[];
+        };
         if (cancelled) return;
 
         if (result.ok && result.riskLevel) {
@@ -151,7 +157,7 @@ export function FloodPredictionChart({ useMock = false }: Props) {
       }
     }
 
-    fetchPrediction();
+    void fetchPrediction();
     return () => { cancelled = true; };
   }, [useMock]);
 

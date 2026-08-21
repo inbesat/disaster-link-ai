@@ -27,7 +27,7 @@ async function getUserId(): Promise<string | null> {
 }
 
 /** List chat sessions for the current user. */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const rateResult = sessionsLimiter(`chat-sessions-list:${clientIp(request)}`);
   if (!rateResult.success) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
@@ -42,14 +42,14 @@ export async function GET(request: NextRequest) {
       include: { _count: { select: { messages: true } } },
     });
     return NextResponse.json({ ok: true, sessions });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to load chat sessions:", error);
     return NextResponse.json({ ok: true, sessions: [] });
   }
 }
 
 /** Create a new chat session. */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const rateResult = sessionsLimiter(`chat-sessions-create:${clientIp(request)}`);
   if (!rateResult.success) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       },
     });
     return NextResponse.json({ ok: true, session });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to create chat session:", error);
     return NextResponse.json({ ok: false, error: "Failed to create session." }, { status: 500 });
   }

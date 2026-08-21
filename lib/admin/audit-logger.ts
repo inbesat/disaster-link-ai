@@ -14,7 +14,7 @@ export async function logAdminAction(
     await prisma.auditLog.create({
       data: { action, resource, details },
     });
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("[audit] failed to write audit log", { action, resource }, err);
   }
 }

@@ -75,7 +75,10 @@ const withPWA = withPWAInit({
 // is also emitted so cookie/session auth can work cross-origin. When the
 // value is "*", that header is omitted — browsers reject "*" + credentials.
 const allowedOrigin =
-  process.env.NEXT_PUBLIC_SITE_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "*";
+  process.env.ALLOWED_ORIGIN ??
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ??
+  (isDev ? "http://localhost:3000" : "https://safesphere.vercel.app");
 
 const isWildcard = allowedOrigin === "*";
 

@@ -488,18 +488,20 @@ function GovForm() {
                   aria-checked={active}
                   data-testid={`role-${option.key}`}
                   onClick={() => setRole(option.key)}
-                  className={`rounded-[var(--dl-radius-sm)] border px-3 py-2.5 text-left transition ${
+                  className={`rounded-[var(--dl-radius-sm)] px-3 py-2.5 text-left transition-all duration-200 ease-in-out ${
                     active
-                      ? "border-[var(--dl-blue-light)]/60 bg-[var(--dl-blue)]/20"
-                      : "border-white/15 bg-white/5 hover:border-white/25"
+                      ? "border-2 border-blue-500 bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.15)]"
+                      : "cursor-pointer border-2 border-slate-700/50 bg-slate-800/30 hover:bg-slate-800 hover:border-slate-600"
                   }`}
                 >
                   <span
-                    className={`block text-sm font-semibold ${active ? "text-[var(--dl-blue-light)]" : "text-white"}`}
+                    className={`block text-sm ${active ? "font-bold text-blue-400" : "font-semibold text-slate-400"}`}
                   >
                     {option.label}
                   </span>
-                  <span className="mt-0.5 block text-[0.6875rem] text-[var(--dl-text-muted)]">
+                  <span
+                    className={`mt-0.5 block text-[0.6875rem] ${active ? "text-blue-200/70" : "text-slate-500"}`}
+                  >
                     {option.description}
                   </span>
                 </button>

@@ -19,6 +19,7 @@ import { Mic, Camera, MapPin, Send, Radio, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import { triggerLightHaptic, triggerHeavyHaptic } from "@/hooks/useHaptics";
 import { PATNA_CENTER } from "@/lib/field-offline";
+import { safeParseJSON } from "@/lib/utils";
 
 type Channel = "unit" | "command";
 type Message = {
@@ -80,7 +81,8 @@ function readChat(): Message[] {
   if (typeof window === "undefined") return SEED;
   try {
     const raw = window.localStorage.getItem(CHAT_KEY);
-    return raw ? (JSON.parse(raw) as Message[]) : SEED;
+    const parsed = safeParseJSON<Message[]>(raw);
+    return parsed ?? SEED;
   } catch {
     return SEED;
   }

@@ -42,7 +42,7 @@ export default function AuditLogsPage() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    listAuditLogs().then((data) => {
+    void listAuditLogs().then((data) => {
       setEvents(data);
       setLoading(false);
     });

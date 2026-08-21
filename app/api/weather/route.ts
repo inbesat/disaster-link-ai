@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
+import { handleApiError } from "@/app/api/error-handler";
+import { safeLog } from "@/lib/logger";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const latParam = request.nextUrl.searchParams.get("lat");
   const lngParam = request.nextUrl.searchParams.get("lng");
   const apiKey = process.env.OPENWEATHER_API_KEY;
@@ -17,10 +19,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (!apiKey) {
-    return NextResponse.json(
-      { error: "OPENWEATHER_API_KEY is not configured on the server." },
-      { status: 500 },
-    );
+    return handleApiError(new Error("OPENWEATHER_API_KEY is not configured on the server."), request, { status: 500 });
   }
 
   try {
@@ -40,9 +39,6 @@ export async function GET(request: NextRequest) {
 
     const rainfallMm = data.rain?.["1h"] ?? data.rain?.["3h"] ?? 0;
 
-    // Persist to weather_data — best effort. A DB outage (e.g. a Vercel
-    // cold start) must never fail this route: log and continue serving the
-    // freshly fetched weather so the live-conditions chain keeps working.
     let recorded: {
       id: string;
       rainfallMm: number;
@@ -68,8 +64,8 @@ export async function GET(request: NextRequest) {
         lat: record.lat,
         lng: record.lng,
       };
-    } catch (persistError) {
-      console.error("Failed to persist weather data (continuing):", persistError);
+    } catch (persistError: unknown) {
+      safeLog("warn", "Failed to persist weather data (continuing)", { metadata: { error: String(persistError) } });
     }
 
     return NextResponse.json({
@@ -82,8 +78,7 @@ export async function GET(request: NextRequest) {
         description: data.weather?.[0]?.description ?? null,
       },
     });
-  } catch (error) {
-    console.error("Weather fetch failed:", error);
-    return NextResponse.json({ error: "Failed to fetch weather data." }, { status: 500 });
+  } catch (error: unknown) {
+    return handleApiError(error, request);
   }
 }

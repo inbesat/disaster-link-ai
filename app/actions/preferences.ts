@@ -46,7 +46,7 @@ export async function updatePreferredLanguage(
     }
 
     return { ok: true };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[preferences] Server sync failed:", error);
     return { ok: false, error: error instanceof Error ? error.message : "Unknown error" };
   }

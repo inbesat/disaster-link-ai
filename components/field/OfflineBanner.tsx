@@ -29,7 +29,7 @@ export default function OfflineBanner() {
 
   // Boot: warm the 24h bundle + subscribe to network events + queue changes.
   useEffect(() => {
-    buildOfflineBundle().then(cacheBundle);
+    void buildOfflineBundle().then(cacheBundle);
     const unsub = subscribeToNetwork(() => {
       const backOnline = isOnline();
       setOnline(backOnline);
@@ -80,7 +80,9 @@ export default function OfflineBanner() {
           {pending > 0 && (
             <button
               type="button"
-              onClick={syncNow}
+              onClick={() => {
+                void syncNow();
+              }}
               disabled={syncing}
               className="flex min-h-[48px] min-w-[48px] items-center justify-center gap-2 rounded-full bg-black px-5 text-[0.9375rem] font-bold text-amber-300 transition hover:opacity-90 disabled:opacity-60"
             >
@@ -97,7 +99,9 @@ export default function OfflineBanner() {
           <Wifi className="h-5 w-5 text-emerald-300" />
           <button
             type="button"
-            onClick={syncNow}
+            onClick={() => {
+              void syncNow();
+            }}
             disabled={syncing}
             className="flex min-h-[48px] min-w-[48px] items-center gap-2 rounded-full border border-emerald-400 bg-emerald-500/15 px-5 text-[0.9375rem] font-bold text-emerald-200 transition hover:bg-emerald-500/25 disabled:opacity-60"
           >

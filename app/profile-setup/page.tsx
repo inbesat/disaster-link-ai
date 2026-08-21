@@ -65,7 +65,7 @@ export default function ProfileSetupPage() {
         return;
       }
     }
-    guard();
+    void guard();
   }, [router]);
 
   async function onSubmit(data: ProfileSetupInput) {
@@ -85,7 +85,7 @@ export default function ProfileSetupPage() {
     if (avatarFile) {
       try {
         avatarUrl = await uploadAvatar(avatarFile, user.id);
-      } catch (e) {
+      } catch (e: unknown) {
         setError(e instanceof Error ? e.message : "Avatar upload failed.");
         setSaving(false);
         return;

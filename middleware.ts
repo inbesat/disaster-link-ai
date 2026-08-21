@@ -255,7 +255,35 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // CSRF protection for state-changing API routes
+  if (
+    pathname.startsWith("/api/") &&
+    ["POST", "PUT", "PATCH", "DELETE"].includes(request.method)
+  ) {
+    const csrfTokenHeader = request.headers.get("x-csrf-token");
+    const csrfCookie = request.cookies.get("csrf_token")?.value;
+    if (csrfCookie && csrfTokenHeader !== csrfCookie) {
+      return NextResponse.json(
+        { ok: false, error: "CSRF token mismatch." },
+        { status: 403 },
+      );
+    }
+  }
+
   let response = NextResponse.next({ request });
+
+  // Security headers on response
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set(
+    "Permissions-Policy",
+    "geolocation=(self), microphone=(self), camera=()",
+  );
+  response.headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains",
+  );
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -327,7 +355,7 @@ export async function middleware(request: NextRequest) {
         .maybeSingle();
       role =
         profile && ROLES.includes(profile.role as Role) ? (profile.role as Role) : null;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to resolve user role in middleware:", error);
     }
 

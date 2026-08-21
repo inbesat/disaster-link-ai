@@ -158,7 +158,7 @@ export class WebLLMProvider implements AIProvider {
           mode: "local",
           durationMs: Date.now() - startedAt,
         };
-      } catch (error) {
+      } catch (error: unknown) {
         return {
           text:
             error instanceof Error
@@ -216,7 +216,7 @@ export class WebLLMProvider implements AIProvider {
         }
         yield { text: "", done: true, mode: "local" };
         return;
-      } catch (error) {
+      } catch (error: unknown) {
         yield {
           text:
             error instanceof Error

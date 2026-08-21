@@ -46,7 +46,7 @@ export default function PwaUpdateBanner() {
     // without workbox's auto-skipWaiting), ask it to take over. The
     // message is a no-op if nothing is listening.
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.getRegistration().then((registration) => {
+      void navigator.serviceWorker.getRegistration().then((registration) => {
         registration?.waiting?.postMessage("SKIP_WAITING");
       });
     }

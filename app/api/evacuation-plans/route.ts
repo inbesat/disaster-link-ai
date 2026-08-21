@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 /** List evacuation plans, most recently created first. */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const plans = await prisma.evacuationPlan.findMany({
       orderBy: { createdAt: "desc" },
@@ -21,7 +21,7 @@ export async function GET() {
     }));
 
     return NextResponse.json({ ok: true, plans: enriched });
-  } catch (error) {
+  } catch (error: unknown) {
     // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
     // serve an empty list (source: "mock") so the tracker still renders.
     console.error("Failed to load evacuation plans (serving empty list):", error);
@@ -33,7 +33,7 @@ export async function GET() {
  * Persist an evacuation plan produced by the Mass Evacuation Planner so it
  * survives refresh and can be reviewed in the /evacuations tracker.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       },
     });
     return NextResponse.json({ ok: true, plan });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to create evacuation plan:", error);
     return NextResponse.json(
       { ok: false, error: "Could not save plan." },

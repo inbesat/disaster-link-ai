@@ -70,7 +70,7 @@ export default function TestBroadcastModal({
       setMessage(data.message ?? null);
       setResults(data.stations ?? []);
       toast.success(`Test broadcast delivered to ${data.stations?.length ?? 0} channels.`);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Test broadcast failed:", error);
       toast.error("Could not reach the test broadcast service.");
     } finally {

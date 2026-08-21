@@ -274,7 +274,7 @@ export class ModelChunkStore {
         fraction: 1,
       };
       return progress;
-    } catch (error) {
+    } catch (error: unknown) {
       if (this.abort?.signal.aborted) {
         const paused: ModelManifest = { ...manifest, status: "paused", updatedAt: new Date().toISOString() };
         await this.writeManifest(db, paused);
@@ -305,7 +305,7 @@ export class ModelChunkStore {
   async deleteModel(modelId: string): Promise<void> {
     const db = this.getDb();
     if (!db) return;
-    this.pause();
+    await this.pause();
     try {
       const manifest = await this.readManifest(db);
       if (manifest?.modelId === modelId) await db.metadata.delete(MANIFEST_KEY);

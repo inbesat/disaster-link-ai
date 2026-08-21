@@ -58,10 +58,11 @@ export default function Navbar() {
   return (
     <header className="fixed top-4 w-full z-50 flex flex-col items-center">
       {/* Tier 1 — the main dark rounded pill (logo · links · CTAs).
-          Symmetric px-5 keeps the rounded-full end curves clear of the
-          first/last child so the border never cuts through a button. */}
+          Width: near-full viewport (98vw, capped 1400px on 2xl screens).
+          Padding: generous left rail (pl-8), tight-but-safe right edge
+          (pr-4) so the rounded corners never clip the blue CTA. */}
       <div
-        className={`w-full max-w-[98%] xl:max-w-7xl mx-auto backdrop-blur-[16px] border border-white/10 rounded-full pl-5 pr-5 py-3 flex items-center justify-between transition-all duration-300 ${
+        className={`w-full max-w-[98vw] 2xl:max-w-[1400px] mx-auto backdrop-blur-[16px] border border-white/10 rounded-full pl-8 pr-4 py-3 flex items-center justify-between transition-all duration-300 ${
           scrolled
             ? "bg-[rgba(11,31,58,0.85)] shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]"
             : "bg-[rgba(11,31,58,0.55)]"
@@ -78,7 +79,7 @@ export default function Navbar() {
         {/* Desktop Nav Links — xl+ only: below 1280px the full bar
             physically cannot fit, so the hamburger menu takes over and
             nothing overflows the pill. gap-3 at xl / gap-4 on very wide
-            screens keeps everything inside the max-w-7xl cap. */}
+            screens keeps everything comfortably inside the pill. */}
         <div className="hidden xl:flex gap-3 2xl:gap-4 items-center">
           {NAV_LINKS.map((link) => (
             <a

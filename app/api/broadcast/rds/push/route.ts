@@ -27,7 +27,7 @@ const VALID_SEVERITIES: RdsSeverity[] = ["critical", "warning", "watch"];
  * Returns: { success, rdsEncoderResponse } and logs the attempt (with the
  * encoder's confirmation) to fm_broadcast_logs.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
       text,
       stationId: station.id,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("RDS push failed:", message);
     return NextResponse.json({ ok: false, error: "RDS push failed." }, { status: 503 });

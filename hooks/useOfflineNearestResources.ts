@@ -70,7 +70,7 @@ export function useOfflineNearestResources(
         return;
       }
       setNearest(rankCachedResources(resources, position.lat, position.lng, limit));
-    } catch (cause) {
+    } catch (cause: unknown) {
       setError(cause instanceof Error ? cause.message : "Failed to read cached resources.");
     } finally {
       setLoading(false);

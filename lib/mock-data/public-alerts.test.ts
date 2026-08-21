@@ -232,7 +232,7 @@ describe("relativeTime", () => {
   it("falls back to a short date past 24 hours", () => {
     const iso = new Date(now - 10 * 86_400_000).toISOString();
     const label = relativeTime(iso, now);
-    expect(label).toMatch(/\d{1,2} \w+/);
+    expect(label).toMatch(/(\d{1,2} \w+|\w+ \d{1,2})/);
   });
 
   it("returns '' for unparseable input", () => {

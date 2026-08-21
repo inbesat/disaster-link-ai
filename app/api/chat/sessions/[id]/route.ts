@@ -47,14 +47,14 @@ async function assertOwnership(request: NextRequest, sessionId: string) {
       return { status: 403 as const, body: { ok: false, error: "Forbidden: session does not belong to you." } };
     }
     return session;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to check chat session ownership:", error);
     return null;
   }
 }
 
 /** Get a chat session with its messages. */
-export async function GET(request: NextRequest, { params }: Params) {
+export async function GET(request: NextRequest, { params }: Params): Promise<NextResponse> {
   const rateResult = sessionLimiter(`chat-session-get:${clientIp(request)}`);
   if (!rateResult.success) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
@@ -83,14 +83,14 @@ export async function GET(request: NextRequest, { params }: Params) {
       return NextResponse.json({ ok: false, error: "Session not found." }, { status: 404 });
     }
     return NextResponse.json({ ok: true, session });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to load chat session:", error);
     return NextResponse.json({ ok: false, error: "Failed to load session." }, { status: 500 });
   }
 }
 
 /** Add a message to a chat session. */
-export async function POST(request: NextRequest, { params }: Params) {
+export async function POST(request: NextRequest, { params }: Params): Promise<NextResponse> {
   const rateResult = sessionLimiter(`chat-session-add:${clientIp(request)}`);
   if (!rateResult.success) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
@@ -137,14 +137,14 @@ export async function POST(request: NextRequest, { params }: Params) {
       data: { updatedAt: new Date() },
     });
     return NextResponse.json({ ok: true, message });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to add message:", error);
     return NextResponse.json({ ok: false, error: "Failed to add message." }, { status: 500 });
   }
 }
 
 /** Delete a chat session. */
-export async function DELETE(request: NextRequest, { params }: Params) {
+export async function DELETE(request: NextRequest, { params }: Params): Promise<NextResponse> {
   const rateResult = sessionLimiter(`chat-session-delete:${clientIp(request)}`);
   if (!rateResult.success) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
@@ -167,7 +167,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
   try {
     await prisma.chatSession.delete({ where: { id: params.id } });
     return NextResponse.json({ ok: true });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to delete chat session:", error);
     return NextResponse.json({ ok: false, error: "Failed to delete session." }, { status: 500 });
   }

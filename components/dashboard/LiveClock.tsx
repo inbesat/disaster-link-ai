@@ -97,21 +97,24 @@ export function LiveClock({ className = "", timeClassName }: LiveClockProps) {
 
   const { hour, minute, second, period } = formatIstParts(now);
 
+  // Multi-span typography — HH:MM bold white, :SS muted + smaller, then a
+  // distinct gap before AM/PM and before the timezone so nothing smashes
+  // together ("02:37:38 PM IST", not "02:37:38PMIST").
   return (
-    <span
+    <div
       role="timer"
       aria-label="Current time in Indian Standard Time"
-      className={`inline-flex items-baseline text-sm font-semibold tabular-nums tracking-wider ${
-        timeClassName ?? "text-slate-100"
-      } ${className}`}
+      className={`flex items-center gap-1 font-mono tabular-nums tracking-wider ${className}`}
     >
-      <span>
+      <span className={`font-bold ${timeClassName ?? "text-white"}`}>
         {hour}:{minute}
       </span>
-      <span className="text-muted">:{second}</span>
-      <span> {period}</span>
-      <span className="text-muted"> IST</span>
-    </span>
+      <span className="text-sm text-slate-400">:{second}</span>
+      <span className={`ml-1 font-semibold text-sm ${timeClassName ?? "text-white"}`}>
+        {period}
+      </span>
+      <span className="ml-1 text-sm text-slate-500">IST</span>
+    </div>
   );
 }
 

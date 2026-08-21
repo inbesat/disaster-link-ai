@@ -74,7 +74,7 @@ export default function PublicLoginModal({ open, onClose }: PublicLoginModalProp
 
     try {
       await publicDemoLogin();
-    } catch (err) {
+    } catch (err: unknown) {
       setLoading(false);
       setError(err instanceof Error ? err.message : "Login failed. Try again.");
     }

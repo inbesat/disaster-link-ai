@@ -70,13 +70,13 @@ export default function MissingPersonsPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetchPersons();
+    void fetchPersons();
   }, []);
 
   async function fetchPersons() {
     try {
       const res = await fetch("/api/missing-persons");
-      const data = await res.json();
+      const data = (await res.json()) as { ok?: boolean; persons: MissingPerson[] };
       if (data.ok) setPersons(data.persons);
     } catch {
       // Use empty list on failure
@@ -105,7 +105,7 @@ export default function MissingPersonsPage() {
           notes: formData.notes || null,
         }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as { ok?: boolean; person: MissingPerson };
       if (data.ok) {
         setPersons((prev) => [data.person, ...prev]);
         setShowForm(false);
@@ -125,7 +125,7 @@ export default function MissingPersonsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status: "found" }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as { ok?: boolean };
       if (data.ok) {
         setPersons((prev) =>
           prev.map((p) => (p.id === id ? { ...p, status: "found" } : p))
@@ -415,7 +415,9 @@ export default function MissingPersonsPage() {
 
               {person.status === "missing" && (
                 <button
-                  onClick={() => markFound(person.id)}
+                  onClick={() => {
+                    void markFound(person.id);
+                  }}
                   className="w-full rounded-lg bg-emerald-500/15 border border-emerald-500/20 py-2 text-sm font-medium text-emerald-400 hover:bg-emerald-500/25 transition flex items-center justify-center gap-1.5"
                 >
                   <CheckCircle2 size={14} /> Mark as Found

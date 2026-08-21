@@ -15,7 +15,7 @@ const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
  * coverage_radius_km) via the turf great-circle fallback, so it answers
  * correctly even before the PostGIS geometry column is populated.
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
       covering,
       count: covering.length,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     // DB unreachable — answer coverage from the seeded demo list so the
     // "Test Coverage" tool still works before migrations are pushed.
     console.error("Failed to test FM coverage:", error);

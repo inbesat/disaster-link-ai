@@ -13,7 +13,7 @@ function clientIp(request: NextRequest): string {
   return forwarded ? forwarded.split(",")[0].trim() : "anonymous";
 }
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const scope = resolveDemoScope();
     const persons = await prisma.missingPerson.findMany({
@@ -22,13 +22,13 @@ export async function GET() {
       take: 200,
     });
     return NextResponse.json({ ok: true, persons });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to load missing persons:", error);
     return NextResponse.json({ ok: true, persons: [], source: "mock" });
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Security: reporting a missing person mutates the registry. Citizens and
   // demo guests may report (requireSession admits role cookies + guest_mode),
   // but a fully anonymous caller is blocked and the write is rate-limited.
@@ -83,13 +83,13 @@ export async function POST(request: NextRequest) {
       },
     });
     return NextResponse.json({ ok: true, person });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to create missing person:", error);
     return NextResponse.json({ ok: false, error: "Failed to save." }, { status: 500 });
   }
 }
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: NextRequest): Promise<NextResponse> {
   // Security: flipping a person to "found"/"safe" (and editing notes) is a
   // gov/responder action — the citizen report form only POSTs. Guard it.
   const auth = await requireRole(GOV_ROLES);
@@ -118,7 +118,7 @@ export async function PATCH(request: NextRequest) {
       },
     });
     return NextResponse.json({ ok: true, person });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to update missing person:", error);
     return NextResponse.json({ ok: false, error: "Update failed." }, { status: 500 });
   }

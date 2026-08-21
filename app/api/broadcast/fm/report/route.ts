@@ -15,7 +15,7 @@ const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
  * Returns aggregated stats: total alerts, stations reached, success rate %,
  * avg detection→broadcast minutes, language breakdown.
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
     );
 
     return NextResponse.json({ ok: true, window: { start: start.toISOString(), end: end.toISOString() }, district: district ?? null, ...report });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to build FM broadcast report:", error);
     return NextResponse.json({ ok: false, error: "Report generation failed." }, { status: 500 });
   }

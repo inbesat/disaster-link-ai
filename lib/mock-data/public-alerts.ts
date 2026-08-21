@@ -400,7 +400,7 @@ export function relativeTime(iso: string, now: number = Date.now()): string {
   if (diffMin < 60) return `${diffMin}m ago`;
   const diffH = Math.floor(diffMin / 60);
   if (diffH < 24) return `${diffH}h ago`;
-  return new Date(iso).toLocaleDateString(undefined, {
+  return new Date(iso).toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
   });

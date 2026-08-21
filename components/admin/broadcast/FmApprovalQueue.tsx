@@ -90,7 +90,7 @@ export default function FmApprovalQueue() {
       const res = await fetch("/api/broadcast/fm/approvals");
       const data = (await res.json()) as { approvals?: ApprovalDTO[] };
       setApprovals(data.approvals ?? []);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to load approvals:", error);
     } finally {
       setLoading(false);
@@ -130,7 +130,7 @@ export default function FmApprovalQueue() {
           action === "approve" ? "Broadcast approved — dispatching now." : "Approval rejected.",
         );
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Approval decision failed:", error);
       toast.error("Could not reach the approval service.");
     } finally {
@@ -177,7 +177,7 @@ export default function FmApprovalQueue() {
         toast.error("Audio playback failed.");
       };
       void audio.play();
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Voice preview failed:", error);
       toast.error("Could not reach the TTS service.");
       setPreviewingId(null);

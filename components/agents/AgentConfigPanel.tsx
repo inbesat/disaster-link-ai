@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SlidersHorizontal, Save } from "lucide-react";
 import toast from "react-hot-toast";
+import { safeParseJSON } from "@/lib/utils";
 
 // ---------------------------------------------------------------------
 // components/agents/AgentConfigPanel.tsx
@@ -38,8 +39,8 @@ function loadDirectives(initial: Partial<AgentDirectives>): AgentDirectives {
   if (typeof window !== "undefined") {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as Partial<AgentDirectives>;
+      const parsed = safeParseJSON<Partial<AgentDirectives>>(raw);
+      if (parsed) {
         return {
           predictorSensitivity: clamp(
             Number(parsed.predictorSensitivity) || DEFAULTS.predictorSensitivity,

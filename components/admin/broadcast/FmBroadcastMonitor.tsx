@@ -207,7 +207,7 @@ export default function FmBroadcastMonitor() {
       } else {
         toast.success(`IVR call placed${data.callSid ? ` (${data.callSid})` : ""}.`);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Force IVR failed:", error);
       toast.error("Could not reach the IVR service.");
     } finally {

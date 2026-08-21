@@ -118,7 +118,7 @@ export default function AvatarCard({
       // A fresh server avatar supersedes any stale local snapshot.
       clearStoredAvatar();
       toast.success("Avatar updated!");
-    } catch (error) {
+    } catch (error: unknown) {
       // Offline/bypassed Storage → keep the cropped image locally and update
       // the navbar avatar immediately.
       console.warn(
@@ -148,7 +148,7 @@ export default function AvatarCard({
         await client.auth.updateUser({ data: { avatar_url: null } });
       }
       toast.success("Avatar removed.");
-    } catch (error) {
+    } catch (error: unknown) {
       console.warn("[avatar] Server removal failed — local state cleared.", error);
       toast.success("Avatar removed locally.");
     } finally {

@@ -85,7 +85,7 @@ export async function checkSpamPatrol(
       console.warn(`[spampatrol] Spam detected: "${payload.text.slice(0, 80)}"`);
     }
     return { isSpam, reason: data.reason, score: data.score };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[spampatrol] API call failed — falling back to isSpam: false.", error);
     return { isSpam: false };
   }

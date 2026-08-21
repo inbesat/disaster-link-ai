@@ -91,7 +91,7 @@ export default function PushNotificationToggle() {
       }
 
       setState({ status: "enabled" });
-    } catch (error) {
+    } catch (error: unknown) {
       setState({
         status: "error",
         message: error instanceof Error ? error.message : "Push setup failed.",
@@ -114,7 +114,7 @@ export default function PushNotificationToggle() {
         }).catch(() => undefined);
       }
       setState({ status: "idle" });
-    } catch (error) {
+    } catch (error: unknown) {
       setState({
         status: "error",
         message: error instanceof Error ? error.message : "Unsubscribe failed.",

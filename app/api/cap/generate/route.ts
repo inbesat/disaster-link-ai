@@ -45,7 +45,7 @@ function parseCircle(value: unknown): [number, number, number] | undefined {
  * with an audio <resource> link, validates it, and stores it in cap_alerts.
  * Returns: { capXml, alertId, audioUrl, recordId, ... }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ ok: true, ...result });
-  } catch (error) {
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     if (message.includes("not found")) {
       return NextResponse.json({ ok: false, error: message }, { status: 404 });

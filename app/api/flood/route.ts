@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const latParam = request.nextUrl.searchParams.get("lat");
   const lngParam = request.nextUrl.searchParams.get("lng");
 
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       peak_discharge_m3s: peak,
       warning_level: deriveWarning(peak),
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Flood fetch failed:", error);
     return NextResponse.json({ error: "Failed to fetch flood data." }, { status: 500 });
   }

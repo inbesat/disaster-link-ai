@@ -89,7 +89,7 @@ export default function WhatIfSimulator({
         confidence: Number(data.confidenceScore) || 0,
         loading: false,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Simulator prediction failed:", error);
       setResult({ level: "Safe", confidence: 0, loading: false });
     }

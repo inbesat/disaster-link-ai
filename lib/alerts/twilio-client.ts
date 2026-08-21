@@ -9,6 +9,7 @@
 
 import twilio from "twilio";
 import { isDemoMode } from "@/lib/demo-mode";
+import { safeLog } from "@/lib/logger";
 
 const ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
 const AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
@@ -37,21 +38,19 @@ export async function sendSMSAlert(
   // Returns a fake success so the alert pipeline (delivery tracking, audit
   // logs) keeps flowing end-to-end during the demo.
   if (isDemoMode()) {
-    console.log(`DEMO MODE: SMS bypassed (to ${toNumber})`);
+    safeLog("info", "DEMO MODE: SMS bypassed", { metadata: { to: toNumber } });
     return { ok: true, sid: "demo-bypass" };
   }
 
   const client = getClient();
 
   if (!client) {
-    console.warn(
-      "[twilio] SMS not sent: TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN not configured.",
-    );
+    safeLog("warn", "[twilio] SMS not sent: TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN not configured.");
     return { ok: false, error: "Twilio not configured" };
   }
 
   if (!FROM_NUMBER) {
-    console.warn("[twilio] SMS not sent: no TWILIO_PHONE_NUMBER configured.");
+    safeLog("warn", "[twilio] SMS not sent: no TWILIO_PHONE_NUMBER configured.");
     return { ok: false, error: "Twilio sender number not configured" };
   }
 
@@ -61,11 +60,11 @@ export async function sendSMSAlert(
       to: toNumber,
       body: messageBody,
     });
-    console.log(`[twilio] SMS sent (sid=${message.sid}) to ${toNumber}`);
+    safeLog("info", `[twilio] SMS sent (sid=${message.sid})`, { metadata: { sid: message.sid, to: toNumber } });
     return { ok: true, sid: message.sid };
-  } catch (error) {
+  } catch (error: unknown) {
     // Includes trial-credit exhaustion and quota errors — never throw.
-    console.error("[twilio] SMS send failed:", error);
+    safeLog("error", "[twilio] SMS send failed", { metadata: { error: String(error) } });
     return {
       ok: false,
       error: error instanceof Error ? error.message : String(error),
@@ -96,19 +95,17 @@ export interface VoiceCallInput {
  */
 export async function placeVoiceCall(input: VoiceCallInput): Promise<VoiceCallResult> {
   if (isDemoMode()) {
-    console.log(`DEMO MODE: voice call bypassed (to ${input.to})`);
+    safeLog("info", "DEMO MODE: voice call bypassed", { metadata: { to: input.to } });
     return { ok: true, callSid: "demo-bypass" };
   }
 
   const client = getClient();
   if (!client) {
-    console.warn(
-      "[twilio] Voice call not placed: TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN not configured.",
-    );
+    safeLog("warn", "[twilio] Voice call not placed: TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN not configured.");
     return { ok: false, error: "Twilio not configured" };
   }
   if (!FROM_NUMBER) {
-    console.warn("[twilio] Voice call not placed: no TWILIO_PHONE_NUMBER configured.");
+    safeLog("warn", "[twilio] Voice call not placed: no TWILIO_PHONE_NUMBER configured.");
     return { ok: false, error: "Twilio sender number not configured" };
   }
 
@@ -133,10 +130,10 @@ export async function placeVoiceCall(input: VoiceCallInput): Promise<VoiceCallRe
           }
         : {}),
     });
-    console.log(`[twilio] Voice call placed (sid=${call.sid}) to ${input.to}`);
+    safeLog("info", `[twilio] Voice call placed (sid=${call.sid})`, { metadata: { sid: call.sid, to: input.to } });
     return { ok: true, callSid: call.sid };
-  } catch (error) {
-    console.error("[twilio] Voice call failed:", error);
+  } catch (error: unknown) {
+    safeLog("error", "[twilio] Voice call failed", { metadata: { error: String(error) } });
     return {
       ok: false,
       error: error instanceof Error ? error.message : String(error),

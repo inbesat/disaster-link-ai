@@ -45,7 +45,7 @@ export const runtime = "nodejs";
 /** Webhooks must never be statically cached or revalidated. */
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const rawBody = await request.text();
 
   // SAFE — record the citizen's status in the database so family and
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         data: { safetyStatus: "safe", lastSafeAt: new Date() },
       });
       return SAFE_REPLY;
-    } catch (error) {
+    } catch (error: unknown) {
       // DB unreachable (dev cold start) — never 500 Twilio; reply honestly.
       console.error("[sms-webhook] failed to record SAFE status:", error);
       return SAFE_FAILED_REPLY;
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       status: 200,
       headers: TWI_ML_HEADERS,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     // A malformed body must never bubble up as an HTML 500 — Twilio shows
     // the response body to the sender.
     console.error("[sms-webhook] failed to handle SMS:", error);

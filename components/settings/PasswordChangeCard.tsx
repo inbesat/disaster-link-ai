@@ -136,7 +136,7 @@ export default function PasswordChangeCard() {
         toast.success("Password updated successfully!");
       }
       reset();
-    } catch (error) {
+    } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : "Could not update password.");
     } finally {
       setSaving(false);

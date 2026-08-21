@@ -82,7 +82,7 @@ export const calculateEvacuationRoutes = tool({
             }
           : {}),
       };
-    } catch (error) {
+    } catch (error: unknown) {
       console.warn("[ai] calculateEvacuationRoutes failed.", error);
       return {
         ok: false,

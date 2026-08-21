@@ -51,7 +51,7 @@ const fetchPublicShelters = unstable_cache(
   { revalidate: 300, tags: [PUBLIC_SHELTERS_CACHE_TAG] },
 );
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   // Step 5 · role-based rate limiting — public tier, keyed by client IP.
   const ip = clientIpFromRequest(request);
   const rate = rateLimitByRole("public", ip);
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
   try {
     const shelters = await fetchPublicShelters();
     return NextResponse.json({ ok: true, shelters, source: "db" });
-  } catch (error) {
+  } catch (error: unknown) {
     // Prisma can be unreachable on cold starts — never 500 the Citizen App;
     // serve the demo district's shelters so the public map still renders.
     console.error("[public/shelters] Prisma unavailable; serving mock shelters.", error);

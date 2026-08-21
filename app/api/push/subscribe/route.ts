@@ -27,7 +27,7 @@ function parseBody(body: unknown): {
   return { endpoint, p256dh, auth };
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   let parsed: ReturnType<typeof parseBody>;
   try {
     parsed = parseBody(await request.json());
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       },
     });
     return NextResponse.json({ ok: true, subscription });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[push] Failed to save subscription:", error);
     return NextResponse.json(
       { ok: false, error: "Could not save subscription." },
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
   const endpoint = request.nextUrl.searchParams.get("endpoint");
   if (!endpoint) {
     return NextResponse.json({ ok: false, error: "Missing endpoint." }, { status: 400 });
@@ -84,7 +84,7 @@ export async function DELETE(request: NextRequest) {
   try {
     await prisma.pushSubscription.delete({ where: { endpoint } }).catch(() => undefined);
     return NextResponse.json({ ok: true });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[push-sub] Failed to remove subscription:", error);
     return NextResponse.json(
       { ok: false, error: "Could not remove subscription." },

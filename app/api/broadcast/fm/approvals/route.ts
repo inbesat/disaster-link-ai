@@ -16,7 +16,7 @@ const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
  * auto-approval window are approved + dispatched first (lazy), then the
  * remaining pending requests are returned, newest first.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   const auth = await requireRole(GOV_ROLES);
   if (!auth.ok) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
@@ -36,7 +36,7 @@ export async function GET() {
       approvals: pending.map((row) => serializeApproval(row)),
       autoApproved,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to list FM approvals:", error);
     return NextResponse.json({ ok: true, approvals: [], autoApproved: [] });
   }

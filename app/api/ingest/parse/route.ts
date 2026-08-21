@@ -19,7 +19,7 @@ function clientIp(request: NextRequest): string {
 // the LLM client (and any key reference) out of the client bundle.
 // Body: { text: string }
 // ---------------------------------------------------------------------
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Any signed-in identity (demo guests included) may parse a report text.
   const auth = await requireSession();
   if (!auth.ok) {
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         summary: sanitizeInput(parsed.summary),
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to parse citizen report:", error);
     return NextResponse.json({ ok: false, error: "Parsing failed." }, { status: 500 });
   }

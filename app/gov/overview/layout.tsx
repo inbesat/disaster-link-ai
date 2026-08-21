@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { Role } from "@/lib/validations/user";
 import DashboardShell from "@/components/navigation/DashboardShell";
-import AlertTicker from "@/components/dashboard/AlertTicker";
 import OfflineBanner from "@/components/ui/OfflineBanner";
 import QuickActionDock from "@/components/gov/dashboard/QuickActionDock";
 
@@ -34,7 +33,6 @@ export default function GovOverviewLayout({ children }: { children: ReactNode })
         email={null}
         avatarUrl={null}
       >
-        <AlertTicker />
         {children}
       </DashboardShell>
 

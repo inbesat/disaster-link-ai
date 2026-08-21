@@ -35,6 +35,7 @@ import { EmailStudioStrategy } from "@/lib/broadcast/strategies/email-studio";
 import { IvrCallStrategy } from "@/lib/broadcast/strategies/ivr-call";
 import { buildEmergencyRdsText, mapCapSeverity } from "@/lib/broadcast/rds-encoder";
 import { selectAllStrategies } from "@/lib/broadcast/strategy-selector";
+import { safeLog } from "@/lib/logger";
 import type {
   DispatchContext,
   DispatchResult,
@@ -296,8 +297,8 @@ async function writeLog(
         externalRef: result.externalRef ?? null,
       },
     });
-  } catch (error) {
-    console.error("[broadcast] Failed to write fm_broadcast_log:", error);
+  } catch (error: unknown) {
+    safeLog("error", "[broadcast] Failed to write fm_broadcast_log", { metadata: { error: String(error) } });
   }
 }
 
@@ -308,14 +309,11 @@ async function findCoveringStations(event: DisasterEvent): Promise<FmStation[]> 
     stations = await prisma.fmStation.findMany({
       where: { isActive: true },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     // DB unreachable (migrations not pushed / offline) — dispatch against
     // the seeded demo list so the end-to-end pipeline can still be
     // rehearsed (same fallback as /api/fm/stations + /api/fm/coverage).
-    console.error(
-      "[broadcast] Failed to load FM stations — using demo list:",
-      error,
-    );
+    safeLog("error", "[broadcast] Failed to load FM stations — using demo list", { metadata: { error: String(error) } });
     stations = MOCK_FM_STATIONS as unknown as FmStation[];
   }
 
@@ -363,8 +361,8 @@ async function buildDispatchContext(
       if (remote.ok) {
         audioBuffer = Buffer.from(await remote.arrayBuffer());
       }
-    } catch (error) {
-      console.error("[broadcast] Failed to fetch stored audio:", error);
+    } catch (error: unknown) {
+      safeLog("error", "[broadcast] Failed to fetch stored audio", { metadata: { error: String(error) } });
     }
   }
 

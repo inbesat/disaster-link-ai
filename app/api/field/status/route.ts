@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanitizeInput } from "@/lib/security/sanitize";
+import { requireRole } from "@/lib/security/require-role";
+import { GOV_ROLES } from "@/lib/validations/user";
 
 export const runtime = "nodejs";
 
@@ -13,7 +15,12 @@ export const runtime = "nodejs";
  *
  * Body: { status, emoji?, responder, lat, lng, at }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
+  }
+
   let body: {
     status?: unknown;
     emoji?: unknown;

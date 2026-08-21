@@ -180,13 +180,13 @@ export default function FmBroadcastHistory() {
       } else {
         setAlerts(data.alerts ?? []);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to load broadcast history:", error);
       setAlerts([]);
     } finally {
       setLoading(false);
     }
-  }, [startDate, endDate, district, disasterType, status, filterParams]);
+  }, [filterParams]);
 
   useEffect(() => {
     void fetchHistory();

@@ -139,7 +139,7 @@ export async function getFloodPrediction(
       lng,
       predictedAt: new Date().toISOString(),
     };
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("ML service unreachable, returning default 'Safe':", error);
     return fallback(lat, lng);
   }
@@ -187,7 +187,7 @@ async function maybeTriggerAlert(lat: number, lng: number, riskLevel: RiskLabel)
     }).catch((error) => {
       console.warn("[ml-client] FM broadcast automation failed:", error);
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("Failed to log flood alert:", error);
   }
 }
@@ -246,7 +246,7 @@ async function triggerFmBroadcast(opts: {
         result,
       );
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn("[ml-client] FM broadcast automation failed:", error);
   }
 }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import DemoConversionWelcome from "@/components/demo/DemoConversionWelcome";
+import PasswordStrengthMeter from "@/components/auth/PasswordStrengthMeter";
 
 let supabase: ReturnType<typeof createClient> | null = null;
 
@@ -25,8 +26,8 @@ export default function SignupPage() {
     e.preventDefault();
     setError(null);
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long.");
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+      setError("Password must be at least 8 characters long and contain at least one uppercase letter and one number.");
       return;
     }
     if (password !== confirmPassword) {
@@ -96,6 +97,7 @@ export default function SignupPage() {
               placeholder="Minimum 8 characters"
               className="w-full rounded-md border border-border bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:outline-none"
             />
+            <PasswordStrengthMeter password={password} />
           </div>
 
           <div>
