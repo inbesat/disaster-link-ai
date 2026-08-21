@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Cookie, ShieldCheck, X } from "lucide-react";
+import { Cookie, X } from "lucide-react";
 
 export function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);
@@ -10,7 +10,7 @@ export function CookieConsentBanner() {
   useEffect(() => {
     // Check 'Do Not Track' browser header/property
     if (typeof window !== "undefined") {
-      const dnt = navigator.doNotTrack === "1" || (window as any).doNotTrack === "1";
+      const dnt = navigator.doNotTrack === "1" || (window as unknown as { doNotTrack?: string }).doNotTrack === "1";
       const consent = localStorage.getItem("safesphere_cookie_consent");
       if (!consent && !dnt) {
         setVisible(true);

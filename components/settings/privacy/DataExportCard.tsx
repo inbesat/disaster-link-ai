@@ -15,11 +15,8 @@
 //   • Reuses the GDPR payload builder from components/security/DataExportButton.
 // ---------------------------------------------------------------------
 
-import { useState } from "react";
 import toast from "react-hot-toast";
-import { DatabaseZap, FileJson, FileSpreadsheet, Loader2, ShieldCheck } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import { buildExportPayload } from "@/components/security/DataExportButton";
+import { DatabaseZap, FileJson, FileSpreadsheet, ShieldCheck } from "lucide-react";
 import {
   DEMO_AUDIT_EVENTS,
   auditEventsToCsv,
@@ -34,53 +31,7 @@ const INCLUDED_RECORDS = [
   "Alerts received & acknowledgements",
 ];
 
-let supabase: ReturnType<typeof createClient> | null = null;
-
-function getSupabase() {
-  if (!supabase) supabase = createClient();
-  return supabase;
-}
-
 export default function DataExportCard() {
-  const [archiving, setArchiving] = useState(false);
-
-  async function requestArchive() {
-    if (archiving) return;
-    setArchiving(true);
-    try {
-      // Simulated archive compilation round-trip (2s) — then the download.
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      let email: string | null = null;
-      let displayName: string | null = null;
-      try {
-        const { data } = await getSupabase().auth.getUser();
-        email = data.user?.email ?? null;
-        displayName = data.user?.user_metadata?.name ?? null;
-      } catch {
-        // auth unavailable — the mock payload still compiles
-      }
-
-      const payload = buildExportPayload(email, displayName);
-      const blob = new Blob([JSON.stringify(payload, null, 2)], {
-        type: "application/json;charset=utf-8",
-      });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "personal_data_archive.json";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-
-      toast.success("Data archive compiled and downloaded securely.");
-    } finally {
-      // Always release the spinner, even if compilation ever throws.
-      setArchiving(false);
-    }
-  }
-
   function downloadActivityCsv() {
     const csv = auditEventsToCsv(DEMO_AUDIT_EVENTS);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });

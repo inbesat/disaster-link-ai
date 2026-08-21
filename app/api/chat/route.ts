@@ -15,7 +15,6 @@ import { buildKnowledgeContext } from "@/lib/retrieval/retrieve";
 import { searchSimilarDocuments } from "@/lib/rag/vector-search";
 import { checkAiChatRateLimit, logAiUsage } from "@/lib/security/ai-rate-limit";
 import { guardPromptInput, logAiAudit } from "@/lib/ai/llm-guard";
-import { createRateLimiter } from "@/lib/security/rate-limit";
 import {
   assertDistrictAccess,
   enforceDistrictScope,
@@ -23,17 +22,6 @@ import {
 } from "@/lib/security/data-isolation";
 
 export const maxDuration = 60;
-
-// ---------------------------------------------------------------------
-// Phase 11/21 · Server-side rate limiting (per visitor IP) via the shared
-// lib/security/rate-limit sliding window. Protects the LLM budget even if
-// the client-side gauge is bypassed. Swap the shared limiter for a Redis
-// bucket at multi-tenant scale — the API stays identical.
-// ---------------------------------------------------------------------
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX_REQUESTS = 5;
-
-const chatLimiter = createRateLimiter(RATE_LIMIT_MAX_REQUESTS, RATE_LIMIT_WINDOW_MS);
 
 function clientKey(req: Request): string {
   const forwarded = req.headers.get("x-forwarded-for");
@@ -92,17 +80,6 @@ function withDistrictScope(
   return guarded;
 }
 
-const BASE_PROMPT = `You are the SafeSphere Emergency AI. You generate tactical 48-hour evacuation plans. You MUST use your tools to check real data before suggesting a plan. Be concise and authoritative.
-
-Context from Official SOPs — retrieved laws, NDMA guidelines, and district procedures that MUST govern your planning. Follow these rules when planning:
-{SOP_CONTEXT}
-
-SECURITY / ROLE GUARDRAILS:
-- The current role is ROLE. Their assigned district is DISTRICT.
-- If the user is NOT a Commander (role not in "District Commander", "super_admin", or "district_admin"), REFUSE to generate mass evacuation plans or issue any wide-scale evacuation order.
-- In that case, briefly explain that the action requires commander clearance and advise the user to contact the District Control Room.
-- Always respect the signer's authority level; never escalate, never fabricate an override.`;
-
 type AccessContext = { role: string; district: string };
 
 function defaultCommandContext(): AccessContext {
@@ -147,10 +124,10 @@ export async function POST(req: Request): Promise<Response> {
   // Without this, every chat request burns rate-limit budget, runs RAG,
   // probes dead providers and surfaces as a vague stream error in the UI.
   // ---------------------------------------------------------------------
-  if (!process.env.OPENROUTER_API_KEY && !process.env.GROQ_API_KEY) {
+  if (!process.env.OPENROUTER_API_KEY && !process.env.GROQ_API_KEY && !process.env.BLUESMINDS_API_KEY) {
     console.error(
       "🚨 CRITICAL: No AI API Key found in environment variables! " +
-        "Set OPENROUTER_API_KEY or GROQ_API_KEY in .env.local and restart the dev server.",
+        "Set OPENROUTER_API_KEY, GROQ_API_KEY, or BLUESMINDS_API_KEY in .env.local and restart the dev server.",
     );
     return new Response(
       JSON.stringify({ error: "API Key Configuration Error" }),
