@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Upload,
 } from "lucide-react";
+import PasswordStrengthMeter from "@/components/auth/PasswordStrengthMeter";
 
 // ---------------------------------------------------------------------
 // app/gov/signup/page.tsx — Phase 1 · Step 4 · Strict Gov Auth Flow.
@@ -226,6 +227,7 @@ export default function GovSignupPage() {
                 placeholder="At least 8 characters"
                 className={inputClass}
               />
+              <PasswordStrengthMeter password={password} />
             </div>
             {/* Employee / Volunteer ID upload zone */}
             <div>
