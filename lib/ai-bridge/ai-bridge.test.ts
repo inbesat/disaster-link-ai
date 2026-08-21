@@ -83,7 +83,7 @@ describe("AIBridge.route", () => {
     const res = await bridge.route("help");
     expect(res.mode).toBe("error");
     expect(res.error).toBe(true);
-    expect(res.text).toContain("local safety model isn't ready");
+    expect(res.text).toContain("AI assistant is temporarily unavailable. For emergencies, use the SOS button or call 108.");
   });
 
   it("drops to the local model when cloud answers but errored online", async () => {

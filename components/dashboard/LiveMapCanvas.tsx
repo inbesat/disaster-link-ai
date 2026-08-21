@@ -53,7 +53,7 @@ export function LiveMapCanvas() {
         mapLib={maplibregl}
         mapStyle={MAP_STYLE}
         initialViewState={{ longitude: CENTER.lng, latitude: CENTER.lat, zoom: 11.2 }}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%", minHeight: "200px" }}
         interactive={false}
         attributionControl={false}
       >

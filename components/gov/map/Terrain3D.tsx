@@ -49,6 +49,13 @@ export function Terrain3D({ sourceId = "gov-terrain-dem", exaggeration = 2 }: Te
     return () => {
       void map.off("sourcedata", enable);
       void map.off("load", enable);
+      try {
+        if (map.getTerrain()) {
+          void map.setTerrain(null);
+        }
+      } catch {
+        // Map instance destroyed or unmounted
+      }
     };
   }, [mapRef, sourceId, exaggeration]);
 

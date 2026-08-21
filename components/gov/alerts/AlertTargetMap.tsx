@@ -280,7 +280,7 @@ export function AlertTargetMap({
           latitude: center.lat,
           zoom: 10.6,
         }}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%", minHeight: "250px" }}
         attributionControl={false}
       >
         {mode === "entire" && <DistrictCoverage district={district} />}

@@ -1,5 +1,4 @@
-// Phase 20 — realtime collaboration library (WebSocket → polling fallback,
-// concurrent-edit resolution, presence tracking). Import from "@/lib/realtime".
+// Phase 20/11 — realtime collaboration library with WebSocket & presence security.
 export {
   RealtimeClient,
   createRealtimeClient,
@@ -11,11 +10,19 @@ export type { RealtimeMessage, RealtimeTransport } from "./client";
 export {
   WebSocketTransport,
   PollingTransport,
+  RealtimeMessageSchema,
   type WebSocketLike,
   type WebSocketTransportOptions,
   type PollingTransportOptions,
   type TransportKind,
 } from "./transports";
+export {
+  SupabaseRealtimeTransport,
+  sanitizeRealtimePayload,
+  type ChannelEvent,
+  type RealtimeUserContext,
+  type SupabaseRealtimeTransportOptions,
+} from "./supabase-transport";
 export {
   applyLastWriteWins,
   isNewerEdit,
@@ -29,7 +36,11 @@ export {
 export {
   PresenceTracker,
   pickFresherPresence,
+  getSanitizedLastSeenStatus,
+  isAuthorizedForPresence,
   type PresenceMember,
+  type SanitizedPresenceMember,
+  type FuzzyPresenceStatus,
   type PresenceEvent,
   type PresenceTrackerOptions,
 } from "./presence";

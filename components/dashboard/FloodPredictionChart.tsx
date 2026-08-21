@@ -9,8 +9,9 @@
 // ML service is unreachable (crash-proof for hackathon demos).
 // ---------------------------------------------------------------------
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Panel from "@/components/ui/Panel";
+import { downsampleDataset, useChartVisibility } from "@/lib/perf/chart-utils";
 import {
   Area,
   AreaChart,
@@ -107,6 +108,9 @@ export function FloodPredictionChart({ useMock = false }: Props) {
   const [data, setData] = useState<ForecastPoint[]>(() => buildMockForecast());
   const [mlStatus, setMlStatus] = useState<"loading" | "live" | "fallback">("loading");
   const [prediction, setPrediction] = useState<MlPrediction | null>(null);
+  const isTabVisible = useChartVisibility();
+
+  const chartData = useMemo(() => downsampleDataset(data, 500), [data]);
 
   useEffect(() => {
     if (useMock) {
@@ -231,7 +235,7 @@ export function FloodPredictionChart({ useMock = false }: Props) {
 
       <div className="h-72 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
+          <AreaChart data={chartData} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id={GID} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.4} />
@@ -292,7 +296,7 @@ export function FloodPredictionChart({ useMock = false }: Props) {
               fill={`url(#${GID})`}
               dot={false}
               activeDot={{ r: 4, fill: "#3b82f6", stroke: "#0a0f1a", strokeWidth: 2 }}
-              isAnimationActive
+              isAnimationActive={isTabVisible}
             />
           </AreaChart>
         </ResponsiveContainer>

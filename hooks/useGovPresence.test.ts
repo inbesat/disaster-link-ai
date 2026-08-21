@@ -19,6 +19,7 @@ const CMOFFICE: PresenceUser = {
   name: "CM Office",
   role: "Secretariat Liaison",
   hue: 195,
+  fuzzyStatus: "online",
 };
 
 describe("PRESENCE_ROSTER", () => {

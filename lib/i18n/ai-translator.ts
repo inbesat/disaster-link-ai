@@ -58,10 +58,12 @@ export async function translateAlertForSMS(
     return text;
   }
 
+  const fallbackNotice = `${text} [Translation unavailable]`;
+
   const groqKey = process.env.GROQ_API_KEY || process.env.GROQ_API_KEY_BACKUP;
   if (!groqKey) {
-    console.warn("[ai-translator] No GROQ_API_KEY — returning untranslated alert.");
-    return text;
+    console.warn("[ai-translator] No GROQ_API_KEY — returning alert in English only with note.");
+    return fallbackNotice;
   }
 
   try {
@@ -81,12 +83,12 @@ export async function translateAlertForSMS(
     ) {
       cleaned = cleaned.slice(1, -1).trim();
     }
-    return cleaned || text;
+    return cleaned || fallbackNotice;
   } catch (error: unknown) {
     console.warn(
-      `[ai-translator] Translation to ${language} failed — returning original alert.`,
+      `[ai-translator] Translation to ${language} failed — returning original alert in English with note.`,
       error,
     );
-    return text;
+    return fallbackNotice;
   }
 }
