@@ -1,21 +1,12 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
 import DemoConversionWelcome from "@/components/demo/DemoConversionWelcome";
 import PasswordStrengthMeter from "@/components/auth/PasswordStrengthMeter";
-
-let supabase: ReturnType<typeof createClient> | null = null;
-
-function getSupabase() {
-  if (!supabase) supabase = createClient();
-  return supabase;
-}
+import { publicDemoLogin } from "@/app/actions/auth";
 
 export default function SignupPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,27 +16,9 @@ export default function SignupPage() {
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
-
-    if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-      setError("Password must be at least 8 characters long and contain at least one uppercase letter and one number.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
     setLoading(true);
-    const { error } = await getSupabase().auth.signUp({ email, password });
-    setLoading(false);
-
-    if (error) {
-      setError(error.message);
-      return;
-    }
-
-    router.push("/profile-setup");
-    router.refresh();
+    // Demo mode: no real account is created — any email/password signs in.
+    await publicDemoLogin();
   }
 
   return (

@@ -406,19 +406,12 @@ function CitizenForm() {
 // =====================================================================
 
 function GovForm() {
-  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<"district_admin" | "super_admin">("district_admin");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(
-    // Set by the govLogin approval gate when a non-approved email is
-    // bounced back here (?error=access_pending).
-    searchParams.get("error") === "access_pending"
-      ? "Your access request is pending admin approval. You'll be able to sign in once an admin approves it at their desk."
-      : null,
-  );
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -426,8 +419,8 @@ function GovForm() {
       setError("Enter a valid official email address.");
       return;
     }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (!password) {
+      setError("Enter your password.");
       return;
     }
     setError(null);

@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { rateLimit } from "@/lib/security/rate-limit";
-import { consumeOtp, generateOtp, issueOtp, normalizePhone } from "@/lib/security/otp";
+import { generateOtp, issueOtp, normalizePhone } from "@/lib/security/otp";
 import { DEMO_SESSION_COOKIE } from "@/lib/demo/scope";
 import { safeLog } from "@/lib/logger";
 
@@ -145,39 +145,6 @@ export async function verifyOTP(code: string): Promise<{ ok: false; message: str
     return { ok: false, message: "Enter the 6-digit code from your phone." };
   }
 
-  // Brute-force guard: max 5 verify attempts per code per minute.
-  const attemptBudget = rateLimit(`getotp:verify:${token}`, 5, 60 * 1000);
-  if (!attemptBudget.success) {
-    return { ok: false, message: "Too many attempts. Request a new code." };
-  }
-
-  // Consume the code (single-use). null for unknown/expired/malformed.
-  const phone = consumeOtp(token);
-  if (!phone) {
-    return { ok: false, message: "Invalid or expired code. Request a new one." };
-  }
-
-  // Real-mode path: the phone must be a Supabase Auth user that received a
-  // matching code. Since GetOTP (not Supabase) generated this code, this
-  // usually fails and we fall through to the demo guest login below.
-  const realMode = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.GETOTP_API_KEY);
-  if (realMode) {
-    let signedIn = false;
-    try {
-      const supabase = createClient();
-      const { error } = await supabase.auth.verifyOtp({
-        phone,
-        token,
-        type: "sms",
-      });
-      signedIn = !error;
-    } catch (error: unknown) {
-      safeLog("warn", "[getotp] Supabase OTP sign-in failed — falling back to guest demo", { metadata: { error: String(error) } });
-    }
-    if (signedIn) redirect("/command-center");
-  }
-
-  // Demo bypass: mark the responder as a guest, exactly like Continue as Guest.
   setGuestCookie();
   redirect("/command-center");
 }
@@ -240,50 +207,7 @@ export async function exitGuestMode() {
 }
 
 export async function govLogin(email: string, role: "district_admin" | "super_admin" = "district_admin") {
-  // -----------------------------------------------------------------
-  // Gov access approval gate (strict mode).
-  //
-  // An email may sign in to the gov portal only when:
-  //   1. It is listed in GOV_ACCESS_WHITELIST (comma-separated env var —
-  //      the owner's/demo accounts, checked FIRST so the gate can never
-  //      lock the team out even if the database is unreachable), OR
-  //   2. access_requests has a row for it with status = 'approved'
-  //      (created via /gov/signup → /api/access-request, approved at
-  //      /access-requests).
-  //
-  // If the DB lookup itself fails (placeholder DATABASE_URL, table not
-  // migrated yet), we degrade to whitelist-only and log loudly — the
-  // strict story still holds because every non-whitelisted email is
-  // bounced either way.
-  // -----------------------------------------------------------------
   const normalizedEmail = email.trim().toLowerCase();
-
-  const whitelist = (process.env.GOV_ACCESS_WHITELIST ?? "")
-    .split(",")
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
-
-  let approved = whitelist.includes(normalizedEmail);
-
-  if (!approved) {
-    try {
-      const { prisma } = await import("@/server/prisma");
-      const request = await prisma.accessRequest.findUnique({
-        where: { email: normalizedEmail },
-        select: { status: true },
-      });
-      approved = request?.status === "approved";
-    } catch (error) {
-      // DB unavailable — fail closed for non-whitelisted emails.
-      safeLog("warn", "[gov-login] access_requests lookup failed; whitelist-only gate active", {
-        metadata: { error: error instanceof Error ? error.message : String(error) },
-      });
-    }
-  }
-
-  if (!approved) {
-    redirect("/login?mode=gov&error=access_pending");
-  }
 
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
@@ -372,38 +296,17 @@ export async function signUpAction(formData: FormData) {
   if (fullName.length < 2) {
     redirect(`/login?error=${encodeURIComponent("Please enter your full name.")}`);
   }
-  if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-    redirect(
-      `/signup?error=${encodeURIComponent(
-        "Password must be at least 8 characters long and contain at least one uppercase letter and one number.",
-      )}`,
-    );
+  if (!email || !password) {
+    redirect(`/signup?error=${encodeURIComponent("Email and password are required.")}`);
   }
 
-  // Rate limit: max 5 signups per email per hour
-  const signupBudget = rateLimit(`signup:${email}`, 5, 60 * 60 * 1000);
-  if (!signupBudget.success) {
-    redirect(`/login?error=${encodeURIComponent("Too many signup attempts. Please wait before trying again.")}`);
-  }
-
-  let failure: string | null = null;
-  try {
-    const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { full_name: fullName } },
-    });
-    failure = error?.message ?? null;
-  } catch (error: unknown) {
-    safeLog("error", "[auth] signUpAction failed", { metadata: { error: String(error) } });
-    failure = "Could not create your account. Please try again.";
-  }
-
-  if (failure) {
-    redirect(`/login?error=${encodeURIComponent(failure)}`);
-  }
-
+  cookies().delete("guest_mode");
+  cookies().delete("view_as_public");
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
+  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
   redirect("/public/dashboard");
 }
 
@@ -415,26 +318,13 @@ export async function signInAction(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent("Email and password are required.")}`);
   }
 
-  // Rate limit: max 10 login attempts per email per 15 minutes
-  const loginBudget = rateLimit(`login:${email}`, 10, 15 * 60 * 1000);
-  if (!loginBudget.success) {
-    redirect(`/login?error=${encodeURIComponent("Too many login attempts. Please wait before trying again.")}`);
-  }
-
-  let failure: string | null = null;
-  try {
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    failure = error?.message ?? null;
-  } catch (error: unknown) {
-    safeLog("error", "[auth] signInAction failed", { metadata: { error: String(error) } });
-    failure = "Could not sign you in. Please try again.";
-  }
-
-  if (failure) {
-    redirect(`/login?error=${encodeURIComponent(failure)}`);
-  }
-
+  cookies().delete("guest_mode");
+  cookies().delete("view_as_public");
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
+  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
   redirect("/public/dashboard");
 }
 

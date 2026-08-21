@@ -22,7 +22,8 @@
     "audit:env": "tsx scripts/audit-env.ts",
     "tokens:check": "tsx scripts/check-tokens.ts",
     "smoke:agents": "tsx scripts/smoke-agents.ts",
-    "smoke:chat": "tsx scripts/smoke-chat.ts"
+    "smoke:chat": "tsx scripts/smoke-chat.ts",
+    "help:shots": "node scripts/capture-help-shots.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.33",
@@ -99,6 +100,7 @@
     "postcss": "^8",
     "prettier": "^3.9.6",
     "prisma": "^6.19.3",
+    "puppeteer": "^25.8.0",
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.23.8",
