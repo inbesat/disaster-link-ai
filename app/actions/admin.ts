@@ -108,10 +108,17 @@ export async function changeUserRole(
     throw new Error(`Invalid role: ${role}`);
   }
 
-  // Prevent self-demotion
-  // Note: In a real app, check against the authenticated user's ID
+  const targetUser = mockUsers.find((u) => u.id === id);
+  const oldRole = targetUser?.role ?? "unknown";
 
   mockUsers = mockUsers.map((u) => (u.id === id ? { ...u, role } : u));
+
+  await logAdminAction(
+    "CHANGE_USER_ROLE",
+    `user:${id}`,
+    `role changed from ${oldRole} to ${role} by ${auth.role}`,
+  );
+
   return mockUsers;
 }
 

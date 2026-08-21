@@ -25,8 +25,8 @@ export default function SignupPage() {
     e.preventDefault();
     setError(null);
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long.");
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+      setError("Password must be at least 8 characters long and contain at least one uppercase letter and one number.");
       return;
     }
     if (password !== confirmPassword) {

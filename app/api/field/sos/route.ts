@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { sanitizeInput } from "@/lib/security/sanitize";
+import { requireRole } from "@/lib/security/require-role";
+import { GOV_ROLES } from "@/lib/validations/user";
 
 export const runtime = "nodejs";
 
@@ -7,6 +9,11 @@ export const runtime = "nodejs";
 // critical alert back so the SOS banner can confirm broadcast; a real build
 // would fan this out over WebSocket/SMS to nearby units.
 export async function POST(req: Request): Promise<NextResponse> {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ ok: false, error: auth.error }, { status: auth.status });
+  }
+
   try {
     const body = (await req.json()) as {
       type?: string;
