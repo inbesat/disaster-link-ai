@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { cookies } from "next/headers";
 import type { Role } from "@/lib/validations/user";
 import DashboardShell from "@/components/navigation/DashboardShell";
-import AlertTicker from "@/components/dashboard/AlertTicker";
 import OfflineBanner from "@/components/ui/OfflineBanner";
 import QuickActionDock from "@/components/gov/dashboard/QuickActionDock";
 
@@ -37,7 +36,6 @@ export default function GovAlertsLayout({ children }: { children: ReactNode }) {
         email={null}
         avatarUrl={null}
       >
-        <AlertTicker />
         {children}
       </DashboardShell>
 

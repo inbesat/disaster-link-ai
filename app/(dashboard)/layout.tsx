@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/server";
 import { ROLES, ROLE_LABELS, type Role } from "@/lib/validations/user";
 import { prisma } from "@/server/prisma";
 import DashboardShell from "@/components/navigation/DashboardShell";
-import AlertTicker from "@/components/dashboard/AlertTicker";
 import OfflineBanner from "@/components/ui/OfflineBanner";
 
 const OPERATIONAL_ROLES: Role[] = ROLES.filter((role) => role !== "viewer");
@@ -91,7 +90,6 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         avatarUrl={avatarUrl}
         alertsBadgeCount={alertsBadgeCount}
       >
-        <AlertTicker />
         {children}
       </DashboardShell>
 

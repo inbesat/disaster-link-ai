@@ -44,7 +44,38 @@ const contacts = [
 ];
 
 export default function Contact() {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [fallbackQuery, setFallbackQuery] = useState("");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    setStatus("sending");
+    // Prefill the mailto fallback with whatever the visitor typed, so even
+    // a backend failure never loses the lead.
+    setFallbackQuery(
+      new URLSearchParams({
+        subject: `Demo Request — ${data.organization || "Unknown org"} (${data.role || "Unspecified"})`,
+        body: `Name: ${data.name}\nOrganization: ${data.organization}\nEmail: ${data.email}\nPhone: ${data.phone}\nRole: ${data.role}\n\n${data.message}`,
+      }).toString(),
+    );
+
+    try {
+      const res = await fetch("/api/demo-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setStatus("success");
+      form.reset();
+    } catch (err) {
+      console.error("[Contact] demo request failed:", err);
+      setStatus("error");
+    }
+  }
 
   return (
     <section className="bg-primary py-28">
@@ -109,18 +140,12 @@ export default function Contact() {
 
         <ScrollReveal animation="fade-left" delay={0.2}>
           <div className="bg-white/5 border border-slate-800 rounded-[var(--radius-xl6)] p-8 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.6)]">
-            {submitted ? (
+            {status === "success" ? (
               <div className="flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-5 text-emerald-300 font-medium">
-                ✓ Thanks — our team will follow up shortly.
+                ✓ Thanks — your request has been emailed to our team and we&apos;ll follow up shortly.
               </div>
             ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubmitted(true);
-                }}
-                className="space-y-5"
-              >
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <label className="text-sm font-medium text-slate-200 mb-1.5 block">
                     Full Name
@@ -149,6 +174,7 @@ export default function Contact() {
                   </label>
                   <input
                     type="email"
+                    name="email"
                     required
                     className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
@@ -160,6 +186,7 @@ export default function Contact() {
                   </label>
                   <input
                     type="tel"
+                    name="phone"
                     required
                     className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   />
@@ -170,6 +197,7 @@ export default function Contact() {
                     Role
                   </label>
                   <select
+                    name="role"
                     required
                     className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all appearance-none"
                   >
@@ -187,16 +215,31 @@ export default function Contact() {
                   </label>
                   <textarea
                     rows={4}
+                    name="message"
                     required
                     className="w-full px-4 py-3 rounded-[var(--radius-xl4)] border border-slate-800 bg-slate-800/50 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[var(--blue)] focus:ring-2 focus:ring-[#2563EB]/20 transition-all"
                   ></textarea>
                 </div>
 
+                {status === "error" && (
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-sm text-red-300">
+                    Couldn&apos;t send automatically.{" "}
+                    <a
+                      href={`mailto:safesphere095@gmail.com,anonymous4w08@gmail.com?${fallbackQuery}`}
+                      className="font-semibold underline hover:text-red-200"
+                    >
+                      Click here to email us directly
+                    </a>{" "}
+                    — your message opens pre-filled in your mail app.
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full mt-2 bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full py-3.5 font-semibold hover:shadow-[0_20px_60px_-20px_rgba(37,99,235,0.5)] transition-all duration-300"
+                  disabled={status === "sending"}
+                  className="w-full mt-2 bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full py-3.5 font-semibold hover:shadow-[0_20px_60px_-20px_rgba(37,99,235,0.5)] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Request Demo →
+                  {status === "sending" ? "Sending…" : "Request Demo →"}
                 </button>
               </form>
             )}

@@ -3,7 +3,6 @@ import Script from "next/script";
 import { Inter, JetBrains_Mono, Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import ToastViewport from "@/components/ui/Toast";
-import EmergencyContactCard from "@/components/EmergencyContactCard";
 import SimulationToggle from "@/components/admin/SimulationToggle";
 import DemoController from "@/components/demo/DemoController";
 import DemoHotkeysHost from "@/components/demo/DemoHotkeysHost";
@@ -140,7 +139,6 @@ export default function RootLayout({
           <LanguageProvider>
             <MapSettingsProvider>
               {children}
-              <EmergencyContactCard />
             </MapSettingsProvider>
           </LanguageProvider>
         </ThemeProvider>

@@ -13,7 +13,8 @@
 //   super_admin     → everything (incl. Settings)
 //
 // Route targets are the REAL pages that exist today:
-//   Overview       → /dashboard        (metrics overview)
+//   Govt Dashboard  → /gov/dashboard    (government portal dashboard)
+//   CMD Center Overview → /dashboard    (metrics overview)
 //   Command Center → /command-center   (live map view)
 //   Resources      → /inventory       (resource inventory)
 //   Team           → /directory       (member directory)
@@ -25,6 +26,7 @@ import {
   Heart,
   LayoutDashboard,
   Map,
+  Monitor,
   PackageOpen,
   Route,
   Satellite,
@@ -85,11 +87,18 @@ export type NavRoute = {
 export const NAVIGATION_ROUTES: NavRoute[] = [
   // ------------------------------------------------------- OPERATIONS ----
   {
-    label: "Overview",
-    href: "/dashboard",
+    label: "Govt Dashboard",
+    href: "/gov/dashboard",
     icon: LayoutDashboard,
     section: "operations",
-    allowedRoles: ["district_admin", "super_admin"],
+    allowedRoles: ["super_admin", "district_admin"],
+  },
+  {
+    label: "CMD Center Overview",
+    href: "/dashboard",
+    icon: Monitor,
+    section: "operations",
+    allowedRoles: ["super_admin", "district_admin"],
   },
   {
     label: "Command Center",

@@ -19,7 +19,6 @@ const PredictionChart = dynamic(() => import("@/components/dashboard/PredictionC
 });
 import WhatIfSimulator from "@/components/dashboard/WhatIfSimulator";
 import ImpactSummary from "@/components/dashboard/ImpactSummary";
-import AlertBanner from "@/components/dashboard/AlertBanner";
 import TimeSlider from "@/components/map/TimeSlider";
 import ScenarioSelector, {
   SCENARIO_MULTIPLIER,
@@ -37,7 +36,6 @@ import HazardSelector from "@/components/map/HazardSelector";
 import AccuracyMetrics from "@/components/dashboard/AccuracyMetrics";
 import WebhookSimulator from "@/components/dashboard/WebhookSimulator";
 import type { GroundReport } from "@/lib/crowdsourced/report";
-import LiveCursors from "@/components/map/LiveCursors";
 
 const DisasterMap = dynamic(() => import("@/components/map/DisasterMap"), {
   ssr: false,
@@ -215,7 +213,6 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
   return (
     <main className="relative flex h-screen w-full flex-col overflow-hidden bg-background">
       {top}
-      <AlertBanner riskLevel={severity} hours={hoursAhead} disasterType={disasterType} />
       <div className="relative flex-1 overflow-hidden">
         <DisasterMap
           visibleLayers={layers}
@@ -228,7 +225,6 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
           onReroute={handleReroute}
           groundReports={groundReports}
         />
-        <LiveCursors />
         <ScenarioSelector value={scenario} onChange={setScenario} />
 
         <aside className="absolute left-4 top-4 z-10 hidden w-80 flex-col gap-4 overflow-y-auto rounded-eoc border border-border bg-surface/90 p-5 shadow-glow-accent backdrop-blur md:flex md:max-h-[calc(100%-2rem)]">

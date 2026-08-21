@@ -141,6 +141,27 @@ async function resolveAccessContext(): Promise<AccessContext> {
   }
 }
 
+export async function POST(req: Request) {
+  // ---------------------------------------------------------------------
+  // HARD GUARDRAIL — fail fast and loud when no LLM key is configured.
+  // Without this, every chat request burns rate-limit budget, runs RAG,
+  // probes dead providers and surfaces as a vague stream error in the UI.
+  // ---------------------------------------------------------------------
+  if (!process.env.OPENROUTER_API_KEY && !process.env.GROQ_API_KEY) {
+    console.error(
+      "🚨 CRITICAL: No AI API Key found in environment variables! " +
+        "Set OPENROUTER_API_KEY or GROQ_API_KEY in .env.local and restart the dev server.",
+    );
+    return new Response(
+      JSON.stringify({ error: "API Key Configuration Error" }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
+  // Phase 21 · Enforce the server-side rate limit before doing any work.
+  const rate = chatLimiter(clientKey(req));
+  if (!rate.success) {
+    const retryAfterMs = Math.max(0, rate.resetTime - Date.now());
 export async function POST(req: Request): Promise<Response> {
   // Phase 21 & Phase 7 · Enforce the server-side rate limit before doing any work.
   const cookieStore = await cookies();
@@ -243,7 +264,7 @@ export async function POST(req: Request): Promise<Response> {
           )
           .join("\n");
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.warn("[chat] vector retrieval failed; using keyword fallback.", error);
     }
   }
@@ -306,7 +327,7 @@ ${isCommander ? "" : "\nNOTE: You do NOT have evacuation tool access. Explain co
   let model: LanguageModel;
   try {
     model = await resolveEmergencyPlannerModel(providerPreference);
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("[chat] failed to resolve an AI provider:", error);
     const detail = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
