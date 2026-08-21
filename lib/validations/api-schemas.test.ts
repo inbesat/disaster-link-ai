@@ -75,6 +75,18 @@ describe("api-schemas Zod validation", () => {
     });
     expect(tooLong.success).toBe(false);
   });
+
+  it("validates resource allocation schema", () => {
+    const valid = resourceSchemas.resource.safeParse({
+      resourceType: "water",
+      quantity: 100,
+      location: {
+        type: "Point",
+        coordinates: [85.1, 25.6],
+      },
+    });
+    expect(valid.success).toBe(true);
+  });
 });
 
 describe("XSS and SQL security helpers", () => {
