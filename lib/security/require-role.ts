@@ -112,6 +112,32 @@ export async function requireRole(
 }
 
 /**
+ * Higher-order authorization wrapper for API route handlers (Prompt 5.5).
+ */
+export function requireRoleHandler(
+  allowedRoles: readonly string[],
+  handler: (req: Request, auth: { role: string }) => Promise<Response>,
+) {
+  return async (req: Request) => {
+    const auth = await requireRole(allowedRoles);
+    if (!auth.ok) {
+      return new Response(JSON.stringify({ ok: false, error: auth.error }), {
+        status: auth.status,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return handler(req, auth);
+  };
+}
+
+/**
+ * Centralized requireAuth wrapper for any authenticated session.
+ */
+export async function requireAuth(): Promise<RequireRoleResult> {
+  return requireSession();
+}
+
+/**
  * requireSession() — weaker sibling of requireRole(): admits ANY signed-in
  * identity (guest_mode cookie, role cookie, or Supabase user) so citizen-facing
  * endpoints keep working for demo guests while blocking anonymous callers.
