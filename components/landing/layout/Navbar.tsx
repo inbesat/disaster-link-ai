@@ -75,8 +75,7 @@ export default function Navbar() {
 
         {/* Desktop Nav Links — xl+ only: below 1280px the full bar
             physically cannot fit, so the hamburger menu takes over and
-            nothing overflows the pill. Breathing room restored now that
-            Request Demo lives on its own tier below. */}
+            nothing overflows the pill. */}
         <div className="hidden xl:flex gap-4 items-center">
           {NAV_LINKS.map((link) => (
             <a
@@ -93,9 +92,10 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop CTAs — INSIDE the rounded pill container. Request Demo
-            is NOT here anymore; it floats on its own tier below the bar. */}
-        <div className="hidden xl:flex flex-row items-center gap-2 shrink-0 whitespace-nowrap">
+        {/* Desktop CTAs — INSIDE the rounded pill container. Request Demo is
+            the primary CTA (vibrant blue); Sign In / Download App stay
+            outline-secondary so they don't compete with it. */}
+        <div className="hidden xl:flex flex-row items-center gap-3 shrink-0 whitespace-nowrap">
           {/* Google Translate widget host — layout.tsx injects the real
               dropdown here and auto-translates the whole page on select.
               Dark-themed via the GOOGLE TRANSLATE block in globals.css. */}
@@ -107,15 +107,9 @@ export default function Navbar() {
             <LogIn size={14} aria-hidden="true" />
             Sign In
           </a>
-          <a
-            href="#platform"
-            className="whitespace-nowrap border border-white/20 text-white rounded-full px-3.5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
-          >
-            Explore Platform
-          </a>
           {/* App download — outline (secondary) so it doesn't compete with
-              the floating Request Demo CTA below. Routes to the /download
-              hub so users pick their platform. */}
+              the solid Request Demo CTA. Routes to the /download hub so
+              users pick their platform. */}
           <Link
             href="/download"
             className="whitespace-nowrap flex items-center gap-2 border border-white/20 text-white rounded-full px-3.5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
@@ -123,6 +117,13 @@ export default function Navbar() {
             <Download size={14} aria-hidden="true" />
             Download App
           </Link>
+          <a
+            href="#contact"
+            className="whitespace-nowrap bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
+          >
+            Request Demo
+            <ArrowRight size={14} />
+          </a>
         </div>
 
         {/* Mobile toggle — shown below xl (where the desktop bar hides) */}
@@ -133,19 +134,6 @@ export default function Navbar() {
         >
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-      </div>
-
-      {/* Tier 2 — floating Request Demo, right-aligned just below the bar.
-          Desktop only (xl+): below xl the hamburger menu carries its own
-          full-width Request Demo entry, so this row would be a duplicate. */}
-      <div className="w-full max-w-[98%] xl:max-w-7xl mx-auto hidden xl:flex justify-end mt-3 px-4">
-        <a
-          href="#contact"
-          className="whitespace-nowrap bg-gradient-to-r from-[var(--blue)] to-[var(--blue-light)] text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all duration-200 flex items-center gap-2"
-        >
-          Request Demo
-          <ArrowRight size={14} />
-        </a>
       </div>
 
       {/* Mobile Overlay */}
@@ -183,13 +171,6 @@ export default function Navbar() {
               >
                 <LogIn size={14} aria-hidden="true" />
                 Sign In
-              </a>
-              <a
-                href="#platform"
-                onClick={closeMobile}
-                className="border border-white/20 text-white rounded-full w-full py-2.5 text-sm text-center font-medium hover:bg-white/10 transition-all"
-              >
-                Explore Platform
               </a>
               <Link
                 href="/download"
