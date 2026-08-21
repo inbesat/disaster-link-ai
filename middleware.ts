@@ -79,8 +79,121 @@ function isDashboard(pathname: string) {
   return DASHBOARD_PATHS.some((base) => matchesBase(pathname, base));
 }
 
+function isAllowedOrigin(origin: string): boolean {
+  if (!origin) return true;
+  const isDevOrTest = process.env.NODE_ENV !== "production";
+
+  if (isDevOrTest && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+    return true;
+  }
+
+  const allowed = [
+    process.env.ALLOWED_ORIGIN,
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    "https://safesphere.vercel.app",
+  ]
+    .filter(Boolean)
+    .flatMap((val) => (val as string).split(",").map((s) => s.trim()));
+
+  return allowed.includes(origin);
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Prompt 6.4: HTTPS Enforcement in production
+  if (
+    process.env.NODE_ENV === "production" &&
+    request.headers.get("x-forwarded-proto") === "http"
+  ) {
+    const httpsUrl = request.nextUrl.clone();
+    httpsUrl.protocol = "https:";
+    return NextResponse.redirect(httpsUrl, 301);
+  }
+
+  // Prompt 6.1: CORS Origin Validation
+  const origin = request.headers.get("origin");
+  if (origin && !isAllowedOrigin(origin)) {
+    return NextResponse.json(
+      { ok: false, error: "CORS error: Origin not allowed." },
+      { status: 403 },
+    );
+  }
+
+  // Handle CORS preflight OPTIONS requests
+  if (origin && request.method === "OPTIONS") {
+    return new NextResponse(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRF-Token",
+        "Access-Control-Max-Age": "86400",
+        Vary: "Origin",
+      },
+    });
+  }
+
+  // Prompt 6.2: Ensure CSRF token cookie exists and validate state-changing API requests
+  let csrfToken = request.cookies.get("csrf_token")?.value;
+  let newCsrfTokenGenerated = false;
+  if (!csrfToken) {
+    csrfToken = crypto.randomUUID();
+    newCsrfTokenGenerated = true;
+  }
+
+  const isWebhook =
+    pathname.startsWith("/api/webhooks/") || pathname === "/api/whatsapp/inbound";
+  if (
+    pathname.startsWith("/api/") &&
+    !isWebhook &&
+    ["POST", "PUT", "PATCH", "DELETE"].includes(request.method)
+  ) {
+    const csrfTokenHeader = request.headers.get("x-csrf-token");
+    const existingCsrfCookie = request.cookies.get("csrf_token")?.value;
+
+    if (!existingCsrfCookie || !csrfTokenHeader || csrfTokenHeader !== existingCsrfCookie) {
+      return NextResponse.json(
+        { ok: false, error: "CSRF token mismatch or missing." },
+        { status: 403 },
+      );
+    }
+  }
+
+  const withSecurityHeaders = (res: NextResponse) => {
+    if (newCsrfTokenGenerated && csrfToken) {
+      res.cookies.set("csrf_token", csrfToken, {
+        httpOnly: false,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+      });
+    }
+    if (origin) {
+      res.headers.set("Access-Control-Allow-Origin", origin);
+      res.headers.set("Access-Control-Allow-Credentials", "true");
+      res.headers.set("Vary", "Origin");
+    }
+    res.headers.set("X-Frame-Options", "DENY");
+    res.headers.set("X-Content-Type-Options", "nosniff");
+    res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.headers.set(
+      "Permissions-Policy",
+      "geolocation=(self), microphone=(self), camera=()",
+    );
+    res.headers.set(
+      "Strict-Transport-Security",
+      "max-age=31536000; includeSubDomains; preload",
+    );
+    res.headers.set(
+      "Content-Security-Policy",
+      "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://translate.google.com https://translate.googleapis.com; style-src 'self' 'unsafe-inline' https://translate.googleapis.com; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://*.mapbox.com https://api.qrserver.com https://translate.googleapis.com https://www.google.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://*.mapbox.com https://api.otp.dev https://translate.googleapis.com; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
+    );
+    return res;
+  };
+
   const isGuest = request.cookies.get("guest_mode")?.value === "true";
   const role = request.cookies.get("role")?.value ?? "";
   const viewAsPublic = request.cookies.get("view_as_public")?.value === "true";
@@ -113,11 +226,11 @@ export async function middleware(request: NextRequest) {
       "/api/allocations",
     ];
     const isPublicApi = publicApiPrefixes.some((p) => pathname === p || pathname.startsWith(p + "/"));
-    if (isPublicApi) return NextResponse.next();
+    if (isPublicApi) return withSecurityHeaders(NextResponse.next());
     // All other API routes pass through — auth is enforced per-handler via
     // requireRole() or requireAuth(). The middleware's role-cookie check
     // below still applies when a role cookie is present.
-    return NextResponse.next();
+    return withSecurityHeaders(NextResponse.next());
   }
 
   // =========================================================================
@@ -255,35 +368,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // CSRF protection for state-changing API routes
-  if (
-    pathname.startsWith("/api/") &&
-    ["POST", "PUT", "PATCH", "DELETE"].includes(request.method)
-  ) {
-    const csrfTokenHeader = request.headers.get("x-csrf-token");
-    const csrfCookie = request.cookies.get("csrf_token")?.value;
-    if (csrfCookie && csrfTokenHeader !== csrfCookie) {
-      return NextResponse.json(
-        { ok: false, error: "CSRF token mismatch." },
-        { status: 403 },
-      );
-    }
-  }
-
-  let response = NextResponse.next({ request });
-
-  // Security headers on response
-  response.headers.set("X-Frame-Options", "DENY");
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set(
-    "Permissions-Policy",
-    "geolocation=(self), microphone=(self), camera=()",
-  );
-  response.headers.set(
-    "Strict-Transport-Security",
-    "max-age=31536000; includeSubDomains",
-  );
+  let response = withSecurityHeaders(NextResponse.next({ request }));
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
