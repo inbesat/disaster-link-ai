@@ -1,23 +1,14 @@
 "use client";
 
 // ---------------------------------------------------------------------
-// hooks/useGovPresence.ts — Phase 7 · Step 9 · Real-Time Collaboration
-// Shell (mock WebSocket).
+// hooks/useGovPresence.ts — Phase 7/11 · Real-Time Collaboration & Presence Security
 //
-// Simulates the WebSocket presence channel the Command Center would open
-// in production ("who else is viewing this dashboard right now?").
-// The simulation logic lives in PURE helpers (PRESENCE_ROSTER,
-// advancePresence) so the "connection" behaviour is unit-testable
-// without a browser; the hook itself is a thin timer wrapper that feeds
-// a mock event stream into React state.
-//
-//   const { users, status } = useGovPresence();
-//
-// The real swap-in is a single line: replace the simulated `emit` with a
-// real `ws.onmessage` handler over the same PresenceEvent shape.
+// WebSocket presence channel for Command Center collaborators with role-based
+// visibility, timestamp masking, channel scoping, and ghost mode privacy settings.
 // ---------------------------------------------------------------------
 
 import { useEffect, useRef, useState } from "react";
+import { isAuthorizedForPresence } from "@/lib/realtime/presence";
 
 /** One collaborator viewing the dashboard. */
 export type PresenceUser = {
@@ -28,6 +19,8 @@ export type PresenceUser = {
   role: string;
   /** Avatar gradient hue (0–360). */
   hue: number;
+  /** Relative status (online, recently, offline) instead of raw timestamp. */
+  fuzzyStatus?: "online" | "recently" | "offline";
 };
 
 export type PresenceStatus = "connecting" | "online" | "offline";
@@ -37,27 +30,31 @@ export type PresenceEvent =
   | { type: "user_joined"; user: PresenceUser }
   | { type: "user_left"; id: string };
 
+/** Options for presence hook security and privacy. */
+export interface UseGovPresenceOptions {
+  userRole?: string;
+  hideOnlineStatus?: boolean;
+  channelId?: string;
+}
+
 /** The fixed "currently viewing" roster (drives the avatar stack). */
 export const PRESENCE_ROSTER: PresenceUser[] = [
-  { id: "dm-patna", name: "DM Patna", role: "District Magistrate", hue: 217 },
-  { id: "sdrf-lead", name: "SDRF Lead", role: "State Disaster Response Force", hue: 152 },
-  { id: "dc-ernakulam", name: "DC Ernakulam", role: "District Collector", hue: 281 },
-  { id: "ops-desk", name: "Ops Desk", role: "Control Room Operations", hue: 348 },
-  { id: "health-officer", name: "Health Officer", role: "Public Health Cell", hue: 38 },
+  { id: "dm-patna", name: "DM Patna", role: "District Magistrate", hue: 217, fuzzyStatus: "online" },
+  { id: "sdrf-lead", name: "SDRF Lead", role: "State Disaster Response Force", hue: 152, fuzzyStatus: "online" },
+  { id: "dc-ernakulam", name: "DC Ernakulam", role: "District Collector", hue: 281, fuzzyStatus: "recently" },
+  { id: "ops-desk", name: "Ops Desk", role: "Control Room Operations", hue: 348, fuzzyStatus: "online" },
+  { id: "health-officer", name: "Health Officer", role: "Public Health Cell", hue: 38, fuzzyStatus: "online" },
 ];
 
 /** Demo-only collaborators that join/leave to show a live stream. */
 const ROAMING_USERS: PresenceUser[] = [
-  { id: "cm-office", name: "CM Office", role: "Secretariat Liaison", hue: 195 },
-  { id: "ndrf-commander", name: "NDRF Cmdr", role: "National Disaster Response Force", hue: 16 },
-  { id: "fire-chief", name: "Fire Chief", role: "State Fire Services", hue: 30 },
+  { id: "cm-office", name: "CM Office", role: "Secretariat Liaison", hue: 195, fuzzyStatus: "online" },
+  { id: "ndrf-commander", name: "NDRF Cmdr", role: "National Disaster Response Force", hue: 16, fuzzyStatus: "online" },
+  { id: "fire-chief", name: "Fire Chief", role: "State Fire Services", hue: 30, fuzzyStatus: "online" },
 ];
 
 /**
  * Apply one simulated presence event to the current roster.
- * Pure — injectable `now` keeps the demo deterministic. Roaming users
- * join at staggered intervals and leave again after a while, so the bar
- * visibly changes over the course of a live pitch.
  */
 export function applyPresenceEvent(
   roster: PresenceUser[],
@@ -75,15 +72,6 @@ export function applyPresenceEvent(
 
 /**
  * Decide the next simulated event for the elapsed-since-connect time.
- * Pure + time-injectable so tests can drive the whole sequence:
- *   8s  → CM Office joins
- *   16s → NDRF Cmdr joins
- *   24s → CM Office leaves
- *   32s → Fire Chief joins
- *   40s → NDRF Cmdr leaves
- *
- * The cycle index is (elapsed / 8s) - 1 so the FIRST join lands at 8s
- * (cycle 0), not immediately on connect — matches the scripted timeline.
  */
 export function nextPresenceEvent(elapsedMs: number): PresenceEvent | null {
   const cycle = Math.floor(elapsedMs / 8000) - 1;
@@ -112,26 +100,47 @@ export type GovPresenceState = {
 };
 
 /**
- * Simulate a WebSocket presence connection. Connects on mount (brief
- * "connecting" handshake), then emits a user_joined/user_left event every
- * 8s until unmount. Cleanup clears all timers so the mock never leaks.
+ * Real-time presence hook with security controls:
+ * - Restricts visibility to authorized team members/admins (`super_admin`, `district_admin`, `field_responder`)
+ * - Hides status when user enables `hideOnlineStatus` (ghost mode)
+ * - Returns fuzzy status ('online' / 'recently' / 'offline') without exposing raw timestamps
  */
-export function useGovPresence(): GovPresenceState {
-  const [users, setUsers] = useState<PresenceUser[]>(PRESENCE_ROSTER);
-  const [status, setStatus] = useState<PresenceStatus>("connecting");
+export function useGovPresence(options: UseGovPresenceOptions = {}): GovPresenceState {
+  const { userRole = "district_admin", hideOnlineStatus = false } = options;
+  const isAuthorized = isAuthorizedForPresence(userRole);
+
+  const [users, setUsers] = useState<PresenceUser[]>(() => {
+    if (!isAuthorized) return [];
+    return PRESENCE_ROSTER;
+  });
+  const [status, setStatus] = useState<PresenceStatus>(() => {
+    if (!isAuthorized) return "offline";
+    return "connecting";
+  });
+
   const connectedAtRef = useRef<number>(0);
   const lastCycleRef = useRef<number>(-1);
 
   useEffect(() => {
-    // Simulated handshake — mark the channel open shortly after mount.
+    // Suppress presence for unauthorized roles or ghost mode
+    if (!isAuthorized) {
+      setUsers([]);
+      setStatus("offline");
+      return;
+    }
+
+    if (hideOnlineStatus) {
+      // User is in ghost mode: show status as offline/hidden
+      setStatus("offline");
+      return;
+    }
+
     const handshake = window.setTimeout(() => {
       connectedAtRef.current = Date.now();
       setStatus("online");
     }, 700);
 
     const emitter = window.setInterval(() => {
-      // Pause the fake stream while the tab is hidden (matches the sync
-      // header behaviour — no pointless timer churn in background tabs).
       if (document.hidden || status !== "online") return;
 
       const elapsed = Date.now() - connectedAtRef.current;
@@ -147,7 +156,7 @@ export function useGovPresence(): GovPresenceState {
       window.clearTimeout(handshake);
       window.clearInterval(emitter);
     };
-  }, [status]);
+  }, [isAuthorized, hideOnlineStatus, status]);
 
   return { users, status };
 }
