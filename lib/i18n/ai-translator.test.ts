@@ -24,9 +24,9 @@ describe("translateAlertForSMS", () => {
     expect(await translateAlertForSMS("", "hi")).toBe("");
   });
 
-  it("falls back to the original text when no Groq key is configured", async () => {
+  it("falls back to the original text in English with note when no Groq key is configured", async () => {
     const result = await translateAlertForSMS(ALERT, "hi");
-    expect(result).toBe(ALERT);
+    expect(result).toBe(`${ALERT} [Translation unavailable]`);
   });
 });
 

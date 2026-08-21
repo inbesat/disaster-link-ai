@@ -296,6 +296,20 @@ export default function DisasterMap({
   activeAllocations = [],
   groundReports = [],
 }: DisasterMapProps) {
+  const [webGlSupported, setWebGlSupported] = useState<boolean | null>(null);
+  const [mapInitError, setMapInitError] = useState<string | null>(null);
+  const [tileError, setTileError] = useState<boolean>(false);
+  const [manualLocation, setManualLocation] = useState<string>("");
+  const [geolocationFailed, setGeolocationFailed] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      const supported = maplibregl.supported({ failIfMajorPerformanceCaveat: false });
+      setWebGlSupported(supported);
+    } catch {
+      setWebGlSupported(false);
+    }
+  }, []);
   const [selected, setSelected] = useState<SelectedFeature>(null);
   const [selectedZone, setSelectedZone] = useState<SelectedZone | null>(null);
   const [measuring, setMeasuring] = useState(false);
@@ -933,8 +947,76 @@ export default function DisasterMap({
           features: [],
         };
 
+  if (webGlSupported === false || mapInitError) {
+    return (
+      <div className="flex h-full min-h-[400px] w-full flex-col items-center justify-center rounded-eoc border border-severity-amber-600/40 bg-surface/90 p-6 text-foreground shadow-glow-amber">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-severity-amber-600/60 bg-severity-amber-600/10">
+          <span className="text-2xl">🗺️</span>
+        </div>
+        <p className="eoc-label mt-4 text-severity-amber-400">MAP ENGINE UNAVAILABLE</p>
+        <h2 className="mt-1 text-center text-lg font-bold">
+          {webGlSupported === false
+            ? "Your browser does not support maps. Please update."
+            : "Map initialization failed."}
+        </h2>
+        <p className="mt-2 max-w-md text-center text-xs leading-relaxed text-slate-400">
+          WebGL standard is required for 3D vector map acceleration. You can still access shelters and disaster forecasts below.
+        </p>
+
+        {/* Fallback Static Area View */}
+        <div className="mt-4 flex w-full max-w-md flex-col gap-2 rounded-md border border-border bg-black/40 p-3 text-xs">
+          <div className="flex justify-between border-b border-border/60 pb-2">
+            <span className="text-slate-400">Viewed Sector:</span>
+            <span className="font-bold text-accent">{liveConditions?.district || "Patna Sector"}</span>
+          </div>
+          <div className="flex justify-between border-b border-border/60 pb-2">
+            <span className="text-slate-400">Active Warning Zones:</span>
+            <span className="font-bold text-severity-amber-400">{zonesGeoJSON.features.length} Zones</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-slate-400">Open Shelters:</span>
+            <span className="font-bold text-emerald-400">{mapShelters.length} Available</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <MapProvider>
+      {tileError && (
+        <div className="absolute top-2 left-1/2 z-20 -translate-x-1/2 rounded-full border border-amber-500/50 bg-surface-elevated/90 px-3 py-1 text-[11px] font-semibold text-amber-300 shadow-md backdrop-blur">
+          ⚠️ Tile loading limited — showing simplified outline mode
+        </div>
+      )}
+
+      {geolocationFailed && (
+        <div className="absolute top-16 left-1/2 z-20 -translate-x-1/2 flex items-center gap-2 rounded-eoc border border-accent bg-surface-elevated/95 p-2 shadow-glow backdrop-blur">
+          <span className="text-xs text-slate-300">Location access denied. Enter location:</span>
+          <input
+            type="text"
+            value={manualLocation}
+            onChange={(e) => setManualLocation(e.target.value)}
+            placeholder="e.g. Patna, Bihar"
+            className="rounded border border-border bg-black/50 px-2 py-1 text-xs text-white focus:outline-none focus:ring-1 focus:ring-accent"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              if (manualLocation.trim()) {
+                setGeolocationFailed(false);
+                // Default fallback center to Patna coordinates if manual input given
+                setMapCenter({ lat: 25.5941, lng: 85.1376 });
+                void fetchLiveData(25.5941, 85.1376);
+              }
+            }}
+            className="rounded bg-accent px-2 py-1 text-xs font-bold text-slate-950 hover:brightness-110"
+          >
+            Go
+          </button>
+        </div>
+      )}
+
       <Map
         mapLib={maplibregl}
         initialViewState={DEFAULT_INITIAL_VIEW}
@@ -948,6 +1030,14 @@ export default function DisasterMap({
         onMouseLeave={(e) => {
           handleMouseLeave(e);
           setCursor(null);
+        }}
+        onError={(e) => {
+          console.warn("[DisasterMap] Map engine error:", e.error);
+          if (e.error?.message?.includes("WebGL") || e.error?.message?.includes("initialize")) {
+            setMapInitError(e.error.message);
+          } else {
+            setTileError(true);
+          }
         }}
         interactiveLayerIds={[
           "hazard-zone-fill",
@@ -1415,6 +1505,9 @@ export default function DisasterMap({
             lastFetchedCoords.current = { lat: latitude, lng: longitude };
             setMapCenter({ lat: latitude, lng: longitude });
             void fetchLiveData(latitude, longitude);
+          }}
+          onError={() => {
+            setGeolocationFailed(true);
           }}
         />
       </Map>
