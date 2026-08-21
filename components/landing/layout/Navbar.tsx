@@ -57,9 +57,11 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-4 w-full z-50 flex flex-col items-center">
-      {/* Tier 1 — the main dark rounded pill (logo · links · CTAs) */}
+      {/* Tier 1 — the main dark rounded pill (logo · links · CTAs).
+          Symmetric px-5 keeps the rounded-full end curves clear of the
+          first/last child so the border never cuts through a button. */}
       <div
-        className={`w-full max-w-[98%] xl:max-w-7xl mx-auto backdrop-blur-[16px] border border-white/10 rounded-full px-4 py-3 flex items-center justify-between transition-all duration-300 ${
+        className={`w-full max-w-[98%] xl:max-w-7xl mx-auto backdrop-blur-[16px] border border-white/10 rounded-full pl-5 pr-5 py-3 flex items-center justify-between transition-all duration-300 ${
           scrolled
             ? "bg-[rgba(11,31,58,0.85)] shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]"
             : "bg-[rgba(11,31,58,0.55)]"
@@ -75,8 +77,9 @@ export default function Navbar() {
 
         {/* Desktop Nav Links — xl+ only: below 1280px the full bar
             physically cannot fit, so the hamburger menu takes over and
-            nothing overflows the pill. */}
-        <div className="hidden xl:flex gap-4 items-center">
+            nothing overflows the pill. gap-3 at xl / gap-4 on very wide
+            screens keeps everything inside the max-w-7xl cap. */}
+        <div className="hidden xl:flex gap-3 2xl:gap-4 items-center">
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
@@ -92,10 +95,11 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop CTAs — INSIDE the rounded pill container. Request Demo is
-            the primary CTA (vibrant blue); Sign In / Download App stay
-            outline-secondary so they don't compete with it. */}
-        <div className="hidden xl:flex flex-row items-center gap-3 shrink-0 whitespace-nowrap">
+        {/* Desktop CTAs — INSIDE the rounded pill container. Simple flex
+            row: no absolute positioning, no negative margins, no fixed
+            widths. Request Demo is the primary CTA (vibrant blue); Sign
+            In / Download App stay outline-secondary. */}
+        <div className="hidden xl:flex items-center gap-3 shrink-0 whitespace-nowrap">
           {/* Google Translate widget host — layout.tsx injects the real
               dropdown here and auto-translates the whole page on select.
               Dark-themed via the GOOGLE TRANSLATE block in globals.css. */}
