@@ -2,6 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import {
+  DefaultChatTransport,
   isTextUIPart,
   isToolUIPart,
   type UIDataTypes,
@@ -337,7 +338,17 @@ function OperationContextPanel({ tokensLeft }: { tokensLeft: number }) {
 export default function AiPlannerPage() {
   const [loadedMessages] = useState<UIMessage[]>(() => loadStoredMessages());
   const { status, messages, setMessages, sendMessage, error } = useChat({
+    // AI SDK v7: the endpoint is set on the transport (no top-level `api`).
+    // Explicit — never rely on the SDK default so a route move can't
+    // silently break the planner.
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
     messages: loadedMessages,
+    // Surface backend failures (missing API key → 500, rate limit → 429,
+    // provider outage → 502) in the browser console instead of failing
+    // silently in the UI.
+    onError: (err) => {
+      console.error("[AiPlanner] chat request failed:", err);
+    },
   });
 
   // Persist every change to the conversation back to localStorage.

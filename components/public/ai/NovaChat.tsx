@@ -273,7 +273,10 @@ export function NovaChat() {
     }
     try {
       return await routeChatQuery(trimmed, CHAT_DISTRICT);
-    } catch {
+    } catch (err) {
+      // Never swallow backend failures silently — a missing server API key
+      // or a 5xx from /api/chat must be visible in the browser console.
+      console.error("[NovaChat] cloud chat failed, using local fallback:", err);
       return { text: t("nova_reply"), source: "local", engineUsed: "local-fallback" };
     }
   };
