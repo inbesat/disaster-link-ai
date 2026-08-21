@@ -810,17 +810,28 @@ model CasualtyRecord {
 // Writes are best-effort: failures are logged, never thrown.
 // ---------------------------------------------------------------------
 model AuditLog {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String?  @map("user_id") // null for guest/demo-authored actions
-  action    String
-  resource  String
-  details   String?
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-  isDemo    Boolean  @default(false) @map("is_demo")
-  sessionId String?  @map("session_id")
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String?  @map("user_id") // null for guest/demo-authored actions
+  action       String   // e.g. 'login', 'shelter_updated', 'role_changed'
+  resource     String   // fallback summary resource name
+  resourceType String?  @map("resource_type") // e.g. 'shelter', 'alert', 'resource', 'user'
+  resourceId   String?  @map("resource_id") @db.Uuid
+  oldValue     Json?    @map("old_value")
+  newValue     Json?    @map("new_value")
+  ipAddress    String?  @map("ip_address")
+  userAgent    String?  @map("user_agent")
+  districtId   String?  @map("district_id") @db.Uuid
+  severity     String   @default("info") // 'info', 'warning', 'critical'
+  details      String?
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  isDemo       Boolean  @default(false) @map("is_demo")
+  sessionId    String?  @map("session_id")
 
   @@index([userId])
   @@index([resource])
+  @@index([resourceType])
+  @@index([action])
+  @@index([severity])
   @@index([createdAt])
   @@map("audit_logs")
 }

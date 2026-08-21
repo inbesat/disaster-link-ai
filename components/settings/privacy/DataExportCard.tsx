@@ -136,24 +136,24 @@ export default function DataExportCard() {
 
       {/* Actions */}
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        <button
-          type="button"
-          onClick={() => void requestArchive()}
-          disabled={archiving}
-          className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_18px_rgba(37,99,235,0.35)] transition hover:bg-blue-500 active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
+        <a
+          href="/api/user/export?format=json"
+          download="safesphere-personal-data.json"
+          className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_18px_rgba(37,99,235,0.35)] transition hover:bg-blue-500 active:scale-[0.98]"
         >
-          {archiving ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-              Compiling archive…
-            </>
-          ) : (
-            <>
-              <FileJson className="h-4 w-4" aria-hidden />
-              Request Data Archive (.JSON)
-            </>
-          )}
-        </button>
+          <FileJson className="h-4 w-4" aria-hidden />
+          Download Personal Data (.JSON)
+        </a>
+
+        <a
+          href="/api/user/export?format=html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-md border border-blue-500/40 bg-blue-500/10 px-4 py-2.5 text-sm font-semibold text-blue-200 transition hover:bg-blue-500/20 active:scale-[0.98]"
+        >
+          <ShieldCheck className="h-4 w-4" aria-hidden />
+          View Printable PDF Summary
+        </a>
 
         <button
           type="button"

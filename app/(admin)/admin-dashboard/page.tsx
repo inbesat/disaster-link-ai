@@ -5,6 +5,7 @@ import {
   Activity,
   AlertTriangle,
   CheckCircle2,
+  Clock,
   Download,
   Filter,
   Lock,
@@ -18,6 +19,7 @@ import {
   Zap,
 } from "lucide-react";
 import { showToast } from "@/components/ui/Toast";
+import { getPerformanceAverages } from "@/lib/monitoring/performance";
 
 const DISTRICTS = ["All Districts", "Patna", "Ernakulam", "Purba Champaran"] as const;
 
@@ -208,6 +210,42 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Performance & Response Times Strip (Phase 16.3) */}
+      <div className="rounded-lg border border-panel-border bg-panel p-4">
+        <div className="flex items-center gap-2 border-b border-panel-border pb-2">
+          <Clock className="h-4 w-4 text-cyan-400" aria-hidden />
+          <p className="text-xs font-bold uppercase tracking-widest text-slate-300">
+            System Performance & Response Times (Averages)
+          </p>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div>
+            <p className="text-[10px] text-slate-500">API Latency</p>
+            <p className="font-mono text-lg font-bold text-foreground">
+              {getPerformanceAverages().avgApiLatencyMs} ms
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500">AI LLM Latency</p>
+            <p className="font-mono text-lg font-bold text-foreground">
+              {getPerformanceAverages().avgAiLatencyMs} ms
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500">Map Initial Load</p>
+            <p className="font-mono text-lg font-bold text-foreground">
+              {getPerformanceAverages().avgMapRenderMs} ms
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] text-slate-500">Alert Delivery</p>
+            <p className="font-mono text-lg font-bold text-foreground">
+              {getPerformanceAverages().avgAlertDeliveryMs} ms
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* KPI strip */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
