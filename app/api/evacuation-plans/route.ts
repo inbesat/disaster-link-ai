@@ -2,13 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
 import { requireRole } from "@/lib/security/require-role";
 import { warnDbUnavailableOnce } from "@/lib/server/db-fallback";
+import { clientIpFromRequest, rateLimitByRole } from "@/lib/security/rate-limiter";
 
 export const dynamic = "force-dynamic";
 
 const GOV_ROLES = ["super_admin", "district_admin", "field_responder"] as const;
 
 /** List evacuation plans, most recently created first. */
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  // Rate limit: 30 req/min per IP for gov endpoints
+  const ip = clientIpFromRequest(request);
+  const rate = rateLimitByRole("public", ip);
+  if (!rate.success) {
+    const retryAfterMs = Math.max(0, rate.resetTime - Date.now());
+    return NextResponse.json(
+      { error: "Rate limit exceeded. Please try again shortly.", rate },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) },
+      },
+    );
+  }
+
   try {
     const plans = await prisma.evacuationPlan.findMany({
       orderBy: { createdAt: "desc" },

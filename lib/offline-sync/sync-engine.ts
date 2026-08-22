@@ -72,6 +72,8 @@ export class OfflineSyncEngine {
   private syncingNow = false;
   private nextSyncAt: number | null = null;
   private lastFullSync: number | null = null;
+  private lastSyncAt: number | null = null;
+  private readonly minSyncIntervalMs = 5 * 60 * 1000; // 5 minutes minimum between syncs
   private db: DisasterLinkDB | null = null;
 
   constructor(options: SyncEngineOptions = {}) {
@@ -113,6 +115,13 @@ export class OfflineSyncEngine {
   private async tick(): Promise<void> {
     const snapshot = this.monitor.getSnapshot();
     if (!snapshot.online && !this.force) return;
+    
+    // Also respect the cooldown in the scheduled tick
+    const now = Date.now();
+    if (this.lastSyncAt && now - this.lastSyncAt < this.minSyncIntervalMs) {
+      return;
+    }
+    
     await this.fullSync();
   }
 
@@ -127,11 +136,18 @@ export class OfflineSyncEngine {
     if (!db) return { synced: 0, failed: 0 };
     if (this.syncingNow) return { synced: 0, failed: 0 };
 
+    // Cooldown: prevent syncs more frequently than minSyncIntervalMs
+    const now = Date.now();
+    if (this.lastSyncAt && now - this.lastSyncAt < this.minSyncIntervalMs) {
+      return { synced: 0, failed: 0 };
+    }
+
     const force = options.force ?? this.force;
     const snapshot = this.monitor.getSnapshot();
     if (!snapshot.online && !force) return { synced: 0, failed: 0 };
 
     this.syncingNow = true;
+    this.lastSyncAt = Date.now();
     emitSyncEvent(SYNC_EVENT_STARTED);
     this.nextSyncAt = Date.now() + this.intervalMs;
 
@@ -179,6 +195,7 @@ export class OfflineSyncEngine {
   ): Promise<boolean> {
     try {
       const rows = await source.fetch({ district });
+      if (!rows) return false; // API error or empty response
       const now = Date.now();
       const ttlMs = source.ttlHours * 60 * 60 * 1000;
       const records: OfflineRecord[] = rows.map((row) => {
