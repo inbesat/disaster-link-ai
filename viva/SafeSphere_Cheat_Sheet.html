@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeSphere - Complete Viva Cheat Sheet</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --accent: #38bdf8;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #fb923c;
+    --accent5: #f472b6;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1a1040 100%);
+    text-align: center;
+    padding: 60px 20px 40px;
+    border-bottom: 2px solid var(--border);
+  }
+  .hero h1 {
+    font-size: 2.8rem;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+  .hero p { color: var(--muted); font-size: 1.15rem; max-width: 750px; margin: 0 auto; }
+  .toc {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    padding: 18px; background: var(--card); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .toc a {
+    color: var(--accent); text-decoration: none; font-size: 0.82rem;
+    padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .toc a:hover { background: var(--accent); color: var(--bg); }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  .section {
+    margin: 28px 0; background: var(--card); border-radius: 16px;
+    border: 1px solid var(--border); overflow: hidden;
+  }
+  .section-header {
+    padding: 20px 28px; display: flex; align-items: center; gap: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header .icon {
+    font-size: 1.8rem; width: 48px; height: 48px; display: flex;
+    align-items: center; justify-content: center; border-radius: 12px; flex-shrink: 0;
+  }
+  .section-header h2 { font-size: 1.3rem; flex: 1; }
+  .section-body { padding: 24px 28px; }
+  .section-body h3 { color: var(--accent2); margin: 22px 0 10px; font-size: 1.05rem; }
+  .section-body h3:first-child { margin-top: 0; }
+  .section-body p { margin: 8px 0; font-size: 0.93rem; color: var(--muted); }
+  .section-body p strong { color: var(--text); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 16px 0; }
+  .mini-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+  }
+  .mini-card h4 { color: var(--accent3); margin-bottom: 6px; font-size: 0.95rem; }
+  .mini-card p { font-size: 0.87rem; color: var(--muted); margin: 0; }
+  .key-concept {
+    background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(167,139,250,0.08));
+    border: 1px solid rgba(56,189,248,0.2); border-radius: 12px;
+    padding: 18px; margin: 14px 0;
+  }
+  .key-concept strong { color: var(--accent); }
+  .flow {
+    display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+    justify-content: center; margin: 20px 0;
+  }
+  .flow-box {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 18px; text-align: center; min-width: 130px;
+  }
+  .flow-box .label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .flow-box .tech { font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-top: 2px; }
+  .flow-arrow { color: var(--accent2); font-size: 1.4rem; padding: 0 8px; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.88rem; }
+  th, td { padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+  th { background: var(--bg); color: var(--accent); font-weight: 600; }
+  td { color: var(--muted); }
+  ul { padding-left: 20px; margin: 8px 0; }
+  li { margin: 5px 0; font-size: 0.9rem; color: var(--muted); }
+  li strong { color: var(--text); }
+  .viva-q {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; margin: 12px 0;
+  }
+  .viva-q .q { color: var(--accent5); font-weight: 700; margin-bottom: 8px; font-size: 0.95rem; }
+  .viva-q .a { color: var(--muted); font-size: 0.9rem; }
+  .viva-q .a strong { color: var(--accent3); }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 6px;
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  }
+  .badge-fe { background: rgba(52,211,153,0.15); color: var(--accent3); }
+  .badge-be { background: rgba(167,139,250,0.15); color: var(--accent2); }
+  .badge-db { background: rgba(251,146,60,0.15); color: var(--accent4); }
+  .badge-ai { background: rgba(244,114,182,0.15); color: var(--accent5); }
+  .badge-dev { background: rgba(56,189,248,0.15); color: var(--accent); }
+  details { margin: 8px 0; }
+  details summary {
+    cursor: pointer; padding: 10px 16px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 8px; font-weight: 600;
+    color: var(--accent); list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: '\25B6 '; font-size: 0.8em; }
+  details[open] summary::before { content: '\1F53C '; }
+  details .detail-content {
+    padding: 14px 16px; border: 1px solid var(--border); border-top: 0;
+    border-radius: 0 0 8px 8px; background: rgba(15,23,42,0.5);
+  }
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 1.8rem; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .section-body { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>SafeSphere / XPBoost</h1>
+  <p>Complete Beginner-Friendly Viva Cheat Sheet. Every concept explained in plain English. Open in a browser and press Ctrl+F to search any term!</p>
+</div>
+
+<nav class="toc">
+  <a href="#arch">Architecture</a>
+  <a href="#nextjs">Next.js 14</a>
+  <a href="#react">React 18</a>
+  <a href="#ts">TypeScript 5</a>
+  <a href="#tailwind">Tailwind 3.4</a>
+  <a href="#supabase">Supabase + PG15</a>
+  <a href="#prisma">Prisma ORM</a>
+  <a href="#postgis">PostGIS</a>
+  <a href="#pgvector">pgvector</a>
+  <a href="#maplibre">MapLibre</a>
+  <a href="#turf">Turf.js</a>
+  <a href="#dexie">Dexie + Offline</a>
+  <a href="#pwa">PWA + Workbox</a>
+  <a href="#webpush">Web Push</a>
+  <a href="#capacitor">Capacitor</a>
+  <a href="#fastapi">FastAPI</a>
+  <a href="#langchain">LangChain</a>
+  <a href="#langgraph">LangGraph</a>
+  <a href="#webllm">WebLLM</a>
+  <a href="#xgboost">XGBoost</a>
+  <a href="#playwright">Playwright</a>
+  <a href="#viva">Viva Q&A</a>
+</nav>
+
+<div class="container">
+
+<!-- ===== ARCHITECTURE ===== -->
+<div class="section" id="arch">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(56,189,248,0.15)">&#127959;&#65039;</div>
+    <h2>System Architecture - The Big Picture</h2>
+    <span class="badge badge-dev">Overview</span>
+  </div>
+  <div class="section-body">
+    <p><strong>In one line:</strong> SafeSphere is a location-aware, AI-powered Progressive Web App with offline-first capabilities, real-time maps, vector-based AI search, and push notifications that can be deployed to web, iOS, and Android.</p>
+
+    <div class="key-concept">
+      <strong>How to explain it in viva:</strong> Our project has a Next.js frontend that renders both server and client components, uses Supabase with PostGIS and pgvector for spatial and AI queries, FastAPI with LangChain and LangGraph for AI orchestration, Dexie and Service Workers for offline-first PWA, Capacitor to deploy to mobile, and WebLLM for in-browser AI inference.
+    </div>
+
+    <div class="flow">
+      <div class="flow-box"><div class="label">Frontend</div><div class="tech">Next.js + React</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">Maps</div><div class="tech">MapLibre + Turf</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">Database</div><div class="tech">Supabase PG15</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">AI Backend</div><div class="tech">FastAPI + LangChain</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">Mobile</div><div class="tech">Capacitor</div></div>
+    </div>
+
+    <h3>Full Tech Stack at a Glance</h3>
+    <table>
+      <tr><th>Layer</th><th>Technology</th><th>What It Does</th></tr>
+      <tr><td><span class="badge badge-fe">Frontend</span></td><td>Next.js 14 + React 18</td><td>Server-first React framework with App Router</td></tr>
+      <tr><td><span class="badge badge-fe">Styling</span></td><td>Tailwind CSS 3.4</td><td>Utility-first CSS with parent selectors and subgrid</td></tr>
+      <tr><td><span class="badge badge-dev">Language</span></td><td>TypeScript 5</td><td>Type-safe JavaScript with decorators and satisfies</td></tr>
+      <tr><td><span class="badge badge-fe">Maps</span></td><td>MapLibre GL 4.7 + react-map-gl</td><td>Open-source vector map rendering in React</td></tr>
+      <tr><td><span class="badge badge-fe">Geo Math</span></td><td>Turf.js 7.4</td><td>Client-side geospatial calculations</td></tr>
+      <tr><td><span class="badge badge-fe">Offline DB</span></td><td>Dexie.js 4</td><td>Offline-first local database with reactive queries</td></tr>
+      <tr><td><span class="badge badge-fe">PWA</span></td><td>next-pwa + Workbox</td><td>Service workers, caching, background sync</td></tr>
+      <tr><td><span class="badge badge-fe">Push</span></td><td>Web Push (VAPID)</td><td>Send notifications even when app is closed</td></tr>
+      <tr><td><span class="badge badge-fe">Mobile</span></td><td>Capacitor 8.5</td><td>Compile web app to iOS and Android native apps</td></tr>
+      <tr><td><span class="badge badge-be">Backend</span></td><td>FastAPI (Python)</td><td>Async microservice framework with auto docs</td></tr>
+      <tr><td><span class="badge badge-ai">AI</span></td><td>LangChain</td><td>Building blocks for LLM pipelines</td></tr>
+      <tr><td><span class="badge badge-ai">AI</span></td><td>LangGraph</td><td>Stateful AI agent workflows with loops</td></tr>
+      <tr><td><span class="badge badge-ai">AI</span></td><td>WebLLM</td><td>Run LLMs in the browser via WebGPU</td></tr>
+      <tr><td><span class="badge badge-ai">ML</span></td><td>XGBoost</td><td>Gradient boosted decision trees for predictions</td></tr>
+      <tr><td><span class="badge badge-db">Database</span></td><td>Supabase + PostgreSQL 15</td><td>Managed Postgres with auth, real-time, REST API</td></tr>
+      <tr><td><span class="badge badge-db">Spatial</span></td><td>PostGIS</td><td>Geographic queries in SQL</td></tr>
+      <tr><td><span class="badge badge-db">Vector</span></td><td>pgvector</td><td>Store and search AI embeddings</td></tr>
+      <tr><td><span class="badge badge-db">ORM</span></td><td>Prisma</td><td>Type-safe database client with migrations</td></tr>
+      <tr><td><span class="badge badge-dev">Testing</span></td><td>Playwright</td><td>Cross-browser end-to-end testing</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===== NEXT.JS 14 ===== -->
+<div class="section" id="nextjs">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(52,211,153,0.15)">&#9889;</div>
+    <h2>Next.js 14 - Server-First React Framework</h2>
+    <span class="badge badge-fe">Frontend</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> Next.js is like React's bigger brother. It knows where to run code - on the server for fast initial page loads or on the client for interactive buttons and forms. It uses a folder structure called the App Router where every folder equals a route.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Server Components by default:</strong> Pages load faster because heavy code runs on the server and only the final HTML is sent to the browser. The user sees content instantly.</li>
+      <li><strong>File-based routing:</strong> Creating a new page is as simple as creating a new folder and file. No need to configure routes manually.</li>
+      <li><strong>Server Actions:</strong> You can write backend logic (like saving to a database) directly inside your form components without creating separate API routes.</li>
+      <li><strong>Streaming and Suspense:</strong> Slow parts of a page show a loading spinner while fast parts render immediately. The user never stares at a blank screen.</li>
+      <li><strong>Built-in optimization:</strong> Automatic image optimization, font loading, and script management out of the box.</li>
+    </ul>
+
+    <h3>Key Concepts</h3>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Server Components (default)</h4>
+        <p>Run ONLY on the server. Can directly fetch data from databases and APIs. Their code is NOT sent to the browser, making pages incredibly fast. Cannot use useState or onClick - think of them as read-only data fetchers.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Client Components ("use client")</h4>
+        <p>Run in the browser. Can use hooks like useState and useEffect, respond to clicks, and access browser APIs. You add "use client" at the top of the file to mark them. These are for anything interactive.</p>
+      </div>
+    </div>
+
+    <h3>What is the App Router?</h3>
+    <p>The App Router is Next.js 14's way of mapping URLs to pages. You create folders inside the "app" directory, and each folder becomes a URL path. A folder named "dashboard" becomes the "/dashboard" route. A "page.tsx" file inside that folder is what renders when someone visits that URL.</p>
+
+    <h3>Layouts - Why They Matter</h3>
+    <p>A layout is a shared wrapper (like a navbar and sidebar) that stays on screen even when the user navigates between pages. Only the content inside changes. This means faster navigation because the layout doesn't re-render every time.</p>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"Why Next.js over plain React?"</strong> - Next.js adds server rendering, file-based routing, API routes, image optimization, and static generation. Plain React is client-only.</li>
+          <li><strong>"What is SSR vs SSG vs ISR?"</strong> - SSR renders on every request (always fresh). SSG builds once at build time (fastest). ISR is static but re-generates periodically (best of both).</li>
+          <li><strong>"What is the difference between Pages Router and App Router?"</strong> - App Router is the newer system in Next.js 13+ that supports React Server Components, layouts, and streaming. Pages Router is the legacy approach.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== REACT 18 ===== -->
+<div class="section" id="react">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(56,189,248,0.15)">&#9883;&#65039;</div>
+    <h2>React 18 - The UI Library</h2>
+    <span class="badge badge-fe">Frontend</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> React is a JavaScript library for building user interfaces. Think of it as LEGO bricks - you build small components like buttons, cards, and forms, then compose them into full pages. React 18 added concurrent rendering (doing multiple things at once) and server components.
+    </div>
+
+    <h3>Core Concepts</h3>
+    <div class="grid-3">
+      <div class="mini-card">
+        <h4>Components</h4>
+        <p>Reusable UI pieces. Functions that return JSX (HTML-like syntax). Each component manages its own piece of the UI. You nest components inside other components to build complex interfaces.</p>
+      </div>
+      <div class="mini-card">
+        <h4>State (useState)</h4>
+        <p>Data that changes over time. When state changes, React re-renders the component to show updated UI. Like a light switch - flip the state, and the screen updates automatically.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Props</h4>
+        <p>Data passed from parent component to child component. Like function arguments. A child receives props and uses them to render. Props are read-only - children cannot change them.</p>
+      </div>
+    </div>
+
+    <h3>What is New in React 18?</h3>
+    <ul>
+      <li><strong>Concurrent Rendering:</strong> React can pause and resume rendering work. Urgent updates like typing in a search box are not blocked by slow updates like loading a large list.</li>
+      <li><strong>Automatic Batching:</strong> Multiple state updates in the same event handler are grouped into ONE re-render instead of multiple, making the app faster.</li>
+      <li><strong>Suspense:</strong> Lets you show a loading fallback while waiting for data. Enables streaming HTML from the server so the user sees content faster.</li>
+      <li><strong>Server Components:</strong> Components that run only on the server. They can access databases directly and do not ship any JavaScript to the browser.</li>
+      <li><strong>Server Actions:</strong> Functions marked with "use server" that run on the server but can be called from client-side forms. No need for separate API routes.</li>
+    </ul>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is React?"</strong> - A declarative, component-based JavaScript library for building user interfaces.</li>
+          <li><strong>"What is the virtual DOM?"</strong> - A lightweight copy of the real DOM. React compares old vs new virtual DOM and only updates what changed. This is called reconciliation or diffing.</li>
+          <li><strong>"What is the difference between state and props?"</strong> - Props are read-only data passed from parent to child. State is mutable data managed inside the component itself.</li>
+          <li><strong>"What is useEffect?"</strong> - A hook that runs side effects after render, like API calls or subscriptions. It runs after every render by default, or only when specific dependencies change.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== TYPESCRIPT 5 ===== -->
+<div class="section" id="ts">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(56,189,248,0.15)">&#128311;</div>
+    <h2>TypeScript 5 - Type Safety for JavaScript</h2>
+    <span class="badge badge-dev">Language</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> TypeScript is JavaScript with a superpower - you can tell the computer what TYPE of data each variable holds (string, number, object, etc.). It catches errors BEFORE your code runs. Think of it as spell-check for code.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Catches bugs early:</strong> If you try to use a number as text, TypeScript stops you before the code even runs.</li>
+      <li><strong>Better IDE experience:</strong> Autocomplete, inline documentation, and instant error highlighting in your editor.</li>
+      <li><strong>Self-documenting:</strong> The types tell other developers exactly what data each function expects and returns.</li>
+      <li><strong>Safer refactoring:</strong> When you change a data structure, TypeScript instantly shows you everywhere that needs updating.</li>
+    </ul>
+
+    <h3>Key Concepts</h3>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Basic Types</h4>
+        <p>You declare what type each variable holds: string for text, number for digits, boolean for true/false, arrays for lists, and objects for structured data with specific properties.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Interfaces and Types</h4>
+        <p>You define the shape of objects. For example, a "User" interface says every user must have a name (string) and email (string). This prevents you from accidentally creating a user without an email.</p>
+      </div>
+    </div>
+
+    <h3>What is New in TypeScript 5?</h3>
+    <ul>
+      <li><strong>satisfies operator:</strong> Validates that an object matches a type without changing what TypeScript infers about the object. You get validation AND precise type information.</li>
+      <li><strong>const type parameters:</strong> Forces generics to infer specific literal values instead of broad types. No more writing "as const" everywhere.</li>
+      <li><strong>ECMAScript Decorators:</strong> Official standard decorators that let you modify classes and methods cleanly. No more experimental compiler flags.</li>
+      <li><strong>Multiple tsconfig extends:</strong> You can now extend multiple configuration files instead of just one, making monorepo setups cleaner.</li>
+      <li><strong>Performance:</strong> 50-60 percent smaller package size and 10-25 percent faster compilation compared to older versions.</li>
+    </ul>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"Why TypeScript over JavaScript?"</strong> - Catches type errors at compile time, better IDE autocomplete, self-documenting code, safer refactoring.</li>
+          <li><strong>"What is a generic?"</strong> - A type parameter that makes functions or components work with ANY type while still being type-safe. Like a placeholder that gets filled in when you use it.</li>
+          <li><strong>"What is the difference between type and interface?"</strong> - Both define object shapes. Interfaces can be extended and merged. Types are more flexible for unions and intersections. In practice, they are interchangeable for most cases.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== TAILWIND 3.4 ===== -->
+<div class="section" id="tailwind">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(244,114,182,0.15)">&#127912;</div>
+    <h2>Tailwind CSS 3.4 - Utility-First Styling</h2>
+    <span class="badge badge-fe">Styling</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> Instead of writing separate CSS files, Tailwind lets you add styling directly in your HTML using short class names like "bg-blue-500 text-white p-4 rounded". It is like having a paint palette where each color and size is a class name you apply directly.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Faster development:</strong> No context switching between HTML and CSS files. Everything is in one place.</li>
+      <li><strong>Consistent design:</strong> Predefined spacing, colors, and sizes ensure your app looks uniform without manual CSS variables.</li>
+      <li><strong>Small production CSS:</strong> Tailwind scans your code and only generates the CSS classes you actually use. Unused styles are purged.</li>
+      <li><strong>Responsive by default:</strong> Classes like "md:flex" and "lg:text-xl" let you build responsive layouts without media queries in separate files.</li>
+    </ul>
+
+    <h3>What is New in Tailwind 3.4?</h3>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>:has() Parent Selector</h4>
+        <p>You can style a parent element based on what its children look like. For example, highlight a card when a checkbox inside it is checked. No JavaScript needed anymore.</p>
+      </div>
+      <div class="mini-card">
+        <h4>size-* Utility</h4>
+        <p>Set both width and height at once with a single class. Instead of writing "w-10 h-10", you just write "size-10".</p>
+      </div>
+    </div>
+    <ul>
+      <li><strong>CSS Subgrid:</strong> Nested grids can inherit column alignment from their parent grid, solving a long-standing layout problem.</li>
+      <li><strong>Dynamic Viewport Units:</strong> "h-dscreen" resizes in real-time as mobile browser bars appear or disappear, fixing the mobile viewport height issue.</li>
+      <li><strong>text-balance:</strong> Prevents ugly single orphan words at the end of long headings.</li>
+      <li><strong>Children selector (*:):</strong> Style all children of an element from the parent class instead of adding classes to each child individually.</li>
+    </ul>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"Why Tailwind over CSS modules?"</strong> - Faster development, consistent design system, smaller production CSS through purging, responsive utilities built in.</li>
+          <li><strong>"How does Tailwind purging work?"</strong> - It scans your source files for class names, generates only the CSS you use, and removes everything else. This keeps your final CSS file tiny.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== SUPABASE ===== -->
+<div class="section" id="supabase">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(251,146,60,0.15)">&#128450;</div>
+    <h2>Supabase + PostgreSQL 15 - The Database</h2>
+    <span class="badge badge-db">Database</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> Supabase is a hosted backend that gives you a full PostgreSQL database, user authentication, real-time data subscriptions, and an auto-generated REST API - all from your database schema. Think of it as an open-source Firebase built on top of PostgreSQL.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>All-in-one backend:</strong> Database, authentication, file storage, and real-time subscriptions in a single platform. No need to stitch together five different services.</li>
+      <li><strong>Auto-generated API:</strong> Every table you create automatically gets a REST API endpoint. No backend code needed for basic CRUD operations.</li>
+      <li><strong>Row-Level Security:</strong> You write policies that control which rows each user can see or modify. Users can only access their own data.</li>
+      <li><strong>Real-time subscriptions:</strong> Your frontend can listen for database changes in real-time. When someone inserts a row, connected clients see it instantly.</li>
+      <li><strong>PostgreSQL extensions:</strong> Install PostGIS for geographic data and pgvector for AI embeddings with a single toggle.</li>
+    </ul>
+
+    <h3>PostgreSQL 15 Key Features</h3>
+    <ul>
+      <li><strong>MERGE statement:</strong> Combine INSERT, UPDATE, and DELETE into one atomic operation. A cleaner way to do upserts.</li>
+      <li><strong>Faster sorting:</strong> Internal sorting algorithms were optimized, making ORDER BY operations up to 4x faster on un-indexed data.</li>
+      <li><strong>Stricter security:</strong> Default CREATE permissions on the public schema are revoked. Only the database owner can create tables.</li>
+      <li><strong>Better replication:</strong> Filter specific rows and columns when replicating data to other databases for analytics.</li>
+    </ul>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is Supabase?"</strong> - Open-source Firebase alternative built on PostgreSQL. Provides database, auth, real-time subscriptions, edge functions, and auto-generated REST/GraphQL APIs.</li>
+          <li><strong>"What is Row-Level Security?"</strong> - A PostgreSQL feature where you write policies to control which rows each user can read or write. Example: users can only see their own orders.</li>
+          <li><strong>"Why PostgreSQL over MongoDB?"</strong> - PostgreSQL is relational (structured data with relationships), supports ACID transactions, has powerful extensions like PostGIS and pgvector, and is battle-tested for decades.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== PRISMA ===== -->
+<div class="section" id="prisma">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(167,139,250,0.15)">&#128208;</div>
+    <h2>Prisma ORM - Database Client</h2>
+    <span class="badge badge-db">Database</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> Prisma is a tool that lets you define your database tables in a special file called schema.prisma, then auto-generates a type-safe client to query those tables. No more writing raw SQL strings with typos!
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Type safety:</strong> Every database query is type-checked. If you try to access a column that does not exist, TypeScript catches it immediately.</li>
+      <li><strong>Auto-generated client:</strong> After defining your schema, run "prisma generate" and you get a fully typed JavaScript/Python client with autocomplete.</li>
+      <li><strong>Migration management:</strong> When you change your schema, "prisma migrate" generates the SQL needed to update your live database automatically.</li>
+      <li><strong>Clean API:</strong> Query your database using method chains instead of raw SQL strings. More readable, less error-prone.</li>
+    </ul>
+
+    <h3>How It Works</h3>
+    <ul>
+      <li><strong>Step 1:</strong> Define your models (tables) in schema.prisma with their fields, types, and relationships.</li>
+      <li><strong>Step 2:</strong> Run "prisma generate" to create the type-safe client library.</li>
+      <li><strong>Step 3:</strong> Run "prisma migrate" to apply schema changes to your database.</li>
+      <li><strong>Step 4:</strong> Import the generated client in your code and use it for all database operations.</li>
+    </ul>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is an ORM?"</strong> - Object-Relational Mapper. It lets you interact with your database using your programming language objects and functions instead of writing raw SQL.</li>
+          <li><strong>"Why Prisma over raw SQL?"</strong> - Type safety, auto-generated client, migration management, less boilerplate, IDE autocomplete for queries.</li>
+          <li><strong>"What is a Prisma migration?"</strong> - A version-controlled SQL file that describes how to update your database schema. Prisma generates these automatically when you change your schema.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== POSTGIS ===== -->
+<div class="section" id="postgis">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(52,211,153,0.15)">&#127757;</div>
+    <h2>PostGIS - Spatial Database Extension</h2>
+    <span class="badge badge-db">Database</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> PostGIS turns your regular Postgres database into a geographic database. You can store GPS coordinates as actual spatial data types, then run queries like "find all locations within 5km of this point" using pure SQL. It is blazingly fast thanks to spatial indexing.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Proximity queries:</strong> Find all safety alerts, restaurants, or events near a user's GPS coordinates with a single SQL query.</li>
+      <li><strong>Spatial indexing:</strong> Uses GiST (Generalized Search Tree) indexes that organize data geographically. Searching through millions of location rows takes milliseconds.</li>
+      <li><strong>Server-side filtering:</strong> Instead of downloading all locations and filtering in JavaScript, the database does the heavy lifting and returns only what you need.</li>
+      <li><strong>Precise calculations:</strong> Handles real-world distances on the curved surface of the Earth, not flat 2D math.</li>
+    </ul>
+
+    <h3>Geometry vs Geography</h3>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>GEOMETRY (Flat Earth)</h4>
+        <p>Uses X and Y coordinates on a flat 2D grid. Incredibly fast. Best for small local areas like a warehouse floor plan or city block.</p>
+      </div>
+      <div class="mini-card">
+        <h4>GEOGRAPHY (Round Earth)</h4>
+        <p>Uses true longitude and latitude on a 3D sphere. Mathematically precise over long distances. Handles real-world distances in meters natively.</p>
+      </div>
+    </div>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is PostGIS?"</strong> - An open-source extension that adds geographic/spatial data types and functions to PostgreSQL.</li>
+          <li><strong>"What is a spatial index?"</strong> - A special GiST index that organizes geographic data using bounding boxes, enabling instant proximity searches without scanning all rows.</li>
+          <li><strong>"What is SRID 4326?"</strong> - The standard coordinate reference system for GPS (WGS 84). It defines how longitude/latitude numbers map to positions on Earth.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== PGVECTOR ===== -->
+<div class="section" id="pgvector">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(244,114,182,0.15)">&#129504;</div>
+    <h2>pgvector - AI Embedding Search</h2>
+    <span class="badge badge-db">Database</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> AI models convert text into arrays of numbers called embeddings (e.g., 1536 numbers). Similar texts get similar number arrays. pgvector lets you store these arrays in Postgres and search for the most similar ones. This powers semantic search and RAG (Retrieval-Augmented Generation).
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Semantic search:</strong> Search by meaning, not keywords. A query about "safe walking routes" can find documents about "secure pedestrian paths" even though they share no common words.</li>
+      <li><strong>RAG pipelines:</strong> Retrieve relevant documents from your database and inject them into an LLM prompt. This gives AI access to your private, up-to-date data.</li>
+      <li><strong>No extra database:</strong> Store vectors alongside your regular data in the same Postgres database. Use standard SQL joins, transactions, and security policies.</li>
+      <li><strong>Fast approximate search:</strong> HNSW indexes find the nearest vectors in milliseconds, even across millions of rows.</li>
+    </ul>
+
+    <h3>What is an Embedding?</h3>
+    <p>An embedding is a long list of numbers (like 1532 floating-point values) that represents the meaning of a piece of text. The AI model reads the text and converts it into these numbers. Texts with similar meanings end up with similar number arrays. You can then measure "distance" between embeddings to find similar content.</p>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is an embedding?"</strong> - A numerical vector (array of floats) that represents the semantic meaning of text or images. Similar meanings produce similar vectors.</li>
+          <li><strong>"What is RAG?"</strong> - Retrieval-Augmented Generation. Instead of relying only on the LLM's training data, you retrieve relevant documents from a vector database and include them in the prompt.</li>
+          <li><strong>"What is cosine similarity?"</strong> - A measurement of how similar two vectors are, regardless of their magnitude. Values close to 1 mean very similar; close to 0 means unrelated.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== MAPLIBRE ===== -->
+<div class="section" id="maplibre">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(56,189,248,0.15)">&#128506;&#65039;</div>
+    <h2>MapLibre GL + react-map-gl - Interactive Maps</h2>
+    <span class="badge badge-fe">Frontend</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> MapLibre GL is an open-source map renderer that draws vector maps using your device's GPU. react-map-gl wraps it into React components so you can use Map, Marker, Popup, and NavigationControl like regular React elements. It is completely free with no token fees.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Fully open-source:</strong> No vendor lock-in, no API tokens, no usage fees. Community-maintained fork of Mapbox GL.</li>
+      <li><strong>GPU-accelerated rendering:</strong> Map tiles render using WebGL and WebGPU. Smooth even with thousands of markers.</li>
+      <li><strong>Declarative React integration:</strong> Add Source and Layer components to overlay data. React reactivity handles updating the map when your data changes.</li>
+      <li><strong>Vector tiles:</strong> Map data is transmitted as binary vector data, not images. This allows interactive styling, rotation, 3D terrain, and smooth zooming.</li>
+      <li><strong>Rich control set:</strong> Built-in navigation controls, geolocation, markers, popups, and layer management.</li>
+    </ul>
+
+    <h3>What is a Vector Tile?</h3>
+    <p>Instead of pre-rendered image tiles (like Google Maps PNGs), vector tiles transmit the actual map data (roads, buildings, borders) as binary data. Your browser renders them in real-time using the GPU. This means you can change colors, zoom smoothly, rotate the map, and add custom overlays without reloading anything.</p>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"Why MapLibre over Mapbox?"</strong> - MapLibre is fully open-source with no vendor lock-in or token fees. Mapbox GL JS became proprietary after version 1.</li>
+          <li><strong>"What are vector tiles?"</strong> - Map data transmitted as binary vectors, allowing interactive styling, rotation, and 3D terrain rendering in the browser.</li>
+          <li><strong>"How do you add custom data to the map?"</strong> - Use Source components to provide GeoJSON data and Layer components to define how it renders (fills, lines, circles, etc.).</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== TURF.JS ===== -->
+<div class="section" id="turf">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(52,211,153,0.15)">&#128208;</div>
+    <h2>Turf.js 7.4 - Client-Side Geospatial Analysis</h2>
+    <span class="badge badge-fe">Frontend</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> Turf.js does math with GPS coordinates right in the browser. It can calculate distances, create buffer zones around points, check if a point is inside a polygon, find intersections between areas, and more. It outputs standard GeoJSON that MapLibre can render directly.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Instant feedback:</strong> No server round-trip needed for simple geo calculations. The user sees results immediately.</li>
+      <li><strong>Works offline:</strong> All calculations happen in the browser, so they work without internet connectivity.</li>
+      <li><strong>Standard output:</strong> Produces GeoJSON objects that plug directly into MapLibre map layers.</li>
+      <li><strong>Rich function library:</strong> Distance calculations, area measurements, buffer creation, point-in-polygon checks, bounding boxes, intersections, and more.</li>
+    </ul>
+
+    <h3>Key Functions</h3>
+    <div class="grid-3">
+      <div class="mini-card"><h4>turf.distance()</h4><p>Calculate the distance between two GPS points in kilometers, miles, or meters.</p></div>
+      <div class="mini-card"><h4>turf.buffer()</h4><p>Create a circle or polygon around a point. Used for delivery zones, safety perimeters, etc.</p></div>
+      <div class="mini-card"><h4>turf.booleanPointInPolygon()</h4><p>Check if a GPS coordinate falls inside a polygon area. Used for geofencing.</p></div>
+      <div class="mini-card"><h4>turf.area()</h4><p>Calculate the surface area of any GeoJSON shape in square meters.</p></div>
+      <div class="mini-card"><h4>turf.bbox()</h4><p>Get the minimum bounding rectangle that contains a shape.</p></div>
+      <div class="mini-card"><h4>turf.intersect()</h4><p>Find where two polygons overlap. Used for zone conflict detection.</p></div>
+    </div>
+
+    <h3>How Turf Fits in the Stack</h3>
+    <p>Raw GPS coordinates come from the API or device. Turf.js processes them in the browser (calculates buffers, checks containment, measures distances). The resulting GeoJSON shapes are passed directly to MapLibre for rendering on the map.</p>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is GeoJSON?"</strong> - A standard JSON format for representing geographic features like points, lines, and polygons with their coordinates.</li>
+          <li><strong>"Why Turf.js on the client?"</strong> - Reduces server load, gives instant feedback with no API round-trip, and works offline.</li>
+          <li><strong>"How does Turf differ from PostGIS?"</strong> - Turf runs in the browser for simple client-side checks. PostGIS runs on the server for complex spatial queries on large datasets. Use both together.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== DEXIE ===== -->
+<div class="section" id="dexie">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(251,146,60,0.15)">&#128190;</div>
+    <h2>Dexie.js 4 - IndexedDB Wrapper (Offline Database)</h2>
+    <span class="badge badge-fe">Frontend</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> IndexedDB is a built-in browser database that needs no server. Dexie makes it easy to use with a clean Promise-based API. It stores data locally so your app works offline. When internet comes back, a Service Worker syncs the data to the server.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Offline-first data:</strong> User actions are saved locally in IndexedDB. The app works fully offline with instant read/write speeds.</li>
+      <li><strong>Reactive queries:</strong> useLiveQuery hook automatically re-renders your React component whenever the underlying data changes.</li>
+      <li><strong>Large storage:</strong> IndexedDB can store hundreds of megabytes of structured data, far more than localStorage.</li>
+      <li><strong>Shared access:</strong> Both the main UI thread and background Service Worker can access the same database simultaneously.</li>
+    </ul>
+
+    <h3>How Offline Sync Works</h3>
+    <ul>
+      <li><strong>Step 1:</strong> User performs an action (e.g., submits a form) while offline.</li>
+      <li><strong>Step 2:</strong> The data is saved to IndexedDB via Dexie.</li>
+      <li><strong>Step 3:</strong> Service Worker detects the failed network request and queues it.</li>
+      <li><strong>Step 4:</strong> When connectivity returns, the Service Worker syncs queued data to the server.</li>
+      <li><strong>Step 5:</strong> useLiveQuery updates the UI to show the sync status in real-time.</li>
+    </ul>
+
+    <div class="key-concept">
+      <strong>Important gotcha:</strong> Because Next.js runs code on the server first, you must always add "use client" at the top of any file that uses Dexie. IndexedDB only exists in the browser, not on the server.
+    </div>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is IndexedDB?"</strong> - A built-in browser database that stores structured data locally. Supports large datasets, indexes, and transactions.</li>
+          <li><strong>"Why Dexie over raw IndexedDB?"</strong> - Dexie provides a clean Promise-based API, TypeScript type safety, and reactive queries with useLiveQuery.</li>
+          <li><strong>"Why not just use localStorage?"</strong> - localStorage is limited to about 5MB, can only store strings, and is synchronous (blocks the UI). IndexedDB supports much more data, structured objects, and async operations.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== PWA ===== -->
+<div class="section" id="pwa">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(56,189,248,0.15)">&#128241;</div>
+    <h2>PWA + Service Workers + Workbox</h2>
+    <span class="badge badge-fe">Frontend</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> A PWA (Progressive Web App) is a website that works like a native app. It can be installed on your phone, work offline, and send push notifications. The magic is the Service Worker, a background script that intercepts network requests and caches files for offline use.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Offline functionality:</strong> The app works without internet by serving cached assets and queued data from IndexedDB.</li>
+      <li><strong>Installable:</strong> Users can add the app to their home screen like a native app, without going through an app store.</li>
+      <li><strong>Faster loading:</strong> Cached assets load instantly on repeat visits. No need to download the same files again.</li>
+      <li><strong>Push notifications:</strong> The Service Worker enables receiving push notifications even when the app is closed.</li>
+    </ul>
+
+    <h3>How Service Workers Work</h3>
+    <div class="flow">
+      <div class="flow-box"><div class="label">User visits site</div><div class="tech">SW registers</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">SW caches assets</div><div class="tech">HTML, CSS, JS</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">Next visit offline</div><div class="tech">Serve from cache!</div></div>
+    </div>
+
+    <h3>What is Workbox?</h3>
+    <p>Workbox is a Google library that makes Service Worker caching strategies easy. Instead of writing complex caching logic from scratch, you use predefined strategies like "cache everything on first visit" or "serve cached but also check for updates in background." next-pwa uses Workbox under the hood.</p>
+
+    <h3>What is next-pwa?</h3>
+    <p>next-pwa is a wrapper that simplifies adding PWA support to Next.js projects. It automatically generates the Service Worker, handles registration, and integrates with Workbox for caching strategies. You configure it in next.config and it does the heavy lifting.</p>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is a Service Worker?"</strong> - A background JavaScript thread that intercepts HTTP requests. It can cache responses, serve cached content when offline, and handle push notifications.</li>
+          <li><strong>"What is the app shell pattern?"</strong> - Cache the minimal UI (HTML, CSS, JS) so the app loads instantly, then fetch dynamic data when online.</li>
+          <li><strong>"What is the difference between cache-first and network-first strategies?"</strong> - Cache-first serves cached content immediately (fast, may be stale). Network-first always tries the server first (fresh, slower). Use cache-first for static assets and network-first for dynamic data.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== WEB PUSH ===== -->
+<div class="section" id="webpush">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(244,114,182,0.15)">&#128276;</div>
+    <h2>Web Push Notifications (VAPID)</h2>
+    <span class="badge badge-fe">Frontend + Backend</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> Web Push lets your server send notifications to a user's device even when your website is completely closed. VAPID keys are a security mechanism - a public/private keypair that proves YOUR server is the only one allowed to send notifications to your users.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Re-engage users:</strong> Send safety alerts, location reminders, or AI analysis results directly to users even when they are not using the app.</li>
+      <li><strong>No app store needed:</strong> Push notifications work through the browser. Users just need to grant permission.</li>
+      <li><strong>Vendor-independent:</strong> Web Push is an open standard. No dependency on Firebase or Apple Push Notification Service directly.</li>
+      <li><strong>Works with PWA:</strong> Combined with Service Workers, notifications can be displayed even when the app is not running.</li>
+    </ul>
+
+    <h3>How the Flow Works</h3>
+    <div class="flow">
+      <div class="flow-box"><div class="label">1. Subscribe</div><div class="tech">Browser + Public Key</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">2. Save</div><div class="tech">Store in Supabase</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">3. Trigger</div><div class="tech">FastAPI + Private Key</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">4. Deliver</div><div class="tech">Push Service</div></div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box"><div class="label">5. Display</div><div class="tech">Notification shows!</div></div>
+    </div>
+
+    <h3>What are VAPID Keys?</h3>
+    <p>VAPID stands for Voluntary Application Server Identification. You generate a public key (shared in your frontend code) and a private key (kept secret on your server). When a user subscribes, the browser's push service verifies that only YOUR server can send notifications to that user. This prevents other servers from spamming your users.</p>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"Can you send push notifications without user permission?"</strong> - No. The browser always asks the user to grant notification permission first.</li>
+          <li><strong>"How does it work when the app is closed?"</strong> - The browser maintains a persistent connection to the push service (FCM for Chrome, Apple Push for Safari). When your server sends a push, the push service wakes up the browser, which triggers the Service Worker to display the notification.</li>
+          <li><strong>"What is the role of the Push Service?"</strong> - It acts as a middleman between your server and the browser. Your server sends the notification to the Push Service (e.g., Google FCM), and the Push Service delivers it to the user's device.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== CAPACITOR ===== -->
+<div class="section" id="capacitor">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(52,211,153,0.15)">&#128241;</div>
+    <h2>Capacitor 8.5 - Web to Native Mobile</h2>
+    <span class="badge badge-fe">Mobile</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> Capacitor takes your web app and wraps it in a native iOS or Android shell. Your web code runs inside a WebView, but you get access to native device features like camera, GPS, and push notifications. Write once, deploy to web, iOS, and Android.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Reuse web code:</strong> No need to rewrite the app in Swift or Kotlin. Your existing Next.js/React code runs as-is on mobile.</li>
+      <li><strong>Native feature access:</strong> Access camera, GPS, file system, push notifications, and other native APIs through Capacitor plugins.</li>
+      <li><strong>App store distribution:</strong> Package your web app as a real iOS/Android app for the App Store and Google Play.</li>
+      <li><strong>Desktop too:</strong> Capacitor 8.5 supports macOS, Windows, and Linux via Tauri, producing apps under 10MB.</li>
+    </ul>
+
+    <h3>Capacitor 8.5 New Features</h3>
+    <ul>
+      <li><strong>Swift Package Manager:</strong> Replaces CocoaPods on iOS for 40 percent faster CI/CD builds.</li>
+      <li><strong>Automatic Edge-to-Edge:</strong> Android layouts extend under the status bar automatically. No manual CSS fixes needed.</li>
+      <li><strong>UIScene Lifecycle:</strong> Proper iPad multi-window support on iOS.</li>
+      <li><strong>Built-in migration tool:</strong> Automated upgrade path from Capacitor 6 or 7 to 8.5.</li>
+    </ul>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"Capacitor vs Cordova?"</strong> - Capacitor is the modern successor. It generates native IDE projects (Xcode, Android Studio) you can edit directly, while Cordova uses a plugin system with less native access.</li>
+          <li><strong>"Capacitor vs React Native?"</strong> - Capacitor wraps existing web code; React Native uses native UI components. Capacitor is faster to develop; React Native has better native feel and performance.</li>
+          <li><strong>"What does npx cap sync do?"</strong> - Copies your compiled web assets into the native iOS/Android projects and updates native plugin configurations.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== FASTAPI ===== -->
+<div class="section" id="fastapi">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(167,139,250,0.15)">&#128013;</div>
+    <h2>FastAPI - Python Backend Framework</h2>
+    <span class="badge badge-be">Backend</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> FastAPI is a Python framework for building APIs. It is extremely fast because it handles requests asynchronously, auto-generates interactive API documentation at /docs, and validates all incoming data automatically using Pydantic models.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Speed:</strong> Built on ASGI (async server), it handles thousands of concurrent requests while waiting for database queries or other service calls.</li>
+      <li><strong>Auto-generated docs:</strong> Every API endpoint automatically gets interactive documentation at /docs and /redoc. Frontend developers can test APIs without backend help.</li>
+      <li><strong>Data validation:</strong> Pydantic automatically validates incoming JSON payloads. If a service sends malformed data, FastAPI rejects it with clear error messages.</li>
+      <li><strong>Lightweight:</strong> Minimal overhead means containerized microservices start up rapidly and consume very little RAM.</li>
+      <li><strong>Python ecosystem:</strong> Access to thousands of Python libraries for AI, data processing, and scientific computing.</li>
+    </ul>
+
+    <h3>Microservices Architecture</h3>
+    <p>In our project, FastAPI powers the AI backend. The Next.js frontend sends requests to FastAPI endpoints, which orchestrate AI pipelines (LangChain/LangGraph), interact with the database, and return results. Each service can be independently scaled and deployed.</p>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"Why FastAPI over Flask or Django?"</strong> - Native async/await support, automatic OpenAPI docs, Pydantic validation, 2-10x faster than Flask for async workloads.</li>
+          <li><strong>"What is ASGI?"</strong> - Asynchronous Server Gateway Interface. The protocol that allows Python web frameworks to handle thousands of concurrent connections efficiently.</li>
+          <li><strong>"What is Pydantic?"</strong> - A data validation library that automatically checks incoming JSON against your type definitions and returns clear error messages for invalid data.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== LANGCHAIN ===== -->
+<div class="section" id="langchain">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(244,114,182,0.15)">&#128279;</div>
+    <h2>LangChain - LLM Building Blocks</h2>
+    <span class="badge badge-ai">AI</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> LangChain provides building blocks for connecting LLMs (like GPT) to your data and tools. Think of it as LEGO bricks for AI - prompt templates, document loaders, vector store integrations, and tool wrappers that you snap together to build AI-powered features.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Standardized interfaces:</strong> Switch between OpenAI, Anthropic, or local models with a single line of code. The rest of your pipeline stays the same.</li>
+      <li><strong>RAG pipeline:</strong> Built-in tools for loading documents, splitting them into chunks, embedding them, storing in vector databases, and retrieving relevant chunks for LLM prompts.</li>
+      <li><strong>LCEL (chain language):</strong> A clean pipe-operator syntax for chaining components together. Automatically handles streaming, async execution, and error handling.</li>
+      <li><strong>Tool ecosystem:</strong> Give LLMs access to Google Search, databases, APIs, or any custom tool. The LLM decides which tool to use based on the user's question.</li>
+    </ul>
+
+    <h3>Core Concepts</h3>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Prompt Templates</h4>
+        <p>Reusable prompt structures where you inject user input dynamically. Instead of hardcoding prompts, you define a template with placeholders and fill them at runtime.</p>
+      </div>
+      <div class="mini-card">
+        <h4>RAG Pipeline</h4>
+        <p>Load documents, split into chunks, embed with AI models, store in vector database, retrieve relevant chunks when user asks a question, and send them to the LLM as context.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Chains (LCEL)</h4>
+        <p>Connect components using the pipe operator. Prompt goes in, LLM processes it, output parser cleans the result. Streaming and async are handled automatically.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Tools and Agents</h4>
+        <p>Give LLMs access to external tools. An Agent uses the LLM as a reasoning engine to decide which tool to call and what arguments to pass based on user input.</p>
+      </div>
+    </div>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is LangChain?"</strong> - An open-source framework that provides standardized building blocks for LLM applications - prompts, chains, retrieval, tools, and agents.</li>
+          <li><strong>"What is RAG?"</strong> - Retrieval-Augmented Generation. Instead of relying only on the LLM's training data, you retrieve relevant documents and include them in the prompt.</li>
+          <li><strong>"What is LCEL?"</strong> - LangChain Expression Language. A declarative way to chain components using the pipe operator. Automatically handles streaming, async, and error handling.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== LANGGRAPH ===== -->
+<div class="section" id="langgraph">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(167,139,250,0.15)">&#128260;</div>
+    <h2>LangGraph - Stateful AI Agent Workflows</h2>
+    <span class="badge badge-ai">AI</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> While LangChain gives you building blocks, LangGraph gives you the blueprint. It lets you build AI workflows with loops, branches, and memory. If an AI agent fails a task, LangGraph can loop back, self-correct, and try again - like a human thinking through a problem.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Self-correcting agents:</strong> If the AI retrieves irrelevant documents or generates a poor answer, LangGraph can loop back, try a different approach, and improve the result.</li>
+      <li><strong>State management:</strong> A centralized state object acts as the app's memory, shared across all steps. Every node reads from and writes to this state.</li>
+      <li><strong>Conditional routing:</strong> After each step, decide where to go next based on the result. If the answer is good, finish. If not, route to a correction node.</li>
+      <li><strong>Multi-agent collaboration:</strong> Split complex tasks among specialized agents (researcher, writer, editor) that pass messages to each other within the same graph.</li>
+      <li><strong>Built-in persistence:</strong> Automatically saves checkpoints after every node execution, giving agents perfect memory and the ability to rewind or replay steps.</li>
+    </ul>
+
+    <h3>Three Core Concepts</h3>
+    <div class="grid-3">
+      <div class="mini-card">
+        <h4>State</h4>
+        <p>A shared data object that all steps read from and write to. Acts as the application's memory. Contains chat history, variables, retrieved documents, and task status.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Nodes</h4>
+        <p>Python functions that perform actions. Each node receives the current state, executes logic (like calling an LLM or database), and returns an updated state.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Edges</h4>
+        <p>Connections between nodes that define the flow of execution. Can be simple (A goes to B) or conditional (if error, loop back; if success, finish).</p>
+      </div>
+    </div>
+
+    <h3>How LangChain and LangGraph Work Together</h3>
+    <p>Think of it this way: LangChain = LEGO bricks. LangGraph = the structural blueprint telling you how to assemble them, when to loop, and when to branch. Each LangGraph node uses LangChain components inside. LangGraph manages the overall flow; LangChain manages the data processing within each step.</p>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"LangChain vs LangGraph?"</strong> - LangChain provides linear chains and building blocks. LangGraph provides cyclical graphs with state management, loops, and multi-agent orchestration.</li>
+          <li><strong>"When would you use LangGraph?"</strong> - When your AI workflow needs loops (retry on failure), conditional branching, multi-agent collaboration, or human-in-the-loop checkpoints.</li>
+          <li><strong>"What is a State Graph?"</strong> - A directed graph where each node is a function and edges define control flow. State is passed through and mutated at each step.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== WEBLLM ===== -->
+<div class="section" id="webllm">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(244,114,182,0.15)">&#129302;</div>
+    <h2>WebLLM - Run AI Models in the Browser</h2>
+    <span class="badge badge-ai">AI</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> WebLLM uses WebGPU (your browser's GPU access) to run large language models completely on your device. No server needed! Zero API costs, total privacy, works offline. Models like Llama 3, Phi 3, and Gemma run right in Chrome.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Zero server cost:</strong> The AI runs entirely on the user's device. No API calls to OpenAI or Anthropic needed for on-device tasks.</li>
+      <li><strong>Complete privacy:</strong> Data never leaves the device. Perfect for processing sensitive location or personal data locally.</li>
+      <li><strong>Works offline:</strong> Once the model is downloaded and cached, it works without internet connectivity.</li>
+      <li><strong>OpenAI-compatible API:</strong> Uses the same API structure as OpenAI, so you can swap between local and cloud models easily.</li>
+    </ul>
+
+    <h3>How It Works</h3>
+    <ul>
+      <li><strong>Step 1:</strong> The first time, the model weights are downloaded from a CDN (1-4GB depending on the model).</li>
+      <li><strong>Step 2:</strong> The weights are cached in the browser's Cache Storage API.</li>
+      <li><strong>Step 3:</strong> WebLLM compiles the quantized model weights into WebGPU compute shaders.</li>
+      <li><strong>Step 4:</strong> Inference runs on the device's GPU. Subsequent loads are instant from cache.</li>
+    </ul>
+
+    <h3>Requirements</h3>
+    <ul>
+      <li><strong>WebGPU support:</strong> Chrome 113+, Edge 113+, Opera 99+. Check navigator.gpu for availability.</li>
+      <li><strong>GPU required:</strong> Needs a dedicated GPU for reasonable inference speeds.</li>
+      <li><strong>Large first download:</strong> Models are 1-4GB. First load downloads; subsequent loads use browser cache.</li>
+    </ul>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"How can an LLM run in the browser?"</strong> - WebLLM uses WebGPU to access the device's GPU, compiles quantized model weights into GPU compute shaders, and runs inference locally.</li>
+          <li><strong>"Why not just call the OpenAI API?"</strong> - WebLLM provides zero cost, full privacy, and offline capability. The trade-off is a large initial download and requiring a decent GPU.</li>
+          <li><strong>"What is WebGPU?"</strong> - The successor to WebGL. Provides direct GPU compute access in the browser, enabling ML inference, 3D rendering, and parallel computing.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== XGBOOST ===== -->
+<div class="section" id="xgboost">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(52,211,153,0.15)">&#128202;</div>
+    <h2>XGBoost - Gradient Boosted Decision Trees</h2>
+    <span class="badge badge-ai">ML</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> XGBoost is a machine learning algorithm that builds many small decision trees sequentially. Each new tree learns from the mistakes of the previous ones. It is incredibly fast and accurate for structured or tabular data like spreadsheets and databases. Famous for winning Kaggle competitions.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>Best-in-class accuracy:</strong> Consistently outperforms other algorithms on structured/tabular data. Dominates data science competitions.</li>
+      <li><strong>Speed:</strong> Parallel processing for feature split-point search makes training extremely fast.</li>
+      <li><strong>Handles messy data:</strong> Automatically deals with missing values, mixed data types, and outliers.</li>
+      <li><strong>Built-in regularization:</strong> L1 and L2 penalties prevent overfitting, making the model generalize well to new data.</li>
+    </ul>
+
+    <h3>How It Works (Simple Analogy)</h3>
+    <p>Imagine a group of students taking a test. The first student makes a baseline attempt. The teacher identifies which questions they got wrong. The next student focuses only on those wrong answers. The third student focuses on what the second student still got wrong. This continues until the group collectively gets an excellent score. Each student is a "tree," and they learn from previous mistakes.</p>
+
+    <h3>Why "Extreme"?</h3>
+    <ul>
+      <li><strong>Built-in regularization:</strong> L1 (Lasso) and L2 (Ridge) penalties to prevent overfitting.</li>
+      <li><strong>Parallel processing:</strong> Split-point search across features is parallelized.</li>
+      <li><strong>Missing data handling:</strong> Automatically learns the best branch for missing values.</li>
+      <li><strong>Tree pruning:</strong> Removes splits that do not improve the model beyond a threshold.</li>
+    </ul>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"XGBoost vs Random Forest?"</strong> - Random Forest builds trees independently (parallel). XGBoost builds sequentially (each tree learns from previous errors). XGBoost is usually more accurate but needs careful tuning.</li>
+          <li><strong>"What is gradient boosting?"</strong> - An ensemble method where each new model corrects the errors of the combined previous models. The "gradient" refers to using gradient descent to minimize the loss function.</li>
+          <li><strong>"What are key hyperparameters?"</strong> - learning_rate (step size), max_depth (tree complexity), n_estimators (number of trees), min_child_weight (minimum samples per leaf).</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== PLAYWRIGHT ===== -->
+<div class="section" id="playwright">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(56,189,248,0.15)">&#129513;</div>
+    <h2>Playwright - End-to-End Testing</h2>
+    <span class="badge badge-dev">Testing</span>
+  </div>
+  <div class="section-body">
+    <div class="key-concept">
+      <strong>Beginner explanation:</strong> Playwright is a testing tool by Microsoft that launches real browsers (Chrome, Firefox, Safari) and automates user actions like clicking buttons, filling forms, and navigating pages. It is like having a robot that tests your app the way a real user would.
+    </div>
+
+    <h3>Why We Use It</h3>
+    <ul>
+      <li><strong>True cross-browser testing:</strong> Test on Chromium, Firefox, and Safari (WebKit) using the exact same test code. No separate tools for each browser.</li>
+      <li><strong>Auto-waiting:</strong> Automatically waits for elements to be visible, stable, and clickable before performing actions. No more flaky tests from hardcoded sleep commands.</li>
+      <li><strong>Parallel execution:</strong> Launch multiple isolated browser contexts (like incognito windows) to run tests concurrently. Dramatically cuts test execution time.</li>
+      <li><strong>Built-in API testing:</strong> You can test backend API endpoints directly without needing a separate HTTP client library.</li>
+      <li><strong>Excellent debugging:</strong> Playwright Inspector, Trace Viewer (records videos, screenshots, and network logs), and Codegen tool that generates test code as you click around.</li>
+    </ul>
+
+    <h3>Playwright vs Other Tools</h3>
+    <table>
+      <tr><th>Feature</th><th>Playwright</th><th>Cypress</th><th>Selenium</th></tr>
+      <tr><td>Speed</td><td>Fast (WebSocket)</td><td>Medium (in-browser)</td><td>Slow (HTTP WebDriver)</td></tr>
+      <tr><td>Safari</td><td>Native WebKit</td><td>Experimental</td><td>Via WebDriver</td></tr>
+      <tr><td>Multi-Tab</td><td>Native support</td><td>Limited</td><td>Yes</td></tr>
+      <tr><td>Auto-Wait</td><td>Built-in</td><td>Built-in</td><td>Manual waits required</td></tr>
+    </table>
+
+    <details>
+      <summary>Viva Points to Remember</summary>
+      <div class="detail-content">
+        <ul>
+          <li><strong>"What is E2E testing?"</strong> - End-to-end testing that simulates real user workflows across the full stack (UI, API, Database).</li>
+          <li><strong>"Playwright vs Cypress?"</strong> - Playwright supports all browsers natively (including Safari), runs in separate processes for speed, and has better multi-tab support. Cypress runs inside the browser itself.</li>
+          <li><strong>"What is auto-wait?"</strong> - Playwright automatically waits for elements to be visible, attached to DOM, stable, and actionable before clicking. Eliminates flaky tests.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- ===== VIVA Q&A ===== -->
+<div class="section" id="viva">
+  <div class="section-header">
+    <div class="icon" style="background:rgba(244,114,182,0.15)">&#127908;</div>
+    <h2>Ultimate Viva Q&A - Top Questions and Answers</h2>
+    <span class="badge badge-dev">Viva Prep</span>
+  </div>
+  <div class="section-body">
+
+    <div class="viva-q">
+      <div class="q">Q1: Give a 2-minute overview of your project.</div>
+      <div class="a"><strong>A:</strong> SafeSphere is a location-aware, AI-powered Progressive Web App built with Next.js 14 and React 18 on the frontend, Supabase with PostgreSQL 15 using PostGIS for spatial queries and pgvector for AI semantic search on the database, FastAPI with LangChain and LangGraph for AI orchestration on the backend, MapLibre GL and Turf.js for interactive maps, Dexie and Service Workers for offline-first PWA capabilities, Web Push with VAPID for notifications, WebLLM for in-browser AI inference, and Capacitor 8.5 to deploy as native iOS and Android apps.</div>
+    </div>
+
+    <div class="viva-q">
+      <div class="q">Q2: What is the difference between SSR, SSG, and ISR?</div>
+      <div class="a"><strong>A:</strong> SSR (Server-Side Rendering) renders the page on every request, so data is always fresh but slower. SSG (Static Site Generation) builds the page once at build time, making it the fastest but data gets stale. ISR (Incremental Static Regeneration) creates a static page that re-generates in the background after a set time interval, giving you the best of both worlds.</div>
+    </div>
+
+    <div class="viva-q">
+      <div class="q">Q3: How does offline-first work in your project?</div>
+      <div class="a"><strong>A:</strong> Dexie.js stores user actions in IndexedDB locally. The Service Worker (configured via next-pwa and Workbox) intercepts failed network requests and queues them. When the user comes back online, the queued data syncs to the server. The useLiveQuery hook provides reactive UI that updates in real-time as local data changes.</div>
+    </div>
+
+    <div class="viva-q">
+      <div class="q">Q4: What is RAG and how do you implement it?</div>
+      <div class="a"><strong>A:</strong> RAG stands for Retrieval-Augmented Generation. Instead of relying only on the LLM's training data, we use LangChain to load documents, split them into chunks, embed them with AI models, and store them in pgvector. When a user asks a question, we convert it to a vector, find the most similar document chunks using cosine similarity, and inject them into the LLM prompt. This gives the LLM access to our private, up-to-date data without fine-tuning.</div>
+    </div>
+
+    <div class="viva-q">
+      <div class="q">Q5: How do LangChain and LangGraph work together?</div>
+      <div class="a"><strong>A:</strong> LangChain provides the building blocks - prompt templates, LLM wrappers, document loaders, tools. LangGraph provides the structural architecture - state management, conditional routing, loops, and multi-agent coordination. In our project, each LangGraph node uses LangChain components inside. For example, a "grade documents" node uses a LangChain chain to evaluate relevance, and LangGraph decides whether to loop back or proceed.</div>
+    </div>
+
+    <div class="viva-q">
+      <div class="q">Q6: What is PostGIS and why do you use it?</div>
+      <div class="a"><strong>A:</strong> PostGIS is a PostgreSQL extension that adds geographic and spatial data types. We use it to store GPS coordinates as GEOGRAPHY columns and run proximity queries like "find all safety alerts within 5km of the user." The GiST spatial index makes these queries instant even with millions of rows. On the frontend, Turf.js handles simpler client-side geo calculations.</div>
+    </div>
+
+    <div class="viva-q">
+      <div class="q">Q7: What is the role of WebLLM in your project?</div>
+      <div class="a"><strong>A:</strong> WebLLM runs LLM inference entirely in the browser using WebGPU. This means zero server costs, complete user privacy because data never leaves the device, and offline capability. We use it for on-device tasks like summarizing location reports or classifying safety zones - tasks that do not need a massive cloud model.</div>
+    </div>
+
+    <div class="viva-q">
+      <div class="q">Q8: How does Capacitor differ from React Native?</div>
+      <div class="a"><strong>A:</strong> Capacitor wraps your existing web code in a native WebView - you write once in React and deploy to iOS, Android, and Desktop. React Native uses native UI components and bridges to them via JavaScript. Capacitor is faster to develop because you reuse web code, while React Native has better native feel and performance for complex animations.</div>
+    </div>
+
+    <div class="viva-q">
+      <div class="q">Q9: How do you handle authentication and security?</div>
+      <div class="a"><strong>A:</strong> We use Supabase Auth for user authentication with email, password, and OAuth options. Database security is enforced via Row-Level Security policies - users can only access their own data. VAPID keys authenticate our push notification server. FastAPI with Pydantic validates all incoming API payloads.</div>
+    </div>
+
+    <div class="viva-q">
+      <div class="q">Q10: What testing strategy do you use?</div>
+      <div class="a"><strong>A:</strong> We use Playwright for end-to-end testing. It launches real browsers (Chromium, Firefox, WebKit) and simulates user workflows. It has built-in auto-waiting, isolated browser contexts for parallel execution, and generates test reports with screenshots and videos. We also use TypeScript as a form of static testing, catching bugs at compile time before code even runs.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div style="text-align:center; padding: 40px 20px; color: var(--muted); font-size: 0.85rem;">
+  <p><strong>SafeSphere / XPBoost</strong> - Viva Cheat Sheet</p>
+  <p style="margin-top:8px;">Open in any browser. Press Ctrl+F to search any term. Good luck with your viva!</p>
+  <p style="margin-top:4px;">Technologies covered: Next.js 14 | React 18 | TypeScript 5 | Tailwind 3.4 | Supabase | PostgreSQL 15 | Prisma | PostGIS | pgvector | MapLibre GL | Turf.js | Dexie.js | PWA/Workbox | Web Push VAPID | Capacitor 8.5 | FastAPI | LangChain | LangGraph | WebLLM | XGBoost | Playwright</p>
+</div>
+
+</div>
+</body>
+</html>
