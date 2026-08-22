@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { rateLimit } from "@/lib/security/rate-limit";
-import { generateOtp, issueOtp, normalizePhone } from "@/lib/security/otp";
+import { generateOtp, issueOtp, normalizePhone, consumeOtp } from "@/lib/security/otp";
 import { DEMO_SESSION_COOKIE } from "@/lib/demo/scope";
 import { safeLog } from "@/lib/logger";
 

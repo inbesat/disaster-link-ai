@@ -153,8 +153,6 @@ export async function initSentry(): Promise<void> {
       console.warn("[sentry] SENTRY_DSN set but @sentry/nextjs is not installed — skipping init.");
       return;
     }
-    // @ts-expect-error optional dependency
-    const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
     Sentry.init({
       dsn,
       environment: process.env.NODE_ENV ?? "development",
@@ -193,8 +191,6 @@ export async function captureException(error: unknown, context?: ErrorTagContext
   try {
     const Sentry = await loadSentry();
     if (!Sentry) return;
-    // @ts-expect-error optional dependency
-    const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
     const sanitizedExtra = sanitizeContext(context ?? {});
 
     const tags: Record<string, string> = {};
@@ -256,13 +252,6 @@ export async function captureMessage(message: string, level: "info" | "warning" 
   if (!isSentryEnabled()) return;
   const Sentry = await loadSentry();
   Sentry?.captureMessage(message, level);
-  try {
-    // @ts-expect-error optional dependency
-    const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
-    Sentry.captureMessage(message, level);
-  } catch {
-    // Silent
-  }
 }
 
 /**
@@ -272,13 +261,6 @@ export async function setUserContext(userId: string | null, role?: string, distr
   if (!isSentryEnabled()) return;
   const Sentry = await loadSentry();
   Sentry?.setUser(userId ? { id: userId, role, district } : null);
-  try {
-    // @ts-expect-error optional dependency
-    const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
-    Sentry.setUser(userId ? { id: userId, role, district } : null);
-  } catch {
-    // Silent
-  }
 }
 
 function isSentryEnabled(): boolean {
