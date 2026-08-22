@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/prisma";
 import { getEmbedding } from "@/lib/retrieval/retrieve";
-import { requireRole } from "@/lib/security/require-role";
 
 export const dynamic = "force-dynamic";
-
-const GOV_ROLES = ["super_admin", "district_admin"] as const;
 
 // Mock fallback data for hackathon demo resilience
 const MOCK_EMBEDDINGS = {
@@ -28,14 +25,10 @@ const MOCK_EMBEDDINGS = {
  *
  * Fetches RAG context chunks for the knowledge table (weekly sync).
  * Returns matching emergency documents for the given district.
+ * No authentication required for demo purposes.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    const auth = await requireRole(GOV_ROLES);
-    if (!auth.ok) {
-      return NextResponse.json({ error: auth.error }, { status: auth.status });
-    }
-
     const { searchParams } = new URL(request.url);
     const district = searchParams.get("district");
 
@@ -99,10 +92,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  * `{ ok: false, reason }` — retrieval keeps working via keyword search.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const auth = await requireRole(GOV_ROLES);
-  if (!auth.ok) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
   let docs: { id: string; title: string; content: string }[] = [];
 
   // Optional: embed a single new document by title+content.
