@@ -98,7 +98,7 @@ const MODULES = [
 }[];
 
 export default function PublicDashboardPage() {
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(true);
 
   useEffect(() => {
     // Forced render after 500ms — guarantees the dashboard content appears
@@ -113,6 +113,7 @@ export default function PublicDashboardPage() {
   // Client-only render — bypasses SSR hydration mismatches from mock-data
   // islands (geolocation, live clocks, rotating feeds). Everything below,
   // including map/weather-dependent components, mounts only in the browser.
+  /*
   if (!isMounted) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--dl-navy)]">
@@ -126,6 +127,7 @@ export default function PublicDashboardPage() {
       </div>
     );
   }
+  */
 
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-primary">
