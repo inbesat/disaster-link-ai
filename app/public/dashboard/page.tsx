@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Bell, HeartHandshake, MapPin, Siren } from "lucide-react";
 import AITeaser from "@/components/public/AITeaser";
@@ -85,6 +88,26 @@ const MODULES = [
 }[];
 
 export default function PublicDashboardPage() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Client-only render — bypasses SSR hydration mismatches from mock-data
+  // islands (geolocation, live clocks, rotating feeds). Everything below,
+  // including map/weather-dependent components, mounts only in the browser.
+  if (!isMounted) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[var(--dl-navy)]">
+        <span
+          aria-label="Loading dashboard"
+          className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[var(--dl-blue)]"
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-primary">
     <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-[140px] px-4 md:px-8 text-[var(--dl-text-on-navy)]">
