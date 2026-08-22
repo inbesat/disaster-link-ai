@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Eye } from "lucide-react";
 import { clearViewAsPublic, setViewAsPublic } from "@/app/actions/auth";
 
@@ -21,20 +22,23 @@ export default function ViewAsPublicToggle({
   const [active, setActive] = useState(initialActive);
   const [busy, setBusy] = useState(false);
 
+  const router = useRouter();
+
   async function handleToggle(next: boolean) {
     if (busy) return;
     setBusy(true);
     try {
       setActive(next);
       if (next) {
-        // Sets the cookie server-side and redirects to the citizen app.
+        // Sets the view_as_public cookie server-side, then navigate client-side.
         await setViewAsPublic();
+        router.push("/public/dashboard");
       } else {
         await clearViewAsPublic();
+        router.push("/gov/dashboard");
       }
     } catch {
-      // Server-action redirect is handled by Next; any real failure just
-      // resets the switch state.
+      // Server-action failure — reset the switch state.
       setActive(!next);
     } finally {
       setBusy(false);

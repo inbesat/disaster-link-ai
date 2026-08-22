@@ -6,6 +6,9 @@ import AlertSimulator from "@/components/dashboard/AlertSimulator";
 import ShelterCapacityWidget from "@/components/dashboard/ShelterCapacityWidget";
 import LowStockWidget from "@/components/dashboard/LowStockWidget";
 import KPICards from "@/components/dashboard/KPICards";
+// Step 10 — Recharts-heavy widget is lazy-loaded client-side (ssr: false)
+// with a SkeletonLoader fallback; the next/dynamic lives in a client
+// wrapper because App Router forbids ssr:false inside Server Components.
 import CommandCenterCharts from "@/components/dashboard/dynamic/CommandCenterChartsLazy";
 import GapAnalysisTable from "@/components/dashboard/GapAnalysisTable";
 import DisasterTimeline from "@/components/dashboard/DisasterTimeline";
@@ -14,32 +17,13 @@ import FieldTasksPlaceholder from "@/components/dashboard/FieldTasksPlaceholder"
 import LiveActivityFeed from "@/components/dashboard/LiveActivityFeed";
 import BroadcastMessage from "@/components/dashboard/BroadcastMessage";
 
-// ---------------------------------------------------------------------
-// app/(dashboard)/global-map/page.tsx — Global Command Center Map
-//
-// Full-featured global map page with the complete CommandCenterClient:
-//   • Interactive DisasterMap (MapLibre) with flood zones, shelters, resources
-//   • Hazard Type selector (Flood / Cyclone / Earthquake / Wildfire)
-//   • Map Layer toggles (Flood Risk, Shelters, Resources)
-//   • What-If Simulator
-//   • Model Accuracy Assessment (AccuracyMetrics)
-   //   • Dev Tools / Simulate SMS (WebhookSimulator)
-   //   • Live Activity Feed
-//   • Prediction Chart
-//   • Impact Summary
-//   • Evacuation Planner
-//   • Scenario Selector + Time Slider
-//   • Severity Legend
-//
-// All extracted from the previous deployment's CommandCenterClient and
-// injected into this standalone route. No CSS or dark-theme changes.
-// ---------------------------------------------------------------------
-
 export const metadata: Metadata = {
-  title: "Global Map | SafeSphere",
+  title: "Command Center | SafeSphere",
 };
 
-export default function GlobalMapPage() {
+export default function CommandCenterPage() {
+  // Demo role resolution: the earliest guest-mode cookie demos the field
+  // responder view; otherwise default to district_admin (full analytics).
   const isGuest = cookies().get("guest_mode")?.value === "true";
   const role = isGuest ? "field_responder" : "district_admin";
   const isFieldResponder = role === "field_responder";
