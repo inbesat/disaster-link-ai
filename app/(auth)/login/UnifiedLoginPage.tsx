@@ -22,7 +22,7 @@
 // ---------------------------------------------------------------------
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -406,6 +406,7 @@ function CitizenForm() {
 // =====================================================================
 
 function GovForm() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -415,22 +416,54 @@ function GovForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Enter a valid official email address.");
-      return;
-    }
-    if (!password) {
-      setError("Enter your password.");
-      return;
-    }
     setError(null);
     setLoading(true);
+
+    // =================================================================
+    // ORIGINAL AUTH — DISABLED FOR DEMO (Aug 24). Uncomment to restore.
+    //
+    // if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    //   setLoading(false);
+    //   setError("Enter a valid official email address.");
+    //   return;
+    // }
+    // if (!password) {
+    //   setLoading(false);
+    //   setError("Enter your password.");
+    //   return;
+    // }
+    //
+    // try {
+    //   await govLogin(email, role);
+    // } catch (err) {
+    //   setLoading(false);
+    //   setError(err instanceof Error ? err.message : "Sign-in failed. Try again.");
+    // }
+    // =================================================================
+
+    // -----------------------------------------------------------------
+    // MOCK AUTH — any email + any password signs in instantly.
+    // -----------------------------------------------------------------
+
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    const mockUser = {
+      id: "demo-gov-user",
+      email: email || "demo.commander@safesphere.gov.in",
+      full_name: "Demo Commander",
+      role,
+      loggedInAt: new Date().toISOString(),
+    };
     try {
-      await govLogin(email, role);
-    } catch (err) {
-      setLoading(false);
-      setError(err instanceof Error ? err.message : "Sign-in failed. Try again.");
+      window.localStorage.setItem("user", JSON.stringify(mockUser));
+    } catch {
+      // localStorage unavailable — non-fatal for the demo session.
     }
+
+    document.cookie = `role=${role}; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`;
+    document.cookie = `gov_email=${encodeURIComponent(mockUser.email)}; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`;
+
+    router.push(role === "super_admin" ? "/gov/overview" : "/gov/dashboard");
   }
 
   const inputClass =
