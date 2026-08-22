@@ -124,10 +124,14 @@ export default function PublicDashboardPage() {
           />
           <span className="text-sm text-white/60">Loading Dashboard...</span>
         </div>
-      </div>
-    );
   }
   */
+
+  // Hardwired mock state for the demo (as requested)
+  const isLoading = false;
+  const weather = { temp: '29°C', rain: '120MM', condition: 'Heavy Rain' };
+  const alerts = [];
+  console.log(isLoading, weather, alerts);
 
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-primary">

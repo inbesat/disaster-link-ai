@@ -287,8 +287,9 @@ export default function RootLayout({
           src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
           strategy="afterInteractive"
         />
-        <Analytics />
-        <SpeedInsights />
+        {/* Analytics disabled to prevent 403 Forbidden POST errors on Vercel */}
+        {/* <Analytics /> */}
+        {/* <SpeedInsights /> */}
       </body>
     </html>
   );
