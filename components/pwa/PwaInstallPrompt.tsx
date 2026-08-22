@@ -125,7 +125,7 @@ export default function PwaInstallPrompt() {
               {/* App logo — 72×72 per spec */}
               <Image
                 src="/icons/icon-192.png"
-                alt=""
+                alt="SafeSphere app icon"
                 width={72}
                 height={72}
                 className="h-[72px] w-[72px] shrink-0 rounded-2xl object-cover ring-1 ring-white/10"

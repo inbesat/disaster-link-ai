@@ -114,14 +114,14 @@ export default function AuditLogCard() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search action, actor, IP, device…"
-            className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-3 font-mono text-xs text-slate-100 outline-none placeholder:font-sans placeholder:text-slate-600 focus:border-emerald-400/60"
+            className="w-full rounded-md border border-panel-border bg-[#0a0f1a] py-2 pl-9 pr-3 font-mono text-xs text-slate-100 outline-none placeholder:font-sans placeholder:text-slate-600 focus:border-emerald-400/60"
           />
         </div>
 
         <div
           role="group"
           aria-label="Filter by status"
-          className="flex flex-wrap items-center gap-1 rounded-md border border-panel-border bg-[#0a0f1d] p-1"
+          className="flex flex-wrap items-center gap-1 rounded-md border border-panel-border bg-[#0a0f1a] p-1"
         >
           {FILTER_OPTIONS.map((option) => (
             <button
@@ -140,7 +140,7 @@ export default function AuditLogCard() {
           ))}
         </div>
 
-        <span className="ml-auto rounded-full border border-panel-border bg-[#0a0f1d] px-2.5 py-1 font-mono text-[11px] tabular-nums text-slate-400">
+        <span className="ml-auto rounded-full border border-panel-border bg-[#0a0f1a] px-2.5 py-1 font-mono text-[11px] tabular-nums text-slate-400">
           {events.length} / {DEMO_AUDIT_EVENTS.length} records
         </span>
       </div>
@@ -148,7 +148,7 @@ export default function AuditLogCard() {
       {/* Dense data table */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[760px] text-left text-sm">
-          <thead className="border-b border-panel-border bg-[#0a0f1d] text-[10px] uppercase tracking-[0.14em] text-slate-500">
+          <thead className="border-b border-panel-border bg-[#0a0f1a] text-eoc-tiny uppercase tracking-[0.14em] text-slate-500">
             <tr>
               <th className="px-5 py-2.5 font-bold">Timestamp</th>
               <th className="px-5 py-2.5 font-bold">Event Action</th>
@@ -169,17 +169,17 @@ export default function AuditLogCard() {
                   <p className="font-semibold tracking-wide text-slate-100">
                     {event.action}
                   </p>
-                  <p className="mt-0.5 text-[10px] text-slate-500">
+<p className="mt-0.5 text-eoc-tiny text-slate-500">
                     {event.actor} · {event.resource}
                   </p>
                 </td>
                 <td className="px-5 py-2.5">
                   <p className="tabular-nums text-cyan-300/90">{event.ip}</p>
-                  <p className="mt-0.5 text-[10px] text-slate-500">{event.device}</p>
+                  <p className="mt-0.5 text-eoc-tiny text-slate-500">{event.device}</p>
                 </td>
                 <td className="px-5 py-2.5 text-right">
                   <span
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${STATUS_STYLES[event.severity]}`}
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${STATUS_STYLES[event.severity]}`}
                   >
                     <span
                       className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[event.severity]}`}
@@ -211,7 +211,7 @@ export default function AuditLogCard() {
           deleted. Written by the server-side audit logger on every privileged
           action.
         </p>
-        <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600">
+        <p className="font-mono text-eoc-tiny uppercase tracking-widest text-slate-600">
           SOC 2 · DPDP 2023 §17
         </p>
       </div>

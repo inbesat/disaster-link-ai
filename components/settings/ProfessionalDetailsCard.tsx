@@ -163,7 +163,7 @@ export default function ProfessionalDetailsCard() {
   }
 
   const inputClass =
-    "w-full rounded-md border border-panel-borderHover bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none";
+    "w-full rounded-md border border-panel-borderHover bg-surface-muted px-3 py-2.5 text-sm text-foreground placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/30 focus:outline-none";
   const labelClass = "eoc-label block mb-1.5 text-slate-400";
 
   return (
@@ -311,7 +311,7 @@ export default function ProfessionalDetailsCard() {
                     <BadgeCheck className="h-5 w-5 text-severity-green-400" aria-hidden />
                   ) : (
                     <span
-                      className="flex h-5 w-5 items-center justify-center text-[10px] font-bold text-cyan-300"
+                      className="flex h-5 w-5 items-center justify-center text-eoc-tiny font-bold text-cyan-300"
                       aria-hidden="true"
                     >
                       {initialsFor(cert.fileName ?? cert.name)}
@@ -323,7 +323,7 @@ export default function ProfessionalDetailsCard() {
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <p className="truncate text-sm font-semibold">{cert.name}</p>
                     <span
-                      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                      className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${
                         cert.status === "verified"
                           ? "border border-severity-green-500/40 bg-severity-green-500/10 text-severity-green-400"
                           : "border border-severity-amber-500/40 bg-severity-amber-500/10 text-severity-amber-400"

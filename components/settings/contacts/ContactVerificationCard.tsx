@@ -71,7 +71,7 @@ export default function ContactVerificationCard() {
           <h2 className="mt-0.5 text-lg font-bold">Contact Health Check</h2>
         </div>
         {status === "done" && (
-          <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+          <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wider text-emerald-300">
             <ShieldCheck className="h-3 w-3" aria-hidden />
             {deliveredCount}/{CONTACTS.length} reachable
           </span>
@@ -89,7 +89,7 @@ export default function ContactVerificationCard() {
         className="mt-5 overflow-x-auto rounded-md border border-panel-border"
       >
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-panel-border bg-[#0a0f1d] text-[10px] uppercase tracking-[0.14em] text-slate-500">
+          <thead className="border-b border-panel-border bg-[#0a0f1a] text-eoc-tiny uppercase tracking-[0.14em] text-slate-500">
             <tr>
               <th className="px-4 py-2.5 font-bold">Contact</th>
               <th className="px-4 py-2.5 font-bold">Number</th>
@@ -117,12 +117,12 @@ export default function ContactVerificationCard() {
                         Checking…
                       </span>
                     ) : status === "done" && contact.delivered ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wider text-emerald-300">
                         <CheckCircle2 className="h-3 w-3" aria-hidden />
                         Delivered
                       </span>
                     ) : status === "done" ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-red-400/40 bg-red-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-red-300">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-red-400/40 bg-red-500/10 px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wider text-red-300">
                         <XCircle className="h-3 w-3" aria-hidden />
                         Failed — {contact.error}
                       </span>

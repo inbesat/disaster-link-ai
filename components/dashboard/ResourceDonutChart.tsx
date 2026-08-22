@@ -133,7 +133,7 @@ export function ResourceDonutChart() {
             <span className="text-2xl font-bold tabular-nums text-primary">
               {READY_PCT}%
             </span>
-            <span className="text-[10px] uppercase tracking-wider text-muted">
+            <span className="text-eoc-tiny uppercase tracking-wider text-muted">
               operational
             </span>
           </div>

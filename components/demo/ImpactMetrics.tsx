@@ -69,7 +69,7 @@ function AnimatedMetric({ metric, delay }: { metric: Metric; delay: number }) {
       >
         {display}
       </motion.div>
-      <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
+      <div className="mt-1.5 text-eoc-tiny font-semibold uppercase tracking-[0.18em] text-white/55">
         {metric.label}
       </div>
     </div>
@@ -97,7 +97,7 @@ export default function ImpactMetrics() {
           aria-hidden
         >
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-white/50">
+            <span className="text-eoc-tiny font-bold uppercase tracking-[0.28em] text-white/50">
               Live Impact
             </span>
             <span className="relative flex h-2 w-2">

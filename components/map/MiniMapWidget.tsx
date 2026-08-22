@@ -27,7 +27,7 @@ export function MiniMapWidget({ className = "" }: { className?: string }) {
         <button
           type="button"
           onClick={() => setVisible(true)}
-          className="flex items-center gap-2 rounded-full border border-border bg-surface-elevated/95 px-3 py-2 text-xs font-semibold text-slate-200 shadow-lg backdrop-blur transition hover:border-accent hover:text-accent"
+          className="flex items-center gap-2 rounded-full border border-border bg-surface-elevated/95 px-3 py-2.5 text-xs font-semibold text-slate-200 shadow-lg backdrop-blur transition hover:border-accent hover:text-accent active:scale-[0.97]"
         >
           <MapPinned className="h-4 w-4 text-accent" aria-hidden />
           Overview Map
@@ -44,9 +44,9 @@ export function MiniMapWidget({ className = "" }: { className?: string }) {
           type="button"
           onClick={() => setVisible(false)}
           aria-label="Hide overview map"
-          className="absolute -top-2 -right-2 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-white/20 bg-surface-elevated text-slate-200 shadow transition hover:border-accent hover:text-accent"
+          className="absolute -top-2 -right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-surface-elevated text-slate-200 shadow transition hover:border-accent hover:text-accent active:scale-[0.97]"
         >
-          <X className="h-3.5 w-3.5" aria-hidden />
+          <X className="h-4 w-4" aria-hidden />
         </button>
 
         {/* Square minimap */}

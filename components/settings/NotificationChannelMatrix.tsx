@@ -213,7 +213,7 @@ function ThresholdSelect({
     <div className="mt-2 flex items-center gap-1.5">
       <label
         htmlFor={`threshold-${categoryLabel}`}
-        className="text-[10px] font-bold uppercase tracking-wider text-slate-500"
+        className="text-eoc-tiny font-bold uppercase tracking-wider text-slate-500"
       >
         Min. threshold
       </label>
@@ -244,7 +244,7 @@ function ThresholdSelect({
         } ${THRESHOLD_ACCENTS[value]}`}
       >
         {THRESHOLD_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value} className="bg-[#0a0f1d] text-slate-300">
+          <option key={option.value} value={option.value} className="bg-[#0a0f1a] text-slate-300">
             {option.label}
           </option>
         ))}
@@ -253,7 +253,7 @@ function ThresholdSelect({
       {locked && (
         <span
           title="Locked by emergency protocol — cannot be relaxed."
-          className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-400/90"
+          className="flex items-center gap-1 text-eoc-tiny font-bold uppercase tracking-wider text-red-400/90"
         >
           <Lock className="h-3 w-3" aria-hidden />
         </span>
@@ -326,14 +326,14 @@ export default function NotificationChannelMatrix({
         >
           {/* Column headers */}
           <div className="contents" role="row">
-            <div className="p-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            <div className="p-3 text-eoc-tiny font-bold uppercase tracking-wider text-slate-500">
               Alert Category
             </div>
             {CHANNELS.map((channel) => (
               <div
                 key={channel.key}
                 role="columnheader"
-                className="flex items-center justify-center gap-1.5 border-l border-panel-border p-3 text-[10px] font-bold uppercase tracking-wider text-slate-500"
+                className="flex items-center justify-center gap-1.5 border-l border-panel-border p-3 text-eoc-tiny font-bold uppercase tracking-wider text-slate-500"
               >
                 <channel.icon className="h-3.5 w-3.5" aria-hidden />
                 {channel.short}

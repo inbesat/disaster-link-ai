@@ -127,7 +127,7 @@ export default function PersonalContactsCard() {
           <p className="eoc-label text-cyan-400/80">CONTACTS · PHASE 7 · STEP 2</p>
           <h2 className="mt-0.5 text-lg font-bold">Personal Emergency Contacts</h2>
         </div>
-        <span className="ml-auto rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-cyan-200">
+        <span className="ml-auto rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-1 font-mono text-eoc-tiny font-bold tabular-nums text-cyan-200">
           {contacts.length}/{MAX_CONTACTS}
         </span>
       </div>
@@ -231,7 +231,7 @@ export default function PersonalContactsCard() {
           </button>
           <span
             role="tooltip"
-            className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-1.5 w-60 -translate-x-1/2 rounded-md border border-cyan-400/40 bg-panel-deep p-2 text-[10px] font-medium leading-snug text-cyan-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+            className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-1.5 w-60 -translate-x-1/2 rounded-md border border-cyan-400/40 bg-panel-deep p-2 text-eoc-tiny font-medium leading-snug text-cyan-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
           >
             Requires mobile contacts permission — grant access in your device
             settings to import emergency contacts.
@@ -249,7 +249,7 @@ export default function PersonalContactsCard() {
       {formOpen && (
         <form
           onSubmit={handleAdd}
-          className="mt-5 grid gap-3 rounded-md border border-panel-border bg-[#0a0f1d] p-4 sm:grid-cols-2"
+          className="mt-5 grid gap-3 rounded-md border border-panel-border bg-[#0a0f1a] p-4 sm:grid-cols-2"
         >
           <Field
             label="Full name"
@@ -331,11 +331,11 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         aria-invalid={error ? true : undefined}
-        className={`mt-1 w-full rounded-md border bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 transition focus:border-cyan-400/60 ${
+        className={`mt-1 w-full rounded-md border bg-[#0a0f1a] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 transition focus:border-cyan-400/60 ${
           error ? "border-red-500/60" : "border-panel-border"
         }`}
       />
-      {error && <p className="mt-1 text-[10px] font-semibold text-red-400">{error}</p>}
+      {error && <p className="mt-1 text-eoc-tiny font-semibold text-red-400">{error}</p>}
     </div>
   );
 }

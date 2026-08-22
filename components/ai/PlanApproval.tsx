@@ -65,7 +65,7 @@ export function PlanApproval({ onStatusChange }: PlanApprovalProps) {
                 Plan Active — Monitoring
               </p>
             </div>
-            <span className="font-mono text-[10px] text-slate-400">PNP-6-B1</span>
+            <span className="font-mono text-eoc-tiny text-slate-400">PNP-6-B1</span>
           </div>
           <p className="mt-1 text-[11px] leading-relaxed text-slate-300">
             Field units dispatched. Flood level telemetry refreshing every 5 min;
@@ -123,7 +123,7 @@ export function PlanApproval({ onStatusChange }: PlanApprovalProps) {
       )}
 
       {status === "idle" && (
-        <p className="mt-2 flex items-center gap-1.5 text-[10px] text-muted">
+        <p className="mt-2 flex items-center gap-1.5 text-eoc-tiny text-muted">
           <CheckCircle2 className="h-3 w-3 text-accent-success" aria-hidden />
           Awaiting commander sign-off — nothing deploys until approved.
         </p>

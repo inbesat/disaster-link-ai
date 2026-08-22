@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { safeLog } from "@/lib/logger";
+import { createRateLimiter } from "@/lib/security/rate-limit";
+import { clientIpFromRequest } from "@/lib/security/rate-limiter";
 
 export const runtime = "nodejs";
 
 const RESET_TOKEN_EXPIRY_MS = 60 * 60 * 1000; // 1 hour
+
+// Rate limiter: 5 requests per minute per IP
+const resetPasswordLimiter = createRateLimiter(5, 60 * 1000);
 
 interface ResetToken {
   token: string;
@@ -20,6 +25,24 @@ const tokenStore = new Map<string, ResetToken>();
  * Step 2: Submit token + new password to complete reset.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  // Apply rate limiting
+  const ip = clientIpFromRequest(request);
+  const rateLimitResult = resetPasswordLimiter(ip);
+  if (!rateLimitResult.success) {
+    const retryAfterMs = Math.max(0, rateLimitResult.resetTime - Date.now());
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "Rate limit exceeded. Please wait before sending another request.",
+        retryAfterMs,
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) },
+      },
+    );
+  }
+
   let body: { action?: string; email?: string; token?: string; newPassword?: string };
   try {
     body = (await request.json()) as typeof body;

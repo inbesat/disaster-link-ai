@@ -197,7 +197,7 @@ function EventRow({
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
           <span
-            className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${style.badge}`}
+            className={`rounded-full border px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${style.badge}`}
           >
             {style.label}
           </span>

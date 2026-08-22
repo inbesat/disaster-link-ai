@@ -174,7 +174,7 @@ export default function AdminPanelPage() {
           </div>
           <div className="hidden text-right sm:block">
             <p className="font-mono text-xl font-bold text-slate-100">{rows.length}</p>
-            <p className="text-[10px] uppercase tracking-widest text-slate-500">
+            <p className="text-eoc-tiny uppercase tracking-widest text-slate-500">
               Active operators
             </p>
           </div>
@@ -277,7 +277,7 @@ export default function AdminPanelPage() {
         <div className="mt-4 overflow-x-auto rounded-lg border border-border">
           <table className="w-full min-w-[760px] border-collapse text-xs">
             <thead className="bg-[var(--bg-tertiary)]">
-              <tr className="text-left text-[10px] uppercase tracking-wider text-muted">
+              <tr className="text-left text-eoc-tiny uppercase tracking-wider text-muted">
                 <th className="border-b border-subtle px-3 py-2.5">
                   <input
                     type="checkbox"
@@ -319,14 +319,14 @@ export default function AdminPanelPage() {
                   </td>
                   <td className="px-3 py-2.5">
                     <div className="flex items-center gap-2">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-[var(--bg-tertiary)] text-[10px] font-bold text-slate-300">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-[var(--bg-tertiary)] text-eoc-tiny font-bold text-slate-300">
                         {initialsFor(row.name)}
                       </span>
                       <div className="min-w-0">
                         <p className="truncate font-semibold text-slate-100">
                           {row.name}
                         </p>
-                        <p className="truncate font-mono text-[10px] text-muted">
+                        <p className="truncate font-mono text-eoc-tiny text-muted">
                           {row.email}
                         </p>
                       </div>
@@ -341,7 +341,7 @@ export default function AdminPanelPage() {
                       {row.status}
                     </span>
                   </td>
-                  <td className="px-3 py-2.5 font-mono text-[10px] text-muted">
+                  <td className="px-3 py-2.5 font-mono text-eoc-tiny text-muted">
                     {row.lastActive}
                   </td>
                   <td className="relative px-3 py-2.5 text-right">

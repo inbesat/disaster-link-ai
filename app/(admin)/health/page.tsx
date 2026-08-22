@@ -92,7 +92,7 @@ export default function SystemHealthPage() {
                   <p className="flex items-center gap-2 text-sm font-medium text-foreground">
                     {s.name}
                     <span
-                      className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                      className={`rounded-full border px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${
                         s.status === "green"
                           ? "border-emerald-500/40 text-emerald-400"
                           : s.status === "amber"

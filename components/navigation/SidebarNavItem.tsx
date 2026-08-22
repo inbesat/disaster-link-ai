@@ -60,16 +60,13 @@ type SidebarNavItemProps = {
   href: string;
   /** Optional count pill (renders "99+" above 99, hidden at 0). */
   badgeCount?: number;
+  /** Optional badge color class (e.g. "bg-red-400/15 text-red-300"). */
+  badgeColor?: string;
   /** Explicit active state — auto-derived from `href` when omitted. */
   active?: boolean;
-  /** Optional sub-routes. When present, the row becomes an accordion
-   * parent: clicking toggles the nested menu instead of navigating.
-   * Named `subRoutes` (not `children`) so the react/no-children-prop
-   * lint rule doesn't fire — these are data, not React children.
-   */
+  /** Optional sub-routes. When present, the row becomes an accordion parent. */
   subRoutes?: SidebarSubRoute[];
-  /** Optional keyboard short-circuit hint, e.g. "⌘1". Rendered as a
-   * muted <kbd> on the right side of the label (expanded only). */
+  /** Optional keyboard short-circuit hint, e.g. "⌘1". */
   shortcut?: string;
   className?: string;
 };
@@ -91,6 +88,7 @@ export function SidebarNavItem({
   label,
   href,
   badgeCount,
+  badgeColor,
   active,
   subRoutes,
   shortcut,
@@ -180,7 +178,7 @@ export function SidebarNavItem({
       />
       {!collapsed && <span className="min-w-0 flex-1 truncate">{label}</span>}
       {!collapsed && badgeCount !== undefined && badgeCount > 0 && (
-        <span className="shrink-0 rounded-full bg-accent-primary/15 px-1.5 py-px text-[0.625rem] font-bold leading-4 text-accent-primary tabular-nums">
+        <span className={`shrink-0 rounded-full px-1.5 py-px text-[0.625rem] font-bold leading-4 tabular-nums ${badgeColor ?? "bg-blue-400/15 text-blue-300"}`}>
           {formatCount(badgeCount)}
         </span>
       )}
@@ -252,7 +250,7 @@ export function SidebarNavItem({
                   >
                     <span className="min-w-0 flex-1 truncate">{sub.label}</span>
                     {sub.badgeCount !== undefined && sub.badgeCount > 0 && (
-                      <span className="shrink-0 rounded-full bg-accent-primary/15 px-1.5 py-px text-[0.625rem] font-bold leading-4 text-accent-primary tabular-nums">
+                      <span className={`shrink-0 rounded-full px-1.5 py-px text-[0.625rem] font-bold leading-4 tabular-nums ${badgeColor ?? "bg-blue-400/15 text-blue-300"}`}>
                         {formatCount(sub.badgeCount)}
                       </span>
                     )}

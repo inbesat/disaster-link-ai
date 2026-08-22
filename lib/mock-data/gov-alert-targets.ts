@@ -18,14 +18,14 @@
 
 import { area as turfArea, polygon } from "@turf/turf";
 
-/** The three alert kinds the composer can raise. */
-export type GovAlertType = "flood_warning" | "evac_order" | "road_closure";
+/** The alert kinds the composer can raise. */
+export type GovAlertType = "flood_warning" | "evac_order" | "all_clear" | "road_closure" | "shelter_update";
+
+/** Delivery channels (multi-select). */
+export type GovAlertChannel = "push" | "sms" | "whatsapp" | "voice" | "fm_radio" | "social";
 
 /** Severity ladder — maps to the roadmap's watch/warning/critical. */
 export type GovAlertSeverity = "watch" | "warning" | "critical";
-
-/** Delivery channels (multi-select). */
-export type GovAlertChannel = "push" | "sms" | "whatsapp" | "voice";
 
 /** Target-area modes (the Step 2 mini-map selector). */
 export type AlertTargetMode = "entire" | "villages" | "polygon";
@@ -40,7 +40,9 @@ export type GovAlertTypeMeta = {
 export const GOV_ALERT_TYPES: GovAlertTypeMeta[] = [
   { value: "flood_warning", label: "Flood Warning", short: "Flood", emoji: "🌊" },
   { value: "evac_order", label: "Evacuation Order", short: "Evac", emoji: "🛟" },
+  { value: "all_clear", label: "All Clear", short: "Clear", emoji: "✅" },
   { value: "road_closure", label: "Road Closure", short: "Road", emoji: "🚧" },
+  { value: "shelter_update", label: "Shelter Update", short: "Shelter", emoji: "🏠" },
 ];
 
 export type GovSeverityMeta = {
@@ -85,6 +87,8 @@ export const GOV_ALERT_CHANNELS: GovChannelMeta[] = [
   { value: "sms", label: "SMS", hint: "All registered mobiles" },
   { value: "whatsapp", label: "WhatsApp", hint: "Business API broadcast" },
   { value: "voice", label: "Voice Call", hint: "Critical-only IVR blast" },
+  { value: "fm_radio", label: "FM Radio", hint: "All India Radio + private FM" },
+  { value: "social", label: "Social Media", hint: "Twitter/X, Facebook, Instagram" },
 ];
 
 /** Districts the gov command center manages (mirrors SituationHeader). */
@@ -156,8 +160,12 @@ export const GOV_ALERT_TEMPLATES: Record<GovAlertType, (district: string) => str
     `HEAVY RAIN WARNING — ${district} District\n\nHeavy rainfall in the catchment has pushed river levels above the danger mark. Low-lying areas along the river may experience waterlogging in the next 12–24 hours.\n\nAct now:\n- Move vehicles and livestock to higher ground\n- Keep documents, medicines and a torch ready\n- Follow instructions from local authorities`,
   evac_order: (district) =>
     `EVACUATION ORDER — ${district} District\n\nWater levels are rising. Evacuation is MANDATORY from the marked low-lying zones. Proceed immediately to the relief shelter assigned to your village.\n\n- Carry ID, medicines and phone chargers\n- Transport is available at assembly points\n- Do not return until authorities say it is safe`,
+  all_clear: (district) =>
+    `ALL CLEAR — ${district} District\n\nFlood waters are receding. It is now safe to return to your homes.\n\n- Avoid damaged buildings until inspected\n- Boil drinking water for 48 hours\n- Report broken power lines to authorities`,
   road_closure: (district) =>
     `ROAD CLOSURE NOTICE — ${district} District\n\nThe following roads are closed to traffic until further notice:\n- Bailey Road riverfront stretch\n- NH-31 slip road near the bridge\n- Service road between Danapur and Maner\n\nUse the marked diversion routes. Never attempt to cross flooded stretches on foot or in vehicles.`,
+  shelter_update: (district) =>
+    `SHELTER UPDATE — ${district} District\n\nRelief shelters are now open at the following locations:\n- Zilla School (Capacity: 620)\n- Community Hall (Capacity: 450)\n- NH-01 Staging Camp (Capacity: 200)\n\nBring ID proof, medicines, and essential items. Families will be kept together.`,
 };
 
 /**
@@ -169,6 +177,8 @@ const CHANNEL_REACH: Record<GovAlertChannel, number> = {
   sms: 0.8,
   whatsapp: 0.85,
   voice: 0.3,
+  fm_radio: 0.6,
+  social: 0.7,
 };
 
 /**

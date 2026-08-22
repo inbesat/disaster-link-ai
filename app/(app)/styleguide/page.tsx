@@ -202,7 +202,7 @@ function ColorSwatch({ token }: { token: ColorToken }) {
       <p className="mt-2 truncate font-mono text-xs font-semibold text-primary">
         {token.name}
       </p>
-      <p className="truncate font-mono text-[10px] text-muted">{token.variable}</p>
+      <p className="truncate font-mono text-eoc-tiny text-muted">{token.variable}</p>
       <p className="mt-0.5 truncate text-[11px] text-muted" title={resolved}>
         {resolved || "…"}
       </p>

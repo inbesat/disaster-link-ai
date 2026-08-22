@@ -75,10 +75,10 @@ export default function ThresholdCalibrationCard() {
             id="calibration-district"
             value={district ? district.id : ""}
             onChange={(e) => setDistrictId(e.target.value)}
-            className="rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm font-semibold text-slate-200 outline-none focus:border-red-400/60"
+            className="rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 text-sm font-semibold text-slate-200 outline-none focus:border-red-400/60"
           >
             {options.map((d) => (
-              <option key={d.id} value={d.id} className="bg-[#0a0f1d]">
+              <option key={d.id} value={d.id} className="bg-[#0a0f1a]">
                 {d.name}
               </option>
             ))}
@@ -113,7 +113,7 @@ export default function ThresholdCalibrationCard() {
           <BandMarker left={`${warningPct}%`} className="bg-amber-200 ring-amber-300" />
           <BandMarker left={`${criticalPct}%`} className="bg-white ring-white" />
         </div>
-        <div className="mt-1 flex justify-between text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+        <div className="mt-1 flex justify-between text-eoc-tiny font-semibold uppercase tracking-wider text-slate-500">
           <span>0 mm</span>
           <span className="text-amber-300/90">Warning ›</span>
           <span className="text-red-300/90">Critical ›</span>
@@ -167,7 +167,7 @@ export default function ThresholdCalibrationCard() {
           <h3 className="text-sm font-bold text-slate-200">
             River Danger Marks
           </h3>
-          <span className="rounded-full border border-panel-border bg-surface-muted/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <span className="rounded-full border border-panel-border bg-surface-muted/40 px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider text-slate-500">
             metres
           </span>
         </div>
@@ -323,7 +323,7 @@ function NumberField({
           step={step}
           value={value}
           onChange={(e) => onChange(e.target.valueAsNumber)}
-          className={`w-full rounded-md border bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-200 outline-none transition focus:border-red-400/60 ${
+          className={`w-full rounded-md border bg-[#0a0f1a] px-3 py-2 font-mono text-sm text-slate-200 outline-none transition focus:border-red-400/60 ${
             accent === "amber" ? "border-amber-400/50" : "border-red-400/50"
           }`}
         />

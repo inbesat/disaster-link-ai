@@ -65,7 +65,7 @@ export default function DecisionLog({ logs, speed = 6 }: Props) {
           agent-console · chain-of-reasoning
         </span>
         {done && (
-          <span className="ml-auto font-mono text-[10px] text-severity-green-400">
+          <span className="ml-auto font-mono text-eoc-tiny text-severity-green-400">
             idle
           </span>
         )}

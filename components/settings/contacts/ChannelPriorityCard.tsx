@@ -100,7 +100,7 @@ export default function ChannelPriorityCard() {
           <p className="eoc-label text-violet-300/80">FAILOVER ROUTING</p>
           <h2 className="mt-0.5 text-lg font-bold">Signal Failover Priority</h2>
         </div>
-        <span className="ml-auto rounded-full border border-violet-400/30 bg-violet-500/10 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-violet-200">
+        <span className="ml-auto rounded-full border border-violet-400/30 bg-violet-500/10 px-2.5 py-1 font-mono text-eoc-tiny font-bold tabular-nums text-violet-200">
           {channels.length} channels
         </span>
       </div>
@@ -170,7 +170,7 @@ export default function ChannelPriorityCard() {
                 className={`hidden shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider sm:inline-block ${
                   index === 0
                     ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-300"
-                    : "border-panel-borderHover bg-[#0a0f1d] text-slate-400"
+                    : "border-panel-borderHover bg-[#0a0f1a] text-slate-400"
                 }`}
               >
                 {index === 0 ? "Primary" : `Fallback ${index}`}

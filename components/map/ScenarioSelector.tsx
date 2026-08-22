@@ -30,7 +30,7 @@ export default function ScenarioSelector({ value, onChange }: ScenarioSelectorPr
             key={option.id}
             type="button"
             onClick={() => onChange(option.id)}
-            className={`rounded-md px-2.5 py-1.5 text-[11px] font-semibold transition ${
+            className={`rounded-md px-3 py-2 text-[11px] font-semibold transition active:scale-[0.97] ${
               value === option.id
                 ? "bg-accent text-slate-950"
                 : "text-slate-400 hover:text-foreground"

@@ -134,7 +134,7 @@ export default function NotificationCenter() {
       >
         <BellIcon />
         {unreadCount > 0 && (
-          <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-severity-red-600 px-1 text-[10px] font-bold text-white">
+          <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-severity-red-600 px-1 text-eoc-tiny font-bold text-white">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
@@ -179,7 +179,7 @@ export default function NotificationCenter() {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span
-                      className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${style.chip}`}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-eoc-tiny font-bold uppercase ${style.chip}`}
                     >
                       {alert.severity}
                     </span>
@@ -198,13 +198,13 @@ export default function NotificationCenter() {
                           <CheckmarkIcon />
                         </button>
                       )}
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-eoc-tiny text-slate-500">
                         {timeAgo(alert.createdAt)}
                       </span>
                     </div>
                   </div>
                   <p className="mt-2 text-sm text-foreground">{alert.message}</p>
-                  <p className="mt-1 text-[10px] uppercase tracking-wider text-slate-500">
+                  <p className="mt-1 text-eoc-tiny uppercase tracking-wider text-slate-500">
                     {alert.district ?? "Unknown district"} · {alert.channel}
                     {!alert.isAcknowledged && (
                       <span className="ml-2 text-severity-red-400">● unread</span>

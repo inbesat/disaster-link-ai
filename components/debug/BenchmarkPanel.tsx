@@ -206,7 +206,7 @@ export function BenchmarkPanel() {
             Performance Monitor
           </p>
           <div className="flex items-center gap-1">
-            <span className="flex items-center gap-1 text-[10px] text-slate-500">
+            <span className="flex items-center gap-1 text-eoc-tiny text-slate-500">
               <RefreshCw aria-hidden className={`h-3 w-3 ${running ? "animate-spin" : ""}`} />
               live
             </span>
@@ -278,7 +278,7 @@ export function BenchmarkPanel() {
               icon={<Radio className="h-3.5 w-3.5" />}
               accent={neon}
             >
-              <p className="text-[10px] text-slate-500">last full sync</p>
+              <p className="text-eoc-tiny text-slate-500">last full sync</p>
             </MetricCard>
 
             {/* Storage */}
@@ -292,7 +292,7 @@ export function BenchmarkPanel() {
             >
               <div className="flex items-center gap-2">
                 <Donut fraction={memo.storageFraction} color={memo.storageOk ? "#34d399" : "#fb923c"} />
-                <p className="text-[10px] text-slate-500">{Math.round(memo.storageFraction * 100)}% used</p>
+                <p className="text-eoc-tiny text-slate-500">{Math.round(memo.storageFraction * 100)}% used</p>
               </div>
             </MetricCard>
 

@@ -69,19 +69,19 @@ export default function AgentNode({ name, role, status }: AgentNodeProps) {
           }`}
         />
         {status === "done" && (
-          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-severity-green-500 text-[10px] font-black text-slate-950">
+          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-severity-green-500 text-eoc-tiny font-black text-slate-950">
             ✓
           </span>
         )}
         {status === "active" && (
-          <span className="eoc-label absolute -bottom-1 whitespace-nowrap text-[10px] text-slate-300">
+          <span className="eoc-label absolute -bottom-1 whitespace-nowrap text-eoc-tiny text-slate-300">
             ACTIVE
           </span>
         )}
       </div>
 
       <p className={`text-sm font-black tracking-wide ${theme.text}`}>{name}</p>
-      <p className="text-[10px] uppercase tracking-wider text-slate-500">{role}</p>
+      <p className="text-eoc-tiny uppercase tracking-wider text-slate-500">{role}</p>
     </div>
   );
 }

@@ -65,7 +65,7 @@ export default function UserManagementPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by name, org, or district…"
-            className="w-full rounded-md border border-border bg-surface-elevated py-2.5 pl-9 pr-3 text-sm text-foreground outline-none transition placeholder:text-slate-500 focus:border-amber-400/60"
+            className="w-full rounded-md border border-border bg-surface-elevated py-2.5 pl-9 pr-3 text-sm text-foreground outline-none transition placeholder:text-slate-500 focus:border-amber-400/60 focus:ring-2 focus:ring-amber-400/30"
           />
         </div>
 

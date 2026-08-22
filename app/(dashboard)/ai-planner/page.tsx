@@ -301,7 +301,7 @@ function OperationContextPanel({ tokensLeft }: { tokensLeft: number }) {
         >
           Intelligence Notes
           <span className="flex items-center gap-1">
-            <span className="rounded-full bg-slate-800 px-1.5 py-0.5 font-mono text-[10px] text-slate-400">
+            <span className="rounded-full bg-slate-800 px-1.5 py-0.5 font-mono text-eoc-tiny text-slate-400">
               {CONTEXT_HEADERS.length}
             </span>
             <svg
@@ -324,7 +324,7 @@ function OperationContextPanel({ tokensLeft }: { tokensLeft: number }) {
                 key={note}
                 className="flex items-start gap-2 rounded-lg border border-slate-800/70 bg-slate-900/50 px-3 py-2"
               >
-                <span className="mt-0.5 text-[10px] text-amber-400">⚠</span>
+                <span className="mt-0.5 text-eoc-tiny text-amber-400">⚠</span>
                 <span className="text-xs text-slate-300">{note}</span>
               </div>
             ))}
@@ -589,7 +589,7 @@ export default function AiPlannerPage() {
                   ? "Rate limit reached — please wait…"
                   : "Ask about flood zones, shelter capacity, or a 48-hour plan…"
               }
-              className="max-h-40 min-h-[48px] flex-1 resize-none rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-red-500/60 focus:outline-none focus:ring-2 focus:ring-red-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+              className="max-h-40 min-h-[48px] flex-1 resize-none rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-red-500/60 focus:ring-2 focus:ring-red-500/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             />
             <button
               type="submit"

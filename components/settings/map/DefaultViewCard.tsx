@@ -224,7 +224,7 @@ export default function DefaultViewCard() {
             <Navigation className="h-4 w-4 text-emerald-300" aria-hidden />
             Default Zoom Level
           </p>
-          <span className="rounded-md bg-[#0a0f1d] px-2 py-1 font-mono text-xs text-emerald-300">
+          <span className="rounded-md bg-[#0a0f1a] px-2 py-1 font-mono text-xs text-emerald-300">
             {view.zoom} · {zoomBand}
           </span>
         </div>
@@ -244,7 +244,7 @@ export default function DefaultViewCard() {
           }}
         />
 
-        <div className="mt-2 flex justify-between text-[10px] text-slate-600">
+        <div className="mt-2 flex justify-between text-eoc-tiny text-slate-600">
           <span>1 · Global</span>
           <button
             type="button"
@@ -298,7 +298,7 @@ export default function DefaultViewCard() {
               max={90}
               value={Number(view.center.lat.toFixed(4))}
               onChange={(e) => setLat(Number(e.target.value))}
-              className="mt-1 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+              className="mt-1 w-full rounded-md border border-panel-borderHover bg-[#0a0f1a] px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-emerald-400"
             />
           </div>
           <div>
@@ -316,7 +316,7 @@ export default function DefaultViewCard() {
               max={180}
               value={Number(view.center.lng.toFixed(4))}
               onChange={(e) => setLng(Number(e.target.value))}
-              className="mt-1 w-full rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-emerald-400"
+              className="mt-1 w-full rounded-md border border-panel-borderHover bg-[#0a0f1a] px-3 py-2 font-mono text-sm text-slate-100 outline-none transition focus:border-emerald-400"
             />
           </div>
         </div>

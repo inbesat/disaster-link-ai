@@ -22,7 +22,7 @@ export default function RoadClosureTool({
       type="button"
       onClick={onToggle}
       aria-pressed={active}
-      className={`flex items-center gap-1.5 rounded-md border px-3 py-2 text-left text-xs font-semibold transition ${
+      className={`flex items-center gap-1.5 rounded-md border px-3 py-2.5 text-left text-xs font-semibold transition active:scale-[0.97] ${
         active
           ? "border-severity-red-600 bg-severity-red-600 text-white shadow-glow-red"
           : "border-border bg-surface-elevated/95 text-foreground shadow-glow-accent backdrop-blur hover:border-severity-red-500"
@@ -34,7 +34,7 @@ export default function RoadClosureTool({
         <span>🚧 Mark Road Closed</span>
       )}
       {count > 0 && (
-        <span className="rounded-full bg-surface-muted px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-severity-red-400">
+        <span className="rounded-full bg-surface-muted px-1.5 py-0.5 text-eoc-tiny font-bold tabular-nums text-severity-red-400">
           {count}
         </span>
       )}

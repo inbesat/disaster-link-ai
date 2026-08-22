@@ -152,7 +152,7 @@ export default function ProfileVisibilityCard() {
 
               <p className="mt-3 text-sm font-bold">
                 {option.title}{" "}
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                <span className="text-eoc-tiny font-bold uppercase tracking-wider text-slate-500">
                   ({option.tagline})
                 </span>
               </p>

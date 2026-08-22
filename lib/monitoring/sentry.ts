@@ -121,6 +121,24 @@ interface SentryModule {
 }
 
 /**
+ * Dynamic Sentry loader. The specifier goes through a variable on purpose:
+ * a literal import("@sentry/nextjs") is statically resolved by Turbopack and
+ * spams "Module not found" warnings whenever the optional dependency isn't
+ * installed. With a runtime specifier the (already try/catch'd) import only
+ * fails at call time, silently.
+ */
+const SENTRY_SPECIFIER = "@sentry/nextjs";
+
+async function loadSentry(): Promise<SentryModule | null> {
+  try {
+    return (await import(SENTRY_SPECIFIER)) as unknown as SentryModule;
+  } catch {
+    // Optional dependency not installed — monitoring stays disabled.
+    return null;
+  }
+}
+
+/**
  * Initialize Sentry. Safe to call multiple times — only initializes once.
  * No-op when SENTRY_DSN is not configured or @sentry/nextjs not installed.
  */
@@ -130,6 +148,11 @@ export async function initSentry(): Promise<void> {
   if (!dsn) return;
 
   try {
+    const Sentry = await loadSentry();
+    if (!Sentry) {
+      console.warn("[sentry] SENTRY_DSN set but @sentry/nextjs is not installed — skipping init.");
+      return;
+    }
     // @ts-expect-error optional dependency
     const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
     Sentry.init({
@@ -168,6 +191,8 @@ export async function initSentry(): Promise<void> {
 export async function captureException(error: unknown, context?: ErrorTagContext): Promise<void> {
   if (!isSentryEnabled()) return;
   try {
+    const Sentry = await loadSentry();
+    if (!Sentry) return;
     // @ts-expect-error optional dependency
     const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
     const sanitizedExtra = sanitizeContext(context ?? {});
@@ -229,6 +254,8 @@ export async function captureAPIError(error: unknown, context?: { route?: string
  */
 export async function captureMessage(message: string, level: "info" | "warning" | "error" = "info"): Promise<void> {
   if (!isSentryEnabled()) return;
+  const Sentry = await loadSentry();
+  Sentry?.captureMessage(message, level);
   try {
     // @ts-expect-error optional dependency
     const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;
@@ -243,6 +270,8 @@ export async function captureMessage(message: string, level: "info" | "warning" 
  */
 export async function setUserContext(userId: string | null, role?: string, district?: string): Promise<void> {
   if (!isSentryEnabled()) return;
+  const Sentry = await loadSentry();
+  Sentry?.setUser(userId ? { id: userId, role, district } : null);
   try {
     // @ts-expect-error optional dependency
     const Sentry = (await import(/* webpackIgnore: true */ "@sentry/nextjs")) as unknown as SentryModule;

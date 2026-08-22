@@ -86,7 +86,7 @@ export default function LiveDemoQR() {
               </svg>
             </button>
 
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-emerald-300">
+            <p className="text-eoc-tiny font-bold uppercase tracking-[0.3em] text-emerald-300">
               Judges · Live Test
             </p>
             <h2 className="mt-2 bg-gradient-to-br from-white via-white to-emerald-200/80 bg-clip-text text-2xl font-bold leading-tight text-transparent">
@@ -113,7 +113,7 @@ export default function LiveDemoQR() {
               />
             </div>
 
-            <p className="mt-5 break-all font-mono text-[10px] text-white/35">{sandboxUrl}</p>
+            <p className="mt-5 break-all font-mono text-eoc-tiny text-white/35">{sandboxUrl}</p>
             <p className="mt-3 text-[11px] text-white/45">
               Forms are read-only in sandbox mode — every action returns a simulated success.
             </p>

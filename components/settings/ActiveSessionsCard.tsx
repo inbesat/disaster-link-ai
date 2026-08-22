@@ -172,7 +172,7 @@ export default function ActiveSessionsCard() {
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="truncate text-sm font-semibold">{session.device}</p>
                     <span
-                      className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${
                         session.isCurrent
                           ? "border border-severity-green-500/40 bg-severity-green-500/10 text-severity-green-400"
                           : "border border-panel-borderHover bg-[#1c2740] text-slate-400"

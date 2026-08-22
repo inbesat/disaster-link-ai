@@ -200,7 +200,7 @@ export default function BulkOperationsPage() {
                       rows={4}
                       maxLength={160}
                       placeholder="Type the broadcast message limited to 160 chars…"
-                      className="mt-2 w-full resize-none rounded-md border border-border bg-surface-elevated px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-slate-500 focus:border-amber-400/60"
+                      className="mt-2 w-full resize-none rounded-md border border-border bg-surface-elevated px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-slate-500 focus:border-amber-400/60 focus:ring-2 focus:ring-amber-400/30"
                     />
                     <p className="mt-1 text-right text-xs text-slate-500">
                       {message.length}/160

@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Skeleton } from "@/components/ui/SkeletonLoader";
 
 /**
  * Phase 22 · Step 1 (global skeletons) — Admin panel loading state.
@@ -13,7 +13,7 @@ export default function AdminLoading() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Desktop sidebar skeleton */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-border bg-surface lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[260px] flex-col border-r border-border bg-surface lg:flex">
         <div className="flex h-14 items-center gap-2.5 border-b border-border px-5">
           <Skeleton className="h-4 w-4 rounded-full" />
           <Skeleton className="h-3 w-24" />
@@ -32,7 +32,7 @@ export default function AdminLoading() {
       </aside>
 
       {/* Content area */}
-      <main className="lg:pl-64">
+      <main className="lg:pl-[260px]">
         <div className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6">
           {/* Page header */}
           <div className="space-y-2">

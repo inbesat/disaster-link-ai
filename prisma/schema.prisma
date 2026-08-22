@@ -65,6 +65,13 @@ model User {
   // stores the specific mobility/accessibility need (e.g. "Wheelchair user").
   isPwd             Boolean  @default(false) @map("is_pwd")
   pwdDetails        String?  @map("pwd_details")
+  // Stripe Billing — subscription lifecycle fields
+  stripeCustomerId  String?  @unique @map("stripe_customer_id")
+  stripeSubscriptionId String? @unique @map("stripe_subscription_id")
+  stripePriceId     String?  @map("stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map("stripe_current_period_end")
+  subscriptionStatus String   @default("free") @map("subscription_status") // free | active | past_due | canceled | trialing
+  cancelAtPeriodEnd Boolean  @default(false) @map("cancel_at_period_end")
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -73,6 +80,32 @@ model User {
   @@index([district]) // responder directory + district role scoping
   @@index([homeDistrict]) // citizen directory / district-scoped alerts
   @@map("users")
+}
+
+// ---------------------------------------------------------------------
+// access_requests — Gov portal approval gate.
+//
+// Every "Request access" submission from /gov/signup lands here AND in
+// the team inbox (safesphere095@gmail.com) with the ID document attached.
+// An admin approves/rejects from /access-requests; only emails with an
+// approved row (or listed in GOV_ACCESS_WHITELIST) can pass govLogin().
+// Re-submitting the same email updates the existing row back to pending
+// instead of piling up duplicates.
+// ---------------------------------------------------------------------
+model AccessRequest {
+  id            String    @id @default(uuid()) @db.Uuid
+  name          String
+  email         String    @unique
+  organization  String
+  requestedRole String    @default("field_responder") @map("requested_role")
+  idFileName    String?   @map("id_file_name")
+  message       String?
+  status        String    @default("pending") // pending | approved | rejected
+  decidedAt     DateTime? @map("decided_at") @db.Timestamptz
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([status, createdAt])
+  @@map("access_requests")
 }
 
 // ---------------------------------------------------------------------
@@ -834,4 +867,26 @@ model AuditLog {
   @@index([severity])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ---------------------------------------------------------------------
+// bug_reports (Phase 2) — user-submitted bug reports and feature requests.
+// ---------------------------------------------------------------------
+model BugReport {
+  id          String   @id @default(uuid()) @db.Uuid
+  type        String   // bug | feature | performance | accessibility | other
+  description String
+  email       String?  // optional contact email
+  url         String   // page where issue was reported
+  userAgent   String   // browser/device info
+  status      String   @default("open") // open | in_progress | resolved | closed
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  isDemo      Boolean  @default(false) @map("is_demo")
+  sessionId   String?  @map("session_id")
+
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+  @@map("bug_reports")
 }

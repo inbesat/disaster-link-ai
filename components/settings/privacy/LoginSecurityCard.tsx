@@ -83,10 +83,10 @@ export default function LoginSecurityCard({
                   { duration: 2500 },
                 );
               }}
-              className="rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm font-semibold text-slate-200 outline-none focus:border-emerald-400/60"
+              className="rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 text-sm font-semibold text-slate-200 outline-none focus:border-emerald-400/60"
             >
               {SESSION_TIMEOUTS.map((t) => (
-                <option key={t.value} value={t.value} className="bg-[#0a0f1d]">
+                <option key={t.value} value={t.value} className="bg-[#0a0f1a]">
                   {t.label}
                   {t.note ? ` — ${t.note}` : ""}
                 </option>
@@ -94,7 +94,7 @@ export default function LoginSecurityCard({
             </select>
 
             {sessionTimeout === "never" && (
-              <span className="rounded-full border border-red-400/50 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-300">
+              <span className="rounded-full border border-red-400/50 bg-red-500/10 px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider text-red-300">
                 Disables auto sign-out
               </span>
             )}

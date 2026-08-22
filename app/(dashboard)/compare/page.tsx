@@ -66,7 +66,7 @@ export default function ComparePage() {
             }`}
           >
             {d.criticalPriority && (
-              <span className="absolute -top-3 left-6 rounded-full border-2 border-severity-red-500 bg-background px-3 py-1 text-[10px] font-black uppercase tracking-widest text-severity-red-400">
+              <span className="absolute -top-3 left-6 rounded-full border-2 border-severity-red-500 bg-background px-3 py-1 text-eoc-tiny font-black uppercase tracking-widest text-severity-red-400">
                 🚨 Critical Priority
               </span>
             )}

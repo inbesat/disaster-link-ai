@@ -3,12 +3,9 @@
 // ---------------------------------------------------------------------
 // components/gov/dashboard/FloodChartWidget.tsx — Phase 7 · Step 3.
 //
-// 2×1 river-level widget: a 72-hour forecast Area Chart (Recharts) for
-// the selected district, with a dashed red "Critical Danger Mark"
-// reference line. Chart colours are hard-coded to the roadmap tokens
-// (--border-subtle #1e293b, muted text #94a3b8) because SVG presentation
-// attributes can't read CSS custom properties — same approach as
-// components/dashboard/FloodPredictionChart.tsx.
+// 2×1 river-level widget: 72-hour forecast Area Chart (Recharts) with
+// dashed red "Critical Danger Mark" reference line. Gradient fill,
+// interactive tooltip, threshold crossing highlighted in red.
 // ---------------------------------------------------------------------
 
 import {
@@ -26,36 +23,56 @@ import {
 const CRITICAL_LEVEL = 4.6;
 
 const GID = "gov-flood-fill";
+const GID_RED = "gov-flood-fill-red";
 
-type ForecastPoint = { time: string; level: number };
+type ForecastPoint = { time: string; level: number; isCritical: boolean };
 
-/** 72 hourly points: slow rise, diurnal ripple, late-run surge over the mark. */
+/** 73 hourly points: slow rise, diurnal ripple, late-run surge over the mark. */
 function buildForecast(): ForecastPoint[] {
   return Array.from({ length: 73 }, (_, h) => {
-    const base = 3.1 + (h / 72) * 1.4; // seasonal climb toward danger
-    const tide = Math.sin(h / 7) * 0.16; // gentle diurnal ripple
-    const surge = h > 58 ? (h - 58) * 0.028 : 0; // late-run rapid rise
+    const base = 3.1 + (h / 72) * 1.4;
+    const tide = Math.sin(h / 7) * 0.16;
+    const surge = h > 58 ? (h - 58) * 0.028 : 0;
+    const level = Math.round((base + tide + surge) * 100) / 100;
     return {
       time: `+${h}h`,
-      level: Math.round((base + tide + surge) * 100) / 100,
+      level,
+      isCritical: level >= CRITICAL_LEVEL,
     };
   });
 }
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (!active || !payload?.length) return null;
+  const level = Number(payload[0]?.value ?? 0);
+  const isCritical = level >= CRITICAL_LEVEL;
+  return (
+    <div className="rounded-lg border border-white/10 bg-slate-800 px-3 py-2 shadow-xl">
+      <p className="text-[0.625rem] font-semibold text-slate-400">{label}</p>
+      <p className={`text-sm font-bold ${isCritical ? "text-red-300" : "text-white"}`}>
+        {level.toFixed(2)} m
+      </p>
+      {isCritical && (
+        <p className="mt-0.5 text-[0.625rem] font-semibold text-red-400">⚠ Above critical</p>
+      )}
+    </div>
+  );
+};
 
 export function FloodChartWidget() {
   const data = buildForecast();
 
   return (
-    <section className="flex flex-col rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/[0.04] backdrop-blur transition hover:border-white/20">
+    <section className="flex flex-col rounded-xl border border-white/10 bg-[#111827] backdrop-blur transition hover:border-white/20">
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-5 py-4">
         <div className="flex items-center gap-2.5">
           <h2 className="eoc-label text-white">72-Hour River Level Forecast</h2>
-          <span className="rounded-full border border-severity-red-400/30 bg-severity-red-400/10 px-2 py-0.5 text-[0.625rem] font-semibold tracking-wide text-severity-red-300">
+          <span className="rounded-full border border-red-400/30 bg-red-400/10 px-2 py-0.5 text-[0.625rem] font-semibold tracking-wide text-red-300">
             GANGA · PATNA
           </span>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-severity-red-400/30 bg-severity-red-400/10 px-2.5 py-1 text-[0.6875rem] font-semibold text-severity-red-300">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-severity-red-400" aria-hidden />
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-red-400/30 bg-red-400/10 px-2.5 py-1 text-[0.6875rem] font-semibold text-red-300">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-red-400" aria-hidden />
           Critical mark&nbsp;·&nbsp;{CRITICAL_LEVEL} m
         </span>
       </header>
@@ -67,6 +84,10 @@ export function FloodChartWidget() {
               <linearGradient id={GID} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.45} />
                 <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.02} />
+              </linearGradient>
+              <linearGradient id={GID_RED} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ef4444" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#ef4444" stopOpacity={0.02} />
               </linearGradient>
             </defs>
 
@@ -89,17 +110,7 @@ export function FloodChartWidget() {
               tickFormatter={(v: number) => `${v.toFixed(1)} m`}
             />
 
-            <Tooltip
-              contentStyle={{
-                background: "#111827",
-                border: "1px solid #1e293b",
-                borderRadius: 8,
-                boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-              }}
-              labelStyle={{ color: "#94a3b8", fontSize: 11 }}
-              itemStyle={{ color: "#f1f5f9" }}
-              formatter={(value) => [`${Number(value ?? 0).toFixed(2)} m`, "River level"]}
-            />
+            <Tooltip content={<CustomTooltip />} />
 
             <ReferenceLine
               y={CRITICAL_LEVEL}
@@ -115,6 +126,7 @@ export function FloodChartWidget() {
               }}
             />
 
+            {/* Main blue area — below threshold */}
             <Area
               type="monotone"
               dataKey="level"

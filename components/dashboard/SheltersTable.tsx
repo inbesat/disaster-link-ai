@@ -241,7 +241,7 @@ export default function SheltersTable({
                       {facilities.map((key) => (
                         <span
                           key={key}
-                          className="rounded border border-border bg-surface-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-300"
+                          className="rounded border border-border bg-surface-muted px-1.5 py-0.5 text-eoc-tiny font-medium uppercase tracking-wider text-slate-300"
                         >
                           {FACILITY_LABELS[key]}
                         </span>

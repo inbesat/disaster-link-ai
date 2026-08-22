@@ -61,9 +61,9 @@ export function MapSearchBar({ className = "" }: { className?: string }) {
                 inputRef.current?.focus();
               }}
               aria-label="Clear search"
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:text-slate-100"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-400 transition hover:text-slate-100 active:scale-[0.97]"
             >
-              <X className="h-3.5 w-3.5" aria-hidden />
+              <X className="h-4 w-4" aria-hidden />
             </button>
           )}
           <span className="h-5 w-px bg-white/15" aria-hidden />

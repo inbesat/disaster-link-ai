@@ -99,7 +99,7 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-[#070b13] text-foreground">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-panel-border bg-panel lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[260px] flex-col border-r border-panel-border bg-panel lg:flex">
         <SidebarContent />
       </aside>
 
@@ -141,7 +141,7 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 flex w-72 flex-col border-r border-panel-border bg-panel">
+          <aside className="absolute inset-y-0 left-0 flex w-[260px] flex-col border-r border-panel-border bg-panel">
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -155,7 +155,7 @@ export default function AdminSidebar({ children }: { children: ReactNode }) {
         </div>
       )}
 
-      <main className="lg:pl-64">
+      <main className="lg:pl-[260px]">
         <div className="mx-auto max-w-6xl p-4 sm:p-6">{children}</div>
       </main>
     </div>

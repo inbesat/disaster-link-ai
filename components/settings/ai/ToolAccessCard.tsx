@@ -76,7 +76,7 @@ function WarningTooltip({ text }: { text: string }) {
       <TriangleAlert className="h-4 w-4 cursor-help text-red-400" aria-hidden />
       <span
         role="tooltip"
-        className="pointer-events-none absolute bottom-full right-0 z-20 mb-1.5 w-56 rounded-md border border-red-400/40 bg-[#170f0f] p-2 text-[10px] font-medium leading-snug text-red-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+        className="pointer-events-none absolute bottom-full right-0 z-20 mb-1.5 w-56 rounded-md border border-red-400/40 bg-[#170f0f] p-2 text-eoc-tiny font-medium leading-snug text-red-100 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
       >
         {text}
       </span>
@@ -108,7 +108,7 @@ export default function ToolAccessCard() {
           <p className="eoc-label text-amber-300/80">AGENTIC GUARDRAILS</p>
           <h2 className="mt-0.5 text-lg font-bold">AI Tool Access</h2>
         </div>
-        <span className="ml-auto rounded-full border border-amber-400/30 bg-amber-500/10 px-2.5 py-1 text-[10px] font-bold text-amber-200">
+        <span className="ml-auto rounded-full border border-amber-400/30 bg-amber-500/10 px-2.5 py-1 text-eoc-tiny font-bold text-amber-200">
           {grantedCount}/{TOOLS.length} tools
         </span>
       </div>
@@ -162,7 +162,7 @@ export default function ToolAccessCard() {
                     {description}
                   </p>
                   {highRisk && (
-                    <p className="mt-1 flex items-center gap-1.5 text-[10px] font-semibold text-red-300">
+                    <p className="mt-1 flex items-center gap-1.5 text-eoc-tiny font-semibold text-red-300">
                       <ShieldAlert className="h-3 w-3" aria-hidden />
                       High-risk privileged action
                     </p>
@@ -191,7 +191,7 @@ export default function ToolAccessCard() {
       </div>
 
       {/* Guardrail footnote */}
-      <div className="mt-4 flex items-start gap-2 rounded-md border border-panel-border bg-[#0a0f1d] p-3">
+      <div className="mt-4 flex items-start gap-2 rounded-md border border-panel-border bg-[#0a0f1a] p-3">
         <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" aria-hidden />
         <p className="text-[11px] leading-relaxed text-slate-500">
           The assistant never silently escalates. Any denied tool request is

@@ -81,7 +81,7 @@ export default function IntelligencePipeline() {
               </span>
               {node.highlight && (
                 <motion.span
-                  className="ml-auto text-[10px] font-bold uppercase tracking-wider text-[var(--blue-light)] flex-shrink-0"
+                  className="ml-auto text-eoc-tiny font-bold uppercase tracking-wider text-[var(--blue-light)] flex-shrink-0"
                   animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >

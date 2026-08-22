@@ -180,7 +180,7 @@ export function ShortcutModal() {
               {/* Shortcut grid — grouped Navigate / Global, kbd chips per key */}
               <div className="mt-4 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  <p className="text-eoc-tiny font-bold uppercase tracking-wider text-muted">
                     Navigate
                   </p>
                   <div className="mt-1 space-y-0.5">
@@ -190,7 +190,7 @@ export function ShortcutModal() {
                   </div>
                 </div>
                 <div className="mt-4 sm:mt-0">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  <p className="text-eoc-tiny font-bold uppercase tracking-wider text-muted">
                     Global
                   </p>
                   <div className="mt-1 space-y-0.5">
@@ -226,7 +226,7 @@ function ShortcutRowView({ row }: { row: ShortcutRow }) {
         {row.keys.map((combo, ci) => (
           <span key={ci} className="flex items-center">
             {ci > 0 && (
-              <span className="px-1 text-[10px] font-semibold text-muted" aria-hidden>
+              <span className="px-1 text-eoc-tiny font-semibold text-muted" aria-hidden>
                 or
               </span>
             )}
@@ -234,7 +234,7 @@ function ShortcutRowView({ row }: { row: ShortcutRow }) {
               <span key={ki} className="flex items-center">
                 {ki > 0 && (
                   <span
-                    className="px-0.5 text-[10px] font-semibold text-muted"
+                    className="px-0.5 text-eoc-tiny font-semibold text-muted"
                     aria-hidden
                   >
                     +

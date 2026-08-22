@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 import typography from "@tailwindcss/typography";
 import animate from "tailwindcss-animate";
 import daisyui from "daisyui";
-import { colors, shadows } from "./styles/tokens";
+import { colors, shadows, chartPalette, fontFamilies } from "./styles/tokens";
 
 const config: Config = {
   // ThemeProvider (next-themes) toggles the `dark` class on <html>.
@@ -146,24 +146,23 @@ const config: Config = {
           elevated: "rgb(var(--surface-elevated-rgb) / <alpha-value>)",
           muted: "rgb(var(--surface-muted-rgb) / <alpha-value>)",
         },
+        /* Chart palette — shared data-viz colors (styles/tokens.ts → chartPalette) */
+        chart: {
+          blue: chartPalette.blue.base,
+          orange: chartPalette.orange.base,
+          green: chartPalette.green.base,
+          red: chartPalette.red.base,
+          purple: chartPalette.purple.base,
+          amber: chartPalette.amber.base,
+          cyan: chartPalette.cyan.base,
+          pink: chartPalette.pink.base,
+          slate: chartPalette.slate.base,
+        },
       },
       fontFamily: {
-        sans: [
-          "var(--font-sans)",
-          "Inter",
-          "ui-sans-serif",
-          "system-ui",
-          "-apple-system",
-          "sans-serif",
-        ],
-        mono: [
-          "var(--font-mono)",
-          "JetBrains Mono",
-          "ui-monospace",
-          "SFMono-Regular",
-          "Menlo",
-          "monospace",
-        ],
+        sans: [...fontFamilies.sans],
+        mono: [...fontFamilies.mono],
+        display: [...fontFamilies.display],
       },
       borderRadius: {
         /* Roadmap radius scale — overrides Tailwind defaults.

@@ -89,7 +89,7 @@ export default function ECCGrid() {
             <div className="flex items-center justify-between mb-3">
               <span className="text-2xl">{card.emoji}</span>
               <span
-                className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                className={`text-eoc-tiny font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
                   card.badge === "warn"
                     ? "bg-amber-500/15 text-amber-400"
                     : "bg-emerald-500/15 text-emerald-400"

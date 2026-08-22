@@ -119,7 +119,7 @@ export default function ResponseStyleCard() {
                 <p className={`text-xs font-semibold ${active ? "text-fuchsia-200" : "text-slate-300"}`}>
                   {snap.label}
                 </p>
-                <p className="mt-0.5 text-[10px] text-slate-500">{snap.sub}</p>
+                <p className="mt-0.5 text-eoc-tiny text-slate-500">{snap.sub}</p>
               </button>
             );
           })}
@@ -155,7 +155,7 @@ export default function ResponseStyleCard() {
                 <p className={`text-xs font-semibold ${active ? "text-fuchsia-200" : "text-slate-300"}`}>
                   {option.label}
                 </p>
-                <p className="mt-0.5 text-[10px] text-slate-500">{option.pill}</p>
+                <p className="mt-0.5 text-eoc-tiny text-slate-500">{option.pill}</p>
               </button>
             );
           })}
@@ -170,12 +170,12 @@ export default function ResponseStyleCard() {
         </p>
         <div
           data-testid="ai-preview"
-          className={`mt-2 rounded-lg border border-panel-border bg-[#0a0f1d] p-4 ${
+          className={`mt-2 rounded-lg border border-panel-border bg-[#0a0f1a] p-4 ${
             personality === "urgent" ? "border-red-400/30" : ""
           }`}
         >
           <div className="flex items-center gap-2 rounded-t-md border-b border-panel-border pb-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-fuchsia-500/15 text-[10px] font-bold text-fuchsia-300">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-fuchsia-500/15 text-eoc-tiny font-bold text-fuchsia-300">
               AI
             </span>
             <p className="text-[11px] font-semibold text-slate-400">

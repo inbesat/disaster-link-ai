@@ -103,7 +103,7 @@ export default function DigestModeCard({
                 type="time"
                 value={digestTime}
                 onChange={(e) => onTimeChange(e.target.value)}
-                className="w-40 rounded-md border border-panel-borderHover bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400 [color-scheme:dark]"
+                className="w-40 rounded-md border border-panel-borderHover bg-[#0a0f1a] px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-sky-400 [color-scheme:dark]"
                 aria-label="Daily digest delivery time"
               />
               <span className="inline-flex items-center gap-1.5 rounded-md border border-sky-400/30 bg-sky-500/10 px-2.5 py-1.5 text-xs font-semibold text-sky-300">

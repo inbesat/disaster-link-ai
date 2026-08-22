@@ -60,7 +60,7 @@ export default function AutoShareLocationCard() {
           <h2 className="mt-0.5 text-lg font-bold">Live GPS Injection</h2>
         </div>
         <span
-          className={`ml-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
+          className={`ml-auto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wider ${
             injectEnabled
               ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-300"
               : "border-panel-borderHover bg-surface-muted/40 text-slate-500"
@@ -98,7 +98,7 @@ export default function AutoShareLocationCard() {
       <div className="mt-3">
         {injectEnabled ? (
           <div className="rounded-md border border-emerald-400/30 bg-emerald-500/[0.06] p-3 font-mono text-[11px] leading-relaxed">
-            <p className="text-[10px] uppercase tracking-widest text-emerald-300/70">
+            <p className="text-eoc-tiny uppercase tracking-widest text-emerald-300/70">
               Preview · appended to every SOS message
             </p>
             <p className="mt-1.5 text-emerald-200">{LOCATION_PREVIEW}</p>

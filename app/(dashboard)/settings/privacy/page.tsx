@@ -233,7 +233,7 @@ export default function PrivacySecurityPage() {
                   )),
                 )}
               </div>
-              <p className="mt-2 flex items-center justify-center gap-1 font-mono text-[10px] text-slate-600">
+              <p className="mt-2 flex items-center justify-center gap-1 font-mono text-eoc-tiny text-slate-600">
                 <QrCode className="h-3 w-3" aria-hidden /> drip:totf:aarav
               </p>
             </div>
@@ -255,7 +255,7 @@ export default function PrivacySecurityPage() {
                     onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
                     placeholder="000 000"
                     aria-label="Authenticator code"
-                    className="w-full bg-transparent font-mono text-sm tracking-[0.3em] text-slate-100 outline-none placeholder:text-slate-500"
+                    className="w-full bg-transparent font-mono text-sm tracking-[0.3em] text-slate-100 outline-none focus:ring-2 focus:ring-accent/30 placeholder:text-slate-500"
                   />
                 </div>
                 <button
@@ -331,7 +331,7 @@ export default function PrivacySecurityPage() {
                           {sess.device}
                         </span>
                         {sess.isCurrent && (
-                          <span className="rounded bg-accent/20 px-1.5 py-0.5 text-[10px] font-bold text-accent">
+                          <span className="rounded bg-accent/20 px-1.5 py-0.5 text-eoc-tiny font-bold text-accent">
                             Current
                           </span>
                         )}
@@ -368,7 +368,7 @@ export default function PrivacySecurityPage() {
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full min-w-[520px] border-collapse text-xs">
               <thead className="bg-[var(--bg-tertiary)]">
-                <tr className="text-left text-[10px] uppercase tracking-wider text-muted">
+                <tr className="text-left text-eoc-tiny uppercase tracking-wider text-muted">
                   <th className="border-b border-subtle px-4 py-3 font-semibold">
                     Timestamp
                   </th>

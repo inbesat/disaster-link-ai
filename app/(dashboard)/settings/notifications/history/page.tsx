@@ -173,7 +173,7 @@ export default function NotificationHistoryPage() {
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className={`inline-flex items-center rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${SEVERITY_STYLES[notification.severity]}`}
+                    className={`inline-flex items-center rounded border px-1.5 py-0.5 text-eoc-tiny font-semibold uppercase tracking-wider ${SEVERITY_STYLES[notification.severity]}`}
                   >
                     {notification.severity}
                   </span>
@@ -207,7 +207,7 @@ export default function NotificationHistoryPage() {
                   return (
                     <span
                       key={ch}
-                      className="flex items-center gap-1 rounded bg-tertiary px-1.5 py-0.5 text-[10px] text-slate-300"
+                      className="flex items-center gap-1 rounded bg-tertiary px-1.5 py-0.5 text-eoc-tiny text-slate-300"
                     >
                       <Icon className="h-3 w-3" />
                       {ch.replace("_", " ")}

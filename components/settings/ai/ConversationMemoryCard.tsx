@@ -103,7 +103,7 @@ export default function ConversationMemoryCard() {
             id="ai-retention"
             value={memory.retention}
             onChange={(event) => setRetention(event.target.value as ContextRetention)}
-            className="w-full appearance-none rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-sky-400/60"
+            className="w-full appearance-none rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-sky-400/60"
           >
             {RETENTION_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -236,7 +236,7 @@ export default function ConversationMemoryCard() {
               disabled={wiping}
               onChange={(event) => setTyped(event.target.value.toUpperCase())}
               placeholder="CLEAR"
-              className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 font-mono text-sm tracking-widest text-slate-200 outline-none transition focus:border-red-400/60"
+              className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2.5 font-mono text-sm tracking-widest text-slate-200 outline-none transition focus:border-red-400/60"
             />
 
             <div className="mt-5 flex items-center justify-end gap-3">
@@ -244,7 +244,7 @@ export default function ConversationMemoryCard() {
                 type="button"
                 onClick={closeModal}
                 disabled={wiping}
-                className="rounded-md border border-panel-borderHover bg-[#0a0f1d] px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-slate-400"
+                className="rounded-md border border-panel-borderHover bg-[#0a0f1a] px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-slate-400"
               >
                 Cancel
               </button>

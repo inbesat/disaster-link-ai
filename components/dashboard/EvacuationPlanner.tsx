@@ -247,19 +247,19 @@ export default function EvacuationPlanner({
             <div className="mt-1.5 flex items-center justify-around text-center">
               <div>
                 <p className="text-lg font-bold tabular-nums">{status.busesNeeded}</p>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400">
+                <p className="text-eoc-tiny uppercase tracking-wider text-slate-400">
                   Buses
                 </p>
               </div>
               <div>
                 <p className="text-lg font-bold tabular-nums">{status.boatsNeeded}</p>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400">
+                <p className="text-eoc-tiny uppercase tracking-wider text-slate-400">
                   NDRF Boats
                 </p>
               </div>
               <div>
                 <p className="text-lg font-bold tabular-nums">{status.totalHours}</p>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400">
+                <p className="text-eoc-tiny uppercase tracking-wider text-slate-400">
                   Est. Time (h)
                 </p>
               </div>

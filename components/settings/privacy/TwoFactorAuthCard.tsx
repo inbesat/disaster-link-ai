@@ -108,7 +108,7 @@ export default function TwoFactorAuthCard() {
                 {/* Mock QR code */}
                 <div className="flex flex-col items-center gap-2">
                   <MockQr seed={MOCK_SETUP_KEY} />
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                  <p className="text-eoc-tiny font-semibold uppercase tracking-wider text-slate-500">
                     Scan with authenticator
                   </p>
                 </div>
@@ -118,7 +118,7 @@ export default function TwoFactorAuthCard() {
                   <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
                     Manual setup key
                   </p>
-                  <div className="mt-2 flex items-center justify-between gap-2 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5">
+                  <div className="mt-2 flex items-center justify-between gap-2 rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2.5">
                     <code className="font-mono text-sm font-bold tracking-widest text-emerald-200">
                       {MOCK_SETUP_KEY}
                     </code>
@@ -128,7 +128,7 @@ export default function TwoFactorAuthCard() {
                         void navigator.clipboard.writeText(MOCK_SETUP_KEY);
                         toast("Setup key copied to clipboard.");
                       }}
-                      className="rounded-md border border-panel-border px-2 py-1 text-[10px] font-bold text-slate-400 transition hover:border-emerald-400/50 hover:text-emerald-200"
+                      className="rounded-md border border-panel-border px-2 py-1 text-eoc-tiny font-bold text-slate-400 transition hover:border-emerald-400/50 hover:text-emerald-200"
                     >
                       Copy
                     </button>
@@ -157,7 +157,7 @@ export default function TwoFactorAuthCard() {
                     }
                     inputMode="numeric"
                     placeholder="000 000"
-                    className="w-40 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-center font-mono text-lg font-bold tracking-[0.4em] text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
+                    className="w-40 rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 text-center font-mono text-lg font-bold tracking-[0.4em] text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
                   />
                   <button
                     type="button"
@@ -223,7 +223,7 @@ export default function TwoFactorAuthCard() {
             <p className="mt-1 text-xs leading-relaxed text-slate-400">
               Every login now asks for an authenticator code alongside your
               password. Recovery codes were saved as{" "}
-              <code className="rounded bg-surface-muted px-1 font-mono text-[10px] text-emerald-300">
+              <code className="rounded bg-surface-muted px-1 font-mono text-eoc-tiny text-emerald-300">
                 drip-2fa-recovery-codes.txt
               </code>
             </p>
@@ -237,7 +237,7 @@ export default function TwoFactorAuthCard() {
 function StatusBadge({ enabled }: { enabled: boolean }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-eoc-tiny font-bold uppercase tracking-widest ${
         enabled
           ? "border-emerald-400/60 bg-emerald-500/10 text-emerald-300"
           : "border-slate-500/40 bg-slate-600/10 text-slate-400"
@@ -292,7 +292,7 @@ function MockQr({ seed }: { seed: string }) {
         {cells.map((filled, index) => (
           <span
             key={index}
-            className={filled ? "bg-[#0a0f1d]" : "bg-white"}
+            className={filled ? "bg-[#0a0f1a]" : "bg-white"}
             style={{ aspectRatio: "1 / 1" }}
           />
         ))}

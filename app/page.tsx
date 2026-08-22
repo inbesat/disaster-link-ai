@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Navbar from "@/components/landing/layout/Navbar";
 import Footer from "@/components/landing/layout/Footer";
 import Hero from "./sections/Hero";
-import Problem from "./sections/Problem";
-import Solution from "./sections/Solution";
-import Features from "@/app/(public)/landing/sections/Features";
+import StatsBar from "./sections/StatsBar";
+import FeatureCards from "./sections/FeatureCards";
+import DualModePreview from "./sections/DualModePreview";
 import Channels from "@/app/(public)/landing/sections/Channels";
 import CommandCenter from "@/app/(public)/landing/sections/CommandCenter";
 import HowItWorks from "@/app/(public)/landing/sections/HowItWorks";
@@ -30,10 +30,12 @@ export default function HomePage() {
     >
       <Navbar />
       <Hero />
+      <StatsBar />
       <section id="platform">
-        <Problem />
-        <Solution />
-        <Features />
+        <FeatureCards />
+      </section>
+      <section id="dual-mode">
+        <DualModePreview />
       </section>
       <section id="communication">
         <Channels />

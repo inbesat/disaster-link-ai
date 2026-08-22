@@ -41,9 +41,9 @@ const VARIANTS = {
 } as const;
 
 const SIZES = {
-  sm: "h-8 w-8", // 32px
-  md: "h-10 w-10", // 40px
-  lg: "h-12 w-12", // 48px
+  sm: "h-10 w-10", // 40px — minimum touch target
+  md: "h-12 w-12", // 48px — WCAG minimum
+  lg: "h-14 w-14", // 56px — preferred for primary actions
 } as const;
 
 export type IconButtonVariant = keyof typeof VARIANTS;

@@ -89,9 +89,9 @@ function SegmentedButton({
       >
         {label}
       </p>
-      {hint && <p className="mt-0.5 text-[10px] text-slate-500">{hint}</p>}
+      {hint && <p className="mt-0.5 text-eoc-tiny text-slate-500">{hint}</p>}
       {note && (
-        <p className="mt-0.5 text-[10px] font-medium text-slate-500">{note}</p>
+        <p className="mt-0.5 text-eoc-tiny font-medium text-slate-500">{note}</p>
       )}
     </button>
   );

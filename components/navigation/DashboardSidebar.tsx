@@ -3,26 +3,16 @@
 // UI/UX Phase 2 · Step 3 — the full composed sidebar nav.
 //
 // Config-driven: maps over lib/config/navigation.ts (NAVIGATION_ROUTES),
-// filters it by the active user's role (defaults to a mock 'district_admin'
-// per the spec — the server layout can pass the real role later via the
-// `userRole` prop with zero component changes), groups the survivors by
-// section, and renders SidebarSection + SidebarNavItem for each.
+// filters it by the active user's role, groups the survivors by section,
+// and renders SidebarSection + SidebarNavItem for each.
 //
-// Only the routes the role may see render — e.g. a field responder never
-// sees Shelters/Resources/Satellite, and Settings is super_admin-only.
-//
-// Like <Sidebar>, this is both controlled (`collapsed` + `onToggle`, used
-// by the dashboard shell so the content margin animates with it) and
-// uncontrolled (omit both — used by the styleguide demo). `variant` lets
-// the styleguide preview it in-flow as `inline`.
-//
-// The Active Alerts pill receives the unacknowledged AlertLog count from
-// the server layout (computed once per request, with a mock fallback when
-// the DB isn't reachable).
+// Phase 9 updates: user profile in header, badge colors from config,
+// keyboard shortcut hints, fade transitions on role change.
 // ---------------------------------------------------------------------
 
 "use client";
 
+import { useMemo } from "react";
 import type { Role } from "@/lib/validations/user";
 import {
   NAV_SECTION_LABELS,
@@ -38,48 +28,45 @@ import SidebarSection from "./SidebarSection";
 import SidebarNavItem from "./SidebarNavItem";
 import { useSidebar } from "./sidebar-context";
 
-// Top-level navigation hotkeys (Phase 2 · Step 9) — `mod` = Cmd on macOS,
-// Ctrl on Windows/Linux. Display strings use the ⌘ glyph for brevity.
+// Global keyboard shortcuts (Prompt 9.6)
 const NAV_SHORTCUTS: Record<string, string> = {
-  "mod+1": "/command-center",
-  "mod+2": "/alerts",
-  "mod+3": "/evacuations",
-  "mod+4": "/inventory",
-  "mod+5": "/ai-planner",
-  "mod+6": "/directory",
+  "mod+1": "/gov/dashboard",
+  "mod+2": "/command-center",
+  "mod+3": "/alerts",
+  "mod+k": "__search__",
+  "mod+/": "/ai-planner",
+  "mod+.": "__toggle_sidebar__",
 };
 
 const NAV_SHORTCUT_LABELS: Record<string, string> = {
-  "/command-center": "⌘1",
-  "/alerts": "⌘2",
-  "/evacuations": "⌘3",
-  "/inventory": "⌘4",
-  "/ai-planner": "⌘5",
-  "/directory": "⌘6",
+  "/gov/dashboard": "⌘1",
+  "/command-center": "⌘2",
+  "/alerts": "⌘3",
+  "/ai-planner": "⌘/",
 };
 
 type DashboardSidebarProps = {
-  /** Unacknowledged AlertLog count — renders the Active Alerts pill. */
   alertsBadgeCount?: number;
-  /** Active user role — filters which nav routes render (mock default). */
   userRole?: Role;
-  /** Guest (demo) mode — sign-out becomes "Exit Demo" (clearGuestMode). */
   guest?: boolean;
-  /** Controlled collapsed state — omit for internal state. */
   collapsed?: boolean;
-  /** Callback when the toggle is pressed (controlled mode). */
   onToggle?: () => void;
-  /** Mobile drawer open state — slides the fixed sidebar in over content. */
   isOpenMobile?: boolean;
-  /** Close the mobile drawer (backdrop click / Escape). */
   onCloseMobile?: () => void;
-  /** fixed: pins to the viewport (dashboard) · inline: in-flow (styleguide). */
   variant?: SidebarVariant;
+  displayName?: string;
+  avatarUrl?: string | null;
   className?: string;
 };
 
-// Spec mock — the server layout overrides this with the real role later.
 const MOCK_ROLE: Role = "district_admin";
+
+const ROLE_LABELS: Record<Role, string> = {
+  super_admin: "Super Admin",
+  district_admin: "District Commander",
+  field_responder: "Field Responder",
+  viewer: "Viewer",
+};
 
 export function DashboardSidebar({
   alertsBadgeCount,
@@ -90,16 +77,23 @@ export function DashboardSidebar({
   isOpenMobile,
   onCloseMobile,
   variant = "fixed",
+  displayName = "District Control Room",
+  avatarUrl,
   className = "",
 }: DashboardSidebarProps) {
   const visibleRoutes = filterRoutesByRole(NAVIGATION_ROUTES, userRole);
 
-  // Global keyboard shortcuts — navigate regardless of collapse state.
+  // Global keyboard shortcuts
   useHotkeys(NAV_SHORTCUTS);
 
-  // Dedupe shortcut hints — two routes point at /command-center, so only
-  // the first item per href gets the ⌘ badge.
-  const shortcutAssigned = new Set<string>();
+  // Dedupe shortcut hints
+  const shortcutAssigned = useMemo(() => {
+    const assigned = new Set<string>();
+    for (const href of Object.values(NAV_SHORTCUT_LABELS)) {
+      assigned.add(href);
+    }
+    return assigned;
+  }, []);
 
   return (
     <Sidebar
@@ -110,62 +104,72 @@ export function DashboardSidebar({
       variant={variant}
       className={className}
       footer={<SignOutButton guest={guest} />}
+      headerProps={{
+        displayName,
+        roleLabel: ROLE_LABELS[userRole],
+        districtStatus: "critical",
+        avatarUrl,
+      }}
     >
-      {NAV_SECTIONS.map((section) => {
-        const sectionRoutes = visibleRoutes.filter((route) => route.section === section);
-        // Skip empty sections so a filtered-out group leaves no stray divider.
-        if (sectionRoutes.length === 0) return null;
+      {/* Fade transition wrapper for role-based nav changes */}
+      <div className="animate-in fade-in duration-200">
+        {NAV_SECTIONS.map((section) => {
+          const sectionRoutes = visibleRoutes.filter(
+            (route) => route.section === section,
+          );
+          if (sectionRoutes.length === 0) return null;
 
-        return (
-          <SidebarSection key={section} label={NAV_SECTION_LABELS[section]}>
-            {sectionRoutes.map((route) => {
-              const shortcut = shortcutAssigned.has(route.href)
-                ? undefined
-                : NAV_SHORTCUT_LABELS[route.href];
-              if (shortcut) shortcutAssigned.add(route.href);
-              return (
-                <SidebarNavItem
-                  key={route.label}
-                  icon={route.icon}
-                  label={route.label}
-                  href={route.href}
-                  badgeCount={route.href === "/alerts" ? alertsBadgeCount : undefined}
-                  shortcut={shortcut}
-                  subRoutes={route.subRoutes}
-                />
-              );
-            })}
-          </SidebarSection>
-        );
-      })}
+          return (
+            <SidebarSection key={section} label={NAV_SECTION_LABELS[section]}>
+              {sectionRoutes.map((route) => {
+                const shortcut = shortcutAssigned.has(route.href)
+                  ? undefined
+                  : NAV_SHORTCUT_LABELS[route.href];
+                if (shortcut) shortcutAssigned.add(route.href);
+
+                // Use config badgeCount/badgeColor, or override for alerts
+                const badge =
+                  route.href === "/alerts" && alertsBadgeCount
+                    ? { count: alertsBadgeCount, color: "bg-red-400/15 text-red-300" }
+                    : route.badgeCount
+                      ? { count: route.badgeCount, color: route.badgeColor }
+                      : undefined;
+
+                return (
+                  <SidebarNavItem
+                    key={route.label}
+                    icon={route.icon}
+                    label={route.label}
+                    href={route.href}
+                    badgeCount={badge?.count}
+                    badgeColor={badge?.color}
+                    shortcut={shortcut}
+                    subRoutes={route.subRoutes}
+                  />
+                );
+              })}
+            </SidebarSection>
+          );
+        })}
+      </div>
     </Sidebar>
   );
 }
 
 export default DashboardSidebar;
 
-// ---------------------------------------------------------------------
-// Sign Out — pinned at the absolute bottom of the sidebar (via Sidebar's
-// `footer` slot). Officials log out through the server action, which ends
-// the Supabase session AND clears the demo role/guest cookies before
-// redirecting to /login. Guests get "Exit Demo" (clearGuestMode) so the
-// read-only demo ride can't leave a stale session behind.
-//
-// Mirrors SidebarNavItem's row styling: collapses to an icon-only button on
-// the 64px rail (native `title` tooltip doubles for the label there).
-// ---------------------------------------------------------------------
 function SignOutButton({ guest }: { guest: boolean }) {
   const { collapsed } = useSidebar();
   const label = guest ? "Exit Demo" : "Sign Out";
 
   return (
-    <div className="border-t border-subtle p-2">
+    <div className="border-t border-white/5 p-2">
       <form action={guest ? clearGuestMode : signOutAction}>
         <button
           type="submit"
           aria-label={collapsed ? label : undefined}
           title={collapsed ? label : undefined}
-          className={`flex h-11 w-full items-center gap-3 rounded-md border-l-2 border-transparent px-3 text-sm text-muted transition-colors duration-150 motion-reduce:transition-none hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] ${
+          className={`flex h-11 w-full items-center gap-3 rounded-md border-l-2 border-transparent px-3 text-sm text-slate-400 transition-colors duration-150 motion-reduce:transition-none hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400 ${
             collapsed ? "justify-center px-0" : ""
           }`}
         >

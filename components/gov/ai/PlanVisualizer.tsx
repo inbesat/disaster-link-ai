@@ -300,12 +300,12 @@ export function PlanVisualizer() {
   };
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-white/10 bg-secondary">
+    <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-white/10 bg-[#111827]">
       {/* Operation-order document header */}
-      <div className="border-b border-white/10 bg-panel-deep px-4 py-3">
+      <div className="border-b border-white/10 bg-[#0a0f1a]/80 px-4 py-3 backdrop-blur-md">
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
           <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-md border border-accent-purple/40 bg-accent-purple/10 text-accent-purple">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-purple-400/40 bg-purple-400/10 text-purple-400">
               <FileText className="h-3.5 w-3.5" aria-hidden />
             </span>
             <h2 className="text-sm font-black uppercase tracking-[0.22em] text-white">
@@ -313,18 +313,15 @@ export function PlanVisualizer() {
             </h2>
           </div>
           <div className="flex items-center gap-2">
-            <span className="eoc-label text-accent-purple">
+            <span className="text-[0.625rem] font-bold uppercase tracking-wider text-purple-400">
               OP-ALERT PNP-6-B1 · Punpun Sector
             </span>
             <PlanHistory />
           </div>
         </div>
         {executing ? (
-          <p className="mt-1.5 flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-accent-success">
-            <span
-              className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-success"
-              aria-hidden
-            />
+          <p className="mt-1.5 flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-emerald-400">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" aria-hidden />
             Execution mode · Live · v2.0 approved
           </p>
         ) : (

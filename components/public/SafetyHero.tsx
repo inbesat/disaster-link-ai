@@ -26,6 +26,7 @@ import type { LucideIcon } from "lucide-react";
 import { Eye, ShieldCheck, Siren, TriangleAlert } from "lucide-react";
 import { useTranslation, type TranslationKey } from "@/lib/i18n/LanguageContext";
 import type { SafetyStatus } from "@/lib/mock-data/hazard-zones";
+import { severityConfig } from "@/styles/tokens";
 
 // Re-exported for convenience — the union lives in the data layer so
 // hooks/mock data and the card all share one source of truth.
@@ -67,43 +68,43 @@ const STATUS_THEMES: Record<SafetyStatus, StatusTheme> = {
     headlineKey: "safety_status_safe",
     sublineKey: "safety_status_safe_sub",
     icon: ShieldCheck,
-    gradientClass: "bg-gradient-to-br from-emerald-500/20 via-teal-900/40 to-[#0a0f1a]",
-    glowShadow: "shadow-emerald-500/10",
-    headlineGradient: "bg-gradient-to-r from-emerald-300 to-teal-200 bg-clip-text text-transparent",
-    tileClass: "bg-white/10 text-severity-green-300 ring-1 ring-white/15",
-    labelClass: "text-severity-green-300/80",
+    gradientClass: "bg-gradient-to-b from-emerald-900/40 to-[#0a0f1a]",
+    glowShadow: "shadow-[0_0_40px_rgba(16,185,129,0.2)]",
+    headlineGradient: "text-emerald-400",
+    tileClass: "bg-emerald-500/15 ring-1 ring-emerald-500/30 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]",
+    labelClass: "text-emerald-400/80",
     breathe: true,
   },
   WATCH: {
     headlineKey: "safety_status_watch",
     sublineKey: "safety_status_watch_sub",
-    icon: Eye,
-    gradientClass: "bg-gradient-to-br from-amber-500/20 via-amber-900/40 to-[#0a0f1a]",
-    glowShadow: "shadow-amber-500/10",
-    headlineGradient: "bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent",
-    tileClass: "bg-white/10 text-severity-amber-300 ring-1 ring-white/15",
-    labelClass: "text-severity-amber-300/80",
+    icon: TriangleAlert,
+    gradientClass: "bg-gradient-to-b from-amber-900/40 to-[#0a0f1a]",
+    glowShadow: "shadow-[0_0_40px_rgba(245,158,11,0.2)]",
+    headlineGradient: "text-amber-400",
+    tileClass: "bg-amber-500/15 ring-1 ring-amber-500/30 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.3)]",
+    labelClass: "text-amber-400/80",
   },
   PREPARE: {
     headlineKey: "safety_status_prepare",
     sublineKey: "safety_status_prepare_sub",
     icon: TriangleAlert,
-    gradientClass: "bg-gradient-to-br from-orange-500/20 via-orange-900/40 to-[#0a0f1a]",
-    glowShadow: "shadow-orange-500/10",
-    headlineGradient: "bg-gradient-to-r from-orange-300 to-amber-200 bg-clip-text text-transparent",
-    tileClass: "bg-white/10 text-[var(--brand-orangeLight)] ring-1 ring-white/15",
-    labelClass: "text-[#FDBA74]/80",
+    gradientClass: "bg-gradient-to-b from-orange-900/40 to-[#0a0f1a]",
+    glowShadow: "shadow-[0_0_40px_rgba(249,115,22,0.2)]",
+    headlineGradient: "text-orange-400",
+    tileClass: "bg-orange-500/15 ring-1 ring-orange-500/30 text-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.3)]",
+    labelClass: "text-orange-400/80",
   },
   EVACUATE: {
     headlineKey: "safety_status_evacuate",
     sublineKey: "safety_status_evacuate_sub",
     icon: Siren,
-    gradientClass: "bg-gradient-to-br from-red-500/25 via-red-900/45 to-[#0a0f1a]",
-    glowShadow: "shadow-red-500/15",
-    headlineGradient: "bg-gradient-to-r from-red-400 to-rose-300 bg-clip-text text-transparent",
-    tileClass: "bg-white/10 text-severity-red-300 ring-1 ring-white/15",
-    labelClass: "text-severity-red-300/80",
-    pulseClass: "animate-alert-pulse",
+    gradientClass: "bg-gradient-to-b from-red-900/60 to-[#0a0f1a]",
+    glowShadow: "shadow-[0_0_60px_rgba(239,68,68,0.3)]",
+    headlineGradient: "text-red-500",
+    tileClass: "bg-red-500/20 ring-1 ring-red-500/40 text-red-500 shadow-[0_0_30px_rgba(239,68,68,0.4)]",
+    labelClass: "text-red-400",
+    pulseClass: "animate-pulse-red",
   },
 };
 
@@ -120,7 +121,7 @@ export function SafetyHero({
     <section
       role="status"
       aria-label={`${t("safety_status_label")}: ${status}`}
-      className={`relative flex min-h-[48vh] flex-col justify-between overflow-hidden rounded-[2rem] border border-white/10 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.5)] backdrop-blur-2xl transition-all duration-300 ${theme.glowShadow} ${theme.pulseClass ?? ""}`}
+      className={`relative flex min-h-[60vh] flex-col justify-between overflow-hidden rounded-3xl border border-white/10 p-6 shadow-2xl backdrop-blur-2xl transition-all duration-500 ${theme.glowShadow} ${theme.pulseClass ?? ""}`}
     >
       {/* Deep status-tinted gradient mesh */}
       <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${theme.gradientClass}`} />
@@ -132,7 +133,7 @@ export function SafetyHero({
           className="sh-breathe pointer-events-none absolute inset-0"
           style={{
             backgroundImage:
-              "radial-gradient(at 50% 60%, rgba(45,212,191,0.35) 0px, transparent 60%)",
+              "radial-gradient(at 50% 60%, rgba(45,212,191,0.4) 0px, transparent 60%)",
           }}
         />
       )}
@@ -150,20 +151,20 @@ export function SafetyHero({
         </p>
         <span
           aria-hidden="true"
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl backdrop-blur-md ${theme.tileClass}`}
+          className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl backdrop-blur-md ${theme.tileClass}`}
         >
-          <Icon className="h-6 w-6" strokeWidth={1.5} />
+          <Icon className="h-8 w-8" strokeWidth={1.5} />
         </span>
       </div>
 
       {/* Massive status text — gradient-clipped headline in a frosted panel */}
-      <div className="relative mt-8 rounded-3xl border border-white/20 bg-white/10 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+      <div className="relative mt-8 rounded-3xl border border-white/20 bg-white/10 p-6 shadow-[0_8px_32px_rgba(0,0,0,0.28)] backdrop-blur-xl">
         <h2
           className={`text-balance text-4xl font-extrabold leading-none tracking-tight sm:text-5xl ${theme.headlineGradient}`}
         >
           {t(theme.headlineKey)}
         </h2>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-[var(--dl-text-on-navy)]">
+        <p className="mt-3 max-w-md text-base leading-relaxed text-slate-300">
           {t(theme.sublineKey)}
         </p>
       </div>
@@ -171,11 +172,11 @@ export function SafetyHero({
       {/* Area + last-updated footer — lighter frosted strip */}
       <div className="relative mt-8 flex flex-wrap items-end justify-between gap-3 rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
         <div>
-          <p className="eoc-label text-[var(--dl-text-muted)]">{t("safety_your_area")}</p>
+          <p className="eoc-label text-slate-400">{t("safety_your_area")}</p>
           <p className="mt-0.5 text-sm font-semibold text-white">{area}</p>
         </div>
         {updatedAt && (
-          <p className="font-mono text-[0.6875rem] uppercase tracking-widest text-[var(--dl-text-muted)]">
+          <p className="font-mono text-xs uppercase tracking-widest text-slate-400">
             {t("safety_updated")} {updatedAt}
           </p>
         )}
@@ -188,6 +189,13 @@ export function SafetyHero({
         @keyframes sh-breathe {
           0%, 100% { opacity: 0.35; transform: scale(1); }
           50% { opacity: 0.85; transform: scale(1.06); }
+        }
+        .animate-pulse-red {
+          animation: pulse-red 2s ease-in-out infinite;
+        }
+        @keyframes pulse-red {
+          0%, 100% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.3); }
+          50% { box-shadow: 0 0 80px rgba(239, 68, 68, 0.5); }
         }
       `}</style>
     </section>

@@ -11,9 +11,12 @@
 //   • sticky "Save Changes" footer — only appears once inputs are dirty
 // ---------------------------------------------------------------------
 
+import Image from "next/image";
 import { useRef, useState } from "react";
 import { Building2, Camera, Shield, UserRound } from "lucide-react";
 import SettingsSection from "@/components/settings/SettingsSection";
+import ColorblindToggle from "@/components/settings/ColorblindToggle";
+import ReducedMotionToggle from "@/components/settings/ReducedMotionToggle";
 import { showToast } from "@/components/ui/Toast";
 import { ROLE_LABELS, type Role } from "@/lib/validations/user";
 import {
@@ -27,7 +30,7 @@ import {
 } from "@/lib/settings/avatar";
 
 const inputClass =
-  "w-full rounded-md border border-subtle bg-[var(--bg-tertiary)] px-3 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-accent";
+  "w-full rounded-md border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-purple-400 focus:ring-1 focus:ring-purple-400/30";
 
 type ProfileFields = {
   name: string;
@@ -129,13 +132,15 @@ export default function ProfileIdentityPage() {
               type="button"
               onClick={() => fileRef.current?.click()}
               aria-label="Upload profile photo"
-              className="group relative h-28 w-28 rounded-full border-2 border-border bg-[var(--bg-tertiary)] transition hover:border-accent"
+              className="group relative h-28 w-28 rounded-full border-2 border-white/20 bg-white/5 shadow-lg transition hover:border-purple-400 hover:shadow-[0_0_16px_rgba(139,92,246,0.4)]"
             >
               {avatar ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={avatar}
                   alt="Your profile photo"
+                  width={112}
+                  height={112}
+                  unoptimized
                   className="h-full w-full rounded-full object-cover"
                 />
               ) : (
@@ -143,7 +148,7 @@ export default function ProfileIdentityPage() {
                   {initialsFor(fields.name)}
                 </span>
               )}
-              <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition group-hover:opacity-100">
+              <span className="absolute inset-0 flex items-center justify-center rounded-full bg-purple-900/60 opacity-0 transition group-hover:opacity-100 backdrop-blur-sm">
                 <Camera className="h-6 w-6 text-white/90" aria-hidden />
               </span>
             </button>
@@ -181,12 +186,12 @@ export default function ProfileIdentityPage() {
             </div>
             <div className="md:col-span-2">
               {label("profile-role", "Role")}
-              <div className="flex items-center gap-3 rounded-md border border-border bg-[var(--bg-tertiary)] px-3 py-2.5">
-                <Shield className="h-4 w-4 text-accent" aria-hidden />
+              <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2.5">
+                <Shield className="h-4 w-4 text-purple-400" aria-hidden />
                 <span className="text-sm font-semibold text-slate-200">
                   {ROLE_LABELS[fields.role] ?? fields.role}
                 </span>
-                <span className="ml-auto rounded-full border border-border bg-tertiary px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted">
+                <span className="ml-auto rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-eoc-tiny uppercase tracking-wider text-slate-400">
                   Read-only · assigned by admin
                 </span>
               </div>
@@ -195,9 +200,132 @@ export default function ProfileIdentityPage() {
         </div>
       </SettingsSection>
 
+      {/* Language Selector */}
+      <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-purple-400/90">Language</p>
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
+          {["English", "Hindi", "Bengali", "Tamil", "Telugu", "Marathi", "Gujarati", "Kannada", "Malayalam", "Punjabi", "Odia", "Assamese"].map((lang) => (
+            <button
+              key={lang}
+              type="button"
+              onClick={() => showToast("success", { title: "Language updated", description: `${lang} selected.` })}
+              className={`rounded-lg border px-3 py-2 text-xs font-medium transition ${
+                lang === "English"
+                  ? "border-purple-400/60 bg-purple-400/10 text-purple-300"
+                  : "border-white/10 bg-white/5 text-slate-400 hover:border-purple-400/40 hover:text-purple-300"
+              }`}
+            >
+              {lang}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Family Members */}
+      <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold uppercase tracking-wider text-purple-400/90">Family Members</p>
+          <button
+            type="button"
+            onClick={() => showToast("info", { title: "Add family member", description: "Form coming soon." })}
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-purple-300 transition hover:border-purple-400/40 hover:bg-purple-400/10"
+          >
+            + Add Member
+          </button>
+        </div>
+        <div className="mt-3 space-y-2">
+          {[
+            { name: "Sunita Verma", relation: "Mother", phone: "+91 98765 12345" },
+            { name: "Raj Verma", relation: "Father", phone: "+91 98765 67890" },
+          ].map((m) => (
+            <div key={m.name} className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-400/10 text-xs font-bold text-purple-300">
+                {m.name.split(" ").map((n) => n[0]).join("")}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-slate-200">{m.name}</p>
+                <p className="text-[11px] text-slate-500">{m.relation} · {m.phone}</p>
+              </div>
+              <button type="button" className="text-xs text-slate-500 transition hover:text-red-400">Remove</button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Home Location */}
+      <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-purple-400/90">Home Location</p>
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <input
+              id="home-location"
+              defaultValue="Patna, Bihar (25.6093° N, 85.1376° E)"
+              className={inputClass}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => showToast("info", { title: "Location picker", description: "Map picker opening..." })}
+            className="shrink-0 rounded-lg border border-purple-400/40 bg-purple-400/10 px-3 py-2 text-xs font-medium text-purple-300 transition hover:bg-purple-400/20"
+          >
+            📍 Use GPS
+          </button>
+        </div>
+        <p className="mt-1.5 text-[11px] text-slate-500">Used to show nearby alerts and shelters on your map.</p>
+      </div>
+
+      {/* 2FA & Security (Gov) */}
+      <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-purple-400/90">Two-Factor Authentication</p>
+        <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+          <div>
+            <p className="text-sm font-medium text-slate-200">Authenticator App (TOTP)</p>
+            <p className="text-[11px] text-slate-500">Use Google Authenticator or similar app for login verification.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => showToast("success", { title: "2FA enabled", description: "Authenticator app configured." })}
+            className="rounded-lg border border-green-500/40 bg-green-500/10 px-3 py-1.5 text-xs font-semibold text-green-400 transition hover:bg-green-500/20"
+          >
+            ✓ Enabled
+          </button>
+        </div>
+      </div>
+
+      {/* Accessibility Settings */}
+      <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-purple-400/90">Accessibility</p>
+        <div className="space-y-3">
+          <ColorblindToggle />
+          <ReducedMotionToggle />
+        </div>
+      </div>
+
+      {/* Active Sessions */}
+      <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-purple-400/90">Active Sessions</p>
+        <div className="space-y-2">
+          {[
+            { device: "Chrome · Windows 11", ip: "103.21.x.x", time: "Now", current: true },
+            { device: "Safari · iPhone 15", ip: "49.36.x.x", time: "2h ago", current: false },
+          ].map((s) => (
+            <div key={s.device} className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+              <span className={`h-2 w-2 rounded-full ${s.current ? "bg-green-400" : "bg-slate-600"}`} />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-slate-200">{s.device}</p>
+                <p className="text-[11px] text-slate-500">{s.ip} · {s.time}</p>
+              </div>
+              {!s.current && (
+                <button type="button" className="text-xs text-red-400 transition hover:text-red-300">Revoke</button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Sticky Save footer — only appears once inputs are modified */}
       {isDirty && (
-        <div className="sticky bottom-0 z-10 flex items-center justify-end gap-3 rounded-xl border border-subtle bg-[rgb(var(--bg-primary-rgb)/95)] px-6 py-4 backdrop-blur">
+        <div className="sticky bottom-0 z-10 flex items-center justify-end gap-3 rounded-xl border border-white/10 bg-[#0a0f1a]/90 px-6 py-4 backdrop-blur-md shadow-lg">
           <p className="mr-auto text-xs text-muted">You have unsaved changes.</p>
           <button
             type="button"

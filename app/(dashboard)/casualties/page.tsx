@@ -351,7 +351,25 @@ export default function CasualtiesPage() {
 
       {/* Results */}
       {loading ? (
-        <div className="text-center py-12 text-slate-500">Loading...</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-3 animate-pulse">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-white/10" />
+                <div className="flex-1">
+                  <div className="h-4 w-32 rounded bg-white/10" />
+                  <div className="h-3 w-20 rounded bg-white/10 mt-1.5" />
+                </div>
+              </div>
+              <div className="h-3 w-full rounded bg-white/10" />
+              <div className="h-3 w-3/4 rounded bg-white/10" />
+              <div className="flex gap-2">
+                <div className="h-6 w-16 rounded-full bg-white/10" />
+                <div className="h-6 w-16 rounded-full bg-white/10" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-12 text-slate-500">
           <Stethoscope size={32} className="mx-auto mb-3 opacity-50" />

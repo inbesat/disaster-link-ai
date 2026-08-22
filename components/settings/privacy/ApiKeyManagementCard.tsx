@@ -144,7 +144,7 @@ export default function ApiKeyManagementCard({
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${SCOPE_STYLES[key.scope]}`}
+                        className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${SCOPE_STYLES[key.scope]}`}
                       >
                         {SCOPE_LABELS[key.scope]}
                       </span>
@@ -237,7 +237,7 @@ export default function ApiKeyManagementCard({
               onChange={(e) => setLabel(e.target.value)}
               placeholder="e.g. Drone-Telemetry-Feed"
               maxLength={80}
-              className="mt-2 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
+              className="mt-2 w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/60"
             />
 
             <p className="mt-4 text-xs font-semibold text-slate-300">Scope</p>
@@ -304,7 +304,7 @@ export default function ApiKeyManagementCard({
               </div>
             </div>
 
-            <div className="mt-5 flex items-center gap-2 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-3">
+            <div className="mt-5 flex items-center gap-2 rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-3">
               <code className="flex-1 break-all font-mono text-xs font-bold text-emerald-200">
                 {revealed.secret}
               </code>

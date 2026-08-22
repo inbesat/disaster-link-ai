@@ -55,7 +55,7 @@ export default function DemoPresentation() {
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-[#060b16] text-white">
       {/* Title strip */}
-      <header className="flex items-center justify-between gap-4 border-b border-white/10 bg-gradient-to-r from-[#0a1120] via-[#0d1526] to-[#0a1120] px-6 py-3">
+      <header className="flex items-center justify-between gap-4 border-b border-white/10 bg-gradient-to-r from-[#0b1120] via-[#0d1526] to-[#0b1120] px-6 py-3">
         <div className="flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-cyan-400/40 bg-cyan-500/10 text-cyan-300">
             <Radio className="h-5 w-5" aria-hidden />

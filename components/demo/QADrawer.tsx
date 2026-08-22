@@ -85,7 +85,7 @@ export default function QADrawer() {
           >
             <header className="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-4">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-cyan-300">
+                <p className="text-eoc-tiny font-bold uppercase tracking-[0.28em] text-cyan-300">
                   Anticipation
                 </p>
                 <h2 className="mt-1 text-xl font-black leading-tight">Q&A Drawer</h2>
@@ -153,9 +153,9 @@ export default function QADrawer() {
                           <li className="flex gap-2">
                             <span className="mt-1.5 h-1 w-3 shrink-0 rounded-full bg-sky-400" />
                             SMS fallback — text{" "}
-                            <code className="rounded bg-white/10 px-1 font-mono text-[10px]">STATUS</code>{" "}
+                            <code className="rounded bg-white/10 px-1 font-mono text-eoc-tiny">STATUS</code>{" "}
                             or{" "}
-                            <code className="rounded bg-white/10 px-1 font-mono text-[10px]">SAFE</code>
+                            <code className="rounded bg-white/10 px-1 font-mono text-eoc-tiny">SAFE</code>
                             .
                           </li>
                           <li className="flex gap-2">
@@ -256,7 +256,7 @@ export default function QADrawer() {
                       className="overflow-hidden"
                     >
                       <div className="space-y-2 border-t border-white/10 px-4 pb-4 pt-3">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">
+                        <p className="text-eoc-tiny font-bold uppercase tracking-[0.22em] text-slate-500">
                           LangGraph multi-agent flow
                         </p>
                         {AGENT_FLOW.map((node, i) => (
@@ -266,7 +266,7 @@ export default function QADrawer() {
                             >
                               <div>
                                 <p className="text-xs font-bold">{node.label}</p>
-                                <p className="text-[10px] text-slate-400">{node.sub}</p>
+                                <p className="text-eoc-tiny text-slate-400">{node.sub}</p>
                               </div>
                               <span className="rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-400">
                                 agent

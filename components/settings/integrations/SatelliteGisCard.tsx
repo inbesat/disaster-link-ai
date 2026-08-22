@@ -183,7 +183,7 @@ export default function SatelliteGisCard() {
             Satellite Imagery &amp; GIS Providers
           </h2>
         </div>
-        <span className="ml-auto rounded-full border border-violet-400/30 bg-violet-500/10 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-violet-200">
+        <span className="ml-auto rounded-full border border-violet-400/30 bg-violet-500/10 px-2.5 py-1 font-mono text-eoc-tiny font-bold tabular-nums text-violet-200">
           {PROVIDERS.length} providers
         </span>
       </div>
@@ -227,7 +227,7 @@ export default function SatelliteGisCard() {
                       type="button"
                       onClick={() => validateCredentials(provider.id)}
                       title="Re-validate credentials"
-                      className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300 transition hover:bg-emerald-500/20"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-eoc-tiny font-bold uppercase tracking-wider text-emerald-300 transition hover:bg-emerald-500/20"
                     >
                       <CheckCircle2 className="h-3 w-3" aria-hidden />
                       Validated
@@ -265,7 +265,7 @@ export default function SatelliteGisCard() {
                       >
                         {field.label}
                       </label>
-                      <p className="mb-1.5 text-[10px] text-slate-500">
+                      <p className="mb-1.5 text-eoc-tiny text-slate-500">
                         {field.hint}
                       </p>
                       <div className="relative">
@@ -300,7 +300,7 @@ export default function SatelliteGisCard() {
                           aria-label={`${provider.name} ${field.label}`}
                           autoComplete="off"
                           spellCheck={false}
-                          className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-violet-400/60"
+                          className="w-full rounded-md border border-panel-border bg-[#0a0f1a] py-2 pl-9 pr-9 font-mono text-xs text-slate-100 outline-none placeholder:text-slate-600 focus:border-violet-400/60"
                         />
                         {field.kind !== "id" && (
                           <button

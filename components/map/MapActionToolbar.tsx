@@ -66,7 +66,7 @@ export default function MapActionToolbar({
   shareAlert,
 }: MapActionToolbarProps) {
   const buttonBase =
-    "w-full justify-start rounded-md border px-2.5 py-1 text-left text-[10px] font-semibold leading-tight transition backdrop-blur md:px-3 md:py-2 md:text-xs md:leading-normal";
+    "w-full justify-start rounded-md border px-3 py-2.5 text-left text-eoc-tiny font-semibold leading-tight transition backdrop-blur active:scale-[0.97] md:px-3 md:py-2 md:text-xs md:leading-normal";
   const quiet =
     "border-border bg-surface-elevated/95 text-foreground shadow-glow-accent hover:border-accent";
   const danger =

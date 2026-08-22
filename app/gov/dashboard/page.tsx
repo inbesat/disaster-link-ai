@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { ShieldCheck } from "lucide-react";
 import ViewAsPublicToggle from "@/components/gov/ViewAsPublicToggle";
 import SituationHeader from "@/components/gov/dashboard/SituationHeader";
+import HeroKPIRow from "@/components/gov/dashboard/HeroKPIRow";
 import LiveMapWidget from "@/components/gov/dashboard/LiveMapWidget";
 import FloodChartWidget from "@/components/gov/dashboard/FloodChartWidget";
 import AlertFeedWidget from "@/components/gov/dashboard/AlertFeedWidget";
@@ -43,9 +44,12 @@ const STAT_CELLS: Array<{
   tone: string;
   mdFull?: boolean;
 }> = [
-  { label: "Active Events", value: "3", tone: "text-severity-red-300" },
-  { label: "People at Risk", value: "12,480", tone: "text-severity-amber-300" },
-  { label: "Responders Online", value: "45", tone: "text-severity-green-300", mdFull: true },
+  { label: "Active Events", value: "3", tone: "text-red-300" },
+  { label: "People at Risk", value: "12,480", tone: "text-amber-300" },
+  { label: "Casualties / Injured", value: "42 / 128", tone: "text-red-400" },
+  { label: "Reported Missing", value: "14", tone: "text-orange-300" },
+  { label: "Active NGOs", value: "8 Teams Deployed", tone: "text-sky-300" },
+  { label: "Responders Online", value: "45", tone: "text-emerald-300", mdFull: true },
 ];
 
 export default function GovDashboardPage() {
@@ -55,7 +59,7 @@ export default function GovDashboardPage() {
   const previewing = cookies().get("view_as_public")?.value === "true";
 
   return (
-    <main className="min-h-screen bg-primary text-foreground">
+    <main id="main-content" className="min-h-screen bg-primary text-foreground">
       {/* Phase 7 · Step 2 — persistent situation-awareness top bar. */}
       <SituationHeader />
 
@@ -63,7 +67,7 @@ export default function GovDashboardPage() {
         {/* Page title strip */}
         <div className="flex flex-wrap items-end justify-between gap-3 px-4 pt-6 sm:px-6">
           <div>
-            <p className="eoc-label text-[var(--dl-blue-light)]">
+            <p className="eoc-label text-blue-400">
               BIHAR · OPERATIONAL OVERVIEW · LIVE
             </p>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-white md:text-3xl">
@@ -75,6 +79,11 @@ export default function GovDashboardPage() {
           <div className="w-full max-w-sm">
             <ViewAsPublicToggle initialActive={previewing} />
           </div>
+        </div>
+
+        {/* Hero KPI row — 4 stat cards with count-up animations */}
+        <div className="px-4 sm:px-6">
+          <HeroKPIRow />
         </div>
 
         {/* MASSIVE responsive grid — 1 / 2 / 4 columns, dense packing so
@@ -124,13 +133,13 @@ export default function GovDashboardPage() {
           {STAT_CELLS.map((stat) => (
             <div
               key={stat.label}
-              className={`flex min-h-[150px] flex-col justify-between rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition hover:border-white/20 ${
+              className={`flex min-h-[150px] flex-col justify-between rounded-xl border border-white/10 bg-[#111827] p-5 backdrop-blur transition hover:border-white/20 ${
                 stat.mdFull ? "md:col-span-2 lg:col-span-1" : ""
               }`}
             >
-              <p className="eoc-label text-[var(--dl-text-muted)]">{stat.label}</p>
+              <p className="eoc-label text-slate-400">{stat.label}</p>
               <p className={`font-mono text-3xl font-bold ${stat.tone}`}>{stat.value}</p>
-              <p className="text-xs text-[var(--dl-text-muted)]">Phase 7 · live feed</p>
+              <p className="text-xs text-slate-500">Phase 7 · live feed</p>
             </div>
           ))}
         </div>
@@ -138,8 +147,8 @@ export default function GovDashboardPage() {
 
       {/* Footer */}
       <footer className="border-t border-white/10 py-5">
-        <p className="flex items-center justify-center gap-2 px-4 text-center text-xs text-[var(--dl-text-muted)]">
-          <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 text-[var(--dl-blue-light)]" />
+        <p className="flex items-center justify-center gap-2 px-4 text-center text-xs text-slate-500">
+          <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5 text-blue-400" />
           Authorized personnel only · All access is logged &amp; audited
         </p>
       </footer>

@@ -82,7 +82,7 @@ export function AlertFeedWidget() {
       title={
         <>
           <span>Active Alerts</span>
-          <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-danger/15 px-1.5 text-[10px] font-bold tabular-nums text-accent-danger">
+          <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-danger/15 px-1.5 text-eoc-tiny font-bold tabular-nums text-accent-danger">
             {MOCK_ALERTS.length}
           </span>
         </>

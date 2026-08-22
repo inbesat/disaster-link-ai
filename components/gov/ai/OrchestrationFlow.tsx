@@ -1,26 +1,15 @@
 "use client";
 
 // ---------------------------------------------------------------------
-// components/gov/ai/OrchestrationFlow.tsx — Phase 9 · Step 3 · Agent
-// Orchestration Workflow Diagram.
+// components/gov/ai/OrchestrationFlow.tsx — Agent Orchestration
+// Workflow Diagram.
 //
-// The swarm pipeline: FloodPredictor → EvacuationPlanner →
-// ResourceAllocator → Validator → CommunicationsAgent, rendered as a
-// horizontal row of AgentCards joined by animated marching-dash
-// connectors (.flow-connector in globals.css).
-//
-// Simulation: "Generate Plan" runs the pipeline — every 2 seconds the
-// next agent flips Thinking → Complete with its mock output, so the
-// light cascades left→right. Re-running resets the cascade; timers are
-// cleaned up on unmount / re-run. The What-If Simulator (Step 8) can
-// also re-trigger the run by dispatching the PLANNER_RERUN_EVENT window
-// event.
-//
-// Mounted at the top of the right pane (PlannerLayout's `plan` slot).
+// Vertical flow of 5 agent cards connected by animated SVG lines.
+// When complete, shows "Plan Ready" banner. The WOW moment.
 // ---------------------------------------------------------------------
 
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import { Loader2, Play, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { CheckCircle2, Loader2, Play, Sparkles } from "lucide-react";
 import AgentCard, { EMERGENCY_AGENTS, type AgentStatus } from "./AgentCard";
 
 /** Window event the What-If Simulator dispatches to re-run the pipeline. */
@@ -37,7 +26,6 @@ const TURN_OUTPUTS: Record<string, string> = {
 
 const IDLE_OUTPUT = "Standing by — queued in orchestration pipeline.";
 
-/** 2s per agent turn (thinking + completion). */
 const TURN_MS = 2000;
 
 type FlowAgentState = {
@@ -51,13 +39,51 @@ function initialStates(): Record<string, FlowAgentState> {
   );
 }
 
-/** Animated dashed connector between pipeline stages. */
-function FlowConnector() {
+/** Animated SVG connector line between vertical cards. */
+function FlowConnector({ active, complete }: { active: boolean; complete: boolean }) {
   return (
-    <span className="flow-connector shrink-0 self-center" aria-hidden>
-      <span className="flow-connector-line" />
-      <span className="flow-connector-arrow" />
-    </span>
+    <div className="flex justify-center py-1" aria-hidden>
+      <svg width="2" height="24" viewBox="0 0 2 24" className="overflow-visible">
+        {/* Background line */}
+        <line
+          x1="1"
+          y1="0"
+          x2="1"
+          y2="24"
+          stroke={complete ? "#10b981" : active ? "#8b5cf6" : "#334155"}
+          strokeWidth="2"
+          strokeDasharray={active ? "4 4" : "none"}
+          className={active ? "animate-[dash_0.8s_linear_infinite]" : ""}
+        />
+        {/* Animated pulse on active */}
+        {active && (
+          <circle cx="1" cy="12" r="3" fill="#8b5cf6" opacity="0.6">
+            <animate
+              attributeName="r"
+              values="2;4;2"
+              dur="1.5s"
+              repeatCount="indefinite"
+            />
+            <animate
+              attributeName="opacity"
+              values="0.8;0.2;0.8"
+              dur="1.5s"
+              repeatCount="indefinite"
+            />
+          </circle>
+        )}
+        {/* Arrow at bottom */}
+        <polygon
+          points="1,24 -3,18 5,18"
+          fill={complete ? "#10b981" : active ? "#8b5cf6" : "#334155"}
+        />
+      </svg>
+      <style jsx>{`
+        @keyframes dash {
+          to { stroke-dashoffset: -8; }
+        }
+      `}</style>
+    </div>
   );
 }
 
@@ -68,8 +94,6 @@ export function OrchestrationFlow() {
   const runningRef = useRef(false);
   runningRef.current = running;
 
-  // Resets the pipeline and starts the cascade. Guarded by a ref so
-  // external triggers (What-If Simulator) can't double-run it.
   const startRun = useCallback(() => {
     if (runningRef.current) return;
     setStates(initialStates());
@@ -77,15 +101,12 @@ export function OrchestrationFlow() {
     setRunning(true);
   }, []);
 
-  // Step 8 — external re-run trigger (What-If Scenario Simulator).
   useEffect(() => {
     const onRerun = () => startRun();
     window.addEventListener(PLANNER_RERUN_EVENT, onRerun);
     return () => window.removeEventListener(PLANNER_RERUN_EVENT, onRerun);
   }, [startRun]);
 
-  // Sequential pipeline: agent i thinks at i*TURN_MS and completes at
-  // (i+1)*TURN_MS, so the light cascades left → right every 2 seconds.
   useEffect(() => {
     if (!running) return;
     const timers: number[] = [];
@@ -129,36 +150,33 @@ export function OrchestrationFlow() {
     (agent) => states[agent.id]?.status === "complete",
   ).length;
 
-  const handleGenerate = startRun;
-
   return (
-    <section className="shrink-0 rounded-xl border border-accent-purple/30 bg-panel-deep p-3 shadow-[0_0_28px_rgba(168,85,247,0.15)]">
+    <section className="shrink-0 rounded-xl border border-purple-400/30 bg-[#111827] p-3 shadow-[0_0_28px_rgba(139,92,246,0.15)]">
       {/* Pipeline header */}
-      <div className="mb-2.5 flex items-center justify-between gap-3">
+      <div className="mb-3 flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-purple/15 text-accent-purple shadow-[0_0_14px_rgba(139,92,246,0.3)]">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-purple-500/15 text-purple-400 shadow-[0_0_14px_rgba(139,92,246,0.3)]">
             <Sparkles className="h-4 w-4" aria-hidden />
           </span>
           <div className="min-w-0">
             <h2 className="truncate text-sm font-bold text-white">Agent Orchestration</h2>
-            <p className="truncate text-[0.625rem] uppercase tracking-[0.18em] text-muted">
+            <p className="truncate text-[0.625rem] uppercase tracking-[0.18em] text-slate-500">
               Swarm pipeline · 5 agents · Sequential
             </p>
           </div>
         </div>
 
-        {/* Progress readout */}
         <div className="hidden items-center gap-2 sm:flex">
           {running ? (
-            <span className="font-mono text-[0.625rem] font-bold uppercase tracking-wider text-accent-purple">
+            <span className="font-mono text-[0.625rem] font-bold uppercase tracking-wider text-purple-400">
               {completedCount}/{EMERGENCY_AGENTS.length} complete
             </span>
           ) : finished ? (
-            <span className="font-mono text-[0.625rem] font-bold uppercase tracking-wider text-accent-success">
+            <span className="font-mono text-[0.625rem] font-bold uppercase tracking-wider text-emerald-400">
               Plan generated
             </span>
           ) : (
-            <span className="font-mono text-[0.625rem] font-bold uppercase tracking-wider text-muted">
+            <span className="font-mono text-[0.625rem] font-bold uppercase tracking-wider text-slate-500">
               Standby
             </span>
           )}
@@ -166,9 +184,9 @@ export function OrchestrationFlow() {
 
         <button
           type="button"
-          onClick={handleGenerate}
+          onClick={startRun}
           disabled={running}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-accent-purple px-3 py-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-white shadow-[0_0_16px_rgba(139,92,246,0.4)] transition hover:bg-accent-purple/90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-white shadow-[0_0_16px_rgba(139,92,246,0.4)] transition hover:bg-purple-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {running ? (
             <>
@@ -184,24 +202,45 @@ export function OrchestrationFlow() {
         </button>
       </div>
 
-      {/* Pipeline: agent cards joined by animated connectors */}
-      <div className="flex items-stretch gap-1.5 overflow-x-auto pb-0.5">
+      {/* Plan Ready banner */}
+      {finished && (
+        <div className="mb-3 flex items-center gap-2.5 rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-4 py-3 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400" aria-hidden />
+          <div>
+            <p className="text-sm font-bold text-emerald-300">Plan Ready</p>
+            <p className="text-[0.625rem] text-emerald-400/70">
+              All agents completed. Review the action plan below.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Vertical agent flow */}
+      <div className="flex flex-col items-center">
         {EMERGENCY_AGENTS.map((agent, i) => {
           const state = states[agent.id] ?? { status: "idle", output: IDLE_OUTPUT };
+          const isLast = i === EMERGENCY_AGENTS.length - 1;
+          const nextAgent = EMERGENCY_AGENTS[i + 1];
+          const nextComplete = nextAgent
+            ? states[nextAgent.id]?.status === "complete"
+            : false;
+
           return (
-            <Fragment key={agent.id}>
-              <div className="min-w-[150px] flex-1">
-                <AgentCard
-                  name={agent.name}
-                  icon={agent.icon}
-                  colorAccent={agent.accent}
-                  status={state.status}
-                  latestOutput={state.output}
-                  className="h-full"
+            <div key={agent.id} className="w-full">
+              <AgentCard
+                name={agent.name}
+                icon={agent.icon}
+                colorAccent={agent.accent}
+                status={state.status}
+                latestOutput={state.output}
+              />
+              {!isLast && (
+                <FlowConnector
+                  active={state.status === "thinking"}
+                  complete={state.status === "complete"}
                 />
-              </div>
-              {i < EMERGENCY_AGENTS.length - 1 && <FlowConnector />}
-            </Fragment>
+              )}
+            </div>
           );
         })}
       </div>

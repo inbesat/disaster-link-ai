@@ -84,7 +84,7 @@ export default function FeedbackLoopCard() {
       </div>
 
       {/* Privacy policy link */}
-      <div className="mt-4 flex items-center justify-between gap-3 rounded-md border border-panel-border bg-[#0a0f1d] p-3">
+      <div className="mt-4 flex items-center justify-between gap-3 rounded-md border border-panel-border bg-[#0a0f1a] p-3">
         <p className="text-[11px] text-slate-500">
           Read how feedback data is collected, used and protected.
         </p>

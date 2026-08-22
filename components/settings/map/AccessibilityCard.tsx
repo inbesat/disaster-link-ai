@@ -307,7 +307,7 @@ function Marker({
           style={{ borderTopColor: color }}
         />
       </div>
-      <span className="rounded-sm bg-black/70 px-1.5 text-[10px] font-semibold text-white">
+      <span className="rounded-sm bg-black/70 px-1.5 text-eoc-tiny font-semibold text-white">
         {label}
       </span>
     </div>

@@ -53,6 +53,7 @@ const DASHBOARD_PATHS = ["/public/dashboard", "/gov/dashboard"] as const;
 const ADMIN_BASES = [
   "/admin",
   "/users",
+  "/access-requests",
   "/districts",
   "/bulk-ops",
   "/fm-stations",

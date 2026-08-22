@@ -128,7 +128,7 @@ export function ChatThread({ onHistoryToggle }: { onHistoryToggle?: () => void }
               <History className="h-4 w-4" aria-hidden />
             </button>
           )}
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-purple/40 bg-accent-purple/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-purple">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-purple/40 bg-accent-purple/10 px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider text-accent-purple">
             <span
               className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-purple"
               aria-hidden

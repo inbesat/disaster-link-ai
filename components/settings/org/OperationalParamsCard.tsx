@@ -127,7 +127,7 @@ export default function OperationalParamsCard() {
                   ),
                 })
               }
-              className="w-28 rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-200 outline-none focus:border-sky-400/60"
+              className="w-28 rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 font-mono text-sm text-slate-200 outline-none focus:border-sky-400/60"
             />
             <span className="text-xs font-semibold text-slate-500">
               units per depot — e.g. min 10 boats per dispatch point
@@ -144,7 +144,7 @@ export default function OperationalParamsCard() {
                 className={`rounded-md border px-2.5 py-1 text-xs font-semibold transition ${
                   lowStock === preset
                     ? "border-sky-400/60 bg-sky-500/10 text-sky-200"
-                    : "border-panel-border bg-[#0a0f1d] text-slate-400 hover:border-sky-400/40"
+                    : "border-panel-border bg-[#0a0f1a] text-slate-400 hover:border-sky-400/40"
                 }`}
               >
                 {preset}

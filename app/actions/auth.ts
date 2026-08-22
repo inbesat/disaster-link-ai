@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { rateLimit } from "@/lib/security/rate-limit";
-import { consumeOtp, generateOtp, issueOtp, normalizePhone } from "@/lib/security/otp";
+import { generateOtp, issueOtp, normalizePhone } from "@/lib/security/otp";
 import { DEMO_SESSION_COOKIE } from "@/lib/demo/scope";
 import { safeLog } from "@/lib/logger";
 
@@ -228,7 +228,9 @@ export async function exitGuestMode() {
   redirect("/");
 }
 
-export async function govLogin(role: "district_admin" | "super_admin" = "district_admin") {
+export async function govLogin(email: string, role: "district_admin" | "super_admin" = "district_admin") {
+  const normalizedEmail = email.trim().toLowerCase();
+
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
   cookies().delete("demo_mode");
@@ -236,6 +238,7 @@ export async function govLogin(role: "district_admin" | "super_admin" = "distric
   cookies().delete("citizen_phone");
   cookies().delete("sandbox");
   setSessionCookie("role", role, 60 * 60 * 24 * 7);
+  setSessionCookie("gov_email", normalizedEmail, 60 * 60 * 24 * 7);
   redirect(role === "super_admin" ? "/gov/overview" : "/gov/dashboard");
 }
 
@@ -312,6 +315,21 @@ export async function signUpAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
+  if (fullName.length < 2) {
+    redirect(`/login?error=${encodeURIComponent("Please enter your full name.")}`);
+  }
+  if (!email || !password) {
+    redirect(`/signup?error=${encodeURIComponent("Email and password are required.")}`);
+  }
+
+  cookies().delete("guest_mode");
+  cookies().delete("view_as_public");
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
+  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
+  redirect("/public/dashboard");
   if (!email && !fullName) {
     redirect(`/login?error=${encodeURIComponent("Please enter your name and email.")}`);
   }
@@ -345,6 +363,14 @@ export async function signInAction(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent("Email or password is required.")}`);
   }
 
+  cookies().delete("guest_mode");
+  cookies().delete("view_as_public");
+  cookies().delete("demo_mode");
+  cookies().delete(DEMO_SESSION_COOKIE);
+  cookies().delete("citizen_phone");
+  cookies().delete("sandbox");
+  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
+  redirect("/public/dashboard");
   let signedIn = false;
   try {
     const supabase = createClient();
@@ -378,4 +404,43 @@ export async function signInAction(formData: FormData) {
 
 export async function guestLoginAction() {
   await enableGuestMode();
+}
+
+// ---------------------------------------------------------------------
+// Password Reset Flow
+// ---------------------------------------------------------------------
+
+/**
+ * Send a password reset email using Supabase's built-in flow.
+ * The email contains a link to /auth/update-password with a code parameter.
+ */
+export async function forgotPasswordAction(formData: FormData) {
+  const email = String(formData.get("email") ?? "").trim();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    redirect(`/login?error=${encodeURIComponent("Please enter a valid email address.")}`);
+  }
+
+  // Rate limit: max 3 reset requests per email per hour
+  const resetBudget = rateLimit(`pwd_reset:${email}`, 3, 60 * 60 * 1000);
+  if (!resetBudget.success) {
+    redirect(`/login?error=${encodeURIComponent("Too many reset requests. Please wait before trying again.")}`);
+  }
+
+  try {
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/auth/update-password`,
+    });
+
+    if (error) {
+      safeLog("error", "[auth] forgotPasswordAction failed", { metadata: { error: error.message, email } });
+      // Don't reveal if email exists — always show success for security
+    }
+  } catch (error: unknown) {
+    safeLog("error", "[auth] forgotPasswordAction exception", { metadata: { error: String(error), email } });
+  }
+
+  // Always redirect to login with success message (don't reveal if account exists)
+  redirect(`/login?reset=sent`);
 }

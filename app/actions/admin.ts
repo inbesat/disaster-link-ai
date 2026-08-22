@@ -188,3 +188,148 @@ export async function listAuditLogs(): Promise<AuditEvent[]> {
   if (!auth.ok) throw new Error("Unauthorized: admin access required.");
   return DEMO_AUDIT_EVENTS.map((event) => ({ ...event }));
 }
+
+// ---------------------------------------------------------------------
+// Gov access-request management (/access-requests).
+//
+// Prisma-first with an in-memory mock fallback, mirroring every other
+// admin surface: when DATABASE_URL points at a real Postgres with the
+// access_requests table migrated, decisions persist; until then they
+// live in mock memory for the demo and reset on server restart.
+// ---------------------------------------------------------------------
+
+export type AccessRequestStatus = "pending" | "approved" | "rejected";
+
+export interface AccessRequestRecord {
+  id: string;
+  name: string;
+  email: string;
+  organization: string;
+  requestedRole: "field_responder" | "district_admin";
+  idFileName: string | null;
+  message: string | null;
+  status: AccessRequestStatus;
+  createdAt: string; // ISO
+}
+
+let mockAccessRequests: AccessRequestRecord[] = [
+  {
+    id: "ar_demo_1",
+    name: "Cdr. Asha Verma",
+    email: "asha.verma@ndrf.gov.in",
+    organization: "NDRF",
+    requestedRole: "field_responder",
+    idFileName: "ndrf-id-asha.pdf",
+    message: "NDRF Battalion 9 — deployed to Sitamarhi sector.",
+    status: "pending",
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "ar_demo_2",
+    name: "Suresh Patil",
+    email: "s.patil@sdrf.in",
+    organization: "SDRF",
+    requestedRole: "district_admin",
+    idFileName: "sdrf-card-patil.jpg",
+    message: null,
+    status: "approved",
+    createdAt: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+function normalizeRequest(r: {
+  id: string;
+  name: string;
+  email: string;
+  organization: string;
+  requestedRole: string;
+  idFileName: string | null;
+  message: string | null;
+  status: string;
+  createdAt: Date;
+}): AccessRequestRecord {
+  return {
+    ...r,
+    requestedRole:
+      r.requestedRole === "district_admin" ? "district_admin" : "field_responder",
+    status: (["pending", "approved", "rejected"] as const).includes(
+      r.status as AccessRequestStatus,
+    )
+      ? (r.status as AccessRequestStatus)
+      : "pending",
+    createdAt: r.createdAt.toISOString(),
+  };
+}
+
+export async function listAccessRequests(): Promise<AccessRequestRecord[]> {
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) throw new Error("Unauthorized: admin access required.");
+
+  try {
+    const { prisma } = await import("@/server/prisma");
+    const rows = await prisma.accessRequest.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 200,
+    });
+    return rows.map(normalizeRequest);
+  } catch {
+    // Table missing / DB unreachable — serve the in-memory demo list.
+    return [...mockAccessRequests];
+  }
+}
+
+export async function decideAccessRequest(
+  id: string,
+  decision: Exclude<AccessRequestStatus, "pending">,
+  role?: "field_responder" | "district_admin",
+): Promise<AccessRequestRecord[]> {
+  const auth = await requireRole(ADMIN_ROLES);
+  if (!auth.ok) throw new Error("Unauthorized: admin access required.");
+
+  if (decision !== "approved" && decision !== "rejected") {
+    throw new Error(`Invalid decision: ${decision}`);
+  }
+
+  const target = mockAccessRequests.find((r) => r.id === id);
+
+  try {
+    const { prisma } = await import("@/server/prisma");
+    await prisma.accessRequest.update({
+      where: { id },
+      data: {
+        status: decision,
+        decidedAt: new Date(),
+        ...(decision === "approved" && role ? { requestedRole: role } : {}),
+      },
+    });
+  } catch {
+    // DB write unavailable — mutate the mock so the demo UI stays coherent.
+    mockAccessRequests = mockAccessRequests.map((r) =>
+      r.id === id
+        ? {
+            ...r,
+            status: decision,
+            ...(decision === "approved" && role ? { requestedRole: role } : {}),
+          }
+        : r,
+    );
+  }
+
+  await logAdminAction(
+    decision === "approved" ? "APPROVE_ACCESS_REQUEST" : "REJECT_ACCESS_REQUEST",
+    `access_request:${id}`,
+    `${target?.email ?? "unknown"} ${decision}${role ? ` as ${role}` : ""} by ${auth.role}`,
+  );
+
+  // Return the freshest view we can (DB preferred, mock as fallback).
+  try {
+    const { prisma } = await import("@/server/prisma");
+    const rows = await prisma.accessRequest.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 200,
+    });
+    return rows.map(normalizeRequest);
+  } catch {
+    return [...mockAccessRequests];
+  }
+}

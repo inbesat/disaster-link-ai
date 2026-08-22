@@ -3,6 +3,7 @@ import { prisma } from "@/server/prisma";
 import { requireRole } from "@/lib/security/require-role";
 import { alertSchemas } from "@/lib/validations/api-schemas";
 import { sanitizeInput } from "@/lib/security/sanitize";
+import { warnDbUnavailableOnce } from "@/lib/server/db-fallback";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   } catch (error: unknown) {
     // Prisma can be unreachable on cold starts (e.g. Vercel). Never 500 —
     // serve realistic mock alerts so the dashboard table still renders.
-    console.error("Failed to load alerts (serving mock data):", error);
+    warnDbUnavailableOnce("alerts", error);
     const now = Date.now();
     const hoursAgo = (hours: number) =>
       new Date(now - hours * 60 * 60 * 1000).toISOString();

@@ -168,7 +168,7 @@ export default function DistrictConfigCard() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Sitamarhi"
-                className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-red-400/60"
+                className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-red-400/60"
               />
             </label>
             <label className="block">
@@ -177,7 +177,7 @@ export default function DistrictConfigCard() {
                 value={state}
                 onChange={(e) => setState(e.target.value)}
                 placeholder="e.g. Bihar"
-                className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-red-400/60"
+                className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-red-400/60"
               />
             </label>
             <label className="block">
@@ -189,7 +189,7 @@ export default function DistrictConfigCard() {
                 onChange={(e) => setCenterLat(e.target.value)}
                 placeholder="e.g. 26.6141"
                 inputMode="decimal"
-                className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-red-400/60"
+                className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 font-mono text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-red-400/60"
               />
             </label>
             <label className="block">
@@ -201,7 +201,7 @@ export default function DistrictConfigCard() {
                 onChange={(e) => setCenterLng(e.target.value)}
                 placeholder="e.g. 85.3143"
                 inputMode="decimal"
-                className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2 font-mono text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-red-400/60"
+                className="mt-1.5 w-full rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2 font-mono text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-red-400/60"
               />
             </label>
           </div>
@@ -249,7 +249,7 @@ export default function DistrictConfigCard() {
                 className={`mt-1.5 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-dashed px-4 py-6 text-center transition ${
                   dragOver
                     ? "border-red-400 bg-red-500/10"
-                    : "border-panel-border bg-[#0a0f1d] hover:border-red-400/40"
+                    : "border-panel-border bg-[#0a0f1a] hover:border-red-400/40"
                 }`}
               >
                 <UploadCloud className="h-5 w-5 text-slate-500" aria-hidden />
@@ -284,7 +284,7 @@ export default function DistrictConfigCard() {
 
       {/* District list */}
       <div className="mt-5 overflow-hidden rounded-md border border-panel-border">
-        <div className="hidden grid-cols-12 gap-2 border-b border-panel-border bg-surface-muted/40 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 md:grid">
+        <div className="hidden grid-cols-12 gap-2 border-b border-panel-border bg-surface-muted/40 px-4 py-2 text-eoc-tiny font-bold uppercase tracking-widest text-slate-500 md:grid">
           <div className="col-span-4">District</div>
           <div className="col-span-3">Map Center</div>
           <div className="col-span-3">Boundary</div>
@@ -295,7 +295,7 @@ export default function DistrictConfigCard() {
           <div
             key={district.id}
             className={`grid grid-cols-1 items-center gap-3 border-b border-[#152033] px-4 py-3 transition last:border-b-0 md:grid-cols-12 ${
-              index % 2 === 0 ? "bg-[#0a0f1d]" : "bg-surface-muted/20"
+              index % 2 === 0 ? "bg-[#0a0f1a]" : "bg-surface-muted/20"
             }`}
           >
             {/* Name + state */}
@@ -344,7 +344,7 @@ export default function DistrictConfigCard() {
             {/* Status toggle */}
             <div className="col-span-1 flex items-center justify-between gap-2 md:col-span-2 md:justify-end">
               <span
-                className={`text-[10px] font-bold uppercase tracking-wider md:hidden ${
+                className={`text-eoc-tiny font-bold uppercase tracking-wider md:hidden ${
                   district.active ? "text-emerald-300" : "text-slate-500"
                 }`}
               >

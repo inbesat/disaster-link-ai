@@ -155,7 +155,7 @@ export default function SystemHealthCard() {
           <p className="eoc-label text-rose-300/80">EXTERNAL SYSTEMS · OPS MONITOR</p>
           <h2 className="mt-0.5 text-lg font-bold">External Systems Health</h2>
         </div>
-        <span className="rounded-full border border-panel-borderHover bg-surface-muted/40 px-2.5 py-1 font-mono text-[10px] font-bold tabular-nums text-slate-400">
+        <span className="rounded-full border border-panel-borderHover bg-surface-muted/40 px-2.5 py-1 font-mono text-eoc-tiny font-bold tabular-nums text-slate-400">
           {services.length} services
         </span>
         <button
@@ -186,7 +186,7 @@ export default function SystemHealthCard() {
       {/* Summary strip */}
       <div
         role="status"
-        className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-panel-border bg-[#0a0f1d] px-4 py-3"
+        className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-md border border-panel-border bg-[#0a0f1a] px-4 py-3"
       >
         <p className="flex items-center gap-2 text-sm text-slate-300">
           <Activity className="h-4 w-4 shrink-0 text-cyan-400" aria-hidden />
@@ -259,7 +259,7 @@ export default function SystemHealthCard() {
                   )}
                 </p>
                 {running && (
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-400/80">
+                  <span className="text-eoc-tiny font-bold uppercase tracking-wider text-cyan-400/80">
                     checking…
                   </span>
                 )}

@@ -120,7 +120,7 @@ export function DualModeChat({ district, stream = true }: DualModeChatProps) {
               <button
                 type="button"
                 onClick={retry}
-                className="inline-flex shrink-0 items-center gap-1 rounded-md border border-subtle bg-tertiary px-2 py-1 text-[10px] font-bold text-slate-200 transition hover:bg-[var(--bg-tertiary)]"
+                className="inline-flex shrink-0 items-center gap-1 rounded-md border border-subtle bg-tertiary px-2 py-1 text-eoc-tiny font-bold text-slate-200 transition hover:bg-[var(--bg-tertiary)]"
               >
                 <RefreshCw className="h-3 w-3" aria-hidden />
                 Retry
@@ -159,12 +159,12 @@ function ModeBar({ aiMode, onRetry }: { aiMode: "cloud" | "local" | "fallback"; 
         </span>
         <div className="flex flex-col leading-tight">
           <p className="text-sm font-bold text-slate-100">AI Command Advisor</p>
-          <p className="text-[10px] text-muted">Dual-mode · cloud + offline</p>
+          <p className="text-eoc-tiny text-muted">Dual-mode · cloud + offline</p>
         </div>
       </div>
       <div className="flex items-center gap-2">
         <span
-          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${palette.bg} ${palette.border} ${palette.text}`}
+          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-eoc-tiny font-bold uppercase tracking-wider ${palette.bg} ${palette.border} ${palette.text}`}
         >
           <span className={`h-1.5 w-1.5 animate-pulse rounded-full ${palette.dot}`} aria-hidden />
           <Icon className="h-3 w-3" aria-hidden />
@@ -174,7 +174,7 @@ function ModeBar({ aiMode, onRetry }: { aiMode: "cloud" | "local" | "fallback"; 
           <button
             type="button"
             onClick={onRetry}
-            className="inline-flex items-center gap-1 rounded-md border border-subtle bg-tertiary px-2 py-1 text-[10px] font-bold text-slate-200 transition hover:bg-[var(--bg-tertiary)]"
+            className="inline-flex items-center gap-1 rounded-md border border-subtle bg-tertiary px-2 py-1 text-eoc-tiny font-bold text-slate-200 transition hover:bg-[var(--bg-tertiary)]"
           >
             <RefreshCw className="h-3 w-3" aria-hidden />
             Try again
@@ -222,7 +222,7 @@ function MessageBubble({ message }: { message: DisasterChatMessage }) {
         }`}
       >
         {!isUser && (
-          <span className="mb-1 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-accent-purple">
+          <span className="mb-1 flex items-center gap-1 text-eoc-tiny font-bold uppercase tracking-wider text-accent-purple">
             <Bot className="h-3 w-3" aria-hidden />
             {isStreaming ? "Gemma streaming…" : "AI Advisor"}
           </span>
@@ -249,7 +249,7 @@ function MessageBubble({ message }: { message: DisasterChatMessage }) {
             {message.source === "local" ? "Local" : "Cloud"}
           </span>
         )}
-        <span className="text-[10px] tabular-nums text-muted">
+        <span className="text-eoc-tiny tabular-nums text-muted">
           {new Intl.DateTimeFormat("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true }).format(
             new Date(message.timestamp),
           )}
@@ -287,7 +287,7 @@ function MessageBubble({ message }: { message: DisasterChatMessage }) {
 function TypingIndicator() {
   return (
     <div className="flex items-center gap-2 pl-1">
-      <span className="text-[10px] font-bold uppercase tracking-wider text-muted">
+      <span className="text-eoc-tiny font-bold uppercase tracking-wider text-muted">
         Gemma is thinking
       </span>
       <span className="flex items-center gap-1" aria-hidden>

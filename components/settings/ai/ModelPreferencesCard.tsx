@@ -128,7 +128,7 @@ export default function ModelPreferencesCard() {
             id="ai-provider"
             value={settings.provider}
             onChange={(event) => setProvider(event.target.value as AiProvider)}
-            className="w-full appearance-none rounded-md border border-panel-border bg-[#0a0f1d] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-fuchsia-400/60"
+            className="w-full appearance-none rounded-md border border-panel-border bg-[#0a0f1a] px-3 py-2.5 pr-9 text-sm text-slate-200 outline-none transition focus:border-fuchsia-400/60"
           >
             {AI_PROVIDERS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -175,7 +175,7 @@ export default function ModelPreferencesCard() {
             onChange={(event) => setApiKey(event.target.value)}
             placeholder="••••••••••••••••"
             autoComplete="off"
-            className="w-full rounded-md border border-panel-border bg-[#0a0f1d] py-2.5 pl-9 pr-3 text-sm text-slate-200 outline-none transition focus:border-fuchsia-400/60"
+            className="w-full rounded-md border border-panel-border bg-[#0a0f1a] py-2.5 pl-9 pr-3 text-sm text-slate-200 outline-none transition focus:border-fuchsia-400/60"
           />
         </div>
         <p className="mt-2 flex items-start gap-2 text-[11px] leading-relaxed text-slate-500">

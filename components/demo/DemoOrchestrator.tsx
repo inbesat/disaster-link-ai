@@ -187,10 +187,10 @@ export default function DemoOrchestrator({ className = "" }: DevToolsProps) {
             type="button"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "Expand" : "Collapse"}
-            className="flex h-6 w-6 items-center justify-center rounded-md border border-white/10 bg-white/5 text-slate-400 transition hover:text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-md border border-white/10 bg-white/5 text-slate-400 transition hover:text-white active:scale-[0.97]"
           >
             <ChevronUp
-              className={`h-3.5 w-3.5 transition-transform ${collapsed ? "rotate-180" : ""}`}
+              className={`h-4 w-4 transition-transform ${collapsed ? "rotate-180" : ""}`}
               aria-hidden
             />
           </button>
@@ -222,10 +222,10 @@ export default function DemoOrchestrator({ className = "" }: DevToolsProps) {
             {/* Teleprompter */}
             <div className="border-t border-white/10 p-3">
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-cyan-300">
+                <span className="text-eoc-tiny font-bold uppercase tracking-[0.22em] text-cyan-300">
                   Teleprompter
                 </span>
-                <span className="font-mono text-[10px] text-slate-400">
+                <span className="font-mono text-eoc-tiny text-slate-400">
                   {mmss(elapsed)} / {mmss(TOTAL_SECONDS)}
                 </span>
               </div>
@@ -259,7 +259,7 @@ export default function DemoOrchestrator({ className = "" }: DevToolsProps) {
                   <button
                     type="button"
                     onClick={() => setRunning(false)}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-white/10 bg-white/5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-200 transition hover:bg-white/10"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-white/10 bg-white/5 py-2.5 text-[11px] font-bold uppercase tracking-wide text-slate-200 transition hover:bg-white/10 active:scale-[0.97]"
                   >
                     <Pause className="h-3 w-3" aria-hidden />
                     Pause
@@ -268,7 +268,7 @@ export default function DemoOrchestrator({ className = "" }: DevToolsProps) {
                   <button
                     type="button"
                     onClick={() => setRunning(true)}
-                    className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-emerald-400/50 bg-emerald-500/15 py-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/25"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-emerald-400/50 bg-emerald-500/15 py-2.5 text-[11px] font-bold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/25 active:scale-[0.97]"
                   >
                     <Play className="h-3 w-3" aria-hidden />
                     Start script
@@ -277,7 +277,7 @@ export default function DemoOrchestrator({ className = "" }: DevToolsProps) {
                 <button
                   type="button"
                   onClick={resetPrompt}
-                  className="flex items-center justify-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-300 transition hover:bg-white/10"
+                  className="flex items-center justify-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wide text-slate-300 transition hover:bg-white/10 active:scale-[0.97]"
                 >
                   <Square className="h-3 w-3" aria-hidden />
                 </button>

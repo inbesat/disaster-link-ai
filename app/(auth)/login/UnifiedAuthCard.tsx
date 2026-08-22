@@ -28,6 +28,7 @@ import { Lock, Mail, ShieldCheck, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import {
+  forgotPasswordAction,
   guestLoginAction,
   signInAction,
   signUpAction,
@@ -43,11 +44,12 @@ function getSupabase() {
 type AuthTab = "signin" | "signup";
 
 const inputClass =
-  "w-full rounded-md border border-border bg-surface-muted py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:outline-none";
+  "w-full rounded-md border border-border bg-surface-muted py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-slate-500 focus:border-accent focus:ring-2 focus:ring-accent/30 focus:outline-none";
 
 export default function UnifiedAuthCard() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
+  const resetSent = searchParams.get("reset") === "sent";
   const [tab, setTab] = useState<AuthTab>("signin");
 
   // Google OAuth is a redirect, not a form action — Supabase returns the
@@ -78,6 +80,18 @@ export default function UnifiedAuthCard() {
         {error && (
           <div className="mt-4">
             <ErrorBanner message={error} />
+          </div>
+        )}
+
+        {/* Password reset success message */}
+        {resetSent && (
+          <div className="mt-4">
+            <div className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300 flex items-center gap-2">
+              <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+              If an account exists for that email, a password reset link has been sent.
+            </div>
           </div>
         )}
 
@@ -159,6 +173,17 @@ export default function UnifiedAuthCard() {
                     className={inputClass}
                   />
                 </div>
+              </div>
+
+              <div className="text-right">
+                <form action={forgotPasswordAction}>
+                  <button
+                    type="submit"
+                    className="text-sm font-medium text-accent hover:underline transition"
+                  >
+                    Forgot password?
+                  </button>
+                </form>
               </div>
 
               <button

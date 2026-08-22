@@ -97,14 +97,20 @@ const nextConfig = {
   },
 
   // Remote image hosts the app renders via next/image (QR codes are generated
-  // on-demand by qrserver.com; donate flows embed them). Local + PWA assets
-  // need no config.
+  // on-demand by qrserver.com; donate flows embed them). Landing section
+  // photography comes from Unsplash. Local + PWA assets need no config.
+  // NOTE: adding hosts here requires a dev-server restart.
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "api.qrserver.com",
         pathname: "/v1/create-qr-code/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
       },
     ],
   },

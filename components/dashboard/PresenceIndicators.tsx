@@ -69,7 +69,7 @@ export default function PresenceIndicators() {
                   {c.name}
                 </span>
               </span>
-              <span className="block whitespace-nowrap text-[10px] uppercase tracking-wider text-accent">
+              <span className="block whitespace-nowrap text-eoc-tiny uppercase tracking-wider text-accent">
                 {c.role}
               </span>
             </span>

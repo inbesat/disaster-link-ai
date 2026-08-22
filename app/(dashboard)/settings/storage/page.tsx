@@ -321,7 +321,7 @@ export default function StorageSettingsPage() {
                 }}
               />
             </div>
-            <div className="mt-1 flex justify-between text-[10px] font-medium text-muted">
+            <div className="mt-1 flex justify-between text-eoc-tiny font-medium text-muted">
               <span>0 MB</span>
               <span>{formatBytes(progress.totalBytes || 1.3 * 1024 * 1024 * 1024)}</span>
             </div>
@@ -437,7 +437,7 @@ function StorageGauge({
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-2xl font-bold text-slate-100">{Math.min(100, pct).toFixed(0)}%</span>
-          <span className="text-[10px] font-medium text-muted">{formatBytes(usedBytes)}</span>
+          <span className="text-eoc-tiny font-medium text-muted">{formatBytes(usedBytes)}</span>
         </div>
       </div>
       <p className="text-center text-xs text-muted">

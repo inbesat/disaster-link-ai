@@ -170,7 +170,7 @@ export function ChatHistorySidebar({ onClose }: ChatHistorySidebarProps) {
                       <span className="block truncate text-xs font-semibold text-slate-100">
                         {session.title}
                       </span>
-                      <span className="mt-0.5 block font-mono text-[10px] text-muted">
+                      <span className="mt-0.5 block font-mono text-eoc-tiny text-muted">
                         {session.date}
                       </span>
                       <span

@@ -63,12 +63,12 @@ export default function OfflineMapBadge() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.96 }}
             transition={{ duration: reduceMotion ? 0 : 0.16 }}
-            className="absolute left-0 top-full mt-2 w-64 rounded-xl border border-white/10 bg-[#0a1120]/95 p-3 text-left shadow-[0_8px_28px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+            className="absolute left-0 top-full mt-2 w-64 rounded-xl border border-white/10 bg-[#0b1120]/95 p-3 text-left shadow-[0_8px_28px_rgba(0,0,0,0.5)] backdrop-blur-xl"
           >
             {/* Pointing caret */}
             <span
               aria-hidden="true"
-              className="absolute -top-1 left-5 h-2 w-2 rotate-45 border-l border-t border-white/10 bg-[#0a1120]"
+              className="absolute -top-1 left-5 h-2 w-2 rotate-45 border-l border-t border-white/10 bg-[#0b1120]"
             />
             <p className="flex items-start gap-2 text-xs leading-relaxed text-white/85">
               <Info

@@ -223,11 +223,11 @@ export function FloodPredictionChart({ useMock = false }: Props) {
     >
       {/* Model Training Badge */}
       <div className="mb-2 flex items-center justify-between">
-        <span className="inline-flex items-center gap-1 rounded bg-accent-primary/10 px-2 py-0.5 text-[10px] font-medium text-accent-primary">
+        <span className="inline-flex items-center gap-1 rounded bg-accent-primary/10 px-2 py-0.5 text-eoc-tiny font-medium text-accent-primary">
           Model Trained on Official PDF Datasets
         </span>
         {prediction && mlStatus === "live" && (
-          <span className="text-[10px] text-muted">
+          <span className="text-eoc-tiny text-muted">
             Risk: {prediction.risk_level} · Confidence: {(prediction.confidence_score * 100).toFixed(1)}%
           </span>
         )}

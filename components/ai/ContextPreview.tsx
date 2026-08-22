@@ -100,12 +100,12 @@ export function ContextPreview({
         </div>
         <div className="flex items-center gap-2">
           {district && (
-            <span className="rounded border border-subtle bg-[var(--bg-tertiary)] px-1.5 py-0.5 font-mono text-[10px] text-muted">
+            <span className="rounded border border-subtle bg-[var(--bg-tertiary)] px-1.5 py-0.5 font-mono text-eoc-tiny text-muted">
               {district}
             </span>
           )}
           <span
-            className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${
+            className={`rounded-full px-2 py-0.5 font-mono text-eoc-tiny font-bold ${
               overBudget
                 ? "bg-amber-500/15 text-amber-300"
                 : "bg-emerald-500/10 text-emerald-300"
@@ -124,7 +124,7 @@ export function ContextPreview({
               key={t.key}
               type="button"
               onClick={t.onToggle}
-              className={`inline-flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-[10px] font-semibold transition ${
+              className={`inline-flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-eoc-tiny font-semibold transition ${
                 t.enabled
                   ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-300"
                   : "border-subtle bg-[var(--bg-tertiary)] text-muted line-through"
@@ -137,7 +137,7 @@ export function ContextPreview({
             <button
               type="button"
               onClick={onReset}
-              className="ml-auto inline-flex items-center gap-1 rounded border border-subtle bg-[var(--bg-tertiary)] px-2 py-1 text-[10px] font-semibold text-muted transition hover:text-slate-200"
+              className="ml-auto inline-flex items-center gap-1 rounded border border-subtle bg-[var(--bg-tertiary)] px-2 py-1 text-eoc-tiny font-semibold text-muted transition hover:text-slate-200"
             >
               <Trash2 className="h-3 w-3" aria-hidden />
               Reset
@@ -169,7 +169,7 @@ export function ContextPreview({
                   )}
                   <span className={body ? "text-[#7ee787]" : "text-[#8b949e]"}>{label}</span>
                   {counts?.[key] !== undefined && (
-                    <span className="ml-auto font-mono text-[10px] text-[#8b949e]">
+                    <span className="ml-auto font-mono text-eoc-tiny text-[#8b949e]">
                       {counts[key]} rows
                     </span>
                   )}
@@ -188,7 +188,7 @@ export function ContextPreview({
       {/* Full context textarea */}
       <div className="flex items-center gap-2 pt-1">
         <TerminalSquare className="h-3.5 w-3.5 text-[#8b949e]" aria-hidden />
-        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#8b949e]">
+        <p className="font-mono text-eoc-tiny font-bold uppercase tracking-wider text-[#8b949e]">
           Injected context
         </p>
       </div>
@@ -221,7 +221,7 @@ export function ContextPreview({
 
       {showFullPrompt && testPrompt && (
         <div className="flex flex-col gap-1.5 rounded-md border border-[#21262d] bg-[#010409] p-3">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#79c0ff]">
+          <p className="font-mono text-eoc-tiny font-bold uppercase tracking-wider text-[#79c0ff]">
             Full augmented prompt
           </p>
           <pre className="whitespace-pre-wrap font-mono text-[11px] leading-relaxed text-[#e6edf3]">

@@ -49,7 +49,6 @@ function Reveal({
   delay?: number;
   className?: string;
   y?: number;
-  /** translateZ depth when inside a preserve-3d context */
   z?: number;
 }) {
   const reduce = useReducedMotion();
@@ -67,7 +66,6 @@ function Reveal({
   );
 }
 
-/** Parallax background orbs that drift with scroll */
 function ParallaxOrbs() {
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll();
@@ -102,8 +100,6 @@ export default function Hero() {
     target: undefined,
     offset: ["start start", "end start"],
   });
-  /* Scroll-linked 3D depth: mockup rises + scales while copy parallaxes
-     slower — the Apple-style scroll choreography. */
   const mockY = useTransform(scrollYProgress, [0, 1], [0, 110]);
   const mockScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
   const copyY = useTransform(scrollYProgress, [0, 1], [0, -40]);
@@ -111,7 +107,6 @@ export default function Hero() {
 
   return (
     <section className="min-h-screen flex items-center relative overflow-hidden" id="hero">
-      {/* Background */}
       <div
         className="absolute inset-0 -z-20"
         style={{
@@ -119,7 +114,6 @@ export default function Hero() {
             "radial-gradient(circle at 18% 20%, #12335e 0%, #0B1F3A 46%, #081527 100%)",
         }}
       />
-      {/* Dot-grid overlay */}
       <div
         className="absolute inset-0 -z-10 opacity-40"
         style={{
@@ -133,7 +127,6 @@ export default function Hero() {
       <ParallaxOrbs />
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[55%_45%] gap-14 lg:gap-12 items-center py-28 lg:py-20 w-full [perspective:1800px]">
-        {/* Left column */}
         <motion.div style={reduce ? undefined : { y: copyY, opacity: orbOpacity }}>
           <Reveal delay={0}>
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white/90">
@@ -205,7 +198,6 @@ export default function Hero() {
           </Reveal>
         </motion.div>
 
-        {/* Right column — 3D tilted dashboard mockup */}
         <motion.div
           style={
             reduce
@@ -216,7 +208,6 @@ export default function Hero() {
         <Reveal delay={0.35} y={34} className="relative">
           <TiltCard maxTilt={9} perspective={1200} className="rounded-[var(--radius-xl3)]">
             <div className="bg-white/[0.06] border border-white/[0.14] backdrop-blur-[18px] rounded-[var(--radius-xl3)] p-5 relative z-10 shadow-[0_50px_100px_-40px_rgba(0,0,0,0.7)] [transform-style:preserve-3d]">
-              {/* Header */}
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                   <span className="relative flex h-2.5 w-2.5">
@@ -230,7 +221,6 @@ export default function Hero() {
                 <span className="text-[10px] text-white/40 tabular-nums">Updated 4s ago</span>
               </div>
 
-              {/* Radar map */}
               <div className="h-[200px] relative flex items-center justify-center bg-[rgba(37,99,235,0.05)] rounded-xl overflow-hidden">
                 <div
                   className={`absolute w-[70px] h-[70px] rounded-full border border-[#2563EB]/25 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${reduce ? "" : "motion-safe:animate-mpulse"}`}
@@ -248,7 +238,6 @@ export default function Hero() {
                 <div className="absolute w-[64px] h-[64px] rounded-full border border-white/10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
                 <div className="absolute w-2 h-2 rounded-full bg-white/60 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
 
-                {/* Pins */}
                 <span
                   className={`absolute w-3 h-3 bg-[var(--blue)] rounded-full top-1/4 left-1/3 ${reduce ? "" : "animate-dotpulse"}`}
                   aria-hidden="true"
@@ -264,7 +253,6 @@ export default function Hero() {
                   aria-hidden="true"
                 />
 
-                {/* Floating hazard chips inside radar (3D depth) */}
                 <motion.span
                   initial={reduce ? false : { opacity: 0, y: -8 }}
                   animate={reduce ? {} : { opacity: 1, y: 0 }}
@@ -283,7 +271,6 @@ export default function Hero() {
                 </motion.span>
               </div>
 
-              {/* Bottom stats grid */}
               <div className="grid grid-cols-3 gap-3 mt-4" style={{ transform: "translateZ(30px)" }}>
                 {FEED_STATS.map((stat, idx) => {
                   const Icon = stat.icon;
@@ -307,7 +294,6 @@ export default function Hero() {
             </div>
           </TiltCard>
 
-          {/* Floating chips — layered at different 3D depths */}
           <motion.div
             initial={reduce ? false : { opacity: 0, scale: 0.9 }}
             animate={reduce ? {} : { opacity: 1, scale: 1 }}
@@ -327,7 +313,6 @@ export default function Hero() {
             transition={{ delay: 1.1, duration: 0.5 }}
             style={{ transform: "translateZ(45px)" }}
             className={`absolute -bottom-4 -left-4 lg:-left-16 bg-[#0B1F3A]/85 border border-white/[0.15] backdrop-blur-[12px] rounded-xl px-4 py-2.5 text-sm text-white z-30 shadow-xl ${reduce ? "" : "animate-floaty"}`}
-            // second floaty chip with inverted delay via inline style
           >
             <span
               className="flex items-center gap-2"
@@ -338,7 +323,6 @@ export default function Hero() {
             </span>
           </motion.div>
 
-          {/* Small verified badge */}
           <motion.div
             initial={reduce ? false : { opacity: 0, scale: 0.9 }}
             animate={reduce ? {} : { opacity: 1, scale: 1 }}

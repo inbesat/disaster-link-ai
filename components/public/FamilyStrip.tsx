@@ -95,12 +95,12 @@ export function FamilyStrip() {
     return (
       <section
         aria-label="Family safety"
-        className="rounded-[var(--dl-radius)] border border-white/10 bg-white/5 p-4 backdrop-blur"
+        className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl"
       >
-        <p className="text-sm text-[var(--dl-text-muted)]">
+        <p className="text-sm text-slate-400">
           No family members yet —{" "}            <Link
               href="/public/setup/family"
-              className="font-semibold text-[var(--dl-orange-light)] hover:underline"
+              className="font-semibold text-blue-400 hover:underline"
             >
               add your safety circle
             </Link>{" "}
@@ -114,8 +114,8 @@ export function FamilyStrip() {
     <MotionConfig reducedMotion="user">
       <section aria-label="Family safety status" className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="eoc-label text-[var(--dl-text-muted)]">MY FAMILY</p>
-          <p className="text-[0.6875rem] text-[var(--dl-text-muted)]">
+          <p className="eoc-label text-slate-400">MY FAMILY</p>
+          <p className="text-xs text-slate-500">
             Tap a member to reach them
           </p>
         </div>
@@ -130,21 +130,21 @@ export function FamilyStrip() {
                 type="button"
                 onClick={() => setSelected(member)}
                 aria-label={`${member.name} — status ${dot.label}. Open contact options`}
-                className="group flex w-16 shrink-0 flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
+                className="group flex w-20 shrink-0 flex-col items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
               >
                 {/* Avatar + status dot */}
                 <span className="relative">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-gradient-to-br from-[var(--dl-navy-3)] to-[var(--dl-navy-2)] text-sm font-bold text-white shadow-[var(--dl-shadow-soft)] transition group-hover:border-[var(--dl-orange)]/50 group-hover:ring-2 group-hover:ring-[var(--dl-orange)]/30">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-gradient-to-br from-slate-700 to-slate-800 text-sm font-bold text-white shadow-lg transition group-hover:border-blue-500/50 group-hover:ring-2 group-hover:ring-blue-500/30 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]">
                     {familyInitials(member.name)}
                   </span>
                   <span
                     aria-hidden="true"
-                    className={`absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-[var(--dl-navy)] ${dot.dot} ${
+                    className={`absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-[#0a0f1a] ${dot.dot} ${
                       dot.pulse ? "animate-pulse" : ""
                     }`}
                   />
                 </span>
-                <span className="w-full truncate text-center text-[0.6875rem] font-medium text-[var(--dl-text-on-navy)]">
+                <span className="w-full truncate text-center text-xs font-medium text-slate-300">
                   {member.name.split(" ")[0]}
                 </span>
               </button>
@@ -174,7 +174,7 @@ export function FamilyStrip() {
               exit={{ y: 32, opacity: 0, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-sm rounded-2xl border border-white/10 bg-[var(--dl-navy-2)] p-5 shadow-[var(--dl-shadow-soft)] outline-none"
+              className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-800 p-5 shadow-2xl outline-none"
             >
               {/* Header — avatar + name */}
               <div className="flex items-start justify-between gap-3">
@@ -247,7 +247,7 @@ function NudgeButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center gap-2.5 rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:border-[var(--dl-orange)]/50 hover:bg-[var(--dl-orange)]/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
+      className="flex w-full items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:border-blue-500/50 hover:bg-blue-500/10 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
     >
       {children}
     </button>
