@@ -8,6 +8,57 @@ export const dynamic = "force-dynamic";
 const GOV_ROLES = ["super_admin", "district_admin"] as const;
 
 /**
+ * GET /api/retrieval/embed?district=<district>
+ *
+ * Fetches RAG context chunks for the knowledge table (weekly sync).
+ * Returns matching emergency documents for the given district.
+ */
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  const auth = await requireRole(GOV_ROLES);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const district = searchParams.get("district");
+
+  if (!district) {
+    return NextResponse.json(
+      { error: "Missing required query parameter: district" },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const docs = await prisma.$queryRaw<
+      { id: string; title: string; content: string }[]
+    >`
+      SELECT id, title, content
+      FROM public.emergency_documents
+      WHERE district = ${district}
+        AND content IS NOT NULL
+        AND content != ''
+      LIMIT 50
+    `;
+
+    return NextResponse.json({
+      ok: true,
+      results: docs.map((doc) => ({
+        id: doc.id,
+        title: doc.title,
+        content: doc.content,
+      })),
+    });
+  } catch (error: unknown) {
+    console.error("[retrieval] failed to read documents:", error);
+    return NextResponse.json(
+      { ok: false, error: "Failed to read documents." },
+      { status: 500 },
+    );
+  }
+}
+
+/**
  * POST /api/retrieval/embed · optional body: { title?, content? }
  *
  * Back-fills embeddings for emergency_documents whose `embedding` is NULL.

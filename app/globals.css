@@ -1417,12 +1417,35 @@ html.high-contrast [class*="border-white/"] {
 .goog-te-banner-frame.skiptranslate,
 .goog-te-banner-frame {
   display: none !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  visibility: hidden !important;
 }
 
 /* Google shifts <body> down by 39px for that banner — reset so the
    fixed navbar and hero stay put. */
 body {
   top: 0 !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Kill any Google Translate wrapper that reserves space at the top. */
+#skiptranslate {
+  height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  visibility: hidden !important;
+}
+
+.skiptranslate iframe {
+  display: none !important;
+  height: 0 !important;
+  visibility: hidden !important;
 }
 
 /* The hover tooltip that pops up over translated words. */
