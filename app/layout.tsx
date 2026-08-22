@@ -32,6 +32,8 @@ import { ReducedMotionProvider } from "@/components/providers/ReducedMotionConte
 import { LiveRegionProvider } from "@/components/ui/LiveRegion";
 import SkipToContent from "@/components/ui/SkipToContent";
 import { SIMULATION_COOKIE } from "@/lib/admin/simulation";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 // Phase 22 · Step 9 + UI Phase 1 · Step 9 — next/font/google (Inter for the
@@ -285,6 +287,8 @@ export default function RootLayout({
           src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
           strategy="afterInteractive"
         />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
