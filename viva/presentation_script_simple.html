@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeSphere — SIH 2026 Simple Presentation Script</title>
+<style>
+:root {
+  --bg:#0a0e17; --surface:#111827; --elevated:#1a2234;
+  --border:#1e2d4a; --border-subtle:#162038;
+  --text:#e2e8f0; --dim:#94a3b8; --muted:#64748b;
+  --accent:#38bdf8; --green:#22c55e; --yellow:#eab308;
+  --orange:#f97316; --red:#ef4444; --purple:#a78bfa;
+  --radius:12px;
+}
+* {box-sizing:border-box;margin:0;padding:0}
+body {
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg); color:var(--text);
+  line-height:1.9; -webkit-font-smoothing:antialiased;
+}
+.page {max-width:900px;margin:0 auto;padding:32px 20px 64px;}
+h1 {font-size:26px;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;
+  background:linear-gradient(135deg,#f1f5f9,#38bdf8);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.subtitle {font-size:14px;color:var(--muted);margin-bottom:24px;}
+.budget-bar {
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;
+  font-family:'SF Mono','Fira Code',monospace;font-size:13px;
+}
+.budget-bar .label {color:var(--dim);text-transform:uppercase;letter-spacing:0.06em;font-size:11px;}
+.budget-bar .value {font-weight:700;color:var(--accent);}
+.budget-bar .status-ok {color:var(--green);}
+.callout-fix {
+  background:rgba(239,68,68,0.08);border:2px solid var(--red);border-radius:var(--radius);
+  padding:16px;margin-bottom:24px;
+}
+.callout-fix h4 {color:var(--red);margin-bottom:8px;font-size:14px;}
+.callout-fix ul {margin-left:20px;}
+.callout-fix li {color:var(--dim);margin-bottom:4px;font-size:13px;}
+section.person {background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;margin-bottom:24px;}
+.person-header {display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1px solid var(--border-subtle);}
+.person-name {font-size:20px;font-weight:800;color:var(--text);}
+.person-budget {font-family:'SF Mono',monospace;font-size:12px;color:var(--accent);
+  background:rgba(56,189,248,0.1);padding:4px 10px;border-radius:6px;}
+.script-para {margin-bottom:16px;color:var(--dim);font-size:15px;line-height:1.95;}
+.script-para strong {color:var(--text);}
+.script-para em {color:var(--accent);font-style:normal;font-weight:600;}
+.simple-note {color:var(--purple);font-size:13px;font-style:italic;margin:8px 0 16px;}
+.prompt {color:var(--yellow);font-size:13px;font-style:italic;margin:16px 0;padding:10px 14px;
+  background:rgba(234,179,8,0.08);border-left:3px solid var(--yellow);border-radius:0 8px 8px 0;}
+details.ref-section {background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:0;margin-bottom:16px;overflow:hidden;}
+details.ref-section summary {padding:16px 24px;cursor:pointer;font-weight:700;font-size:15px;
+  color:var(--accent);background:var(--elevated);border-bottom:1px solid var(--border-subtle);
+  display:flex;align-items:center;gap:12px;}
+details.ref-section summary::-webkit-details-marker {display:none;}
+details.ref-section summary::before {content:'▸';font-size:18px;transition:transform 0.2s;}
+details.ref-section[open] summary::before {transform:rotate(90deg);}
+details.ref-section .content {padding:20px 24px;}
+details.ref-section h3 {font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;}
+details.ref-section ul {margin-left:20px;}
+details.ref-section li {color:var(--dim);font-size:13px;margin-bottom:6px;line-height:1.6;}
+details.ref-section li strong {color:var(--text);}
+hr.divider {border:none;border-top:1px solid var(--border-subtle);margin:32px 0;}
+@media print {
+  .page {max-width:none;padding:20px;}
+  section.person {break-inside:avoid;page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ════════════════════════════════════════════════════════════════
+     RUNNING TOTAL
+     ════════════════════════════════════════════════════════════════ -->
+<div class="budget-bar">
+  <span class="label">Total script</span>
+  <span class="value">~1,400 words</span>
+  <span class="label">≈</span>
+  <span class="value status-ok">10:45</span>
+  <span class="label">target 7:00 | ceiling 8:00 | floor 6:00</span>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     NEEDS DEV FIX
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="callout-fix">
+  <h4>⚠ NEEDS DEV FIX BEFORE DEMO</h4>
+  <ul>
+    <li><strong>AI flood prediction model:</strong> The trained model file is missing — the system will show a placeholder prediction. We'll say "demo prediction" on stage.</li>
+    <li><strong>Large app size (6 MB):</strong> May load slowly on stage Wi-Fi. We're optimizing.</li>
+    <li><strong>Verify demo pages work:</strong> Command center, AI planner, citizen dashboard, report page, field responder page must open without asking for login.</li>
+  </ul>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 1: ARNAV — PROBLEM, SOLUTION & WHY WE'RE DIFFERENT
+     ════════════════════════════════════════════════════════════════ -->
+<section class="person" id="arnav">
+  <div class="person-header">
+    <span class="person-name">Arnav</span>
+    <span class="person-budget">~2:45</span>
+  </div>
+
+  <p class="script-para">When the Ganga river floods in Bihar, the first thing that happens is the cell phone towers stop working. In the last big flood, more than half the villages lost phone signal within the first few hours. Think about that — the people who need help the most, the farmers in low-lying villages, the families who only have basic feature phones, the elderly who don't use smartphones — they're the ones who get cut off completely.</p>
+
+  <p class="script-para">Most disaster apps today assume you have a smartphone and a good internet connection. They show you a risk score on a map and that's it. But when the network dies, that map is useless. SafeSphere is built for that exact moment — when the internet is gone but people still need to know what to do.</p>
+
+  <p class="script-para">Our solution is simple: we built one platform that works as two completely different apps. If you're a citizen, you get a simple emergency app — it shows your risk level, the nearest shelter, one big SOS button, and lets you tell your family you're safe. If you're a government responder, you get a full emergency command center — live maps, AI-powered evacuation plans, resource tracking, and the ability to send alerts through nine different channels. Same data, same system, but each person sees exactly what they need.</p>
+
+  <p class="script-para">Here's what makes us different — five things no other disaster app does:</p>
+  <p class="script-para"><strong>First,</strong> we don't just predict floods — we plan evacuations. Our AI creates a detailed 48-hour plan: which villages to evacuate first, which shelters have space, what resources to send where, and the exact timeline.</p>
+  <p class="script-para"><strong>Second,</strong> we reach people with zero internet. We send alerts through nine channels at once — SMS, phone notifications, email, WhatsApp, and critically, FM radio. We generate a Hindi voice message, wrap it in the official emergency radio format, and push it to radio stations in eight seconds. Even someone with an old feature phone or a car radio gets the warning.</p>
+  <p class="script-para"><strong>Third,</strong> our AI doesn't make things up. Every recommendation is backed by real Indian disaster guidelines — the NDMA rules, district plans, official procedures. When the AI says "evacuate this village via this route to this shelter," it cites the exact guideline section it's drawn from.</p>
+  <p class="script-para"><strong>Fourth,</strong> the whole thing works offline. The app caches 48 hours of data on your phone — maps, shelter locations, alerts, predictions. There's even a small AI model that runs right in your browser with no internet needed. And if even that fails, we have 61 pre-written emergency answers for common questions.</p>
+  <p class="script-para"><strong>Fifth,</strong> strict security. Citizens can never see government data. Government users only see their own district. Three layers of protection make sure of that.</p>
+
+  <p class="script-para">Predict. Plan. Alert. Evacuate. Verify. One platform from the river gauge to the field responder.</p>
+
+  <p class="simple-note">[Handoff] Now Tavneet and Vedanjali will explain the technology behind all of this.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 2: TAVNEET & VEDANJALI — TECHNOLOGY STACK
+     ════════════════════════════════════════════════════════════════ -->
+<section class="person" id="tavneet-vedanjali">
+  <div class="person-header">
+    <span class="person-name">Tavneet & Vedanjali</span>
+    <span class="person-budget">~3:00</span>
+  </div>
+
+  <p class="script-para"><strong>Tavneet:</strong> Let me start with what you see and interact with. We built the app using Next.js — a modern web framework that loads pages instantly because it does the heavy work on our servers first, then sends you the finished page. This is crucial in disaster zones where internet is slow. We use React for the interactive parts, and TypeScript — which is like JavaScript but with a safety net that catches errors before they reach users.</p>
+
+  <p class="script-para">For the look and feel, we use Tailwind CSS — it lets us build consistent, good-looking interfaces fast. The maps run on MapLibre, which is like Google Maps but completely free and open-source. It draws maps using your phone's graphics chip, so it's smooth even with thousands of markers. We also use a library called Turf.js that does map math right on your phone — calculating distances, drawing safety zones, checking if a location is inside a flood area — all without needing internet.</p>
+
+  <p class="script-para">The database is PostgreSQL on Supabase — a rock-solid database system used by companies worldwide. We added two special extensions: PostGIS for geographic data (so we can ask "what's within 5 km of here?" and get answers in milliseconds), and pgvector for AI search (so we can find relevant emergency documents by meaning, not just keywords). We use Prisma as our database tool — it writes the SQL for us and catches mistakes automatically.</p>
+
+  <p class="script-para">For offline use, we use something called IndexedDB — it's a database built into every browser. We wrap it with a tool called Dexie that makes it easy to use. Your phone stores shelter data, predictions, alerts, and pending reports locally. A background script called a Service Worker syncs everything back to the server when internet returns.</p>
+
+  <p class="script-para"><strong>Vedanjali:</strong> Now the AI side. You've probably heard about "AI agents." Ours are different — the five agents that create evacuation plans are not chatbots. They're step-by-step logical pipelines: one assesses flood risk, one plans evacuation routes, one assigns resources like boats and medical kits, one checks for conflicts like overcrowded shelters. They use keywords and rules, not AI guesswork, so they can't hallucinate wrong evacuation orders. Only the chat feature uses a large language model.</p>
+
+  <p class="script-para">That chat has a chain of six fallback AI providers — if one is down or out of credits, it automatically tries the next. The last resort is a tiny AI model that runs entirely in your browser, and if even that fails, 61 pre-written emergency answers. The alert system that sends SMS, push notifications, and FM radio alerts never uses AI at all — it's pure logic, so it works even if every AI service is down.</p>
+
+  <p class="script-para">Our flood prediction uses a machine learning model called XGBoost. It takes four inputs — how much rain fell in the last 3 days, whether the river is rising or falling, how wet the soil is, and the elevation of the land — and outputs a risk level. This runs as a separate Python service. <strong>[Note: The trained model file isn't in the repo yet, so the demo shows a placeholder prediction.]</strong></p>
+
+  <p class="script-para">For the knowledge base, we use a technique called RAG — Retrieval-Augmented Generation. We upload PDFs of NDMA guidelines and district disaster plans, break them into chunks, convert each chunk to a list of numbers that represents its meaning, and store them in the database. When someone asks a question, we find the most relevant chunks and give them to the AI as context. If the AI service is unavailable, we fall back to simple keyword search — the AI still gets useful context, just not as smart.</p>
+
+  <p class="simple-note">[Handoff] Now Divyansh and Inbesat will show you the live demo.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 3: DIVYANSH & INBESAT — LIVE DEMO
+     ════════════════════════════════════════════════════════════════ -->
+<section class="person" id="divyansh-inbesat">
+  <div class="person-header">
+    <span class="person-name">Divyansh & Inbesat</span>
+    <span class="person-budget">~3:15 + demo time</span>
+  </div>
+
+  <p class="script-para"><strong>Divyansh:</strong> I'll show you the citizen experience. We start at the landing page with two big buttons: "I Need Help" for regular people, and "I'm a Responder" for government staff. Click "I Need Help" and you're instantly inside — no signup, no OTP, no waiting. We're in guest mode with realistic Patna flood data.</p>
+
+  <p class="script-para">The citizen dashboard is clean: your current risk level, the nearest shelter with walking distance, one big red SOS button, and recent alerts. Tap the map and you see the exact same map the government sees — shelters, flood zones, reports from other citizens, all toggleable. The report page lets anyone drop a pin, pick what they're reporting — flooding, blocked road, need shelter, need rescue — add a photo, and submit. It's automatically filtered for spam and goes straight to the government dispatch console. And the AI chat — ask it anything like "where's the nearest shelter?" or "what do I do in a flood?" It works even with airplane mode on, using those 61 pre-written answers.</p>
+
+  <p class="prompt">[Demo rhythm: click, wait for screen to load, say your line. If something lags, skip ahead. Spend a moment on the SOS button and offline chat — they prove the offline claim.]</p>
+
+  <p class="script-para"><strong>Inbesat:</strong> Now the government side — the Emergency Operations Center. Same guest mode, locked to Patna district. The command center shows everything at a glance: active flood events, how full shelters are, pending resource requests, where responders are on the map, live alert feed, recent activity.</p>
+
+  <p class="script-para">The AI Planner — click "Plan evacuation for Patna district" and watch it think out loud. Four steps stream live: risk assessment, route planning, resource assignment, conflict checking. Each step explains its reasoning. The government map has layers — flood zones, shelters, road closures, resource movements. The what-if simulator is the wow moment: crank rainfall to 150mm and watch the flood zones grow in real time.</p>
+
+  <p class="script-para">The alerts page shows severity levels and the FM radio approval queue. Critical alerts automatically broadcast via SMS, push notifications, and FM radio. Warning alerts wait for an admin to approve. The FM station page shows our five ways to reach radio: direct API push, scrolling text on car radios (RDS), audio file upload for older stations, email to the studio, and literally calling the control room by phone and playing the alert. We end on the commander's dashboard — key metrics, gap analysis, situation report generator, and a green system health panel showing every subsystem is operational.</p>
+
+  <p class="prompt">[Demo rhythm: click, paint, line. What-if simulator and FM queue are the wow moments. End on the green health panel.]</p>
+
+  <p class="simple-note">[Handoff] Awani will close us out.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION 4: AWANI — CONCLUSION
+     ════════════════════════════════════════════════════════════════ -->
+<section class="person" id="awani">
+  <div class="person-header">
+    <span class="person-name">Awani</span>
+    <span class="person-budget">~1:45</span>
+  </div>
+
+  <p class="script-para">We started with a fact: 65% of rural India reaches FM radio before they reach a smartphone. SafeSphere meets people where they are — on basic feature phones, on cracked screens, on dead networks.</p>
+
+  <p class="script-para">In the past weeks we've built 28 database tables, 31 API endpoints, four AI planning agents, a machine learning service, five FM radio broadcast methods, a 61-rule offline fallback, and a web app that works offline for 48 hours — all in one codebase with strict security that separates citizens from government users by district.</p>
+
+  <p class="script-para">Our demo is Patna on the Ganga. But the system is designed to work anywhere — Assam, Odisha, Kerala — just by changing the shelter locations, resources, radio stations, and alert rules. The security and district isolation work automatically.</p>
+
+  <p class="script-para">What's next: connect live river gauges and weather stations for real-time predictions, expand to all 388 private FM stations plus All India Radio, add voice support for all 22 official Indian languages, and make the offline AI even smaller and faster. We believe this platform can save lives — giving every village the same intelligence as a district control room, and making them act together.</p>
+
+  <p class="script-para"><strong>Predict. Plan. Alert. Evacuate. Verify.</strong> One platform from the river gauge to the field responder. Thank you for your time. We're happy to answer any questions.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CUE CARDS — glance-only
+     ════════════════════════════════════════════════════════════════ -->
+<details class="ref-section" open>
+  <summary>Cue Cards — glance-only prompts for stage</summary>
+  <div class="content">
+    <h3>Arnav (Problem/Solution/USP)</h3>
+    <ul>
+      <li>Towers die first in floods — 60% lose signal</li>
+      <li>Two apps in one: citizen + government</li>
+      <li>5 USPs: plans not predicts, 9 channels incl FM, NDMA-backed, offline-first, 3-layer security</li>
+      <li>Tagline: Predict. Plan. Alert. Evacuate. Verify.</li>
+    </ul>
+    <h3>Tavneet (Frontend/Data)</h3>
+    <ul>
+      <li>Next.js — loads fast even on slow internet</li>
+      <li>MapLibre — free maps, works offline</li>
+      <li>PostgreSQL + PostGIS + pgvector — location + AI search</li>
+      <li>Dexie + Service Worker — offline database + sync</li>
+    </ul>
+    <h3>Vedanjali (AI/ML)</h3>
+    <ul>
+      <li>5 agents = logical pipeline steps, not chatbots</li>
+      <li>LLM only for chat; 6 backups + browser AI + 61 rules</li>
+      <li>Knowledge base: NDMA guidelines, falls back to keyword search</li>
+      <li>Flood model: 4 inputs → risk level (demo shows placeholder)</li>
+      <li>Alerts = zero AI, pure logic</li>
+    </ul>
+    <h3>Divyansh (Citizen Demo)</h3>
+    <ul>
+      <li>Landing → guest → dashboard</li>
+      <li>Map = same as government</li>
+      <li>Report = spam filtered</li>
+      <li>AI chat = works offline</li>
+    </ul>
+    <h3>Inbesat (Government Demo)</h3>
+    <ul>
+      <li>Command center = live overview</li>
+      <li>AI Planner = streams 4 steps</li>
+      <li>What-if simulator = wow</li>
+      <li>FM approval queue = wow</li>
+      <li>System health = all green</li>
+    </ul>
+    <h3>Awani (Close)</h3>
+    <ul>
+      <li>65% rural India on FM radio</li>
+      <li>28 tables, 31 APIs, 4 agents</li>
+      <li>Deploy anywhere by changing data</li>
+      <li>Future: live gauges, all FM stations, 22 languages</li>
+      <li>Tagline + Q&A invite</li>
+    </ul>
+  </div>
+</details>
+
+<!-- ════════════════════════════════════════════════════════════════
+     ANTICIPATED Q&A — simple answers
+     ════════════════════════════════════════════════════════════════ -->
+<details class="ref-section">
+  <summary>Anticipated Q&A — simple answers for any judge</summary>
+  <div class="content">
+    <h3>Q: "Are these really AI agents?"</h3>
+    <p><strong>A:</strong> The planning agents are logical pipelines — they follow rules and keywords, not AI guessing. Only the chat uses a large language model. Critical decisions like evacuation orders can't be hallucinated because they're rule-based.</p>
+
+    <h3>Q: "Is the flood prediction real or fake?"</h3>
+    <p><strong>A:</strong> The model is real — it takes 4 measurements and outputs risk. But the trained model file isn't in our demo, so we show a placeholder. We're transparent: we'll say "demo prediction" on stage.</p>
+
+    <h3>Q: "What if all your AI services go down?"</h3>
+    <p><strong>A:</strong> The alert system (SMS, push, FM radio) never uses AI — it's pure logic, so it always works. The chat falls through 6 AI providers, then a browser AI, then 61 pre-written answers. The knowledge base falls back to keyword search. Everything degrades gracefully — nothing crashes.</p>
+
+    <h3>Q: "How does offline work?"</h3>
+    <p><strong>A:</strong> Real offline, not simulated. Your browser has a built-in database (IndexedDB). We store shelter data, predictions, alerts, pending reports there. A background script syncs when internet returns. Maps cache tiles you've viewed. There's even a small AI model that runs in the browser.</p>
+
+    <h3>Q: "9 alert channels — which actually work?"</h3>
+    <p><strong>A:</strong> SMS (Twilio), phone notifications, email, FM radio (5 methods: direct API, car radio text, audio file upload, email to studio, phone call to control room), in-app alerts, WhatsApp (webhook ready). All fire in parallel. FM needs station partnerships for full end-to-end.</p>
+
+    <h3>Q: "Is the knowledge base really using NDMA documents?"</h3>
+    <p><strong>A:</strong> Yes — we upload PDFs, extract text, chunk it, convert to meaning-vectors, store in the database with a fast search index. If the AI embedding service is down, we fall back to keyword search. Demo uses seeded NDMA guideline chunks.</p>
+
+    <h3>Q: "How do you stop citizens from seeing government data?"</h3>
+    <p><strong>A:</strong> Three layers: 1) Middleware checks every request and redirects wrong-role users. 2) Server actions verify role before any changes. 3) Database itself enforces row-level security — users literally cannot query rows outside their district even if they hack the API.</p>
+
+    <h3>Q: "What about all those NASA/GLOFAS/IMD environment variables?"</h3>
+    <p><strong>A:</strong> Of ~40 config variables, only ~20 are actually used in code (Supabase, weather, AI providers, SMS, push, text-to-speech). The others like NASA, GLOFAS, Sentinel Hub are declared for future integration but not wired up. We don't claim live integration with them.</p>
+
+    <h3>Q: "Can this work outside Patna?"</h3>
+    <p><strong>A:</strong> Yes — the architecture is district-agnostic. Geographic queries, AI search, FM radio, offline database, planning agents — all parameterized by district. Deploy to another district by changing the data: shelters, resources, radio stations, alert rules.</p>
+
+    <h3>Q: "Biggest technical risk?"</h3>
+    <p><strong>A:</strong> The trained flood model file isn't checked in — the prediction service shows a placeholder until we run training. Also, the app bundle is 6 MB which may load slowly on stage Wi-Fi. Both fixable before demo.</p>
+  </div>
+</details>
+
+<hr class="divider">
+
+<p style="text-align:center;color:var(--muted);font-size:12px;">
+  SafeSphere · Smart India Hackathon 2026 · Bharat Shakti Track · Team Resilience x<br>
+  Simplified script for non-technical audiences. Same structure as technical version, plain English throughout.
+</p>
+
+</div>
+</body>
+</html>

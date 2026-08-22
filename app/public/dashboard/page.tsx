@@ -1,5 +1,9 @@
+"use client";
+
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Bell, HeartHandshake, MapPin, Siren } from "lucide-react";
+import { SectionErrorBoundary } from "@/components/providers/SectionErrorBoundary";
 import AITeaser from "@/components/public/AITeaser";
 import BandwidthGate from "@/components/public/BandwidthGate";
 import BatterySaverBanner from "@/components/public/BatterySaverBanner";
@@ -19,8 +23,16 @@ import SafetyOverview from "@/components/public/SafetyOverview";
 import SafetyTipsFeed from "@/components/public/ai/SafetyTipsFeed";
 import NearestHelpCard from "@/components/public/sos/NearestHelpCard";
 import Translated from "@/components/ui/Translated";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import type { TranslationKey } from "@/lib/i18n/LanguageContext";
+
+/** Lightweight fallback for Suspense boundaries inside the dashboard. */
+function SectionFallback({ label }: { label: string }) {
+  return (
+    <div className="flex min-h-[80px] items-center justify-center rounded-xl border border-white/10 bg-white/5 p-4">
+      <span className="text-xs text-white/40">Loading {label}…</span>
+    </div>
+  );
+}
 
 // ---------------------------------------------------------------------
 // app/public/dashboard/page.tsx — Phase 2 · Step 1 · Mobile-first
@@ -86,9 +98,40 @@ const MODULES = [
 }[];
 
 export default function PublicDashboardPage() {
+  const [isMounted, setIsMounted] = useState(true);
+
+  useEffect(() => {
+    // Forced render after 500ms — guarantees the dashboard content appears
+    // even if child component imports are slow or a context provider stalls.
+    // The brief skeleton flash gives the layout time to stabilize.
+    const timer = setTimeout(() => setIsMounted(true), 500);
+    // Also set immediately via microtask as the fast path
+    setIsMounted(true);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Client-only render — bypasses SSR hydration mismatches from mock-data
+  // islands (geolocation, live clocks, rotating feeds). Everything below,
+  // including map/weather-dependent components, mounts only in the browser.
+  /*
+  if (!isMounted) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[var(--dl-navy)]">
+        <div className="flex flex-col items-center gap-3">
+          <span
+            aria-label="Loading dashboard"
+            className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-[var(--dl-blue)]"
+          />
+          <span className="text-sm text-white/60">Loading Dashboard...</span>
+        </div>
+      </div>
+    );
+  }
+  */
+
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-primary">
-    <main id="main-content" className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-[140px] px-4 md:px-8 text-[var(--dl-text-on-navy)]">
+    <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-[140px] px-4 md:px-8 text-[var(--dl-text-on-navy)]">
       {/* Ambient backdrop */}
       <div
         aria-hidden="true"
@@ -116,70 +159,88 @@ export default function PublicDashboardPage() {
 
         {/* Pull-to-refresh wraps the entire dashboard content (Step 10) */}
         <PullToRefresh>
-        {/* Server navbar — identity-aware avatar dropdown (guest vs user) */}
+        {/* Navbar — identity-aware avatar dropdown (guest vs user) */}
         <PublicNavbar />
 
         {/* Safety stack — live status (mock geo-fence) → hero card →
             contextual action → 3-day forecast (Phase 2 · Steps 2–5) */}
-        <ScrollReveal delay={0} className="mt-8">
-          <SafetyOverview />
-        </ScrollReveal>
+        <section className="mt-8">
+          <SectionErrorBoundary sectionName="Safety Overview">
+            <Suspense fallback={<SectionFallback label="Safety Status" />}>
+              <SafetyOverview />
+            </Suspense>
+          </SectionErrorBoundary>
+        </section>
 
         {/* Lifelines — "Find Nearest Safe Shelter" (geolocation → map
             routing) + "WhatsApp Lifeline" (subscribe + wa.me SOS). Public
             citizen actions only, no admin broadcast controls. */}
-        <ScrollReveal delay={0.1} className="mt-8">
-          <EvacuationLifelines />
-        </ScrollReveal>
+        <section className="mt-8">
+          <SectionErrorBoundary sectionName="Evacuation Lifelines">
+            <EvacuationLifelines />
+          </SectionErrorBoundary>
+        </section>
 
         {/* Phase 6 · Step 8 — Nova's rotating safety tips (one every
             5s, pauses on hover). Proactive advice between chats. Hidden in
             low-bandwidth mode (Phase 13 · Step 2). */}
-        <ScrollReveal delay={0.2} className="mt-8">
-          <BandwidthGate>
-            <SafetyTipsFeed />
-          </BandwidthGate>
-        </ScrollReveal>
+        <section className="mt-8">
+          <SectionErrorBoundary sectionName="Safety Tips">
+            <BandwidthGate>
+              <SafetyTipsFeed />
+            </BandwidthGate>
+          </SectionErrorBoundary>
+        </section>
 
         {/* Phase 5 · Step 6 — "Help Nearby" auto-finder. Client island:
             renders nothing unless an SOS is active, so it's safe here. */}
-        <ScrollReveal delay={0.3} className="mt-8">
-          <NearestHelpCard />
-        </ScrollReveal>
+        <section className="mt-8">
+          <SectionErrorBoundary sectionName="Nearest Help">
+            <NearestHelpCard />
+          </SectionErrorBoundary>
+        </section>
 
         {/* Family safety strip — avatars with status dots, tap to nudge
             (Phase 2 · Step 6) */}
-        <ScrollReveal delay={0.4} className="mt-8">
-          <FamilyStrip />
-        </ScrollReveal>
+        <section className="mt-8">
+          <SectionErrorBoundary sectionName="Family Circle">
+            <FamilyStrip />
+          </SectionErrorBoundary>
+        </section>
 
         {/* Nearby shelters quick-list — exactly 3, with walk time &
             occupancy (Phase 2 · Step 7) */}
-        <ScrollReveal delay={0.5} className="mt-8">
-          <NearbySheltersList />
-        </ScrollReveal>
+        <section className="mt-8">
+          <SectionErrorBoundary sectionName="Nearby Shelters">
+            <NearbySheltersList />
+          </SectionErrorBoundary>
+        </section>
 
         {/* Emergency speed-dial — 4 tel: squares, red control room
             (Phase 2 · Step 8; replaces the old Call-1070 strip) */}
-        <ScrollReveal delay={0.6} className="mt-8">
-          <EmergencyDial />
-        </ScrollReveal>
+        <section className="mt-8">
+          <SectionErrorBoundary sectionName="Emergency Dial">
+            <EmergencyDial />
+          </SectionErrorBoundary>
+        </section>
 
         {/* Phase 1 · Step 4 — Disaster Management Center Directory:
             filterable NDRF/Police/Hospital/Fire cards with one-tap call
             + an emoji mini-map. */}
-        <ScrollReveal delay={0.7} className="mt-8">
-          <CenterDirectory />
-        </ScrollReveal>
+        <section className="mt-8">
+          <SectionErrorBoundary sectionName="Center Directory">
+            <CenterDirectory />
+          </SectionErrorBoundary>
+        </section>
 
         {/* Module grid — stacks on phones, two-up on desktop */}
-        <ScrollReveal delay={0.8} className="mt-8 flex-1">
+        <section className="mt-8 flex-1">
           <div className="grid grid-cols-2 gap-4">
-            {MODULES.map((module) => (
+            {(MODULES || []).map((module) => (
               <Link
                 key={module.href}
                 href={module.href}
-                className="group relative flex min-h-[80px] items-center gap-4 overflow-hidden rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-4 ring-1 ring-transparent backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.08] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-blue)] active:scale-[0.97]"
+                className="group relative flex min-h-[80px] items-center gap-4 overflow-hidden rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-4 ring-1 ring-transparent backdrop-blur transition-all duration-300 hover:border-white/20 hover:bg-white/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-blue)]"
               >
                 <span
                   className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/10 transition group-hover:ring-2 ${module.ring}`}
@@ -201,16 +262,18 @@ export default function PublicDashboardPage() {
               </Link>
             ))}
           </div>
-        </ScrollReveal>
+        </section>
 
         {/* AI Safety Assistant teaser — prompt pills deep-link to
             /public/ai?q=… (Phase 2 · Step 9). Hidden in low-bandwidth
             mode (Phase 13 · Step 2). */}
-        <ScrollReveal delay={0.9} className="mt-8">
-          <BandwidthGate>
-            <AITeaser />
-          </BandwidthGate>
-        </ScrollReveal>
+        <section className="mt-8">
+          <SectionErrorBoundary sectionName="AI Teaser">
+            <BandwidthGate>
+              <AITeaser />
+            </BandwidthGate>
+          </SectionErrorBoundary>
+        </section>
         </PullToRefresh>
         </PublicContentColumn>
 
@@ -222,7 +285,9 @@ export default function PublicDashboardPage() {
       {/* Public "Live Response Status" — read-only transparency panel.
           Fixed right rail on desktop (collapsible drawer); toggleable
           slide-up sheet on mobile. Contains no admin/action widgets. */}
-      <PublicTransparencyPanel />
+      <SectionErrorBoundary sectionName="Transparency Panel">
+        <PublicTransparencyPanel />
+      </SectionErrorBoundary>
     </main>
     </div>
   );

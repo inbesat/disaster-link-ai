@@ -19,9 +19,13 @@ export const SYNC_DISTRICTS = ["Patna", "Ernakulam", "Kamrup"] as const;
 async function fetchJson<T>(url: string, signal?: AbortSignal): Promise<T | null> {
   try {
     const response = await fetch(url, { signal, cache: "no-store" });
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.warn(`[fetchJson] API error: ${response.status} ${response.statusText} for ${url}`);
+      return null;
+    }
     return (await response.json()) as T;
-  } catch {
+  } catch (error) {
+    console.warn(`[fetchJson] Network error for ${url}:`, error);
     return null;
   }
 }

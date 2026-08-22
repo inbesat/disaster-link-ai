@@ -196,7 +196,7 @@ export function TeamRoster() {
   );
 
   const filtered = useMemo(() => {
-    let result = MOCK_RESPONDERS.filter((r) => {
+    const result = MOCK_RESPONDERS.filter((r) => {
       if (search && !r.name.toLowerCase().includes(search.toLowerCase())) return false;
       if (filterRole && r.role !== filterRole) return false;
       if (filterStatus && r.status !== filterStatus) return false;

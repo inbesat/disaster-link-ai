@@ -113,6 +113,9 @@ export function SafetyHero({
   area = "Kankarbagh, Patna",
   updatedAt,
 }: SafetyHeroProps) {
+  // Safe fallbacks for optional props
+  const safeArea = area ?? "Kankarbagh, Patna";
+  const safeUpdatedAt = updatedAt ?? undefined;
   const { t } = useTranslation();
   const theme = STATUS_THEMES[status];
   const Icon = theme.icon;
@@ -173,11 +176,11 @@ export function SafetyHero({
       <div className="relative mt-8 flex flex-wrap items-end justify-between gap-3 rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
         <div>
           <p className="eoc-label text-slate-400">{t("safety_your_area")}</p>
-          <p className="mt-0.5 text-sm font-semibold text-white">{area}</p>
+          <p className="mt-0.5 text-sm font-semibold text-white">{safeArea}</p>
         </div>
-        {updatedAt && (
+        {safeUpdatedAt && (
           <p className="font-mono text-xs uppercase tracking-widest text-slate-400">
-            {t("safety_updated")} {updatedAt}
+            {t("safety_updated")} {safeUpdatedAt}
           </p>
         )}
       </div>

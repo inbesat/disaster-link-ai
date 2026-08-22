@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -10,7 +10,6 @@ import {
   Plus,
   Search,
   Stethoscope,
-  XCircle,
   User,
   MapPin,
 } from "lucide-react";

@@ -4,9 +4,6 @@ import {
   Shield,
   MapPin,
   AlertTriangle,
-  Database,
-  Lock,
-  Eye,
   Mail,
   Phone,
 } from "lucide-react";

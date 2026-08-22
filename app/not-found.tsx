@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, AlertTriangle, Phone } from "lucide-react";
+import { ArrowLeft, AlertTriangle } from "lucide-react";
 
 /**
  * not-found.tsx — branded 404 page for SafeSphere.

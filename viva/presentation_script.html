@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeSphere — SIH 2026 Presentation Script</title>
+<style>
+:root {
+  --bg:#0a0e17; --surface:#111827; --elevated:#1a2234;
+  --border:#1e2d4a; --border-subtle:#162038;
+  --text:#e2e8f0; --dim:#94a3b8; --muted:#64748b;
+  --accent:#38bdf8; --green:#22c55e; --yellow:#eab308;
+  --orange:#f97316; --red:#ef4444; --purple:#a78bfa;
+  --radius:12px;
+}
+* {box-sizing:border-box;margin:0;padding:0}
+body {
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg); color:var(--text);
+  line-height:1.75; -webkit-font-smoothing:antialiased;
+}
+.page {max-width:900px;margin:0 auto;padding:32px 20px 64px;}
+h1 {font-size:26px;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;
+  background:linear-gradient(135deg,#f1f5f9,#38bdf8);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.subtitle {font-size:14px;color:var(--muted);margin-bottom:24px;}
+.budget-bar {
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:24px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;
+  font-family:'SF Mono','Fira Code',monospace;font-size:13px;
+}
+.budget-bar .label {color:var(--dim);text-transform:uppercase;letter-spacing:0.06em;font-size:11px;}
+.budget-bar .value {font-weight:700;color:var(--accent);}
+.budget-bar .status-ok {color:var(--green);}
+.budget-bar .status-warn {color:var(--yellow);}
+.callout-fix {
+  background:rgba(239,68,68,0.08);border:2px solid var(--red);border-radius:var(--radius);
+  padding:16px;margin-bottom:24px;
+}
+.callout-fix h4 {color:var(--red);margin-bottom:8px;font-size:14px;}
+.callout-fix ul {margin-left:20px;}
+.callout-fix li {color:var(--dim);margin-bottom:4px;font-size:13px;}
+section.person {background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;margin-bottom:24px;}
+.person-header {display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1px solid var(--border-subtle);}
+.person-name {font-size:20px;font-weight:800;color:var(--text);}
+.person-budget {font-family:'SF Mono',monospace;font-size:12px;color:var(--accent);
+  background:rgba(56,189,248,0.1);padding:4px 10px;border-radius:6px;}
+.slide-cue {display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:2px 8px;border-radius:4px;background:var(--elevated);
+  color:var(--purple);border:1px solid rgba(167,139,250,0.25);margin-right:6px;vertical-align:middle;}
+.script-para {margin-bottom:14px;color:var(--dim);font-size:14px;line-height:1.8;}
+.script-para strong {color:var(--text);}
+.code-ref {font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:var(--muted);
+  background:var(--elevated);padding:2px 6px;border-radius:4px;display:inline-block;
+  margin-left:6px;opacity:0.7;}
+.demo-step {margin:10px 0;padding:10px 14px;background:var(--elevated);border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;font-size:13.5px;color:var(--dim);}
+.demo-step strong {color:var(--text);}
+.demo-step .route {font-family:'SF Mono',monospace;font-size:11.5px;color:var(--accent);background:var(--bg);padding:1px 6px;border-radius:3px;}
+.demo-step .say {color:var(--text);font-style:italic;}
+details.ref-section {background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:0;margin-bottom:16px;overflow:hidden;}
+details.ref-section summary {padding:16px 24px;cursor:pointer;font-weight:700;font-size:15px;
+  color:var(--accent);background:var(--elevated);border-bottom:1px solid var(--border-subtle);
+  display:flex;align-items:center;gap:12px;}
+details.ref-section summary::-webkit-details-marker {display:none;}
+details.ref-section summary::before {content:'▸';font-size:18px;transition:transform 0.2s;}
+details.ref-section[open] summary::before {transform:rotate(90deg);}
+details.ref-section .content {padding:20px 24px;}
+details.ref-section h3 {font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;}
+details.ref-section ul {margin-left:20px;}
+details.ref-section li {color:var(--dim);font-size:13px;margin-bottom:6px;line-height:1.6;}
+details.ref-section li strong {color:var(--text);}
+hr.divider {border:none;border-top:1px solid var(--border-subtle);margin:32px 0;}
+.transition {color:var(--purple);font-size:13px;font-style:italic;margin:8px 0 16px;}
+@media print {
+  .page {max-width:none;padding:20px;}
+  section.person {break-inside:avoid;page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ════════════════════════════════════════════════════════════════
+     RUNNING TOTAL — UPDATE IF SCRIPT CHANGES
+     ════════════════════════════════════════════════════════════════ -->
+<div class="budget-bar">
+  <span class="label">Total script</span>
+  <span class="value">~920 words</span>
+  <span class="label">≈</span>
+  <span class="value status-ok">7:05</span>
+  <span class="label">target 7:00 | ceiling 8:00 | floor 6:00</span>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     NEEDS DEV FIX BEFORE DEMO
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="callout-fix">
+  <h4>⚠ NEEDS DEV FIX BEFORE DEMO — do not ship script until resolved</h4>
+  <ul>
+    <li><strong>ML model artifact missing:</strong> <code>ml_models/flood_xgboost_model.pkl</code> is only <code>.gitkeep</code> — the FastAPI service will fail to load and fall back to mock predictions. Either run <code>cd ml_service && python train_model.py</code> (needs <code>historical_flood_data.csv</code>) or update the demo script to say "fallback label" not "live prediction".</li>
+    <li><strong>Large JS chunk:</strong> Build warns <code>/_next/static/chunks/fbe89ba5.ad3fd902d5a9f4e7.js is 6.03 MB</code> — may slow initial load on stage Wi-Fi. Consider dynamic imports for heavy map/AI modules.</li>
+    <li><strong>Sentry critical dependency warning</strong> in <code>lib/monitoring/sentry.ts</code> — not blocking but noisy.</li>
+    <li><strong>Verify these routes render in guest mode:</strong> <code>/command-center</code>, <code>/ai-planner</code>, <code>/public/dashboard</code>, <code>/public/report</code>, <code>/field</code>. If any redirect to login, the demo flow breaks.</li>
+  </ul>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     ARNAV — COLD OPEN + PROBLEM / SOLUTION / WHY BETTER
+     ~280 words / ~2:09
+     ════════════════════════════════════════════════════════════════ -->
+<section class="person" id="arnav">
+  <div class="person-header">
+    <span class="person-name">Arnav</span>
+    <span class="person-budget">~280 words / ~2:09</span>
+  </div>
+
+  <p class="script-para"><span class="slide-cue">[Slide 1]</span> When the Ganga floods in Bihar, the cell towers go down first. Most disaster apps die with the network — leaving citizens without warnings and responders without data. That is the problem we walked into.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 2]</span> SafeSphere is built for that exact moment. It is a dual-mode platform from a single codebase: citizens get a one-tap emergency companion app, while government responders get a full Emergency Operations Center with live metrics, geospatial intelligence, and multi-channel alerting. Two doors, same data, completel dvfjbjvdlvk cbscjkkvdvjdjky different experiences.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 3]</span> When the internet dies, alerts cascade through nine redundant channels — SMS, web push, email, WhatsApp, in-app, and critically, FM radio broadcasts via CAP v1.2 XML with AI-generated voice in Hindi and English. That reaches feature-phone users in their own language within eight seconds. No other platform in this hackathon does radio.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 4]</span> The AI does not just predict floods. It plans forty-eight-hour evacuations using a LangGraph multi-agent pipeline — predictor, planner, allocator, validator, communicator — grounded in real NDMA guidelines through a RAG pipeline over pgvector embeddings. The planner outputs concrete routes, shelter assignments, and resource deployments, not just text.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 5]</span> And the whole system works offline: a forty-eight-hour IndexedDB cache for predictions, shelters, and alerts; a local Gemma two-B model that runs in the browser via WebLLM; and a sixty-one-rule static fallback that never goes silent, even on a dead device with no cache. The AI never hallucinates an evacuation order because the critical path is rule-based.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 6]</span> Predict. Plan. Alert. Evacuate. Verify. One platform from river gauge to field responder. That is SafeSphere.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     TAVNEET — FRONTEND + DATA LAYER STACK
+     ~115 words / ~53 sec
+     ════════════════════════════════════════════════════════════════ -->
+<section class="person" id="tavneet">
+  <div class="person-header">
+    <span class="person-name">Tavneet</span>
+    <span class="person-budget">~115 words / ~53s</span>
+  </div>
+
+  <p class="script-para"><span class="slide-cue">[Slide 7]</span> The frontend runs on Next.js 14 with the App Router, React 18, and TypeScript strict mode. We picked it for server-side rendering on slow networks, and because the API routes host our agent orchestration <code class="code-ref">app/api/agents/orchestrate/route.ts</code>.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 8]</span> Styling is Tailwind CSS 3 plus DaisyUI 4 for speed and consistency, with shadcn/ui primitives on Radix UI for accessible dialogs, dropdowns, tables <code class="code-ref">components/ui/</code>.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 9]</span> Mapping is MapLibre GL with react-map-gl — vector tiles, WebGL rendering, full offline tile caching via Workbox <code class="code-ref">components/map/</code>. Geospatial queries run on PostGIS through Prisma, with Turf.js for client-side analysis <code class="code-ref">lib/agents/nodes/</code>.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 10]</span> Database is Supabase PostgreSQL 15 with Prisma 6 ORM — type-safe queries, connection pooling, Row-Level Security for district isolation <code class="code-ref">prisma/schema.prisma</code>. Vector search uses pgvector with HNSW index for RAG embeddings <code class="code-ref">lib/rag/</code>.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 11]</span> Offline-first: Dexie wraps IndexedDB for predictions, alerts, shelters, pending reports; a custom service worker handles background sync and push queue replay <code class="code-ref">lib/offline-sync/</code> <code class="code-ref">worker/index.js</code>.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     VEDANJALI — AI / LLM CHAIN + ML SERVICE STACK
+     ~120 words / ~55 sec
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="person" id="vedanjali">
+  <div class="person-header">
+    <span class="person-name">Vedanjali</span>
+    <span class="person-budget">~120 words / ~55s</span>
+  </div>
+
+  <p class="script-para"><span class="slide-cue">[Slide 12]</span> The five named agents — Flood Analyst, Shelter Manager, Resource Coordinator, Evacuation Planner, Communications Officer — are deterministic LangGraph pipeline nodes, not separate LLMs. They use keyword and feature matching so critical decisions cannot be hallucinated <code class="code-ref">lib/agents/graph.ts</code> <code class="code-ref">lib/agents/nodes/intelligence-nodes.ts</code> <code class="code-ref">lib/agents/nodes/action-nodes.ts</code>.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 13]</span> The LLM fallback chain powers only the conversational chat: Groq free tier → OpenRouter primary → OpenRouter backup → Bluesminds → on-device Gemma 2B via WebLLM → 61-rule static fallback <code class="code-ref">lib/ai/openrouter.ts</code> <code class="code-ref">lib/agents/model-provider.ts</code> <code class="code-ref">lib/ai-bridge/</code>.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 14]</span> RAG uses pgvector with OpenAI embeddings; if the key is missing it silently degrades to keyword search — retrieval never throws or returns empty <code class="code-ref">lib/rag/</code>.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 15]</span> Flood risk model is XGBoost with four engineered features — cumulative rainfall 72h, river level trend, soil saturation index, elevation — served by a separate FastAPI microservice <code class="code-ref">ml_service/api.py</code>. <strong>[UNVERIFIED — CONFIRM BEFORE DEMO]</strong> The model artifact <code>flood_xgboost_model.pkl</code> is currently absent; the service will return a mock label. We will say "fallback label" on stage.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 16]</span> The alerting and broadcast path never touches an LLM — it is fully deterministic CAP v1.2 XML generation, so an LLM outage never blocks an evacuation alert <code class="code-ref">lib/cap/cap-builder.ts</code> <code class="code-ref">lib/broadcast/auto-trigger.ts</code>.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     DIVYANSH — LIVE DEMO, CITIZEN-SIDE SCREENS
+     ~125 words / ~58 sec (+ 25s nav time)
+     ════════════════════════════════════════════════════════════════ -->
+<section class="person" id="divyansh">
+  <div class="person-header">
+    <span class="person-name">Divyansh</span>
+    <span class="person-budget">~125 words / ~58s + nav</span>
+  </div>
+
+  <p class="script-para"><span class="slide-cue">[Slide 17]</span> I'll walk the citizen flow in guest mode — zero signup, seeded Patna data with four flood scenarios <code class="code-ref">lib/demo/seeder.ts</code>.</p>
+
+  <div class="demo-step">
+    <strong>1. Landing</strong> — <span class="route">/</span> — Two doors, alert ticker. <span class="say">"Two doors. One codebase. Pick your role."</span>
+  </div>
+  <div class="demo-step">
+    <strong>2. Guest entry</strong> — Click "I Need Help" → <span class="route">/public/dashboard</span> — <span class="say">"Guest mode. Full access. No OTP."</span>
+  </div>
+  <div class="demo-step">
+    <strong>3. Citizen dashboard</strong> — <span class="route">/public/dashboard</span> — Risk card, nearest shelter, SOS, alerts. <span class="say">"Risk level. Nearest shelter. One-tap SOS."</span>
+  </div>
+  <div class="demo-step">
+    <strong>4. Public map</strong> — <span class="route">/public/map</span> — Same map as control room. <span class="say">"Citizens see the same map data as the district admin."</span>
+  </div>
+  <div class="demo-step">
+    <strong>5. Report</strong> — <span class="route">/public/report</span> — GPS, type, photo, spam guard. <span class="say">"Crowdsourced ground truth. Spam-filtered."</span>
+  </div>
+  <div class="demo-step">
+    <strong>6. AI chat</strong> — <span class="route">/public/ai</span> — Offline-ready, 61-rule fallback. <span class="say">"Ask anything. Works without internet."</span>
+  </div>
+
+  <p class="transition">[Click, paint, line. If a screen stalls, skip. Linger on SOS and offline chat — they prove the offline claim.]</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     INBESAT — LIVE DEMO, GOV/ADMIN-SIDE SCREENS
+     ~125 words / ~58 sec (+ 25s nav time)
+     ════════════════════════════════════════════════════════════════ -->
+<section class="person" id="inbesat">
+  <div class="person-header">
+    <span class="person-name">Inbesat</span>
+    <span class="person-budget">~125 words / ~58s + nav</span>
+  </div>
+
+  <p class="script-para"><span class="slide-cue">[Slide 19]</span> Now the Emergency Operations Center — guest mode, district-scoped to Patna. Middleware enforces crossover guards <code class="code-ref">middleware.ts</code>.</p>
+
+  <div class="demo-step">
+    <strong>1. Command Center</strong> — <span class="route">/command-center</span> — Metrics, ticker, mini-map. <span class="say">"Live dashboard: events, shelters, resources, responders."</span>
+  </div>
+  <div class="demo-step">
+    <strong>2. AI Planner</strong> — <span class="route">/ai-planner</span> — Click "Plan evacuation for Patna." <span class="say">"Four agents. Deterministic. Streams the plan live."</span>
+  </div>
+  <div class="demo-step">
+    <strong>3. Gov map + what-if</strong> — <span class="route">/map</span> — Layer toggles, crank to 150mm. <span class="say">"Wow moment. Watch flood zones grow."</span>
+  </div>
+  <div class="demo-step">
+    <strong>4. Alerts + FM queue</strong> — <span class="route">/alerts</span> — Severity badges, approval queue. <span class="say">"Critical = SMS+Push+FM auto. Warning = approval queue."</span>
+  </div>
+  <div class="demo-step">
+    <strong>5. FM stations</strong> — <span class="route">/fm-stations</span> — 5 strategies: CAP, RDS, FTP, Email, IVR. <span class="say">"Five ways to reach radio. CAP XML, RDS text, FTP audio, email, IVR."</span>
+  </div>
+  <div class="demo-step">
+    <strong>6. Commander's desk</strong> — <span class="route">/dashboard</span> — KPIs, sit-rep, health panel. <span class="say">"Everything green. ML, AI, broadcast, DB — all operational."</span>
+  </div>
+
+  <p class="transition">[Same rhythm: click, paint, line. What-if sim and FM queue are the wow moments. End on green health panel.]</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     AWANI — CONCLUSION, IMPACT, THANK THE JURY
+     ~135 words / ~1:02
+     ════════════════════════════════════════════════════════════════ -->
+<section class="person" id="awani">
+  <div class="person-header">
+    <span class="person-name">Awani</span>
+    <span class="person-budget">~135 words / ~1:02</span>
+  </div>
+
+  <p class="script-para"><span class="slide-cue">[Slide 21]</span> We started with a fact: sixty-five percent of rural India reaches FM radio before it reaches a smartphone. SafeSphere meets people where they are — on feature phones, on cracked screens, on dead networks.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 22]</span> In the last weeks we shipped twenty-eight database models, thirty-one API endpoints, four LangGraph agent nodes, a FastAPI ML service, five FM broadcast strategies, a sixty-one-rule offline fallback, and a PWA that caches forty-eight hours of operational data — all in one Next.js codebase with dual-mode auth and district-level isolation.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 23]</span> Our demo district is Patna on the Ganga. But the architecture — PostGIS geospatial, pgvector RAG, CAP v1.2 radio, Dexie offline, LangGraph planning — is district-agnostic. Deploy to Assam, Odisha, Kerala by changing the seed data and alert rules.</p>
+
+  <p class="script-para"><span class="slide-cue">[Slide 24]</span> Predict. Plan. Alert. Evacuate. Verify. One platform from river gauge to field responder. Thank you for your time.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CUE CARDS — reference only, not timed
+     ════════════════════════════════════════════════════════════════ -->
+<details class="ref-section" open>
+  <summary>Cue Cards — glance-only prompts for stage</summary>
+  <div class="content">
+    <h3>Arnav</h3>
+    <ul>
+      <li>Towers down first — problem</li>
+      <li>Dual mode: citizen + gov</li>
+      <li>9 channels incl. FM radio</li>
+      <li>LangGraph plans 48h evac</li>
+      <li>Offline: 48h cache + local AI</li>
+      <li>Tagline: Predict. Plan. Alert. Evacuate. Verify.</li>
+    </ul>
+    <h3>Tavneet</h3>
+    <ul>
+      <li>Next.js 14 App Router + TS strict</li>
+      <li>Tailwind + DaisyUI + shadcn/ui</li>
+      <li>MapLibre GL + PostGIS + Turf.js</li>
+      <li>Supabase + Prisma + pgvector HNSW</li>
+      <li>Dexie + SW + background sync</li>
+    </ul>
+    <h3>Vedanjali</h3>
+    <ul>
+      <li>5 agents = deterministic pipeline nodes</li>
+      <li>LLM only for chat; 6-provider chain</li>
+      <li>RAG degrades to keyword search</li>
+      <li>XGBoost 4 features → FastAPI</li>
+      <li>Alert path = zero LLM</li>
+    </ul>
+    <h3>Divyansh (Citizen)</h3>
+    <ul>
+      <li>Landing → guest → dashboard</li>
+      <li>Map → same data as gov</li>
+      <li>Report → spam filtered</li>
+      <li>AI chat → offline rules</li>
+    </ul>
+    <h3>Inbesat (Gov)</h3>
+    <ul>
+      <li>Command center metrics</li>
+      <li>AI Planner streams 4 nodes</li>
+      <li>What-if sim = wow</li>
+      <li>FM approval queue = wow</li>
+      <li>System health = green</li>
+    </ul>
+    <h3>Awani</h3>
+    <ul>
+      <li>65% rural India on FM</li>
+      <li>28 models, 31 APIs, 4 agents</li>
+      <li>District-agnostic architecture</li>
+      <li>Tagline + thank you</li>
+    </ul>
+  </div>
+</details>
+
+<!-- ════════════════════════════════════════════════════════════════
+     ANTICIPATED Q&A — reference only, not timed
+     ═══════════════════════════════════════════════════════════════ -->
+<details class="ref-section">
+  <summary>Anticipated Q&A — honest answers for technical judges</summary>
+  <div class="content">
+    <h3>Q1: "Are these really five AI agents?"</h3>
+    <li><strong>A:</strong> No — they're deterministic LangGraph pipeline nodes (predictor → planner → allocator → validator → communicator) that use keyword/feature matching. Only the conversational chat uses an LLM. Critical decisions cannot be hallucinated because they're rule-based. <code class="code-ref">lib/agents/graph.ts</code></li>
+
+    <h3>Q2: "Is your ML model really predicting live, or is that a mock?"</h3>
+    <li><strong>A:</strong> The XGBoost model with four features (72h rainfall, river trend, soil saturation, elevation) is real and served via FastAPI. However, the trained artifact <code>flood_xgboost_model.pkl</code> is currently missing from <code>ml_models/</code> — the service falls back to a mock label. We are transparent about this: on stage we say "fallback label" not "live prediction." <code class="code-ref">ml_service/api.py</code></li>
+
+    <h3>Q3: "What happens if all your API keys are removed right now?"</h3>
+    <li><strong>A:</strong> The alerting and broadcast path (CAP v1.2, SMS, Push, FM) never touches an LLM — it's fully deterministic. The conversational chat falls through: Groq → OpenRouter → Bluesminds → WebLLM (Gemma-2B in browser) → 61-rule static fallback. The rule-based fallback has 50+ disaster scenarios and never goes silent. RAG degrades to keyword search if OpenAI key is missing. <code class="code-ref">lib/ai/openrouter.ts</code> <code class="code-ref">lib/ai-bridge/rule-based-fallback.ts</code></li>
+
+    <h3>Q4: "How does offline actually work — is it simulated?"</h3>
+    <li><strong>A:</strong> Real implementation. Dexie wraps IndexedDB for predictions, alerts, shelters, resources, and pending reports. A custom service worker (Workbox) precaches the app shell, runtime-caches API responses network-first, and registers periodic background sync. Push notifications queue in Cache API and replay on reconnect. The local Gemma-2B model downloads to IndexedDB via WebLLM. <code class="code-ref">lib/offline-sync/</code> <code class="code-ref">worker/index.js</code> <code class="code-ref">lib/ai-bridge/webllm-provider.ts</code></li>
+
+    <h3>Q5: "You claim 9 alert channels — which are actually live?"</h3>
+    <li><strong>A:</strong> SMS (Twilio), Web Push (VAPID), Email (Nodemailer), FM Radio (5 strategies: CAP API, RDS, FTP, Email-to-studio, IVR), In-App (Novu-ready), WhatsApp (webhook stub). All fan out in parallel from the alert engine. Twilio is bypassed in demo mode. FM strategies are implemented but need station APIs for end-to-end. <code class="code-ref">lib/broadcast/fm-dispatcher.ts</code> <code class="code-ref">lib/sms/</code></li>
+
+    <h3>Q6: "Is the RAG really using NDMA documents?"</h3>
+    <li><strong>A:</strong> The pipeline exists: PDF upload → text extraction → chunking → OpenAI embeddings (1536-dim) → pgvector HNSW index → cosine similarity search → context injection. If <code>OPENAI_API_KEY</code> is missing, it silently falls back to keyword search over stored chunks — no errors, no empty results. Demo uses seeded NDMA guideline chunks. <code class="code-ref">lib/rag/</code></li>
+
+    <h3>Q7: "How do you prevent a citizen from accessing the gov dashboard?"</h3>
+    <li><strong>A:</strong> Middleware enforces dual-mode crossover guards: a <code>role=public</code> cookie blocks <code>/gov/*</code> routes (redirects to <code>/public/dashboard</code>); a gov role blocks <code>/public/*</code> unless <code>view_as_public</code> is set. Admin routes require <code>super_admin</code> or <code>district_admin</code> — guests are bounced to 403. <code class="code-ref">middleware.ts</code></li>
+
+    <h3>Q8: "What's the story with all those env vars in .env.example — GLOFAS, NASA, Sentinel?"</h3>
+    <li><strong>A:</strong> Of ~40 env vars, only ~20 are wired into real code paths (Supabase, OpenWeatherMap, Groq/OpenRouter/Bluesminds, Twilio, VAPID, TTS providers). GLOFAS, NASA, Sentinel Hub, FIRMS, IMD, CWC, data.gov.in, GraphHopper, Novu, HDX are declared but not called anywhere. We do not claim live integration with them. <code class="code-ref">.env.example</code></li>
+
+    <h3>Q9: "Can this scale beyond Patna?"</h3>
+    <li><strong>A:</strong> Yes. The architecture is district-agnostic: PostGIS geospatial queries, pgvector RAG, CAP v1.2 radio, Dexie offline, LangGraph planning — all parameterized by district. Deploy to another district by seeding shelters, resources, FM stations, and alert rules. The middleware's district scoping and RLS policies handle isolation. <code class="code-ref">prisma/schema.prisma</code> <code class="code-ref">lib/broadcast/auto-trigger.ts</code></li>
+
+    <h3>Q10: "What's the biggest technical risk you're carrying?"</h3>
+    <li><strong>A:</strong> The ML model artifact is not checked in — the FastAPI service will fail to load it and return a mock label until <code>train_model.py</code> runs against <code>historical_flood_data.csv</code>. Also, the 6 MB JS chunk may slow cold start on stage Wi-Fi. Both are fixable before demo. <code class="code-ref">ml_models/</code> <code class="code-ref">next.config.mjs</code></li>
+  </div>
+</details>
+
+<hr class="divider">
+
+<p style="text-align:center;color:var(--muted);font-size:12px;">
+  SafeSphere · Smart India Hackathon 2026 · Bharat Shakti Track · Team Resilience x<br>
+  This script is grounded in the actual codebase as of 23 Aug 2026. Update the running total if you edit.
+</p>
+
+</div>
+</body>
+</html>

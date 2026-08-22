@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import UnifiedLoginPage from "./UnifiedLoginPage";
+import SupportButton from "@/components/ui/SupportButton";
 
 // ---------------------------------------------------------------------
 // app/(auth)/login/page.tsx — unified login entry point.
@@ -27,6 +28,7 @@ export default function LoginPage() {
       }
     >
       <UnifiedLoginPage />
+      <SupportButton />
     </Suspense>
   );
 }

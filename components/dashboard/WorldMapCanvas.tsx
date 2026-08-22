@@ -13,7 +13,7 @@ import { useMemo } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Map, Source, Layer, Marker } from "react-map-gl/maplibre";
-import type { FeatureCollection, Polygon, Point } from "geojson";
+import type { FeatureCollection, Polygon } from "geojson";
 import {
   AlertTriangle,
   Home,
@@ -125,18 +125,6 @@ const GLOBAL_RESOURCES: Array<{ lng: number; lat: number; name: string }> = [
   { lng: -0.1, lat: 51.5, name: "London Reserve" },
   { lng: 139.7, lat: 35.7, name: "Tokyo Depot" },
 ];
-
-// ── Layer colour helpers ────────────────────────────────────────────
-function severityColor(severity?: string): string {
-  switch (severity) {
-    case "high":
-      return "#ef4444";
-    case "medium":
-      return "#f59e0b";
-    default:
-      return "#3b82f6";
-  }
-}
 
 // ── Types ───────────────────────────────────────────────────────────
 interface WorldMapCanvasProps {

@@ -12,7 +12,7 @@
 // ---------------------------------------------------------------------
 
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LayoutGrid, Map as MapIcon, ShieldCheck, Boxes } from "lucide-react";
 import InventoryTable from "@/components/gov/resources/InventoryTable";
 import {
@@ -54,7 +54,7 @@ function ViewToggle({
       aria-label="Resource view"
       className="flex rounded-lg border border-white/10 bg-white/5 p-1"
     >
-      {VIEW_TABS.map((tab) => {
+      {(VIEW_TABS || []).map((tab) => {
         const Icon = tab.icon;
         const active = mode === tab.mode;
         return (
@@ -80,19 +80,33 @@ function ViewToggle({
 }
 
 export default function GovResourcesPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const [mode, setMode] = useState<ViewMode>("table");
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Per-status counts for the summary strip (available / deployed / maintenance).
   const counts = useMemo(() => {
     const byStatus: Record<ResourceStatus, number> = {
-      available: resourcesByStatus("available").length,
-      deployed: resourcesByStatus("deployed").length,
-      maintenance: resourcesByStatus("maintenance").length,
+      available: resourcesByStatus("available")?.length ?? 0,
+      deployed: resourcesByStatus("deployed")?.length ?? 0,
+      maintenance: resourcesByStatus("maintenance")?.length ?? 0,
     };
-    const byCategory = Object.keys(CATEGORY_META) as ResourceCategory[];
-    const total = RESOURCE_INVENTORY.length;
+    const byCategory = (Object.keys(CATEGORY_META) ?? []) as ResourceCategory[];
+    const total = (RESOURCE_INVENTORY || []).length;
     return { byStatus, byCategory, total };
   }, []);
+
+  // Client-only render — bypasses SSR hydration mismatches.
+  if (!isMounted) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center text-white">
+        Loading Resources...
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-primary text-foreground">
@@ -121,30 +135,30 @@ export default function GovResourcesPage() {
             <Boxes aria-hidden className="h-3.5 w-3.5" />
             {counts.total} assets
           </span>
-          {counts.byCategory.map((category) => (
+          {(counts.byCategory || []).map((category) => (
             <span
               key={category}
               className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[0.6875rem] font-semibold text-slate-300"
             >
-              <span aria-hidden>{CATEGORY_META[category].emoji}</span>
-              {CATEGORY_META[category].label}
+              <span aria-hidden>{CATEGORY_META?.[category]?.emoji ?? ''}</span>
+              {CATEGORY_META?.[category]?.label ?? category}
             </span>
           ))}
         </div>
 
         {/* Status legend */}
         <div className="mt-3 flex flex-wrap items-center gap-3">
-          {(Object.keys(STATUS_META) as ResourceStatus[]).map((status) => (
+          {((Object.keys(STATUS_META ?? {}) || []) as ResourceStatus[]).map((status) => (
             <span
               key={status}
               className="inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold text-slate-300"
             >
               <span
                 aria-hidden
-                className={`h-2 w-2 rounded-full ${STATUS_META[status].dot}`}
+                className={`h-2 w-2 rounded-full ${STATUS_META?.[status]?.dot ?? ''}`}
               />
-              {STATUS_META[status].label}
-              <span className="font-mono text-muted">{counts.byStatus[status]}</span>
+              {STATUS_META?.[status]?.label ?? status}
+              <span className="font-mono text-muted">{counts?.byStatus?.[status] ?? 0}</span>
             </span>
           ))}
         </div>

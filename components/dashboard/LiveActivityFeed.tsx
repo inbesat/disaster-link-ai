@@ -145,7 +145,7 @@ export default function LiveActivityFeed({
       <ul
         ref={listRef}
         aria-live="polite"
-        className="feed-scroll flex max-h-[420px] flex-col gap-2 overflow-y-auto p-3"
+        className="feed-scroll flex max-h-[40vh] sm:max-h-[420px] flex-col gap-2 overflow-y-auto p-3"
       >
         {allEvents.map((event) => {
           const style = EVENT_STYLE[event.type];

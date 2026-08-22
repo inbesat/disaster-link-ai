@@ -36,7 +36,7 @@ import {
   ShieldCheck,
   User,
 } from "lucide-react";
-import { publicOtpLogin, govLogin, enableGuestMode } from "@/app/actions/auth";
+import { enableGuestMode } from "@/app/actions/auth";
 
 type LoginMode = "citizen" | "gov";
 

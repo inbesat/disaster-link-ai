@@ -3,8 +3,6 @@ import Script from "next/script";
 import { Inter, JetBrains_Mono, Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import ToastViewport from "@/components/ui/Toast";
-import CookieConsent from "@/components/ui/CookieConsent";
-import SupportButton from "@/components/ui/SupportButton";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import LocalBusinessSchema from "@/components/seo/LocalBusinessSchema";
 import SimulationToggle from "@/components/admin/SimulationToggle";
@@ -274,20 +272,6 @@ export default function RootLayout({
         <ShortcutModal />
 
         <ToastViewport />
-
-        {/* Phase 2 — Cookie Consent Banner (GDPR/DPDP compliance) */}
-        <CookieConsent />
-
-        {/* Phase 2 — Floating Support / Report Bug Button */}
-        <SupportButton />
-
-        {/* Instant app-wide translation (Google Translate widget). The
-            placeholder div lives in the landing Navbar
-            (components/landing/layout/Navbar.tsx); these two scripts inject
-            the real working dropdown there and, on selection, auto-translate
-            the entire DOM — every page of the app, no manual dictionary
-            needed. Inline layout keeps it a compact dropdown, not the
-            full-screen banner variant. */}
         <Script id="google-translate-init" strategy="afterInteractive">
           {`
             function googleTranslateElementInit() {

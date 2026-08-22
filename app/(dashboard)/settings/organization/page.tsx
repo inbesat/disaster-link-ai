@@ -12,7 +12,7 @@
 // ---------------------------------------------------------------------
 
 import { useState } from "react";
-import { Building2, MapPin, ShieldAlert, Users, Clock, Package } from "lucide-react";
+import { Building2, MapPin, ShieldAlert, Users, Package } from "lucide-react";
 import SettingsSection from "@/components/settings/SettingsSection";
 import Toggle from "@/components/settings/Toggle";
 import { showToast } from "@/components/ui/Toast";

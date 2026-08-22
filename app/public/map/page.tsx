@@ -106,7 +106,7 @@ export default function PublicMapPage() {
       )}
 
       {/* Floating gradient header over the map */}
-      <header className="absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-[#0b1120]/85 via-[#0b1120]/40 to-transparent px-4 pb-6 pt-5">
+      <header className="absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-[#0a1120]/85 via-[#0a1120]/40 to-transparent px-4 pb-6 pt-5">
         <div className="flex items-center gap-3">
           <Link
             href="/public/dashboard"

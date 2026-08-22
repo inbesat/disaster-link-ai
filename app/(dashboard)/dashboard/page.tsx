@@ -30,38 +30,42 @@ export default function DashboardPage() {
           Live situational awareness across all active districts.
         </p>
 
-        {/* Staggered widget grid — 1 col on mobile, 2 on tablet, 12 × on xl. */}
+        {/* Staggered widget grid — 1 col on mobile, 2 on tablet, 12 × on lg+.
+            Column counts are overridden to 12 at lg/xl so the col-span-*
+            classes below always match the real track count (mismatched spans
+            force implicit grid tracks and break card alignment). */}
         <DashboardGrid
+          columns={{ mobile: 1, tablet: 2, desktop: 12, wide: 12 }}
           items={[
-            { key: "kpis", className: "xl:col-span-12", children: <HeroKPIs /> },
+            { key: "kpis", className: "lg:col-span-12", children: <HeroKPIs /> },
             {
               key: "map",
-              className: "md:col-span-2 xl:col-span-8 xl:row-span-2",
+              className: "md:col-span-2 lg:col-span-8 lg:row-span-2",
               children: <LiveMapWidget />,
             },
             {
               key: "alerts",
-              className: "md:col-span-2 xl:col-span-4 xl:row-span-2",
+              className: "md:col-span-2 lg:col-span-4 lg:row-span-2",
               children: <AlertFeedWidget />,
             },
             {
               key: "planner",
-              className: "md:col-span-2 xl:col-span-4",
+              className: "md:col-span-2 lg:col-span-4",
               children: <AIPlannerWidget />,
             },
             {
               key: "responders",
-              className: "md:col-span-2 xl:col-span-4",
+              className: "md:col-span-2 lg:col-span-8",
               children: <ResponderStatusBoard />,
             },
             {
               key: "flood",
-              className: "md:col-span-2 xl:col-span-8",
+              className: "md:col-span-2 lg:col-span-8",
               children: <FloodPredictionChart />,
             },
             {
               key: "donut",
-              className: "md:col-span-2 xl:col-span-4",
+              className: "md:col-span-2 lg:col-span-4",
               children: <ResourceDonutChart />,
             },
           ]}

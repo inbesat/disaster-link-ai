@@ -84,17 +84,11 @@ function getGridColsClass(columns: DashboardGridProps["columns"]): string {
 }
 
 /**
- * Generate responsive gap class from gap values.
- * Maps to: gap-{mobile} md:gap-{tablet} lg:gap-{desktop} xl:gap-{wide}
- * Uses Tailwind's gap scale: gap-4=16px, gap-5=20px, gap-6=24px
+ * Canonical responsive gap — token-driven rhythm (16 / 20 / 24 / 24 px).
+ * Gap intentionally does NOT scale from the `columns` prop: column counts
+ * and spacing are independent concerns.
  */
-function getGapClass(columns: DashboardGridProps["columns"]): string {
-  const m = columns?.mobile ? `gap-[${columns.mobile * 4}px]` : "gap-4";
-  const t = columns?.tablet ? `gap-[${columns.tablet * 4}px]` : "gap-5";
-  const d = columns?.desktop ? `gap-[${columns.desktop * 4}px]` : "gap-6";
-  const w = columns?.wide ? `gap-[${columns.wide * 4}px]` : "gap-6";
-  return `${m} md:${t} lg:${d} xl:${w}`;
-}
+const CANONICAL_GAP_CLASS = "gap-4 md:gap-5 lg:gap-6 xl:gap-6";
 
 export function DashboardGrid({ items, columns }: DashboardGridProps) {
   const reduceMotion = useReducedMotion();
@@ -102,14 +96,14 @@ export function DashboardGrid({ items, columns }: DashboardGridProps) {
   const itemVariants = reduceMotion ? fadeItem : gridItem;
 
   const gridColsClass = getGridColsClass(columns);
-  const gapClass = columns ? getGapClass(columns) : "gap-4 md:gap-5 lg:gap-6 xl:gap-6";
+  const gapClass = CANONICAL_GAP_CLASS;
 
   return (
     <motion.div
       variants={container}
       initial="hidden"
       animate="show"
-      className={`mt-6 grid ${gridColsClass} ${gapClass}`}
+      className={`mt-6 grid w-full grid-flow-row-dense items-start ${gridColsClass} ${gapClass}`}
     >
       {items.map(({ key, className = "", children }) => (
         <motion.div key={key} variants={itemVariants} className={className}>

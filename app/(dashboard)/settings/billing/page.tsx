@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CreditCard, ArrowUpRight, AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
+import { CreditCard, AlertCircle, CheckCircle, Clock, XCircle } from "lucide-react";
 import { createCheckoutSession, createCustomerPortalSession, getSubscriptionStatus } from "@/app/actions/billing";
 
 const PRICE_IDS = {
@@ -27,7 +27,7 @@ export default function BillingPage() {
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   useEffect(() => {
-    loadBilling();
+    void loadBilling();
   }, []);
 
   async function loadBilling() {

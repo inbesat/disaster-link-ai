@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import LayerToggle, { type LayerVisibility } from "@/components/map/LayerToggle";
 import { SkeletonLoader } from "@/components/ui/SkeletonLoader";
 // Step 10 — Recharts-heavy prediction widget is lazy-loaded client-side
@@ -69,6 +70,7 @@ type CommandCenterClientProps = {
 
 export default function CommandCenterClient({ sidebar, top }: CommandCenterClientProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
 
   // The map display config is owned by /settings/map via the shared
   // MapSettingsContext — the command-center map honours Default View,
@@ -150,7 +152,7 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
   const controls = (
     <>
       <p className="eoc-label text-accent">COMMAND CENTER · {focusLabel}</p>
-      <h1 className="text-xl font-bold">{DISASTER_META[disasterType].label} Response</h1>
+      <h1 className="text-xl font-bold">{DISASTER_META?.[disasterType]?.label ?? 'Disaster'} Response</h1>
 
       <div className="mt-4">
         <HazardSelector value={disasterType} onChange={setDisasterType} />
@@ -161,7 +163,7 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
       <div className="mt-4">
         <p className="eoc-label mb-2">SEVERITY LEGEND</p>
         <ul className="space-y-2">
-          {SEVERITY_LEGEND.map((item) => (
+          {(SEVERITY_LEGEND || []).map((item) => (
             <li
               key={item.label}
               className="flex items-center gap-2.5 text-sm text-slate-300"
@@ -227,9 +229,30 @@ export default function CommandCenterClient({ sidebar, top }: CommandCenterClien
         />
         <ScenarioSelector value={scenario} onChange={setScenario} />
 
-        <aside className="absolute left-4 top-4 z-10 hidden w-80 flex-col gap-4 overflow-y-auto rounded-eoc border border-border bg-surface/90 p-5 shadow-glow-accent backdrop-blur md:flex md:max-h-[calc(100%-2rem)]">
+        {/* Collapsible left panel + toggle button */}
+        <aside
+          className={`absolute left-4 top-4 z-10 hidden w-80 flex-col gap-4 overflow-y-auto rounded-eoc border border-border bg-surface/90 p-5 shadow-glow-accent backdrop-blur transition-transform duration-300 ease-in-out md:flex md:max-h-[calc(100%-2rem)] ${
+            isPanelCollapsed ? "-translate-x-[calc(100%+1rem)]" : "translate-x-0"
+          }`}
+        >
           {controls}
         </aside>
+
+        {/* Panel collapse / expand toggle */}
+        <button
+          type="button"
+          onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+          aria-label={isPanelCollapsed ? "Expand panel" : "Collapse panel"}
+          className={`absolute top-6 z-20 hidden h-8 w-8 items-center justify-center rounded-full border border-border bg-surface/90 text-white shadow-glow-accent backdrop-blur transition-all duration-300 hover:bg-surface-elevated hover:scale-110 active:scale-95 md:flex ${
+            isPanelCollapsed ? "left-4" : "left-[21.5rem]"
+          }`}
+        >
+          {isPanelCollapsed ? (
+            <ChevronRight aria-hidden="true" className="h-4 w-4" />
+          ) : (
+            <ChevronLeft aria-hidden="true" className="h-4 w-4" />
+          )}
+        </button>
 
         <TimeSlider value={hoursAhead} onChange={setHoursAhead} />
 

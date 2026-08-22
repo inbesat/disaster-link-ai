@@ -75,7 +75,7 @@ export default function FamilySetupPage() {
   }
 
   const inputClass =
-    "w-full rounded-[var(--dl-radius-sm)] border border-white/15 bg-white/5 px-4 py-3.5 text-base text-white placeholder:text-[var(--dl-text-muted)] transition focus:border-[var(--dl-orange)] focus:ring-2 focus:ring-[var(--dl-orange)]/30 focus:outline-none";
+    "w-full rounded-[var(--dl-radius-sm)] border border-white/15 bg-white/5 px-4 py-3.5 text-base text-white placeholder:text-[var(--dl-text-muted)] transition focus:border-[var(--dl-orange)] focus:outline-none";
 
   return (
     <main className="landing-page relative flex min-h-screen flex-col overflow-hidden bg-[var(--dl-navy)]">

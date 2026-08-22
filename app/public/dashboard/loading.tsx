@@ -1,6 +1,5 @@
 import {
   SkeletonLoader,
-  SkeletonCard,
   SkeletonRow,
 } from "@/components/ui/SkeletonLoader";
 

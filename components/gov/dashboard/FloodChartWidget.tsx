@@ -42,7 +42,7 @@ function buildForecast(): ForecastPoint[] {
   });
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value?: number }>; label?: string }) => {
   if (!active || !payload?.length) return null;
   const level = Number(payload[0]?.value ?? 0);
   const isCritical = level >= CRITICAL_LEVEL;
