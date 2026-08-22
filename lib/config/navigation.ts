@@ -41,6 +41,7 @@ import {
   UserCheck,
   UserX,
   Stethoscope,
+  Globe,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { Role } from "@/lib/validations/user";
@@ -100,6 +101,13 @@ export const NAVIGATION_ROUTES: NavRoute[] = [
     icon: Monitor,
     section: "operations",
     allowedRoles: ["super_admin", "district_admin", "field_responder"],
+  },
+  {
+    label: "Global Map",
+    href: "/global-map",
+    icon: Globe,
+    section: "operations",
+    allowedRoles: ["super_admin", "district_admin"],
   },
   {
     label: "Alerts & Notifications",

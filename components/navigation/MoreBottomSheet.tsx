@@ -21,6 +21,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
 import {
+  LifeBuoy,
   LogOut,
   PackageOpen,
   Route,
@@ -51,6 +52,7 @@ const ITEMS: MoreItem[] = [
   { kind: "link", label: "Satellite", href: "/settings/integrations", icon: Satellite },
   { kind: "link", label: "Settings", href: "/settings/profile", icon: Settings },
   { kind: "link", label: "Profile", href: "/settings/profile", icon: UserRound },
+  { kind: "link", label: "Help Center", href: "/help", icon: LifeBuoy },
   { kind: "logout", label: "Logout", icon: LogOut },
 ];
 

@@ -6,6 +6,7 @@ import { Menu, X, ArrowRight, LogIn, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "@/components/ui/Logo";
 import LanguageTranslator from "@/components/ui/LanguageTranslator";
+import { LifeBuoy } from "lucide-react";
 
 const NAV_LINKS = [
   { label: "Platform", href: "#platform" },
@@ -15,6 +16,9 @@ const NAV_LINKS = [
   { label: "Impact", href: "#impact" },
   { label: "FAQ", href: "#faq" },
 ];
+
+/** Path-based links rendered beside the CTA buttons (scroll-spy skips these). */
+const PATH_LINKS = [{ label: "Help", href: "/help" }];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -112,6 +116,17 @@ export default function Navbar() {
             <LogIn size={14} aria-hidden="true" />
             Sign In
           </a>
+          {/* Help Center — path link (scroll-spy skips it, like Sign In) */}
+          {PATH_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="flex items-center gap-2 border border-white/20 text-white rounded-full px-3.5 py-2 text-sm font-medium hover:bg-white/10 hover:border-white/30 transition-all duration-200"
+            >
+              <LifeBuoy size={14} aria-hidden="true" />
+              {link.label}
+            </Link>
+          ))}
           {/* App download — outline (secondary) so it doesn't compete with
               the solid Request Demo CTA. Routes to the /download hub so
               users pick their platform. */}
@@ -177,6 +192,14 @@ export default function Navbar() {
                 <LogIn size={14} aria-hidden="true" />
                 Sign In
               </a>
+              <Link
+                href="/help"
+                onClick={closeMobile}
+                className="flex items-center justify-center gap-2 border border-white/20 text-white rounded-full w-full py-2.5 text-sm font-medium hover:bg-white/10 transition-all"
+              >
+                <LifeBuoy size={14} aria-hidden="true" />
+                Help Center
+              </Link>
               <Link
                 href="/download"
                 onClick={closeMobile}

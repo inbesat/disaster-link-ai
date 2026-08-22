@@ -24,6 +24,7 @@ const PLATFORM_LINKS = [
 ];
 
 const RESOURCE_LINKS = [
+  { label: "Help Center", href: "/help" },
   { label: "Documentation", href: "#docs" },
   { label: "Open Source", href: "#opensource" },
   { label: "NDMA Guidelines", href: "#ndma" },
