@@ -16,27 +16,27 @@ function labelsFor(role: Role): string[] {
 }
 
 describe("NAVIGATION_ROUTES", () => {
-  it("defines the required routes (10 core + later-phase additions)", () => {
-    expect(NAVIGATION_ROUTES).toHaveLength(14);
+  it("defines the required routes (current config)", () => {
+    expect(NAVIGATION_ROUTES).toHaveLength(16);
     const labels = NAVIGATION_ROUTES.map((route) => route.label);
-    expect(labels).toEqual(
-      expect.arrayContaining([
-        "Govt Dashboard",
-        "CMD Center Overview",
-        "Command Center",
-        "Alerts",
-        "Shelters",
-        "Resources",
-        "Evacuation Routes",
-        "AI Planner",
-        "Satellite",
-        "Team",
-        "Settings",
-        "Missing Persons",
-        "Casualty Tracking",
-        "NGO Portal",
-      ]),
-    );
+    expect(labels).toEqual([
+      "Overview",
+      "Command Center",
+      "Global Map",
+      "Alerts & Notifications",
+      "Shelters",
+      "Missing Persons",
+      "Casualty Tracking",
+      "NGO Coordination",
+      "Resources",
+      "Evacuation Routes",
+      "AI Emergency Planner",
+      "Satellite & Ground Truth",
+      "Predictions",
+      "Team & Responders",
+      "Access Requests",
+      "Settings",
+    ]);
   });
 
   it("gives every route at least one allowed role", () => {
@@ -58,45 +58,46 @@ describe("NAVIGATION_ROUTES", () => {
 });
 
 describe("filterRoutesByRole — role matrix", () => {
-  it("field_responder sees Alerts, Routes, Missing/Casualty/NGO, AI, Team", () => {
+  it("field_responder sees Overview, Command Center, Alerts, Evacuation Routes, AI, Team", () => {
     expect(labelsFor("field_responder")).toEqual([
-      "Alerts",
+      "Overview",
+      "Command Center",
+      "Alerts & Notifications",
       "Evacuation Routes",
-      "Missing Persons",
-      "Casualty Tracking",
-      "NGO Portal",
-      "AI Planner",
-      "Team",
+      "AI Emergency Planner",
+      "Team & Responders",
     ]);
   });
 
-  it("district_admin adds Overview, Command Center, Shelters, Resources, Satellite", () => {
+  it("district_admin adds Global Map, Shelters, Missing/Casualty/NGO, Resources, Satellite, Predictions, Access Requests, Settings", () => {
     expect(labelsFor("district_admin")).toEqual([
-      "Govt Dashboard",
-      "CMD Center Overview",
+      "Overview",
       "Command Center",
-      "Alerts",
-      "Evacuation Routes",
+      "Global Map",
+      "Alerts & Notifications",
       "Shelters",
       "Missing Persons",
       "Casualty Tracking",
+      "NGO Coordination",
       "Resources",
-      "NGO Portal",
-      "AI Planner",
-      "Satellite",
-      "Team",
+      "Evacuation Routes",
+      "AI Emergency Planner",
+      "Satellite & Ground Truth",
+      "Predictions",
+      "Team & Responders",
+      "Access Requests",
+      "Settings",
     ]);
   });
 
   it("super_admin sees everything", () => {
     expect(labelsFor("super_admin")).toHaveLength(NAVIGATION_ROUTES.length);
-    // The full set — including Settings, which no lower role sees.
     expect(labelsFor("super_admin")).toContain("Settings");
   });
 
-  it("settings is super_admin-only", () => {
+  it("settings is super_admin and district_admin", () => {
     const settings = NAVIGATION_ROUTES.find((r) => r.label === "Settings");
-    expect(settings?.allowedRoles).toEqual(["super_admin"]);
+    expect(settings?.allowedRoles).toEqual(["super_admin", "district_admin"]);
   });
 
   it("viewer (a real Role) is not listed on any route", () => {

@@ -16,7 +16,6 @@ import {
   Bell,
   Check,
   Clock,
-  Globe,
   Mail,
   MapPin,
   MessageSquare,

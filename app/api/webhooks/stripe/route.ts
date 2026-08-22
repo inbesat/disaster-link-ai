@@ -10,7 +10,7 @@ let stripe: Stripe | null = null;
 function getStripe() {
   if (!stripe && process.env.STRIPE_SECRET_KEY) {
     stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2024-06-20" as any,
+      apiVersion: "2024-06-20",
     });
   }
   return stripe;
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
   try {
     switch (event.type) {
       case "checkout.session.completed": {
-        const session = event.data.object as any;
+        const session = event.data.object as Stripe.Checkout.Session;
         const userId = session.subscription_data?.metadata?.supabase_user_id;
         const customerId = session.customer as string;
         const subscriptionId = session.subscription as string;
@@ -55,9 +55,8 @@ export async function POST(request: NextRequest) {
           const stripeInstance = getStripe();
           if (!stripeInstance) throw new Error("Stripe not initialized");
           const subscription = await stripeInstance.subscriptions.retrieve(subscriptionId);
-          const subData = subscription as any;
-          const priceId = subData.items.data[0]?.price.id;
-          const currentPeriodEnd = new Date(subData.current_period_end * 1000);
+          const priceId = subscription.items.data[0]?.price.id;
+          const currentPeriodEnd = new Date(subscription.current_period_end * 1000);
 
           await supabase
             .from("users")
@@ -78,7 +77,7 @@ export async function POST(request: NextRequest) {
       }
 
       case "customer.subscription.updated": {
-        const subData = event.data.object as any;
+        const subData = event.data.object as Stripe.Subscription;
         const customerId = subData.customer as string;
         const userId = subData.metadata?.supabase_user_id;
 
@@ -134,7 +133,7 @@ export async function POST(request: NextRequest) {
       }
 
       case "customer.subscription.deleted": {
-        const subscription = event.data.object as any;
+        const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
 
         const { data: profile } = await supabase
@@ -162,7 +161,7 @@ export async function POST(request: NextRequest) {
       }
 
       case "invoice.payment_failed": {
-        const invoice = event.data.object as any;
+        const invoice = event.data.object as Stripe.Invoice;
         const customerId = invoice.customer as string;
 
         const { data: profile } = await supabase

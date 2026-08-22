@@ -18,7 +18,9 @@ describe("gov-alert-targets", () => {
     expect(GOV_ALERT_TYPES.map((t) => t.value)).toEqual([
       "flood_warning",
       "evac_order",
+      "all_clear",
       "road_closure",
+      "shelter_update",
     ]);
     expect(GOV_SEVERITIES.map((s) => s.value)).toEqual(["watch", "warning", "critical"]);
     expect(GOV_ALERT_CHANNELS.map((c) => c.value)).toEqual([
@@ -26,6 +28,8 @@ describe("gov-alert-targets", () => {
       "sms",
       "whatsapp",
       "voice",
+      "fm_radio",
+      "social",
     ]);
   });
 

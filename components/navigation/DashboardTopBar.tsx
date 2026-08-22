@@ -20,7 +20,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Menu, Settings } from "lucide-react";
-import { clearGuestMode, signOutAction } from "@/app/actions/auth";
 import NotificationCenter from "@/components/dashboard/NotificationCenter";
 import PushNotificationToggle from "@/components/dashboard/PushNotificationToggle";
 import PresenceIndicators from "@/components/dashboard/PresenceIndicators";
@@ -146,7 +145,7 @@ export function DashboardTopBar({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleSignOut();
+            void handleSignOut();
           }}
           className="ml-1 hidden border-l border-border pl-4 sm:block"
         >

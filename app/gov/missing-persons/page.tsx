@@ -12,7 +12,6 @@ import {
   AlertTriangle,
   CheckCircle2,
   ShieldCheck,
-  Circle,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------

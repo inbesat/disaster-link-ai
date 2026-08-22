@@ -37,6 +37,10 @@ export default function UpdatePasswordPage() {
         } else {
           setCodeValid(true);
         }
+      }).catch((err) => {
+        setCodeValid(false);
+        setError("Failed to verify reset link. Please try again.");
+        console.error(err);
       });
     } else if (!code) {
       setCodeValid(false);
@@ -85,7 +89,7 @@ export default function UpdatePasswordPage() {
         router.push("/login?reset=success");
         router.refresh();
       }, 2000);
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
       setLoading(false);
     }

@@ -369,37 +369,23 @@ export async function signInAction(formData: FormData) {
   cookies().delete(DEMO_SESSION_COOKIE);
   cookies().delete("citizen_phone");
   cookies().delete("sandbox");
-  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
-  redirect("/public/dashboard");
-  let signedIn = false;
-  try {
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email || "demo@safesphere.gov.in",
-      password: password || "DemoPassword123!",
-    });
-    signedIn = !error;
-  } catch (error: unknown) {
-    safeLog("warn", "[auth] signInAction failed — falling back to demo login", { metadata: { error: String(error) } });
-  }
 
-  if (signedIn) {
-    redirect("/public/dashboard");
-  }
-
-  // Demo bypass: any password works for login!
+  // Demo bypass: detect admin emails BEFORE redirect
   const lowerEmail = email.toLowerCase();
   if (lowerEmail.includes("super")) {
-    await govLogin("super_admin");
+    setSessionCookie("role", "super_admin", 60 * 60 * 24 * 7);
+    redirect("/gov/overview");
   } else if (
     lowerEmail.includes("admin") ||
     lowerEmail.includes("gov") ||
     lowerEmail.includes("responder")
   ) {
-    await govLogin("district_admin");
-  } else {
-    await publicDemoLogin();
+    setSessionCookie("role", "district_admin", 60 * 60 * 24 * 7);
+    redirect("/gov/dashboard");
   }
+
+  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
+  redirect("/public/dashboard");
 }
 
 export async function guestLoginAction() {

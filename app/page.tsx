@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import SupportButton from "@/components/ui/SupportButton";
 import Navbar from "@/components/landing/layout/Navbar";
 import Footer from "@/components/landing/layout/Footer";

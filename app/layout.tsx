@@ -270,7 +270,6 @@ export default function RootLayout({
         <ShortcutModal />
 
         <ToastViewport />
-        </body>
         <Script id="google-translate-init" strategy="afterInteractive">
           {`
             function googleTranslateElementInit() {
@@ -288,6 +287,5 @@ export default function RootLayout({
         />
       </body>
     </html>
-  </>
   );
 }
