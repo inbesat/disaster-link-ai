@@ -1,17 +1,4 @@
-// ---------------------------------------------------------------------
-// components/public/WeatherCarousel.tsx — Phase 2 · Step 5 · Weather &
-// Flood Forecast mini-card.
-//
-// Horizontally scrollable 3-day forecast (Today / Tomorrow / Day 3) with
-// the scrollbar hidden and cards snapping to the center of the viewport
-// (snap-x snap-mandatory + snap-center). Each card is a premium
-// iOS-widget-style glass surface — translucent white (bg-white/5),
-// heavy background blur, rounded-2xl corners, an inner top-highlight and
-// a soft hover lift — showing a weather icon, temperature, rainfall
-// prediction and a tiny severity risk badge (reusing the roadmap
-// SeverityBadge). Mounted below the Action Card on the citizen dashboard.
-// ---------------------------------------------------------------------
-
+import React, { useState, useEffect } from "react";
 import { CloudRain, CloudSun, Sun, type LucideIcon } from "lucide-react";
 import SeverityBadge from "@/components/ui/SeverityBadge";
 import type { SeverityLevel } from "@/components/ui/SeverityBadge";
@@ -64,7 +51,31 @@ const FORECAST: ForecastDay[] = [
   },
 ];
 
-export function WeatherCarousel() {
+// Error boundary for weather carousel
+function WeatherErrorFallback({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) {
+  return (
+    <div className="w-[78%] shrink-0 snap-center rounded-3xl border border-red-500/20 bg-red-500/5 p-6 text-center">
+      <p className="text-red-300 font-medium">Unable to load weather forecast</p>
+      <p className="mt-2 text-xs text-slate-500">{error.message}</p>
+      <button
+        onClick={resetErrorBoundary}
+        className="mt-4 rounded-md bg-accent px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-950 shadow-glow transition hover:bg-sky-300"
+      >
+        Retry
+      </button>
+    </div>
+  );
+}
+
+function WeatherCarouselInner() {
+  const [error, setError] = useState<Error | null>(null);
+
+  if (error) {
+    return (
+      <WeatherErrorFallback error={error} resetErrorBoundary={() => setError(null)} />
+    );
+  }
+
   return (
     <section aria-label="3-day weather and flood forecast">
       {/* Hide scrollbars: Firefox [scrollbar-width:none] + WebKit pseudo */}
@@ -117,6 +128,44 @@ export function WeatherCarousel() {
       </p>
     </section>
   );
+}
+
+export function WeatherCarousel() {
+  return (
+    <ErrorBoundary fallbackRender={({ error, resetErrorBoundary }) => (
+      <WeatherErrorFallback error={error} resetErrorBoundary={resetErrorBoundary} />
+    )}>
+      <WeatherCarouselInner />
+    </ErrorBoundary>
+  );
+}
+
+// Simple error boundary implementation
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallbackRender: (props: { error: Error; resetErrorBoundary: () => void }) => React.ReactNode },
+  { error: Error | null }
+> {
+  state = { error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  resetErrorBoundary = () => {
+    this.setState({ error: null });
+  };
+
+  componentDidCatch(error: Error) {
+    console.error("[WeatherCarousel] Error caught:", error);
+    this.setState({ error });
+  }
+
+  render() {
+    if (this.state.error) {
+      return this.props.fallbackRender({ error: this.state.error, resetErrorBoundary: () => this.setState({ error: null }) });
+    }
+    return this.props.children;
+  }
 }
 
 export default WeatherCarousel;
