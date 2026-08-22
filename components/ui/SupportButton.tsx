@@ -52,7 +52,7 @@ export default function SupportButton() {
       <div className="fixed bottom-24 left-4 z-50">
         <div className="relative">
           {/* Expanded options */}
-{expanded && (
+          {expanded && (
             <div className="absolute bottom-16 right-0 mb-2 w-56 animate-slide-up">
               <div className="eoc-panel rounded-xl border border-border/50 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.6)] overflow-hidden">
                 <div className="p-2">
@@ -74,6 +74,7 @@ export default function SupportButton() {
                 </div>
               </div>
             )}
+          </div>
 
           {/* Main button */}
           <button
@@ -109,3 +110,5 @@ export default function SupportButton() {
     </>
   );
 }
+
+export default SupportButton;
