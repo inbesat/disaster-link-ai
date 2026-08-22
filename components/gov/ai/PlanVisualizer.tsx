@@ -441,7 +441,7 @@ export function PlanVisualizer() {
                         className="flex flex-col gap-3 border-t border-white/10 px-3 pb-3 pt-3 animate-in fade-in slide-in-from-top-1 duration-150"
                       >
                         {step.table && (
-                          <div className="overflow-hidden rounded-lg border border-white/10">
+                          <div className="overflow-hidden rounded-lg border border-white/10 overflow-x-auto">
                             <table className="w-full border-collapse text-xs">
                               <thead className="bg-white/[0.04]">
                                 <tr>

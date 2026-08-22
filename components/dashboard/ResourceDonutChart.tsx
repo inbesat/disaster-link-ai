@@ -96,9 +96,9 @@ export function ResourceDonutChart() {
         </span>
       }
     >
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
         {/* Donut */}
-        <div className="relative h-48 w-48 shrink-0">
+        <div className="relative h-40 w-40 shrink-0 sm:h-48 sm:w-48">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Tooltip

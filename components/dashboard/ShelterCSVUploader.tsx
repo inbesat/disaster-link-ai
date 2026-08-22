@@ -190,7 +190,8 @@ export default function ShelterCSVUploader() {
 
             {status.state === "ready" && (
               <div className="mt-4 max-h-64 overflow-auto rounded-md border border-border">
-                <table className="w-full text-left text-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
                   <thead className="bg-surface-elevated/60 text-foreground">
                     <tr>
                       <th className="px-3 py-2 font-semibold">Name</th>
@@ -217,6 +218,7 @@ export default function ShelterCSVUploader() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             )}
 

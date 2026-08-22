@@ -314,7 +314,7 @@ export default function FmBroadcastHistory() {
           <p className="text-sm text-slate-500">No broadcasts match these filters.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-panel-border">
+        <div className="overflow-hidden rounded-lg border border-panel-border overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-primary text-[0.6875rem] uppercase tracking-wider text-slate-500">
               <tr>

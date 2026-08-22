@@ -153,7 +153,7 @@ export default function GlobalWorldMap() {
         {/* ── Right panel: world map ────────────────────────────────── */}
         <Panel
           className="lg:col-span-3"
-          bodyClassName="relative p-0 h-[500px] sm:h-[560px] lg:h-[600px]"
+          bodyClassName="relative p-0 h-[40vh] sm:h-[50vh] lg:h-[600px]"
           title={
             <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-400">
               <Globe className="h-3.5 w-3.5" aria-hidden />

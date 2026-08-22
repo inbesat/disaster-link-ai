@@ -24,7 +24,7 @@ export function LiveMapWidget() {
   return (
     <Panel
       className=""
-      bodyClassName="relative h-72 p-0 sm:h-80 xl:h-[440px]"
+      bodyClassName="relative h-[40vh] p-0 sm:h-[50vh] lg:h-[600px] xl:h-[440px]"
       title={
         <span className="min-w-0">
           <span className="flex items-center gap-2">

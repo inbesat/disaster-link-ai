@@ -215,6 +215,8 @@ function ActionBody({
 }
 
 export function ActionCard({ status }: ActionCardProps) {
+  // Safe fallback for undefined status
+  const safeStatus = status ?? "SAFE";
   switch (status) {
     case "WATCH":
       return <WatchAction />;

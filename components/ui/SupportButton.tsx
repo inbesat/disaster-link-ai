@@ -49,11 +49,11 @@ export default function SupportButton() {
 
   return (
     <>
-      <div className="fixed bottom-24 right-6 z-50">
+      <div className="fixed bottom-24 left-4 z-50">
         <div className="relative">
           {/* Expanded options */}
-          {expanded && (
-            <div className="absolute bottom-16 left-0 mb-2 w-56 animate-slide-up">
+{expanded && (
+            <div className="absolute bottom-16 right-0 mb-2 w-56 animate-slide-up">
               <div className="eoc-panel rounded-xl border border-border/50 shadow-[0_10px_40px_-12px_rgba(0,0,0,0.6)] overflow-hidden">
                 <div className="p-2">
                   {contactOptions.map((option) => (
@@ -73,8 +73,7 @@ export default function SupportButton() {
                   ))}
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* Main button */}
           <button

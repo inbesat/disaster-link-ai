@@ -78,7 +78,7 @@ export function AlertFeedWidget() {
   return (
     <Panel
       className=""
-      bodyClassName="max-h-[400px] overflow-y-auto p-1.5"
+      bodyClassName="max-h-[40vh] sm:max-h-[400px] overflow-y-auto p-1.5"
       title={
         <>
           <span>Active Alerts</span>
