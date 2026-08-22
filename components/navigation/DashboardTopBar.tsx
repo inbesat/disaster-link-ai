@@ -18,6 +18,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Menu, Settings } from "lucide-react";
 import { clearGuestMode, signOutAction } from "@/app/actions/auth";
 import NotificationCenter from "@/components/dashboard/NotificationCenter";
@@ -28,7 +29,6 @@ import LanguageSelector from "@/components/ui/LanguageSelector";
 import NavbarAvatar from "@/components/NavbarAvatar";
 import BackButton from "@/components/ui/BackButton";
 import Translated from "@/components/ui/Translated";
-import LiveClock from "@/components/dashboard/LiveClock";
 
 type DashboardTopBarProps = {
   /** Guest (demo) mode — swaps the avatar for the guest icon + labels. */
@@ -50,6 +50,23 @@ export function DashboardTopBar({
   avatarUrl,
   onOpenMobile,
 }: DashboardTopBarProps) {
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    // Clear any mock auth data
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("user");
+      localStorage.removeItem("auth_token");
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/");
+      });
+    }
+    // Redirect to login
+    router.push("/login");
+  };
+
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b border-subtle bg-secondary px-4">
       <div className="flex min-w-0 items-center gap-2">
@@ -61,14 +78,6 @@ export function DashboardTopBar({
           clock alone lives on the admin-only /dashboard route). timeClassName
           keeps it readable when the top bar re-themes in day-ops. Hidden
           below md where the right utility cluster crowds it. */}
-      <div className="hidden items-center gap-2 md:flex" aria-live="off">
-        <span
-          className="h-2 w-2 animate-pulse rounded-full bg-accent-success"
-          aria-hidden
-        />
-        <LiveClock timeClassName="text-primary" />
-      </div>
-
       <div className="flex shrink-0 items-center gap-4">
         {/* Identity — avatar + name (mirrors the old Navbar layout) */}
         <div className="flex items-center gap-2.5">
@@ -135,7 +144,10 @@ export function DashboardTopBar({
         </button>
 
         <form
-          action={guest ? clearGuestMode : signOutAction}
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSignOut();
+          }}
           className="ml-1 hidden border-l border-border pl-4 sm:block"
         >
           <button

@@ -116,6 +116,21 @@ const nextConfig = {
   },
 
   async headers() {
+    // Hackathon CSP: completely permissive so Maps, Translate, etc work
+    const csp = [
+      "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;",
+      "script-src * 'unsafe-inline' 'unsafe-eval';",
+      "style-src * 'unsafe-inline';",
+      "img-src * data: blob: 'unsafe-inline';",
+      "connect-src *;",
+      "font-src * data:;",
+      "frame-src *;",
+      "frame-ancestors *;",
+      "object-src *;",
+      "base-uri *;",
+      "form-action *;",
+    ].join(" ");
+
     return [
       {
         source: "/api/:path*",
@@ -140,11 +155,8 @@ const nextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          // No Content-Security-Policy is emitted here on purpose: the app
-          // loads Google Translate, WebLLM (CDN wasm/workers), and MapLibre
-          // tile origins at runtime, so a strict CSP would break those
-          // integrations. XSS is mitigated at the data layer via
-          // lib/security/sanitize.ts + React's default escaping instead.
+          // Hackathon CSP: completely permissive so Maps, Translate, etc work
+          { key: "Content-Security-Policy", value: "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; script-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline';" },
         ],
       },
       {

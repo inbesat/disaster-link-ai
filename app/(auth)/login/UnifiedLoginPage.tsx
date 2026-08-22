@@ -187,6 +187,7 @@ export default function UnifiedLoginPage() {
 
 function CitizenForm() {
   type Step = "phone" | "otp";
+  const router = useRouter();
   const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
@@ -247,12 +248,41 @@ function CitizenForm() {
     }
     setError(null);
     setLoading(true);
+
+    // =================================================================
+    // ORIGINAL AUTH — DISABLED FOR DEMO (Aug 24). Uncomment to restore.
+    //
+    // try {
+    //   await publicOtpLogin(phone);
+    // } catch (err) {
+    //   setLoading(false);
+    //   setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
+    // }
+    // =================================================================
+
+    // -----------------------------------------------------------------
+    // MOCK AUTH — any 6-digit code signs in instantly.
+    // -----------------------------------------------------------------
+
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    const mockUser = {
+      id: "demo-citizen-user",
+      phone: phone || "+91 98765 43210",
+      full_name: "Demo Citizen",
+      role: "public",
+      loggedInAt: new Date().toISOString(),
+    };
     try {
-      await publicOtpLogin(phone);
-    } catch (err) {
-      setLoading(false);
-      setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
+      window.localStorage.setItem("user", JSON.stringify(mockUser));
+    } catch {
+      // localStorage unavailable — non-fatal for the demo session.
     }
+
+    document.cookie = `role=public; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`;
+    document.cookie = `citizen_phone=${encodeURIComponent(mockUser.phone)}; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`;
+
+    router.push("/public/onboarding");
   }
 
   const inputClass =
