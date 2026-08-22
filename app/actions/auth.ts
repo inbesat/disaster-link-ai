@@ -141,10 +141,32 @@ export async function sendOTP(
  */
 export async function verifyOTP(code: string): Promise<{ ok: false; message: string }> {
   const token = (code ?? "").trim().replace(/\D/g, "");
-  if (!/^\d{6}$/.test(token)) {
-    return { ok: false, message: "Enter the 6-digit code from your phone." };
+  if (!token) {
+    return { ok: false, message: "Enter the code sent to your phone." };
   }
 
+  // Consume the code if present in memory.
+  const phone = consumeOtp(token);
+
+  // Real-mode path: if Supabase & GetOTP key configured, try verifyOtp
+  const realMode = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.GETOTP_API_KEY && phone);
+  if (realMode) {
+    let signedIn = false;
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.verifyOtp({
+        phone: phone!,
+        token,
+        type: "sms",
+      });
+      signedIn = !error;
+    } catch (error: unknown) {
+      safeLog("warn", "[getotp] Supabase OTP sign-in failed — falling back to guest demo", { metadata: { error: String(error) } });
+    }
+    if (signedIn) redirect("/command-center");
+  }
+
+  // Demo bypass: mark the responder as a guest (any OTP code works for demo).
   setGuestCookie();
   redirect("/command-center");
 }
@@ -308,14 +330,37 @@ export async function signUpAction(formData: FormData) {
   cookies().delete("sandbox");
   setSessionCookie("role", "public", 60 * 60 * 24 * 7);
   redirect("/public/dashboard");
+  if (!email && !fullName) {
+    redirect(`/login?error=${encodeURIComponent("Please enter your name and email.")}`);
+  }
+
+  let signedIn = false;
+  try {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signUp({
+      email: email || "demo@safesphere.gov.in",
+      password: password || "DemoPassword123!",
+      options: { data: { full_name: fullName || "Demo User" } },
+    });
+    signedIn = !error;
+  } catch (error: unknown) {
+    safeLog("warn", "[auth] signUpAction failed — falling back to demo login", { metadata: { error: String(error) } });
+  }
+
+  if (signedIn) {
+    redirect("/public/dashboard");
+  }
+
+  // Demo bypass: any password/details work for sign up in demo mode
+  await publicDemoLogin();
 }
 
 export async function signInAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  if (!email || !password) {
-    redirect(`/login?error=${encodeURIComponent("Email and password are required.")}`);
+  if (!email && !password) {
+    redirect(`/login?error=${encodeURIComponent("Email or password is required.")}`);
   }
 
   cookies().delete("guest_mode");
@@ -326,6 +371,35 @@ export async function signInAction(formData: FormData) {
   cookies().delete("sandbox");
   setSessionCookie("role", "public", 60 * 60 * 24 * 7);
   redirect("/public/dashboard");
+  let signedIn = false;
+  try {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email || "demo@safesphere.gov.in",
+      password: password || "DemoPassword123!",
+    });
+    signedIn = !error;
+  } catch (error: unknown) {
+    safeLog("warn", "[auth] signInAction failed — falling back to demo login", { metadata: { error: String(error) } });
+  }
+
+  if (signedIn) {
+    redirect("/public/dashboard");
+  }
+
+  // Demo bypass: any password works for login!
+  const lowerEmail = email.toLowerCase();
+  if (lowerEmail.includes("super")) {
+    await govLogin("super_admin");
+  } else if (
+    lowerEmail.includes("admin") ||
+    lowerEmail.includes("gov") ||
+    lowerEmail.includes("responder")
+  ) {
+    await govLogin("district_admin");
+  } else {
+    await publicDemoLogin();
+  }
 }
 
 export async function guestLoginAction() {

@@ -315,6 +315,11 @@ export default function DisasterMap({
         canvas.getContext("webgl") ??
         canvas.getContext("experimental-webgl");
       setWebGlSupported(gl !== null);
+      const supported =
+        (maplibregl as unknown as { supported?: (opts?: object) => boolean }).supported?.({
+          failIfMajorPerformanceCaveat: false,
+        }) ?? true;
+      setWebGlSupported(supported);
     } catch {
       setWebGlSupported(false);
     }
