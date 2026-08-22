@@ -198,7 +198,7 @@ export async function middleware(request: NextRequest) {
     );
     res.headers.set(
       "Content-Security-Policy",
-      "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://translate.google.com https://translate.googleapis.com; style-src 'self' 'unsafe-inline' https://translate.googleapis.com; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://*.mapbox.com https://api.qrserver.com https://translate.googleapis.com https://www.google.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://*.mapbox.com https://api.otp.dev https://translate.googleapis.com; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
+      "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://translate.google.com https://translate.googleapis.com https://www.google.com https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://translate.googleapis.com https://fonts.googleapis.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://*.mapbox.com https://api.otp.dev https://translate.googleapis.com https://fonts.googleapis.com https://fonts.gstatic.com https://*.mapbox.com https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://api.otp.dev; font-src 'self' data: https://fonts.gstatic.com https://fonts.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
     );
     return res;
   };
