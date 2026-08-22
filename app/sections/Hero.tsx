@@ -106,7 +106,7 @@ export default function Hero() {
   const orbOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0.4]);
 
   return (
-    <section className="min-h-screen flex items-center relative overflow-hidden" id="hero">
+    <section className="relative overflow-hidden" id="hero">
       <div
         className="absolute inset-0 -z-20"
         style={{
@@ -126,7 +126,7 @@ export default function Hero() {
       />
       <ParallaxOrbs />
 
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[55%_45%] gap-14 lg:gap-12 items-center py-28 lg:py-20 w-full [perspective:1800px]">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[55%_45%] gap-14 lg:gap-12 items-center py-16 lg:py-20 w-full [perspective:1800px]">
         <motion.div style={reduce ? undefined : { y: copyY, opacity: orbOpacity }}>
           <Reveal delay={0}>
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white/90">
