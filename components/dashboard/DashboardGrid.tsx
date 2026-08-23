@@ -2,18 +2,26 @@
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
-import { dashboardGrid } from "@/styles/tokens";
 
 // ---------------------------------------------------------------------
 // components/dashboard/DashboardGrid.tsx — UI/UX Phase 8 · Step 2 + Step 10.
-// Prompt 1.5 — Standardized responsive grid with 8px gap system.
 //
-// The Command Center's responsive widget grid with stagger animation.
-// Uses the canonical dashboard grid breakpoints:
-//   Mobile:  1 column,  gap 16px
-//   Tablet:  2 columns, gap 20px
-//   Desktop: 3 columns, gap 24px
-//   Wide:    4 columns, gap 24px
+// The Command Center's 12-column widget grid, wrapped in a Framer Motion
+// stagger. Each grid cell is a motion.div carrying its own col-span class
+// (so layout stays on the animated element) plus an item variant. Widgets
+// visually "build" top-left → bottom-right as the dashboard mounts.
+//
+// Step 10 · Reduced-motion accessibility — when the user's OS reports
+// prefers-reduced-motion (via Framer's `useReducedMotion`), we swap the
+// staggered container + translate/scale variants for a flat, single-step
+// "hidden → show" with zero delay and no translation. This keeps content
+// fully reachable for motion-sensitive users (WCAG 2.3/2.3 Halt &
+// Three-Flash guidance) while the ornate stagger remains for everyone else.
+// ─────────────────────────────────────────────────────────────────────
+// The widgets themselves keep ONLY their visual classes on the Panel root
+// (e.g. glow-purple-soft); the responsive col-span moved here so the
+// stagger wrapper can host it without a non-animatable `display: contents`
+// bridge. Pass each widget's previous md/xl col-span via `className`.
 // ─────────────────────────────────────────────────────────────────────
 
 const gridContainer: Variants = {
@@ -62,48 +70,19 @@ type DashboardGridItem = {
 type DashboardGridProps = {
   /** Widgets in visual build order — top-left → bottom-right. */
   items: DashboardGridItem[];
-  /** Override the default column span for all items. */
-  columns?: {
-    mobile?: number;
-    tablet?: number;
-    desktop?: number;
-    wide?: number;
-  };
 };
 
-/**
- * Generate responsive grid-cols class from column counts.
- * Maps to: grid-cols-{mobile} sm:grid-cols-{mobile} md:grid-cols-{tablet} lg:grid-cols-{desktop} xl:grid-cols-{wide}
- */
-function getGridColsClass(columns: DashboardGridProps["columns"]): string {
-  const m = columns?.mobile ?? dashboardGrid.mobile.columns;
-  const t = columns?.tablet ?? dashboardGrid.tablet.columns;
-  const d = columns?.desktop ?? dashboardGrid.desktop.columns;
-  const w = columns?.wide ?? dashboardGrid.wide.columns;
-  return `grid-cols-${m} md:grid-cols-${t} lg:grid-cols-${d} xl:grid-cols-${w}`;
-}
-
-/**
- * Canonical responsive gap — token-driven rhythm (16 / 20 / 24 / 24 px).
- * Gap intentionally does NOT scale from the `columns` prop: column counts
- * and spacing are independent concerns.
- */
-const CANONICAL_GAP_CLASS = "gap-4 md:gap-5 lg:gap-6 xl:gap-6";
-
-export function DashboardGrid({ items, columns }: DashboardGridProps) {
+export function DashboardGrid({ items }: DashboardGridProps) {
   const reduceMotion = useReducedMotion();
   const container = reduceMotion ? fadeContainer : gridContainer;
   const itemVariants = reduceMotion ? fadeItem : gridItem;
-
-  const gridColsClass = getGridColsClass(columns);
-  const gapClass = CANONICAL_GAP_CLASS;
 
   return (
     <motion.div
       variants={container}
       initial="hidden"
       animate="show"
-      className={`mt-6 grid w-full grid-flow-row-dense items-start ${gridColsClass} ${gapClass}`}
+      className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-12"
     >
       {items.map(({ key, className = "", children }) => (
         <motion.div key={key} variants={itemVariants} className={className}>

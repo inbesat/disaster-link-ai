@@ -2,6 +2,7 @@ import { isStepCount, streamText, type LanguageModel, type ModelMessage, type To
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import {
+  getEmergencyPlannerCandidates,
   getMissingAiProviderKeys,
   hasAnyAiProviderConfigured,
   resolveEmergencyPlannerModel,
@@ -12,8 +13,10 @@ import { floodTools } from "@/lib/ai/tools/flood-tools";
 import { resourceInventoryTools } from "@/lib/ai/tools/resources-tools";
 import { evacuationPlanTools } from "@/lib/ai/tools/evacuation-tools";
 import { createClient } from "@/lib/supabase/server";
-import { buildKnowledgeContext } from "@/lib/retrieval/retrieve";
-import { searchSimilarDocuments } from "@/lib/rag/vector-search";
+import { buildKnowledgeContext, retrieveRelevantDocuments, type RetrievedDocument } from "@/lib/retrieval/retrieve";
+import { searchSimilarDocuments, type SimilarDocument } from "@/lib/rag/vector-search";
+import { buildRagSourcesPayload } from "@/lib/rag/sources-payload";
+import { RuleBasedFallback } from "@/lib/ai-bridge/rule-based-fallback";
 import { checkAiChatRateLimit, logAiUsage } from "@/lib/security/ai-rate-limit";
 import { guardPromptInput, logAiAudit } from "@/lib/ai/llm-guard";
 import {
@@ -228,12 +231,13 @@ export async function POST(req: Request): Promise<Response> {
   // scoped to the commander's own district so they only get their SOPs. On any
   // retrieval failure this degrades to the wider keyword-aware context builder.
   let officialContext = "";
+  let vectorHits: SimilarDocument[] = [];
   const sanitizedQuery = promptGuard.sanitizedInput;
   if (sanitizedQuery) {
     try {
-      const hits = await searchSimilarDocuments(sanitizedQuery, district, 3);
-      if (hits.length) {
-        officialContext = hits
+      vectorHits = await searchSimilarDocuments(sanitizedQuery, district, 3);
+      if (vectorHits.length) {
+        officialContext = vectorHits
           .map(
             (hit) =>
               `- [${hit.title}${hit.docType ? ` (${hit.docType})` : ""}] (sim ${hit.score.toFixed(
@@ -244,12 +248,24 @@ export async function POST(req: Request): Promise<Response> {
       }
     } catch (error) {
       console.warn("[chat] vector retrieval failed; using keyword fallback.", error);
+      vectorHits = [];
     }
   }
 
   // Keyword / fallback grounding keeps the planner informed when vector search
-  // returns nothing usable.
-  const fallbackKnowledge = queryText ? await buildKnowledgeContext(queryText) : "";
+  // returns nothing usable. Also capture the raw docs so we can cite them.
+  let fallbackDocs: RetrievedDocument[] = [];
+  if (sanitizedQuery && !vectorHits.length) {
+    fallbackDocs = await retrieveRelevantDocuments(sanitizedQuery, 3).catch(() => []);
+  }
+  const fallbackKnowledge = fallbackDocs.length
+    ? fallbackDocs
+        .map(
+          (doc) =>
+            `- [${doc.title}${doc.docType ? ` (${doc.docType})` : ""}]: ${doc.content}`,
+        )
+        .join("\n")
+    : "";
 
   const knowledge = officialContext || fallbackKnowledge;
 
@@ -304,6 +320,9 @@ ${isCommander ? "" : "\nNOTE: You do NOT have evacuation tool access. Explain co
     );
   }
 
+  // Build RAG source citations for the response metadata (UI transparency panel).
+  const ragSources = buildRagSourcesPayload(vectorHits, fallbackDocs);
+
   try {
     const result = streamText({
       model,
@@ -328,7 +347,12 @@ ${isCommander ? "" : "\nNOTE: You do NOT have evacuation tool access. Explain co
       temperature: 0.4,
     });
 
-    return result.toUIMessageStreamResponse();
+    return result.toUIMessageStreamResponse({
+      messageMetadata: ({ part }) =>
+        part.type === "start" || part.type === "finish"
+          ? { ragSources }
+          : undefined,
+    });
   } catch (error: unknown) {
     console.error("[chat] LLM API call failed (401/403 or CORS error):", error);
 
