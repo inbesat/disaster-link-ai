@@ -1,15 +1,88 @@
-"use client";
-
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { Settings } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 import ProfileMenu, {
   type PublicIdentity,
 } from "@/components/public/ProfileMenu";
 import Translated from "@/components/ui/Translated";
 
-export default function PublicNavbar() {
-  const identity: PublicIdentity = { mode: "guest" };
-  const statusLabel = "GUEST MODE";
+// ---------------------------------------------------------------------
+// components/public/PublicNavbar.tsx — server-component navbar for the
+// citizen dashboard.
+//
+// Resolves the visitor's identity once per request:
+//   1. guest_mode=true        → Guest (grey silhouette avatar)
+//   2. Supabase session       → Logged-in user (name / email / avatar)
+//   3. citizen_phone cookie   → Signed-in citizen (OTP flow)
+//   4. anything else          → safe Guest fallback
+// and renders a matching avatar dropdown (see ProfileMenu).
+// ---------------------------------------------------------------------
+
+async function resolveUserIdentity(
+  phone: string,
+  role: string,
+): Promise<PublicIdentity> {
+  // Real Supabase session — richest identity (name + email + avatar).
+  try {
+    const supabase = createClient();
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser();
+
+    if (authUser) {
+      const { data: profile } = await supabase
+        .from("users")
+        .select("name, email, avatar_url")
+        .eq("id", authUser.id)
+        .maybeSingle();
+
+      const name =
+        profile?.name ??
+        (authUser.user_metadata?.full_name as string | undefined) ??
+        authUser.email?.split("@")[0] ??
+        "User";
+      const email = profile?.email ?? authUser.email ?? "";
+      const avatarUrl = profile?.avatar_url ?? null;
+
+      return { mode: "user", name, email, avatarUrl };
+    }
+  } catch (error: unknown) {
+    console.warn(
+      "[PublicNavbar] supabase unavailable — falling back to cookies:",
+      error,
+    );
+  }
+
+  // Citizen OTP session (publicOtpLogin) — no Supabase session, but the
+  // visitor is signed in via the citizen_phone cookie.
+  if (role === "public") {
+    const masked = phone
+      ? `+91 ${phone.slice(-4).padStart(4, "•")}`
+      : "Citizen";
+    return { mode: "user", name: "Citizen", email: masked, avatarUrl: null };
+  }
+
+  // Middleware normally prevents this state; treat it as a Guest.
+  return { mode: "guest" };
+}
+
+export default async function PublicNavbar() {
+  const cookieStore = cookies();
+  const isGuest = cookieStore.get("guest_mode")?.value === "true";
+  const phone = cookieStore.get("citizen_phone")?.value ?? "";
+  const role = cookieStore.get("role")?.value ?? "";
+
+  const identity: PublicIdentity = isGuest
+    ? { mode: "guest" }
+    : await resolveUserIdentity(phone, role);
+
+  const statusLabel =
+    identity.mode === "guest"
+      ? "GUEST MODE"
+      : phone
+        ? `+91 ${phone.slice(-4).padStart(4, "•")}`
+        : identity.email || identity.name;
 
   return (
     <header className="flex items-center justify-between">
