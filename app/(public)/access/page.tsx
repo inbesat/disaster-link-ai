@@ -22,9 +22,12 @@ const RESPONDER_FEATURES = [
   { icon: "🧭", label: "District oversight" },
 ];
 
+import PublicBackButton from "@/components/public/PublicBackButton";
+
 export default function ChooseAccessPage() {
   return (
     <main className="landing-page relative flex min-h-screen flex-col overflow-hidden bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)]">
+      <PublicBackButton />
       {/* Ambient backdrop — deep navy with blue/orange glows */}
       <div
         aria-hidden="true"

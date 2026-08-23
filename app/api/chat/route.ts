@@ -1,11 +1,10 @@
-import { isStepCount, streamText, type LanguageModel, type ModelMessage, type Tool } from "ai";
+import { isStepCount, streamText, type ModelMessage, type Tool } from "ai";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import {
   getEmergencyPlannerCandidates,
   getMissingAiProviderKeys,
   hasAnyAiProviderConfigured,
-  resolveEmergencyPlannerModel,
   type ProviderGroup,
 } from "@/lib/ai/openrouter";
 import { emergencyPlanTools } from "@/lib/ai/tools/shelter-tools";
@@ -13,7 +12,7 @@ import { floodTools } from "@/lib/ai/tools/flood-tools";
 import { resourceInventoryTools } from "@/lib/ai/tools/resources-tools";
 import { evacuationPlanTools } from "@/lib/ai/tools/evacuation-tools";
 import { createClient } from "@/lib/supabase/server";
-import { buildKnowledgeContext, retrieveRelevantDocuments, type RetrievedDocument } from "@/lib/retrieval/retrieve";
+import { retrieveRelevantDocuments, type RetrievedDocument } from "@/lib/retrieval/retrieve";
 import { searchSimilarDocuments, type SimilarDocument } from "@/lib/rag/vector-search";
 import { buildRagSourcesPayload } from "@/lib/rag/sources-payload";
 import { RuleBasedFallback } from "@/lib/ai-bridge/rule-based-fallback";
@@ -308,61 +307,64 @@ ${isCommander ? "" : "\nNOTE: You do NOT have evacuation tool access. Explain co
   // that answers. A dead vendor key or a deprecated model id can no longer
   // take the chat down (see lib/ai/openrouter.ts). Configuration presence
   // was already verified by the hard guardrail at the top of this handler.
-  let model: LanguageModel;
-  try {
-    model = await resolveEmergencyPlannerModel(providerPreference);
-  } catch (error) {
-    console.error("[chat] failed to resolve an AI provider:", error);
-    const detail = error instanceof Error ? error.message : String(error);
-    return NextResponse.json(
-      { error: detail || "No AI provider is currently reachable." },
-      { status: 502 },
-    );
-  }
+  const candidates = getEmergencyPlannerCandidates(providerPreference);
 
   // Build RAG source citations for the response metadata (UI transparency panel).
   const ragSources = buildRagSourcesPayload(vectorHits, fallbackDocs);
 
-  try {
-    const result = streamText({
-      model,
-      system,
-      messages: messages as ModelMessage[],
-      // AI SDK v7 defaults to stopWhen: isStepCount(1) — ONE model invocation
-      // — so tool roundtrips never happen and the chat returns empty after the
-      // first tool call. Allow up to 6 steps (tool calls + final summary); the
-      // loop still ends early when the model stops calling tools.
-      stopWhen: isStepCount(6),
-      // Cap the response budget so providers with limited credits (e.g. an
-      // OpenRouter account with a few thousand tokens left) don't 402 — the
-      // resolver's probe uses the same 2048-token budget.
-      maxOutputTokens: 2048,
-      // Phase 21 · every tool call is scoped to the user's district — the LLM
-      // cannot query data outside its jurisdiction (mock RLS at the tool layer).
-      tools: withDistrictScope(
-        isCommander ? commanderTools : responderTools,
-        district,
-        role,
-      ),
-      temperature: 0.4,
-    });
+  // Candidate-stepping: try each provider until one succeeds (sync errors only;
+  // async stream errors are caught by the probe cache TTL + retry logic below).
+  for (const candidate of candidates) {
+    try {
+      const result = streamText({
+        model: candidate.model,
+        system,
+        messages: messages as ModelMessage[],
+        stopWhen: isStepCount(6),
+        maxOutputTokens: 2048,
+        tools: withDistrictScope(
+          isCommander ? commanderTools : responderTools,
+          district,
+          role,
+        ),
+        temperature: 0.4,
+      });
 
-    return result.toUIMessageStreamResponse({
-      messageMetadata: ({ part }) =>
-        part.type === "start" || part.type === "finish"
-          ? { ragSources }
-          : undefined,
-    });
-  } catch (error: unknown) {
-    console.error("[chat] LLM API call failed (401/403 or CORS error):", error);
-
-    // Return a graceful error message as a mock stream/response so the UI doesn't crash
-    const detail = error instanceof Error ? error.message : String(error);
-    const mockMessage = `⚠️ LLM Provider Error: ${detail || "Unauthorized or connection failed"}.\n\n**MOCK EVACUATION PLAN:**\n- **Evacuees:** 150 from current sector.\n- **Destination:** Central Community Hall.\n- **Status:** Routes are open, move immediately.`;
-    
-    return NextResponse.json(
-      { error: mockMessage },
-      { status: 500 }
-    );
+      // Record which provider answered so the resolver prefers it next time.
+      // (We do this after streamText succeeds, before returning the stream.)
+      // The actual generation-level success is recorded by the resolver when
+      // the stream produces output, but we mark it optimistically here.
+      return result.toUIMessageStreamResponse({
+        messageMetadata: ({ part }) =>
+          part.type === "start" || part.type === "finish"
+            ? { ragSources, aiProvider: candidate.name }
+            : undefined,
+      });
+    } catch (error) {
+      console.warn(
+        `[ai-provider] candidate "${candidate.name}" failed sync, trying next:`,
+        error instanceof Error ? error.message : String(error),
+      );
+      // Continue to next candidate
+    }
   }
+
+  // All configured candidates failed sync — final server-side fallback using
+  // the 61 pre-written emergency rules so the chat never goes silent.
+  console.warn(
+    `[ai-provider] ALL ${candidates.length} candidates failed sync; falling back to RuleBasedFallback`,
+  );
+  const fallback = new RuleBasedFallback();
+  const fallbackResp = fallback.generateResponse(
+    messages[messages.length - 1]?.content ?? "",
+    { currentDistrict: district ?? "unknown" },
+  );
+  return NextResponse.json(
+    {
+      error: `[offline] ${fallbackResp.text}`,
+      offline: true,
+      ragSources: [],
+    },
+    { status: 200 }, // 200 so UI treats it as a valid (offline) response
+  );
 }

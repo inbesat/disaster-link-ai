@@ -2,6 +2,15 @@
 
 import { useState } from "react";
 import { LocateFixed, MapPin, MessageSquareText, Upload } from "lucide-react";
+import {
+  Camera,
+  CheckCircle2,
+  ChevronRight,
+  Info,
+  Loader2,
+  ShieldAlert,
+} from "lucide-react";
+import PublicBackButton from "@/components/public/PublicBackButton";
 import { submitCitizenReport, type CitizenReportInput } from "@/app/actions/reports";
 
 const REPORT_TYPES = [
@@ -125,8 +134,9 @@ export default function ReportPage() {
     "w-full rounded-eoc border border-border bg-surface-elevated px-4 py-3.5 text-base text-foreground placeholder-slate-500 outline-none transition focus:border-accent";
 
   return (
-    <main className="min-h-screen bg-background">
-      <header className="border-b border-border">
+    <main className="min-h-screen bg-background relative">
+      <PublicBackButton className="sm:left-4 sm:top-3 top-3 left-3 bg-black/20" />
+      <header className="border-b border-border pl-16">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2.5">
             <span className="h-3 w-3 animate-pulse-ring rounded-full bg-severity-red-500" />

@@ -1,110 +1,78 @@
 "use client";
 
-// ---------------------------------------------------------------------
-// components/ai/ChatThread.tsx — UI/UX Phase 6 · Step 2.
-//
-// Scrollable tactical conversation container. Header carries the thread
-// identity + a live marker; the body is the overflow-y-auto message list
-// seeded with mock briefings; a disabled composer hints at the next step.
-// ---------------------------------------------------------------------
-
-import ChatMessage from "./ChatMessage";
 import ChatInputBar from "./ChatInputBar";
 import SuggestedPrompts from "./SuggestedPrompts";
 import { History, Sparkles } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport, type UIMessage, type UIDataTypes } from "ai";
+import { useState, useEffect, useCallback } from "react";
 
-type ThreadMessage = {
-  id: string;
-  role: "user" | "ai";
-  content: string;
-  timestamp: string;
-  sources?: string[];
-};
+const WELCOME_CONTENT =
+  "Ask me about flood risk, evacuation plans, resource allocation, or scenario modeling for your district.";
 
-const nowTime = () =>
-  new Intl.DateTimeFormat("en-IN", {
+function mapMetadataToSources(meta: UIDataTypes["metadata"] | undefined): string[] | undefined {
+  if (!meta || !meta.ragSources || !Array.isArray(meta.ragSources)) return undefined;
+  const srcs = meta.ragSources as Array<{ title: string; docType: string | null }>;
+  if (srcs.length === 0) return undefined;
+  return srcs.map((s) => (s.docType ? `${s.title} (${s.docType})` : s.title));
+}
+
+function getProviderBadge(meta: UIDataTypes["metadata"] | undefined): { label: string; isOffline: boolean } | null {
+  if (!meta) return null;
+  if (meta.offline === true) return { label: "OFFLINE · 61-rule fallback", isOffline: true };
+  if (meta.aiProvider && typeof meta.aiProvider === "string") return { label: meta.aiProvider.toUpperCase(), isOffline: false };
+  return null;
+}
+
+function formatTime(d: Date): string {
+  return new Intl.DateTimeFormat("en-IN", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
-  }).format(new Date());
-
-const CANNED_SOURCES = [
-  "NDMA Guideline 4.2",
-  "Live GLOFAS Forecast",
-  "District DMP 2024",
-];
-
-const CANNED_REPLY =
-  "On it.\n\n### Acknowledged — Patna flood desk\n\n• Assigned incident code **PNP-6-B1**.\n• 3 shelters within 2 km of Zone A hold 1,240 free berths.\n• 60 transport + 12 ambulances staged at NH-01 staging point.\n\n| Step | ETA | Team |\n| --- | --- | --- |\n| Broadcast | 12:30 | District Control Room |\n| Evacuation | 13:00 | NDRF + 120 volunteers |\n| Boat deploy | 12:45 | Boat Unit 4 |";
-
-const MOCK_MESSAGES: ThreadMessage[] = [
-  {
-    id: "m1",
-    role: "user",
-    content: "Assess flood risk in the Punpun block for the next 48 hours.",
-    timestamp: "09:12 AM",
-  },
-  {
-    id: "m2",
-    role: "ai",
-    content:
-      "Analysis complete. Punpun gauge crosses the 2.5 m warning mark in ~14h and reaches 3.4 m (critical) by +18h. 12 habitations are inside the projected envelope. Recommend pre-emptive evacuation of low-lying pockets and dispatch of 6 boats to Punpun ghat.",
-    timestamp: "09:12 AM",
-    sources: ["NDMA Guideline 4.2", "District DMP 2024", "Live GLOFAS Forecast"],
-  },
-  {
-    id: "m3",
-    role: "user",
-    content: "Good. Draft the evacuation order for Sonepur & Rampur now.",
-    timestamp: "09:14 AM",
-  },
-  {
-    id: "m4",
-    role: "ai",
-    content:
-      "Draft ready.\n\n### Evacuation Order — Sonepur & Rampur\n\n• Evacuate by 13:00 IST (~4h lead).\n• Use NH-01; the Daulatpur bridge approach is closed.\n\n#### Allocated resources\n\n| Unit | Qty | Assigned |\n| --- | --- | --- |\n| Boats | 12 | Sonepur ghat |\n| Ambulances | 6 | Rampur school |\n| Bus | 8 | NH-01 staging |\n| Medics | 20 | To shelters |\n\nApproval will broadcast to all field units once you confirm.",
-    timestamp: "09:15 AM",
-    sources: ["NDMA Guideline 4.2", "District DMP 2024"],
-  },
-];
+  }).format(d);
+}
 
 export function ChatThread({ onHistoryToggle }: { onHistoryToggle?: () => void }) {
-  const [messages, setMessages] = useState<ThreadMessage[]>(MOCK_MESSAGES);
   const [draft, setDraft] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { messages, append, status } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    initialMessages: [
+      {
+        id: "welcome",
+        role: "assistant",
+        parts: [{ type: "text", text: WELCOME_CONTENT }],
+        metadata: { ragSources: [] },
+      } as UIMessage,
+    ],
+    body: () => ({
+      currentDistrict: undefined,
+      provider: undefined,
+    }),
+  });
 
   useEffect(() => {
-    const el = scrollRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [messages, isProcessing]);
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 108)}px`;
+  }, [draft]);
 
-  const handleSend = () => {
+  const handleSend = useCallback(() => {
     const text = draft.trim();
-    if (!text || isProcessing) return;
-
-    setMessages((prev) => [
-      ...prev,
-      { id: `u-${Date.now()}`, role: "user", content: text, timestamp: nowTime() },
-    ]);
+    if (!text || status === "submitted" || status === "streaming") return;
+    append({ role: "user", content: text }, { body: { currentDistrict: undefined, provider: undefined } });
     setDraft("");
-    setIsProcessing(true);
+  }, [append, draft, status]);
 
-    setTimeout(() => {
-      setIsProcessing(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `a-${Date.now()}`,
-          role: "ai",
-          content: CANNED_REPLY,
-          timestamp: nowTime(),
-          sources: CANNED_SOURCES,
-        },
-      ]);
-    }, 2200);
-  };
+  const handleToolPrompt = useCallback(
+    (prompt: string) => {
+      if (status === "submitted" || status === "streaming") return;
+      setIsTyping(true);
+      append({ role: "user", content: prompt }, { body: { currentDistrict: undefined, provider: undefined } });
+    },
+    [append, status],
+  );
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-primary">
@@ -130,34 +98,134 @@ export function ChatThread({ onHistoryToggle }: { onHistoryToggle?: () => void }
           )}
           <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-purple/40 bg-accent-purple/10 px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider text-accent-purple">
             <span
-              className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-purple"
+              className={`h-1.5 w-1.5 animate-pulse rounded-full ${
+                status === "submitted" || status === "streaming" ? "bg-accent-purple" : "bg-accent-purple"
+              }`}
               aria-hidden
             />
-            Live
+            {status === "submitted" || status === "streaming" ? "Streaming" : "Live"}
           </span>
         </div>
       </div>
 
       {/* Messages */}
-      <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
-        {messages.map((message) => (
-          <ChatMessage
-            key={message.id}
-            role={message.role}
-            content={message.content}
-            timestamp={message.timestamp}
-            sources={message.sources}
-          />
-        ))}
+      <div className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
+        {messages.map((msg) => {
+          const isUser = msg.role === "user";
+          const contentPart = msg.parts.find((p) => p.type === "text");
+          const content = contentPart?.text ?? "";
+          const isTypingMsg = !isUser && (status === "streaming" || status === "submitted") && msg.id === messages[messages.length - 1]?.id;
+          const sources = mapMetadataToSources(msg.metadata);
+          const badge = getProviderBadge(msg.metadata);
+
+          return (
+            <div
+              key={msg.id}
+              className={`flex w-full flex-col ${isUser ? "items-end" : "items-start"}`}
+            >
+              <div
+                className={`max-w-[85%] rounded-lg px-3 py-2.5 ${
+                  isUser
+                    ? "border border-border bg-[var(--bg-tertiary)] text-slate-50"
+                    : "border-l-4 border-accent-purple bg-secondary text-slate-100"
+                }`}
+              >
+                {isUser ? (
+                  <p className="whitespace-pre-wrap text-sm leading-relaxed">{content}</p>
+                ) : (
+                  <>
+                    {isTypingMsg ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-md border border-accent-purple/40 bg-accent-purple/10 px-2 py-1 text-eoc-tiny font-bold uppercase tracking-wider text-accent-purple">
+                        <span className="flex items-center gap-1" aria-hidden>
+                          {[0, 1, 2].map((i) => (
+                            <span
+                              key={i}
+                              className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-purple"
+                              style={{ animationDelay: `${i * 150}ms` }}
+                            />
+                          ))}
+                        </span>
+                        AI Advisor is drafting…
+                      </span>
+                    ) : (
+                      <>
+                        <p className="mb-1.5 flex items-center gap-1.5 text-eoc-tiny font-bold uppercase tracking-wider text-accent-purple">
+                          <span className="flex h-3 w-3 items-center justify-center rounded-md bg-accent-purple/15 text-accent-purple">
+                            <span className="h-4 w-4" aria-hidden>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
+                                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z" />
+                                <path d="M12 16v-4" />
+                                <path d="M12 8h.01" />
+                              </svg>
+                            </span>
+                          </span>
+                          AI Advisor
+                        </p>
+                        <div className="prose prose-invert max-w-none text-sm leading-relaxed [&_h3]:mt-3 [&_h3]:text-[11px] [&_h3]:font-bold [&_h3]:uppercase [&_h3]:tracking-wider [&_h3]:text-accent-purple [&_h4]:mt-2 [&_h4]:text-xs [&_h4]:font-bold [&_h4]:uppercase [&_h4]:tracking-wider [&_h4]:text-slate-200 [&_p]:mt-0 [&_ul]:my-1 [&_ol]:my-1 [&_table]:mt-2 [&_table]:w-full [&_table]:border-collapse [&_table]:text-xs [&_thead_th]:border [&_thead_th]:border-border-subtle [&_thead_th]:bg-tertiary [&_thead_th]:px-2 [&_thead_th]:py-1.5 [&_thead_th]:text-left [&_thead_th]:font-semibold [&_thead_th]:uppercase [&_thead_th]:tracking-wider [&_tbody_td]:border [&_tbody_td]:border-border-subtle [&_tbody_td]:px-2 [&_tbody_td]:py-1.5 [&_tbody_tr:nth-child(even)]:bg-[var(--bg-tertiary)]">
+                          {content}
+                        </div>
+                        {badge && (
+                          <div className="mt-1 flex justify-end">
+                            <span
+                              className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[0.55rem] font-bold uppercase tracking-wider ${
+                                badge.isOffline
+                                  ? "border-amber-400/50 bg-amber-400/10 text-amber-400"
+                                  : "border-emerald-400/50 bg-emerald-400/10 text-emerald-400"
+                              }`}
+                            >
+                              {badge.isOffline ? (
+                                <>
+                                  <span className="h-1 w-1 animate-pulse rounded-full bg-amber-400" aria-hidden />
+                                  {badge.label}
+                                </>
+                              ) : (
+                                badge.label
+                              )}
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+              {!isUser && !isTypingMsg && sources && sources.length > 0 && (
+                <div className="w-full max-w-[85%] overflow-hidden rounded-md">
+                  <button
+                    type="button"
+                    aria-expanded="false"
+                    className="flex w-full items-center gap-2 rounded-md border border-border bg-[var(--bg-tertiary)] px-2.5 py-1.5 text-left text-eoc-tiny font-semibold uppercase tracking-wider text-muted transition hover:border-accent-success/40 hover:text-slate-200"
+                  >
+                    <svg className="h-3 w-3 shrink-0 text-accent-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                      <rect x="2" y="3" width="20" height="14" rx="2" />
+                      <path d="M8 21h8" />
+                      <path d="M12 17v4" />
+                    </svg>
+                    <span className="flex-1 truncate">Sources grounding this plan</span>
+                    <span className="rounded-sm bg-accent-success/10 px-1 font-mono text-[9px] text-accent-success">
+                      {sources.length} docs
+                    </span>
+                  </button>
+                </div>
+              )}
+              <div className="mt-1 flex items-center gap-2 px-1">
+                {!isUser && !isTypingMsg && (
+                  <span className="text-[0.625rem] text-muted">{formatTime(new Date(msg.createdAt ?? Date.now()))}</span>
+                )}
+                {isUser && <span className="text-[0.625rem] text-muted">{formatTime(new Date(msg.createdAt ?? Date.now()))}</span>}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Prompts + composer */}
-      <SuggestedPrompts onSelect={setDraft} />
+      <SuggestedPrompts onSelect={handleToolPrompt} />
       <ChatInputBar
         value={draft}
         onChange={setDraft}
         onSend={handleSend}
-        isProcessing={isProcessing}
+        isProcessing={status === "submitted" || status === "streaming"}
       />
     </div>
   );

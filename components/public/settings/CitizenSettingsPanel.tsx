@@ -806,8 +806,8 @@ export default function CitizenSettingsPanel({
             </p>
           )}
 
-          {/* Save bar — sticky so it never leaves the thumb's reach */}
-          <div className="sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-20">
+          {/* Save bar */}
+          <div className="mt-8 block">
             <button
               type="submit"
               disabled={saving}
