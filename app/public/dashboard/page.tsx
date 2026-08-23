@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight, Bell, HeartHandshake, MapPin, Siren } from "lucide-react";
 import AITeaser from "@/components/public/AITeaser";
