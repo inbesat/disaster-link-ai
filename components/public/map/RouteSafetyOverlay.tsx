@@ -74,7 +74,7 @@ export default function RouteSafetyOverlay({
           animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
           exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
           transition={{ duration: reduceMotion ? 0 : 0.2 }}
-          className="pointer-events-none absolute bottom-[calc(196px+env(safe-area-inset-bottom))] left-4 z-10 w-[10.5rem] rounded-xl border border-white/10 bg-[#0b1120]/85 p-2.5 shadow-[0_8px_28px_rgba(0,0,0,0.45)] backdrop-blur-sm"
+          className="pointer-events-none absolute bottom-[calc(196px+env(safe-area-inset-bottom))] left-4 z-10 w-[10.5rem] rounded-xl border border-white/10 bg-[#0a1120]/85 p-2.5 shadow-[0_8px_28px_rgba(0,0,0,0.45)] backdrop-blur-sm"
         >
           <div className="flex items-center gap-1.5">
             <ShieldCheck

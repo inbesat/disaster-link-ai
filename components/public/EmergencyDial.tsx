@@ -60,8 +60,8 @@ const LINES: EmergencyLine[] = [
 export function EmergencyDial() {
   return (
     <section aria-label="Emergency contacts speed dial">
-      <p className="eoc-label text-slate-400">EMERGENCY CONTACTS</p>
-      <div className="mt-3 flex justify-between gap-3">
+      <p className="eoc-label text-[var(--dl-text-muted)]">EMERGENCY DIAL</p>
+      <div className="mt-3 grid grid-cols-2 gap-4">
         {LINES.map((line) => {
           const Icon = line.icon;
           return (
@@ -69,35 +69,35 @@ export function EmergencyDial() {
               key={line.href}
               href={line.href}
               aria-label={`${line.fullLabel} — ${line.number}`}
-              className={`group flex flex-col items-center gap-1.5 transition active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              className={`group flex min-h-[80px] flex-col items-center justify-center gap-1 rounded-xl transition active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 ${
                 line.primary
-                  ? "focus-visible:outline-red-400"
-                  : "focus-visible:outline-blue-400"
+                  ? "bg-severity-red-600 text-white shadow-[0_0_24px_rgba(239,68,68,0.35)] hover:bg-severity-red-500 focus-visible:outline-severity-red-400"
+                  : "bg-white text-[var(--dl-navy)] shadow-[var(--dl-shadow-soft)] hover:bg-gray-100 focus-visible:outline-[var(--dl-orange)]"
               }`}
             >
-              <span
-                className={`flex h-12 w-12 items-center justify-center rounded-full transition-all duration-200 ${
+              <Icon
+                aria-hidden="true"
+                className={`h-5 w-5 ${
                   line.primary
-                    ? "bg-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] group-hover:shadow-[0_0_30px_rgba(239,68,68,0.6)]"
-                    : "bg-white/10 text-white border border-white/15 group-hover:bg-white/15 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                    ? "text-white transition group-hover:scale-110"
+                    : "text-[var(--dl-blue)] transition group-hover:scale-110"
                 }`}
-              >
-                <Icon
-                  aria-hidden="true"
-                  className="h-5 w-5 transition group-hover:scale-110"
-                />
-              </span>
-              <span className="text-xs font-medium text-slate-400">
+              />
+              <span className="text-[0.625rem] font-bold uppercase leading-none tracking-wide">
                 {line.label}
               </span>
-              <span className="text-xs font-bold text-white">
+              <span
+                className={`font-mono text-sm font-bold leading-none ${
+                  line.primary ? "text-white" : "text-[var(--dl-navy)]"
+                }`}
+              >
                 {line.number}
               </span>
             </a>
           );
         })}
       </div>
-      <p className="mt-3 text-xs text-slate-500 text-center">
+      <p className="mt-2 text-[0.6875rem] text-[var(--dl-text-muted)]">
         Taps open your phone&apos;s dialer with the number pre-filled.
       </p>
     </section>

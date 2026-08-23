@@ -18,7 +18,7 @@
 // Rendered by app/public/settings/page.tsx (a server shell that passes the
 // httpOnly `citizen_phone` cookie down).
 
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import {
   Bell,
@@ -30,7 +30,6 @@ import {
   HeartPulse,
   History,
   Loader2,
-  Map,
   Phone,
   Plus,
   Save,
@@ -181,16 +180,6 @@ type CitizenSettingsPanelProps = {
   isGuest: boolean;
 };
 
-const CATEGORY_TABS: Array<{ id: string; label: string; icon: LucideIcon }> = [
-  { id: "profile", label: "Profile", icon: User },
-  { id: "notifications", label: "Notifications", icon: Bell },
-  { id: "map", label: "Map", icon: Map },
-  { id: "family", label: "Family", icon: HeartPulse },
-  { id: "emergency", label: "Emergency", icon: ShieldAlert },
-  { id: "language", label: "Language", icon: SlidersHorizontal },
-  { id: "privacy", label: "Privacy", icon: Wifi },
-];
-
 export default function CitizenSettingsPanel({
   initialPhone,
   isGuest,
@@ -205,8 +194,6 @@ export default function CitizenSettingsPanel({
   const [notif, setNotif] = useState<NotifPrefs>(DEFAULT_NOTIF);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState("profile");
-  const tabsRef = useRef<HTMLDivElement>(null);
 
   // Offline AI model download state — 0..1 while streaming, null when idle.
   const [modelProgress, setModelProgress] = useState<number | null>(null);
@@ -379,33 +366,6 @@ export default function CitizenSettingsPanel({
               : "NOT SIGNED IN"}
         </span>
       </header>
-
-      {/* Sticky category tabs */}
-      <div ref={tabsRef} className="sticky top-0 z-20 border-b border-white/10 bg-[var(--dl-navy)]/90 backdrop-blur-md">
-        <div className="mx-auto max-w-3xl px-4">
-          <div className="flex gap-1 overflow-x-auto py-2 scrollbar-none">
-            {CATEGORY_TABS.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex items-center gap-1.5 shrink-0 rounded-full px-3 py-2 text-xs font-bold transition ${
-                    isActive
-                      ? "bg-[var(--dl-orange)] text-white shadow-[0_0_12px_rgba(249,115,22,0.4)]"
-                      : "text-[var(--dl-text-muted)] hover:bg-white/5 hover:text-white"
-                  }`}
-                >
-                  <Icon className="h-3.5 w-3.5" aria-hidden />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
 
       {/* Responsive column — max-w-3xl per the settings spec. */}
       <div className="relative z-10 mx-auto w-full max-w-3xl flex-1 px-4 py-6 pb-[calc(88px+env(safe-area-inset-bottom))]">
@@ -846,8 +806,8 @@ export default function CitizenSettingsPanel({
             </p>
           )}
 
-          {/* Save bar */}
-          <div className="mt-8">
+          {/* Save bar — sticky so it never leaves the thumb's reach */}
+          <div className="sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-20">
             <button
               type="submit"
               disabled={saving}

@@ -87,7 +87,7 @@ const MODULES = [
 export default function PublicDashboardPage() {
   return (
     <div className="relative w-full min-h-screen flex flex-col bg-primary">
-    <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-[100px] text-[var(--dl-text-on-navy)]">
+    <main className="relative flex w-full flex-1 flex-col bg-[var(--dl-navy)] pb-[140px] px-4 md:px-8 text-[var(--dl-text-on-navy)]">
       {/* Ambient backdrop */}
       <div
         aria-hidden="true"
@@ -172,7 +172,7 @@ export default function PublicDashboardPage() {
         </section>
 
         {/* Module grid — stacks on phones, two-up on desktop */}
-        <section className="mt-8">
+        <section className="mt-8 flex-1">
           <div className="grid grid-cols-2 gap-4">
             {MODULES.map((module) => (
               <Link
