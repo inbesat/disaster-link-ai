@@ -52,11 +52,31 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     ? { soilSaturation: Math.min(1, Math.max(0, saturation / 100)) }
     : undefined;
 
-  try {
-    const prediction = await getFloodPrediction(lat, lng, rainfallMm, elevation, options);
-    return NextResponse.json({ ok: true, disasterType, ...prediction });
-  } catch (error: unknown) {
-    console.error("ML prediction failed:", error);
-    return NextResponse.json({ error: "Failed to run ML prediction." }, { status: 500 });
-  }
+  // -----------------------------------------------------------------------
+  // SHORT-CIRCUITED FOR DEMO: return instant "Safe" fallback without hitting
+  // the ML service at 127.0.0.1:8000 (which isn't running) or Prisma.
+  // This eliminates the 3-6 second timeout delay on every dashboard load.
+  //
+  // To restore live ML predictions, uncomment the block below and delete
+  // this early return.
+  // -----------------------------------------------------------------------
+  return NextResponse.json({
+    ok: true,
+    disasterType,
+    riskLevel: "Safe",
+    confidenceScore: 0,
+    source: "fallback",
+    lat,
+    lng,
+    predictedAt: new Date().toISOString(),
+  });
+
+  // --- ORIGINAL ML CALL (disabled for demo) ---
+  // try {
+  //   const prediction = await getFloodPrediction(lat, lng, rainfallMm, elevation, options);
+  //   return NextResponse.json({ ok: true, disasterType, ...prediction });
+  // } catch (error: unknown) {
+  //   console.error("ML prediction failed:", error);
+  //   return NextResponse.json({ error: "Failed to run ML prediction." }, { status: 500 });
+  // }
 }
