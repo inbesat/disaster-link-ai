@@ -77,7 +77,16 @@ export default function WhatIfSimulator({
         saturation: String(saturation),
         elevation: String(DEMO_ELEVATION_M),
       });
-      const response = await fetch(`/api/predict?${query.toString()}`);
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(`/api/predict?${query.toString()}`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
       if (!response.ok) throw new Error(`Status ${response.status}`);
       const data = await response.json();
 
@@ -91,6 +100,7 @@ export default function WhatIfSimulator({
       });
     } catch (error: unknown) {
       console.error("Simulator prediction failed:", error);
+      // Gracefully assign fallback mock data so the UI renders normally
       setResult({ level: "Safe", confidence: 0, loading: false });
     }
   }
