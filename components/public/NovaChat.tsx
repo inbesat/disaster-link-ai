@@ -60,6 +60,7 @@ import { readCitizenLocation } from "@/hooks/useSafetyStatus";
 import { resolveCitizenMapView } from "@/lib/map/citizen-view";
 import VoiceInput, { speechLocaleFor } from "./ai/VoiceInput";
 import ShareRouteButton from "./ShareRouteButton";
+import { resolveNovaReply } from "@/lib/nova/nova-reply";
 
 /** Snap points as a fraction of the viewport height that stays visible. */
 const SNAP_COLLAPSED = 0.6;
@@ -277,7 +278,7 @@ export function NovaChat() {
     const trimmed = text.trim();
     if (!trimmed || typing) return;
     // Step 2 — intercept BEFORE the reply path. An emergency intent never
-    // reaches the normal LLM mock: Nova acts instead of chatting.
+    // reaches the normal LLM: Nova acts instead of chatting.
     if (detectEmergency(trimmed)) {
       handleEmergency(trimmed);
       return;
@@ -298,7 +299,26 @@ export function NovaChat() {
     ]);
     setDraft("");
     setTyping(true);
-    window.setTimeout(() => {
+
+    // Build history for context (last 6 messages)
+    const history = messages
+      .slice(-6)
+      .map((m) => ({ role: m.role as "user" | "ai", content: m.content }));
+
+    // Resolve reply via cloud-first chain: /api/chat → 61-rule fallback → static
+    resolveNovaReply(trimmed, history, undefined).then((result) => {
+      setTyping(false);
+      const replyText = result.source === "static" ? t("nova_reply") : result.text;
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `a-${Date.now()}`,
+          role: "ai",
+          content: replyText,
+          timestamp: nowTime(),
+        },
+      ]);
+    }).catch(() => {
       setTyping(false);
       setMessages((prev) => [
         ...prev,
@@ -309,7 +329,7 @@ export function NovaChat() {
           timestamp: nowTime(),
         },
       ]);
-    }, TYPING_MS);
+    });
   };
 
   const handleSend = () => sendPrompt(draft);
