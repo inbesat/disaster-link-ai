@@ -279,10 +279,18 @@ function CitizenForm() {
       // localStorage unavailable — non-fatal for the demo session.
     }
 
+    // Clear any stale gov/guest cookies so middleware's crossover guard
+    // doesn't see a gov role and redirect us back to /gov/dashboard.
+    document.cookie = "gov_email=; path=/; max-age=0";
+    document.cookie = "guest_mode=; path=/; max-age=0";
+    document.cookie = "demo_mode=; path=/; max-age=0";
+    document.cookie = "view_as_public=; path=/; max-age=0";
+    document.cookie = "sandbox=; path=/; max-age=0";
+
     document.cookie = `role=public; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`;
     document.cookie = `citizen_phone=${encodeURIComponent(mockUser.phone)}; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`;
 
-    router.push("/public/onboarding");
+    router.push("/public/dashboard");
   }
 
   const inputClass =
@@ -489,6 +497,14 @@ function GovForm() {
     } catch {
       // localStorage unavailable — non-fatal for the demo session.
     }
+
+    // Clear any stale citizen/guest cookies so middleware doesn't
+    // see conflicting session state.
+    document.cookie = "citizen_phone=; path=/; max-age=0";
+    document.cookie = "guest_mode=; path=/; max-age=0";
+    document.cookie = "demo_mode=; path=/; max-age=0";
+    document.cookie = "view_as_public=; path=/; max-age=0";
+    document.cookie = "sandbox=; path=/; max-age=0";
 
     document.cookie = `role=${role}; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`;
     document.cookie = `gov_email=${encodeURIComponent(mockUser.email)}; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`;
