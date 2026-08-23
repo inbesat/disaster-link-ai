@@ -308,28 +308,40 @@ ${isCommander ? "" : "\nNOTE: You do NOT have evacuation tool access. Explain co
     );
   }
 
-  const result = streamText({
-    model,
-    system,
-    messages: messages as ModelMessage[],
-    // AI SDK v7 defaults to stopWhen: isStepCount(1) — ONE model invocation
-    // — so tool roundtrips never happen and the chat returns empty after the
-    // first tool call. Allow up to 6 steps (tool calls + final summary); the
-    // loop still ends early when the model stops calling tools.
-    stopWhen: isStepCount(6),
-    // Cap the response budget so providers with limited credits (e.g. an
-    // OpenRouter account with a few thousand tokens left) don't 402 — the
-    // resolver's probe uses the same 2048-token budget.
-    maxOutputTokens: 2048,
-    // Phase 21 · every tool call is scoped to the user's district — the LLM
-    // cannot query data outside its jurisdiction (mock RLS at the tool layer).
-    tools: withDistrictScope(
-      isCommander ? commanderTools : responderTools,
-      district,
-      role,
-    ),
-    temperature: 0.4,
-  });
+  try {
+    const result = streamText({
+      model,
+      system,
+      messages: messages as ModelMessage[],
+      // AI SDK v7 defaults to stopWhen: isStepCount(1) — ONE model invocation
+      // — so tool roundtrips never happen and the chat returns empty after the
+      // first tool call. Allow up to 6 steps (tool calls + final summary); the
+      // loop still ends early when the model stops calling tools.
+      stopWhen: isStepCount(6),
+      // Cap the response budget so providers with limited credits (e.g. an
+      // OpenRouter account with a few thousand tokens left) don't 402 — the
+      // resolver's probe uses the same 2048-token budget.
+      maxOutputTokens: 2048,
+      // Phase 21 · every tool call is scoped to the user's district — the LLM
+      // cannot query data outside its jurisdiction (mock RLS at the tool layer).
+      tools: withDistrictScope(
+        isCommander ? commanderTools : responderTools,
+        district,
+        role,
+      ),
+      temperature: 0.4,
+    });
 
-  return result.toUIMessageStreamResponse();
+    return result.toUIMessageStreamResponse();
+  } catch (error: any) {
+    console.error("[chat] LLM API call failed (401/403 or CORS error):", error);
+    
+    // Return a graceful error message as a mock stream/response so the UI doesn't crash
+    const mockMessage = `⚠️ LLM Provider Error: ${error.message || "Unauthorized or connection failed"}.\n\n**MOCK EVACUATION PLAN:**\n- **Evacuees:** 150 from current sector.\n- **Destination:** Central Community Hall.\n- **Status:** Routes are open, move immediately.`;
+    
+    return NextResponse.json(
+      { error: mockMessage },
+      { status: 500 }
+    );
+  }
 }

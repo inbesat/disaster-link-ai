@@ -175,7 +175,16 @@ function addCandidate(
   candidates.push({
     name: cfg.name,
     group: cfg.group,
-    model: createOpenAI({ name: cfg.name, baseURL: cfg.baseURL, apiKey: key }).chat(
+    model: createOpenAI({
+      name: cfg.name,
+      baseURL: cfg.baseURL,
+      apiKey: key,
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "HTTP-Referer": "https://safesphere.vercel.app",
+        "X-Title": "SafeSphere"
+      }
+    }).chat(
       cfg.modelId,
     ),
     probe: { baseURL: cfg.baseURL, model: cfg.modelId, apiKey: key, keyEnvVar: cfg.keyEnvVar },
