@@ -310,6 +310,16 @@ export async function middleware(request: NextRequest) {
     return withSecurityHeaders(NextResponse.next());
   }
 
+  // Ensure /public/* paths are fully whitelisted for both GET and POST
+  // requests so Server Actions and initial data fetches never hit a 403
+  // due to missing sessions.
+  if (pathname.startsWith("/public")) {
+    if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) {
+      // Explicitly allow POST to /public/* without auth or CSRF checks
+      return withSecurityHeaders(NextResponse.next());
+    }
+  }
+
   // =========================================================================
   // PHASE 15 · STEP 4 — JUDGES' SANDBOX (read-only Public Citizen session).
   //
