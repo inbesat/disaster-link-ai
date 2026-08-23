@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { rateLimit } from "@/lib/security/rate-limit";
-import { generateOtp, issueOtp, normalizePhone, consumeOtp } from "@/lib/security/otp";
+import { consumeOtp, generateOtp, issueOtp, normalizePhone } from "@/lib/security/otp";
 import { DEMO_SESSION_COOKIE } from "@/lib/demo/scope";
 import { safeLog } from "@/lib/logger";
 
@@ -141,21 +141,32 @@ export async function sendOTP(
  */
 export async function verifyOTP(code: string): Promise<{ ok: false; message: string }> {
   const token = (code ?? "").trim().replace(/\D/g, "");
-  if (!token) {
-    return { ok: false, message: "Enter the code sent to your phone." };
+  if (!/^\d{6}$/.test(token)) {
+    return { ok: false, message: "Enter the 6-digit code from your phone." };
   }
 
-  // Consume the code if present in memory.
-  const phone = consumeOtp(token);
+  // Brute-force guard: max 5 verify attempts per code per minute.
+  const attemptBudget = rateLimit(`getotp:verify:${token}`, 5, 60 * 1000);
+  if (!attemptBudget.success) {
+    return { ok: false, message: "Too many attempts. Request a new code." };
+  }
 
-  // Real-mode path: if Supabase & GetOTP key configured, try verifyOtp
-  const realMode = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.GETOTP_API_KEY && phone);
+  // Consume the code (single-use). null for unknown/expired/malformed.
+  const phone = consumeOtp(token);
+  if (!phone) {
+    return { ok: false, message: "Invalid or expired code. Request a new one." };
+  }
+
+  // Real-mode path: the phone must be a Supabase Auth user that received a
+  // matching code. Since GetOTP (not Supabase) generated this code, this
+  // usually fails and we fall through to the demo guest login below.
+  const realMode = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.GETOTP_API_KEY);
   if (realMode) {
     let signedIn = false;
     try {
       const supabase = createClient();
       const { error } = await supabase.auth.verifyOtp({
-        phone: phone!,
+        phone,
         token,
         type: "sms",
       });
@@ -166,7 +177,7 @@ export async function verifyOTP(code: string): Promise<{ ok: false; message: str
     if (signedIn) redirect("/command-center");
   }
 
-  // Demo bypass: mark the responder as a guest (any OTP code works for demo).
+  // Demo bypass: mark the responder as a guest, exactly like Continue as Guest.
   setGuestCookie();
   redirect("/command-center");
 }
@@ -228,9 +239,7 @@ export async function exitGuestMode() {
   redirect("/");
 }
 
-export async function govLogin(email: string, role: "district_admin" | "super_admin" = "district_admin") {
-  const normalizedEmail = email.trim().toLowerCase();
-
+export async function govLogin(role: "district_admin" | "super_admin" = "district_admin") {
   cookies().delete("guest_mode");
   cookies().delete("view_as_public");
   cookies().delete("demo_mode");
@@ -238,7 +247,6 @@ export async function govLogin(email: string, role: "district_admin" | "super_ad
   cookies().delete("citizen_phone");
   cookies().delete("sandbox");
   setSessionCookie("role", role, 60 * 60 * 24 * 7);
-  setSessionCookie("gov_email", normalizedEmail, 60 * 60 * 24 * 7);
   redirect(role === "super_admin" ? "/gov/overview" : "/gov/dashboard");
 }
 
@@ -318,115 +326,60 @@ export async function signUpAction(formData: FormData) {
   if (fullName.length < 2) {
     redirect(`/login?error=${encodeURIComponent("Please enter your full name.")}`);
   }
-  if (!email || !password) {
-    redirect(`/signup?error=${encodeURIComponent("Email and password are required.")}`);
+  if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+    redirect(
+      `/signup?error=${encodeURIComponent(
+        "Password must be at least 8 characters long and contain at least one uppercase letter and one number.",
+      )}`,
+    );
   }
 
-  cookies().delete("guest_mode");
-  cookies().delete("view_as_public");
-  cookies().delete("demo_mode");
-  cookies().delete(DEMO_SESSION_COOKIE);
-  cookies().delete("citizen_phone");
-  cookies().delete("sandbox");
-  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
-  redirect("/public/dashboard");
-  if (!email && !fullName) {
-    redirect(`/login?error=${encodeURIComponent("Please enter your name and email.")}`);
-  }
-
-  let signedIn = false;
+  let failure: string | null = null;
   try {
     const supabase = createClient();
     const { error } = await supabase.auth.signUp({
-      email: email || "demo@safesphere.gov.in",
-      password: password || "DemoPassword123!",
-      options: { data: { full_name: fullName || "Demo User" } },
+      email,
+      password,
+      options: { data: { full_name: fullName } },
     });
-    signedIn = !error;
+    failure = error?.message ?? null;
   } catch (error: unknown) {
-    safeLog("warn", "[auth] signUpAction failed — falling back to demo login", { metadata: { error: String(error) } });
+    safeLog("error", "[auth] signUpAction failed", { metadata: { error: String(error) } });
+    failure = "Could not create your account. Please try again.";
   }
 
-  if (signedIn) {
-    redirect("/public/dashboard");
+  if (failure) {
+    redirect(`/login?error=${encodeURIComponent(failure)}`);
   }
 
-  // Demo bypass: any password/details work for sign up in demo mode
-  await publicDemoLogin();
+  redirect("/public/dashboard");
 }
 
 export async function signInAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
-  if (!email && !password) {
-    redirect(`/login?error=${encodeURIComponent("Email or password is required.")}`);
+  if (!email || !password) {
+    redirect(`/login?error=${encodeURIComponent("Email and password are required.")}`);
   }
 
-  cookies().delete("guest_mode");
-  cookies().delete("view_as_public");
-  cookies().delete("demo_mode");
-  cookies().delete(DEMO_SESSION_COOKIE);
-  cookies().delete("citizen_phone");
-  cookies().delete("sandbox");
-
-  // Demo bypass: detect admin emails BEFORE redirect
-  const lowerEmail = email.toLowerCase();
-  if (lowerEmail.includes("super")) {
-    setSessionCookie("role", "super_admin", 60 * 60 * 24 * 7);
-    redirect("/gov/overview");
-  } else if (
-    lowerEmail.includes("admin") ||
-    lowerEmail.includes("gov") ||
-    lowerEmail.includes("responder")
-  ) {
-    setSessionCookie("role", "district_admin", 60 * 60 * 24 * 7);
-    redirect("/gov/dashboard");
+  let failure: string | null = null;
+  try {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    failure = error?.message ?? null;
+  } catch (error: unknown) {
+    safeLog("error", "[auth] signInAction failed", { metadata: { error: String(error) } });
+    failure = "Could not sign you in. Please try again.";
   }
 
-  setSessionCookie("role", "public", 60 * 60 * 24 * 7);
+  if (failure) {
+    redirect(`/login?error=${encodeURIComponent(failure)}`);
+  }
+
   redirect("/public/dashboard");
 }
 
 export async function guestLoginAction() {
   await enableGuestMode();
-}
-
-// ---------------------------------------------------------------------
-// Password Reset Flow
-// ---------------------------------------------------------------------
-
-/**
- * Send a password reset email using Supabase's built-in flow.
- * The email contains a link to /auth/update-password with a code parameter.
- */
-export async function forgotPasswordAction(formData: FormData) {
-  const email = String(formData.get("email") ?? "").trim();
-
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    redirect(`/login?error=${encodeURIComponent("Please enter a valid email address.")}`);
-  }
-
-  // Rate limit: max 3 reset requests per email per hour
-  const resetBudget = rateLimit(`pwd_reset:${email}`, 3, 60 * 60 * 1000);
-  if (!resetBudget.success) {
-    redirect(`/login?error=${encodeURIComponent("Too many reset requests. Please wait before trying again.")}`);
-  }
-
-  try {
-    const supabase = createClient();
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/auth/update-password`,
-    });
-
-    if (error) {
-      safeLog("error", "[auth] forgotPasswordAction failed", { metadata: { error: error.message, email } });
-      // Don't reveal if email exists — always show success for security
-    }
-  } catch (error: unknown) {
-    safeLog("error", "[auth] forgotPasswordAction exception", { metadata: { error: String(error), email } });
-  }
-
-  // Always redirect to login with success message (don't reveal if account exists)
-  redirect(`/login?reset=sent`);
 }

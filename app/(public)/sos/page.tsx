@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Accessibility,
 } from "lucide-react";
+import PublicBackButton from "@/components/public/PublicBackButton";
 
 // ---------------------------------------------------------------------
 // app/(public)/sos/page.tsx — Standalone Emergency SOS Page
@@ -131,7 +132,8 @@ export default function SosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary p-4 sm:p-6">
+    <div className="min-h-screen bg-primary p-4 sm:p-6 relative">
+      <PublicBackButton />
       <div className="max-w-lg mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-3">

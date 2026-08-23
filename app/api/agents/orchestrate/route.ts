@@ -3,6 +3,8 @@ import { createInitialState, type EmergencyGraphInput } from "@/lib/agents/graph
 import { getEmergencyGraph, foldFinalState } from "@/lib/agents/graph";
 import { requireRole } from "@/lib/security/require-role";
 import { createRateLimiter } from "@/lib/security/rate-limit";
+import { getAgentModel } from "@/lib/agents/model-provider";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -81,6 +83,37 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   // Fold streamed updates into the authoritative final state.
   const finalState = foldFinalState(steps, incidentDetails);
 
+  // Generate human-readable public advisory via LLM chain (deterministic decisions untouched).
+  // Uses the multi-provider fallback: OpenRouter (primary + backup) → Groq → Bluesminds.
+  let communicatorAdvisory = "";
+  let llmUsed = false;
+  if (finalState.status === "pending_approval" || finalState.status === "resolved") {
+    try {
+      const model = getAgentModel();
+      const prompt = `Generate a concise, official-sounding public advisory broadcast for the following emergency situation. Tone: authoritative, calm, action-oriented. No markdown. Max 180 words.
+
+Incident: ${finalState.incidentDetails}
+Risk Level: ${finalState.riskLevel}
+Evacuation Plan: ${finalState.evacuationPlan || "No evacuation plan drafted yet"}
+Resource Allocations: ${JSON.stringify(finalState.resourceAllocations)}
+Status: ${finalState.status}
+${finalState.conflict ? `Conflict: ${finalState.conflict}` : ""}
+
+Output ONLY the advisory text.`;
+      const response = await model.invoke([
+        new SystemMessage("You are the Emergency Communications Officer. Draft clear, directive public advisories."),
+        new HumanMessage(prompt),
+      ]);
+      communicatorAdvisory = typeof response.content === "string" ? response.content : String(response.content);
+      llmUsed = true;
+    } catch (e) {
+      console.warn("[orchestrate] LLM advisory generation failed, using template fallback:", e);
+      // Template fallback (existing communicatorNode logic)
+      const incidentHint = (finalState.incidentDetails ?? "").slice(0, 48) || "active incident";
+      communicatorAdvisory = `ATTENTION: Emergency broadcast for "${incidentHint}". ${finalState.riskLevel === "CRITICAL" ? "CRITICAL FLOOD RISK — Immediate evacuation ordered." : "Elevated flood risk — Monitor official channels."} Evacuation routes activated. Proceed to designated shelters. Follow field responder instructions.`;
+    }
+  }
+
   return NextResponse.json({
     ok: true,
     incidentId,
@@ -89,5 +122,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     requiresApproval: finalState.status === "pending_approval",
     conflict: finalState.conflict ?? null,
     status: finalState.status,
+    communicatorAdvisory,
+    llmUsed,
   });
 }

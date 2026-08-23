@@ -24,7 +24,8 @@
 // ---------------------------------------------------------------------------
 
 import { useCallback, useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useAnimation, useReducedMotion } from "framer-motion";
+import PublicBackButton from "@/components/public/PublicBackButton";
 import { useRouter } from "next/navigation";
 import { Bot, ChevronRight, Droplets, ShieldCheck, Users } from "lucide-react";
 import { triggerLightHaptic } from "@/hooks/useHaptics";
@@ -115,6 +116,7 @@ export default function OnboardingPage() {
 
   return (
     <main className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-primary text-white">
+      <PublicBackButton />
       {/* Ambient glow — soft radial sky tint rising from the top. */}
       <div
         aria-hidden

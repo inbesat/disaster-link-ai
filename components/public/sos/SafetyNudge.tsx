@@ -120,7 +120,7 @@ export default function SafetyNudge() {
           transition={{ type: "spring", stiffness: 320, damping: 30, mass: 0.9 }}
           className="fixed inset-x-0 top-[calc(env(safe-area-inset-top)+8px)] z-[70] px-4"
         >
-          <div className="mx-auto w-full max-w-md rounded-2xl border border-severity-amber-500/40 bg-[#0b1120]/95 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+          <div className="mx-auto w-full max-w-md rounded-2xl border border-severity-amber-500/40 bg-[#0a1120]/95 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl">
             {/* Header */}
             <div className="flex items-center gap-2.5">
               <span className="relative flex h-9 w-9 shrink-0 items-center justify-center">

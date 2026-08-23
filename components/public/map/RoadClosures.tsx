@@ -89,12 +89,12 @@ function RoadClosureMarker({ closure, isOpen, onToggle }: RoadClosureMarkerProps
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 0.94 }}
               transition={{ duration: reduceMotion ? 0 : 0.18 }}
-              className="absolute bottom-full left-1/2 mb-2 w-60 -translate-x-1/2 rounded-xl border border-severity-red-500/40 bg-[#0b1120]/95 p-3 text-left shadow-[0_8px_28px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+              className="absolute bottom-full left-1/2 mb-2 w-60 -translate-x-1/2 rounded-xl border border-severity-red-500/40 bg-[#0a1120]/95 p-3 text-left shadow-[0_8px_28px_rgba(0,0,0,0.5)] backdrop-blur-xl"
             >
               {/* Pointing caret */}
               <span
                 aria-hidden="true"
-                className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-severity-red-500/40 bg-[#0b1120]"
+                className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-severity-red-500/40 bg-[#0a1120]"
               />
               <p className="flex items-center gap-1.5 text-[0.6875rem] font-bold uppercase tracking-wider text-severity-red-300">
                 <span aria-hidden="true" className="text-xs leading-none">

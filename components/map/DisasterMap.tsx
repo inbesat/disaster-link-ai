@@ -56,18 +56,15 @@ import { getEvacuationRoute } from "@/lib/map/routing";
 import { getInventory, type InventoryResource } from "@/app/actions/resources";
 import { groundReportColor, type GroundReport } from "@/lib/crowdsourced/report";
 import { redactReportText } from "@/lib/security/sanitize";
-import { severityConfig } from "@/styles/tokens";
 
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
-// SeverityConfig canonical colors — maps disaster risk levels to standardized colors.
-// LOW → safe (emerald-500), MEDIUM → watch (amber-500), HIGH → warning (orange-500),
-// CRITICAL → critical (red-500).
+// Matches the severity-green/amber/red/purple-500 theme tokens
 const SEVERITY_COLORS: Record<string, string> = {
-  low: severityConfig.safe.color,
-  medium: severityConfig.watch.color,
-  high: severityConfig.warning.color,
-  critical: severityConfig.critical.color,
+  low: "#10b981",
+  medium: "#f59e0b",
+  high: "#ef4444",
+  critical: "#a855f7",
 };
 
 // Loose district matching so simulator labels like "Patna (Ganga)" resolve to
@@ -299,31 +296,6 @@ export default function DisasterMap({
   activeAllocations = [],
   groundReports = [],
 }: DisasterMapProps) {
-  const [webGlSupported, setWebGlSupported] = useState<boolean | null>(null);
-  const [mapInitError, setMapInitError] = useState<string | null>(null);
-  const [tileError, setTileError] = useState<boolean>(false);
-  const [manualLocation, setManualLocation] = useState<string>("");
-  const [geolocationFailed, setGeolocationFailed] = useState<boolean>(false);
-
-  useEffect(() => {
-    try {
-      // maplibre-gl v3 removed maplibregl.supported() — probe for a usable
-      // WebGL/WebGL2 context directly instead.
-      const canvas = document.createElement("canvas");
-      const gl =
-        canvas.getContext("webgl2") ??
-        canvas.getContext("webgl") ??
-        canvas.getContext("experimental-webgl");
-      setWebGlSupported(gl !== null);
-      const supported =
-        (maplibregl as unknown as { supported?: (opts?: object) => boolean }).supported?.({
-          failIfMajorPerformanceCaveat: false,
-        }) ?? true;
-      setWebGlSupported(supported);
-    } catch {
-      setWebGlSupported(false);
-    }
-  }, []);
   const [selected, setSelected] = useState<SelectedFeature>(null);
   const [selectedZone, setSelectedZone] = useState<SelectedZone | null>(null);
   const [measuring, setMeasuring] = useState(false);
@@ -595,22 +567,13 @@ export default function DisasterMap({
     showToast(`150 Evacuees assigned to ${nearest.name}. Route mapped.`);
   }
 
-  // Pulse the active evacuation route to signal movement via rAF.
+  // Pulse the active evacuation route to signal movement.
   const [routePulse, setRoutePulse] = useState(true);
   useEffect(() => {
     if (!evacRoute) return;
     setRoutePulse(true);
-    let rafId = 0;
-    let lastTime = performance.now();
-    const animatePulse = (now: number) => {
-      if (now - lastTime >= 700) {
-        lastTime = now;
-        setRoutePulse((p) => !p);
-      }
-      rafId = requestAnimationFrame(animatePulse);
-    };
-    rafId = requestAnimationFrame(animatePulse);
-    return () => cancelAnimationFrame(rafId);
+    const id = setInterval(() => setRoutePulse((p) => !p), 700);
+    return () => clearInterval(id);
   }, [evacRoute]);
 
   // Critical-alert ingress: flash the map frame red + beep when a new critical
@@ -630,7 +593,6 @@ export default function DisasterMap({
     let interval: ReturnType<typeof setInterval> | null = null;
 
     const poll = () => {
-      if (document.hidden) return;
       void fetch("/api/alerts?limit=5")
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
@@ -818,8 +780,6 @@ export default function DisasterMap({
     }
   }
 
-  const moveDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   function handleMoveEnd(e: { viewState: { latitude: number; longitude: number } }) {
     const { latitude, longitude } = e.viewState;
     const last = lastFetchedCoords.current;
@@ -828,12 +788,9 @@ export default function DisasterMap({
       return;
     }
 
-    if (moveDebounceRef.current) clearTimeout(moveDebounceRef.current);
-    moveDebounceRef.current = setTimeout(() => {
-      lastFetchedCoords.current = { lat: latitude, lng: longitude };
-      setMapCenter({ lat: latitude, lng: longitude });
-      void fetchLiveData(latitude, longitude);
-    }, 200);
+    lastFetchedCoords.current = { lat: latitude, lng: longitude };
+    setMapCenter({ lat: latitude, lng: longitude });
+    void fetchLiveData(latitude, longitude);
   }
 
   function handleMapClick(e: MapLayerMouseEvent) {
@@ -961,80 +918,12 @@ export default function DisasterMap({
           features: [],
         };
 
-  if (webGlSupported === false || mapInitError) {
-    return (
-      <div className="flex h-full min-h-[400px] w-full flex-col items-center justify-center rounded-eoc border border-severity-amber-600/40 bg-surface/90 p-6 text-foreground shadow-glow-amber">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-severity-amber-600/60 bg-severity-amber-600/10">
-          <span className="text-2xl">🗺️</span>
-        </div>
-        <p className="eoc-label mt-4 text-severity-amber-400">MAP ENGINE UNAVAILABLE</p>
-        <h2 className="mt-1 text-center text-lg font-bold">
-          {webGlSupported === false
-            ? "Your browser does not support maps. Please update."
-            : "Map initialization failed."}
-        </h2>
-        <p className="mt-2 max-w-md text-center text-xs leading-relaxed text-slate-400">
-          WebGL standard is required for 3D vector map acceleration. You can still access shelters and disaster forecasts below.
-        </p>
-
-        {/* Fallback Static Area View */}
-        <div className="mt-4 flex w-full max-w-md flex-col gap-2 rounded-md border border-border bg-black/40 p-3 text-xs">
-          <div className="flex justify-between border-b border-border/60 pb-2">
-            <span className="text-slate-400">Viewed Sector:</span>
-            <span className="font-bold text-accent">{liveConditions?.district || "Patna Sector"}</span>
-          </div>
-          <div className="flex justify-between border-b border-border/60 pb-2">
-            <span className="text-slate-400">Active Warning Zones:</span>
-            <span className="font-bold text-severity-amber-400">{zonesGeoJSON.features.length} Zones</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-400">Open Shelters:</span>
-            <span className="font-bold text-emerald-400">{mapShelters.length} Available</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <MapProvider>
-      {tileError && (
-        <div className="absolute top-2 left-1/2 z-20 -translate-x-1/2 rounded-full border border-amber-500/50 bg-surface-elevated/90 px-3 py-1 text-[11px] font-semibold text-amber-300 shadow-md backdrop-blur">
-          ⚠️ Tile loading limited — showing simplified outline mode
-        </div>
-      )}
-
-      {geolocationFailed && (
-        <div className="absolute top-16 left-1/2 z-20 -translate-x-1/2 flex items-center gap-2 rounded-eoc border border-accent bg-surface-elevated/95 p-2 shadow-glow backdrop-blur">
-          <span className="text-xs text-slate-300">Location access denied. Enter location:</span>
-          <input
-            type="text"
-            value={manualLocation}
-            onChange={(e) => setManualLocation(e.target.value)}
-            placeholder="e.g. Patna, Bihar"
-            className="rounded border border-border bg-black/50 px-2 py-1 text-xs text-white focus:outline-none focus:ring-1 focus:ring-accent"
-          />
-          <button
-            type="button"
-            onClick={() => {
-              if (manualLocation.trim()) {
-                setGeolocationFailed(false);
-                // Default fallback center to Patna coordinates if manual input given
-                setMapCenter({ lat: 25.5941, lng: 85.1376 });
-                void fetchLiveData(25.5941, 85.1376);
-              }
-            }}
-            className="rounded bg-accent px-2 py-1 text-xs font-bold text-slate-950 hover:brightness-110"
-          >
-            Go
-          </button>
-        </div>
-      )}
-
       <Map
         mapLib={maplibregl}
         initialViewState={DEFAULT_INITIAL_VIEW}
-        style={{ width: "100%", height: "100%", minHeight: "400px" }}
+        style={{ width: "100%", height: "100%" }}
         mapStyle={MAP_STYLE}
         onClick={handleMapClick}
         onMouseEnter={handleMouseEnter}
@@ -1044,14 +933,6 @@ export default function DisasterMap({
         onMouseLeave={(e) => {
           handleMouseLeave(e);
           setCursor(null);
-        }}
-        onError={(e) => {
-          console.warn("[DisasterMap] Map engine error:", e.error);
-          if (e.error?.message?.includes("WebGL") || e.error?.message?.includes("initialize")) {
-            setMapInitError(e.error.message);
-          } else {
-            setTileError(true);
-          }
         }}
         interactiveLayerIds={[
           "hazard-zone-fill",
@@ -1438,7 +1319,7 @@ export default function DisasterMap({
 
         {route && (
           <Marker longitude={mockVillage.lng} latitude={mockVillage.lat} anchor="bottom">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black/30 bg-severity-red-600 text-eoc-tiny font-black text-white shadow-lg transition-all duration-300 ease-out">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black/30 bg-severity-red-600 text-[10px] font-black text-white shadow-lg transition-all duration-300 ease-out">
               V
             </div>
           </Marker>
@@ -1520,9 +1401,6 @@ export default function DisasterMap({
             setMapCenter({ lat: latitude, lng: longitude });
             void fetchLiveData(latitude, longitude);
           }}
-          onError={() => {
-            setGeolocationFailed(true);
-          }}
         />
       </Map>
 
@@ -1569,7 +1447,7 @@ export default function DisasterMap({
         <button
           type="button"
           onClick={toggleMeasure}
-          className={`rounded-md border px-3 py-2.5 text-xs font-semibold transition active:scale-[0.97] ${
+          className={`rounded-md border px-3 py-2 text-xs font-semibold transition ${
             measuring
               ? "border-accent bg-accent text-slate-950"
               : "border-border bg-surface-elevated/95 text-foreground shadow-glow-accent backdrop-blur hover:border-accent"
@@ -1584,7 +1462,7 @@ export default function DisasterMap({
               setPoints([]);
               setCursor(null);
             }}
-            className="rounded-md border border-border bg-surface-elevated/95 px-3 py-2.5 text-xs font-semibold text-severity-red-400 shadow-glow-red backdrop-blur transition hover:border-severity-red-500 active:scale-[0.97]"
+            className="rounded-md border border-border bg-surface-elevated/95 px-3 py-2 text-xs font-semibold text-severity-red-400 shadow-glow-red backdrop-blur transition hover:border-severity-red-500"
           >
             Clear Measurement
           </button>
@@ -1597,7 +1475,7 @@ export default function DisasterMap({
         <button
           type="button"
           onClick={toggleDrawingRisk}
-          className={`rounded-md border px-3 py-2.5 text-xs font-semibold transition active:scale-[0.97] ${
+          className={`rounded-md border px-3 py-2 text-xs font-semibold transition ${
             drawingRisk
               ? "border-amber-400 bg-amber-400 text-slate-950"
               : "border-border bg-surface-elevated/95 text-foreground shadow-glow-accent backdrop-blur hover:border-amber-400"
@@ -1610,7 +1488,7 @@ export default function DisasterMap({
             <button
               type="button"
               onClick={clearDrawing}
-              className="rounded-md border border-border bg-surface-elevated/95 px-3 py-2.5 text-xs font-semibold text-severity-red-400 shadow-glow-red backdrop-blur transition hover:border-severity-red-500 active:scale-[0.97]"
+              className="rounded-md border border-border bg-surface-elevated/95 px-3 py-2 text-xs font-semibold text-severity-red-400 shadow-glow-red backdrop-blur transition hover:border-severity-red-500"
             >
               Clear Drawing
             </button>
@@ -1618,7 +1496,7 @@ export default function DisasterMap({
               type="button"
               disabled={drawPoints.length < 3}
               onClick={broadcastDrawing}
-              className="rounded-md border border-amber-400 bg-amber-400/15 px-3 py-2.5 text-xs font-bold text-amber-300 shadow-glow transition hover:bg-amber-400 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.97]"
+              className="rounded-md border border-amber-400 bg-amber-400/15 px-3 py-2 text-xs font-bold text-amber-300 shadow-glow transition hover:bg-amber-400 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Broadcast Drawing
             </button>
@@ -1750,7 +1628,7 @@ function AiRiskBanner({
         <span className="text-xs text-slate-400">Confidence: {pct}%</span>
       </div>
       {prediction.source === "fallback" && (
-        <p className="mt-1 text-eoc-tiny uppercase text-slate-500">
+        <p className="mt-1 text-[10px] uppercase text-slate-500">
           Model offline · defaulted
         </p>
       )}
@@ -1772,7 +1650,7 @@ function LiveConditionsPanel({ conditions }: { conditions: LiveConditions }) {
       <div className="flex items-center justify-between">
         <p className="eoc-label text-accent">LIVE CONDITIONS</p>
         {conditions.source === "synthetic" && (
-          <span className="rounded-full border border-severity-amber-600 bg-severity-amber-600/10 px-2 py-0.5 text-eoc-tiny font-semibold uppercase text-severity-amber-400">
+          <span className="rounded-full border border-severity-amber-600 bg-severity-amber-600/10 px-2 py-0.5 text-[10px] font-semibold uppercase text-severity-amber-400">
             Fallback
           </span>
         )}
@@ -2013,7 +1891,7 @@ function GroundReportPopupContent({ report }: { report: GroundReport }) {
         <p className="eoc-label" style={{ color }}>
           {report.source.toUpperCase()} REPORT
         </p>
-        <span className="rounded-full bg-black/30 px-2 py-0.5 text-eoc-tiny font-bold uppercase text-slate-300">
+        <span className="rounded-full bg-black/30 px-2 py-0.5 text-[10px] font-bold uppercase text-slate-300">
           {report.verification_status}
         </span>
       </div>
@@ -2145,7 +2023,7 @@ function ShelterPopupContent({ shelter }: { shelter: MapShelter }) {
       <div className="flex items-start justify-between gap-2">
         <p className="eoc-label text-accent">SHELTER</p>
         <span
-          className={`rounded-full px-2 py-0.5 text-eoc-tiny font-bold uppercase tracking-wider ${statusChip}`}
+          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${statusChip}`}
         >
           {shelter.status}
         </span>
@@ -2175,7 +2053,7 @@ function ShelterPopupContent({ shelter }: { shelter: MapShelter }) {
             shelter.facilities?.[key] ? (
               <span
                 key={key}
-                className="inline-flex items-center gap-1 rounded border border-border bg-surface-muted px-1.5 py-0.5 text-eoc-tiny font-medium text-slate-300"
+                className="inline-flex items-center gap-1 rounded border border-border bg-surface-muted px-1.5 py-0.5 text-[10px] font-medium text-slate-300"
               >
                 <span>{meta.icon}</span>
                 {meta.label}

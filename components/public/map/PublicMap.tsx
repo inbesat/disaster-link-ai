@@ -245,7 +245,7 @@ export default function PublicMap({
         className={`absolute bottom-[calc(208px+env(safe-area-inset-bottom))] right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full border shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition hover:brightness-110 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)] ${
           familyVisible
             ? "border-white/40 bg-[var(--dl-orange)] text-white"
-            : "border-white/15 bg-[#0b1120]/80 text-white/80 backdrop-blur"
+            : "border-white/15 bg-[#0a1120]/80 text-white/80 backdrop-blur"
         }`}
       >
         <Users aria-hidden="true" className="h-5 w-5" strokeWidth={2.25} />
@@ -259,7 +259,7 @@ export default function PublicMap({
       <div
         role="img"
         aria-label="Legend: red areas are danger zones, everything else is safe"
-        className="pointer-events-none absolute bottom-[calc(140px+env(safe-area-inset-bottom))] left-4 z-10 flex items-center gap-3 rounded-full bg-[#0b1120]/70 px-3 py-1.5 text-[0.6875rem] font-medium text-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.3)] backdrop-blur-sm"
+        className="pointer-events-none absolute bottom-[calc(140px+env(safe-area-inset-bottom))] left-4 z-10 flex items-center gap-3 rounded-full bg-[#0a1120]/70 px-3 py-1.5 text-[0.6875rem] font-medium text-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.3)] backdrop-blur-sm"
       >
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-severity-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)]" />
@@ -273,7 +273,7 @@ export default function PublicMap({
 
       {/* Area chip — subtle readout of where the map is centred,
           positioned above the BottomNav */}
-      <p className="pointer-events-none absolute bottom-[calc(96px+env(safe-area-inset-bottom))] left-4 z-10 flex items-center gap-1.5 rounded-full bg-[#0b1120]/70 px-3 py-1.5 text-xs font-medium text-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.3)] backdrop-blur-sm">
+      <p className="pointer-events-none absolute bottom-[calc(96px+env(safe-area-inset-bottom))] left-4 z-10 flex items-center gap-1.5 rounded-full bg-[#0a1120]/70 px-3 py-1.5 text-xs font-medium text-white/80 shadow-[0_2px_8px_rgba(0,0,0,0.3)] backdrop-blur-sm">
         <MapPin aria-hidden="true" className="h-3 w-3 shrink-0 text-[var(--dl-orange)]" />
         {view.label}
       </p>

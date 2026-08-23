@@ -18,7 +18,7 @@ const NAV_LINKS = [
 ];
 
 /** Path-based links rendered beside the CTA buttons (scroll-spy skips these). */
-const PATH_LINKS = [{ label: "Help", href: "/help" }];
+const PATH_LINKS = [{ label: "Help", href: "https://help.safesphere.com" }];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);

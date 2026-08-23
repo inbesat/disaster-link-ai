@@ -167,6 +167,38 @@ export function getMissingAiProviderKeys(): string[] {
   );
 }
 
+// ---------------------------------------------------------------------------
+// One-time, masked startup diagnostic. Logs WHICH key slots are usable
+// (env var names only — never values) so a misconfigured .env.local is
+// obvious in dev output and Vercel function logs instead of surfacing as a
+// vague "all providers unreachable" mid-chat.
+// ---------------------------------------------------------------------------
+let envStatusLogged = false;
+
+function logAiEnvStatusOnce(): void {
+  if (envStatusLogged) return;
+  envStatusLogged = true;
+  const parts: string[] = [];
+  for (const cfg of PROVIDER_KEY_CONFIGS) {
+    const raw = process.env[cfg.keyEnvVar];
+    if (!raw || raw.trim().length === 0) {
+      parts.push(`${cfg.keyEnvVar}=unset`);
+    } else if (!hasKey(raw)) {
+      parts.push(`${cfg.keyEnvVar}=placeholder(rejected)`);
+    } else {
+      parts.push(`${cfg.keyEnvVar}=ok`);
+    }
+  }
+  const usable = PROVIDER_KEY_CONFIGS.filter((cfg) => hasKey(process.env[cfg.keyEnvVar])).length;
+  if (usable === 0) {
+    console.error(
+      `[ai-provider] env status → ${parts.join(" ")} — NO provider usable; chat will 503 until a real key is set in .env.local.`,
+    );
+  } else {
+    console.info(`[ai-provider] env status → ${parts.join(" ")} (${usable} usable)`);
+  }
+}
+
 function addCandidate(
   candidates: ProviderCandidate[],
   cfg: ProviderKeyConfig,
@@ -200,6 +232,7 @@ function addCandidate(
 export function getEmergencyPlannerCandidates(
   preferred?: ProviderGroup,
 ): ProviderCandidate[] {
+  logAiEnvStatusOnce();
   const candidates: ProviderCandidate[] = [];
   for (const cfg of PROVIDER_KEY_CONFIGS) {
     if (hasKey(process.env[cfg.keyEnvVar])) addCandidate(candidates, cfg);

@@ -22,7 +22,6 @@ import {
   BellRing,
   HeartHandshake,
   Home,
-  LifeBuoy,
   LogOut,
   Map,
   Settings,
@@ -50,12 +49,6 @@ const NAV_ITEMS: NavItem[] = [
     label: "Donate",
     href: "/public/donations",
     icon: HeartHandshake,
-    hideDuringEmergency: true,
-  },
-  {
-    label: "Help",
-    href: "/help",
-    icon: LifeBuoy,
     hideDuringEmergency: true,
   },
   {

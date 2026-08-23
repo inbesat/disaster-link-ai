@@ -15,7 +15,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { LogOut, UserRound } from "lucide-react";
 import { signOutAction } from "@/app/actions/auth";
 import { initialsFor } from "@/lib/settings/avatar";
@@ -63,13 +62,10 @@ export default function ProfileMenu({
       >
         {isUser ? (
           identity.avatarUrl ? (
-            <Image
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
               src={identity.avatarUrl}
               alt={identity.name}
-              width={36}
-              height={36}
-              priority
-              unoptimized
               className="h-9 w-9 rounded-full object-cover ring-2 ring-white/10"
             />
           ) : (

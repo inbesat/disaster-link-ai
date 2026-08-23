@@ -131,7 +131,7 @@ export default function TurnByTurnNav({ shelter, origin, onExit }: TurnByTurnNav
           mass: 0.9,
           ...(reduceMotion ? { type: "tween", duration: 0 } : {}),
         }}
-        className={`rounded-2xl border bg-[#0b1120]/92 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl ${
+        className={`rounded-2xl border bg-[#0a1120]/92 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl ${
           isArrived ? "border-severity-green-500/40" : "border-white/10"
         }`}
       >

@@ -89,7 +89,7 @@ export default function ReportIncidentFAB({ onSubmit }: ReportIncidentFABProps) 
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.18 }}
-            className="w-60 overflow-hidden rounded-2xl border border-white/10 bg-[#0b1120]/95 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+            className="w-60 overflow-hidden rounded-2xl border border-white/10 bg-[#0a1120]/95 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl"
           >
             <p className="px-4 pb-1 pt-3 text-[0.625rem] font-bold uppercase tracking-widest text-[var(--dl-text-muted)]">
               Report what you see
@@ -117,7 +117,7 @@ export default function ReportIncidentFAB({ onSubmit }: ReportIncidentFABProps) 
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="flex w-60 items-center gap-3 rounded-2xl border border-white/10 bg-[#0b1120]/95 px-4 py-3.5 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+            className="flex w-60 items-center gap-3 rounded-2xl border border-white/10 bg-[#0a1120]/95 px-4 py-3.5 shadow-[0_12px_40px_rgba(0,0,0,0.55)] backdrop-blur-xl"
           >
             <Loader2 aria-hidden="true" className="h-5 w-5 shrink-0 animate-spin text-[var(--dl-orange)]" />
             <p className="text-sm font-semibold text-white">

@@ -68,13 +68,13 @@ export function NearbySheltersList() {
   return (
     <section aria-label="Nearby shelters" className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="eoc-label text-slate-400">NEARBY SHELTERS</p>
+        <p className="eoc-label text-[var(--dl-text-muted)]">NEARBY SHELTERS</p>
         <Link
           href="/public/map"
-          className="inline-flex items-center gap-1 text-xs font-semibold text-blue-400 transition hover:text-blue-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--dl-orange-light)] transition hover:text-[var(--dl-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-orange)]"
         >
           <Map className="h-3.5 w-3.5" aria-hidden />
-          View All →
+          View All on Map
         </Link>
       </div>
 
@@ -84,29 +84,27 @@ export function NearbySheltersList() {
           return (
             <li
               key={shelter.name}
-              className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition-all duration-200 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(59,130,246,0.1)]"
+              className="rounded-[var(--dl-radius-sm)] border border-white/10 bg-white/5 p-4 backdrop-blur"
             >
               {/* Name + pin */}
               <div className="flex items-start justify-between gap-3">
-                <p className="flex items-center gap-1.5 text-base font-medium text-white">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/15">
-                    <MapPin
-                      aria-hidden="true"
-                      className="h-4 w-4 text-blue-400"
-                    />
-                  </span>
+                <p className="flex items-center gap-1.5 text-sm font-bold text-white">
+                  <MapPin
+                    aria-hidden="true"
+                    className="h-4 w-4 shrink-0 text-[var(--dl-orange-light)]"
+                  />
                   {shelter.name}
                 </p>
-                <p className="shrink-0 text-sm font-semibold text-blue-400">
+                <p className="shrink-0 text-xs font-semibold text-[var(--dl-orange-light)]">
                   {shelter.distanceKm.toFixed(1)} km
                 </p>
               </div>
 
               {/* Distance / walk / occupancy readout */}
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400">
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.6875rem] text-[var(--dl-text-muted)]">
                 <span className="flex items-center gap-1">
                   <Footprints aria-hidden="true" className="h-3.5 w-3.5" />
-                  {shelter.walkMins} min walk
+                  {shelter.walkMins} mins walk
                 </span>
                 <span className="tabular-nums">
                   {shelter.occupied}/{shelter.beds} beds
@@ -120,12 +118,12 @@ export function NearbySheltersList() {
                 aria-label={`${shelter.occupied} of ${shelter.beds} beds occupied`}
               >
                 <div
-                  className={`h-full rounded-full transition-all duration-500 ${
+                  className={`h-full rounded-full ${
                     pct >= 80
-                      ? "bg-red-500"
+                      ? "bg-severity-red-500"
                       : pct >= 50
-                        ? "bg-amber-500"
-                        : "bg-emerald-500"
+                        ? "bg-severity-amber-500"
+                        : "bg-severity-green-500"
                   }`}
                   style={{ width: `${pct}%` }}
                 />
@@ -138,7 +136,7 @@ export function NearbySheltersList() {
                 )}
                 {shelter.food && <FacilityChip icon={UtensilsCrossed} label="Food" />}
                 {!shelter.medical && !shelter.food && (
-                  <span className="text-xs text-slate-500">
+                  <span className="text-[0.6875rem] text-[var(--dl-text-muted)]">
                     Basic shelter only
                   </span>
                 )}
@@ -153,8 +151,8 @@ export function NearbySheltersList() {
 
 function FacilityChip({ icon: Icon, label }: { icon: LucideIcon; label: string }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-slate-300">
-      <Icon aria-hidden="true" className="h-3 w-3 text-blue-400" />
+    <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[0.625rem] font-semibold uppercase tracking-wider text-[var(--dl-text-on-navy)]">
+      <Icon aria-hidden="true" className="h-3 w-3 text-[var(--dl-orange-light)]" />
       {label}
     </span>
   );
