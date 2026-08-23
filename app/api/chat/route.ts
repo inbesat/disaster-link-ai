@@ -2,6 +2,7 @@ import { isStepCount, streamText, type LanguageModel, type ModelMessage, type To
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import {
+  getMissingAiProviderKeys,
   hasAnyAiProviderConfigured,
   resolveEmergencyPlannerModel,
   type ProviderGroup,
@@ -120,18 +121,23 @@ async function resolveAccessContext(): Promise<AccessContext> {
 
 export async function POST(req: Request): Promise<Response> {
   // ---------------------------------------------------------------------
-  // HARD GUARDRAIL — fail fast and loud when no LLM key is configured.
-  // Without this, every chat request burns rate-limit budget, runs RAG,
-  // probes dead providers and surfaces as a vague stream error in the UI.
+  // HARD GUARDRAIL — fail fast and loud when no LLM key is usable.
+  // Uses the placeholder-aware checker (lib/ai/openrouter.ts hasKey) so a
+  // copied template value like "your-groq-api-key" counts as NOT configured
+  // instead of passing this guard and dying later inside the probe chain.
+  // Without this guard, every chat request burns rate-limit budget, runs
+  // RAG, probes dead providers and surfaces as a vague stream error.
   // ---------------------------------------------------------------------
-  if (!process.env.OPENROUTER_API_KEY && !process.env.GROQ_API_KEY && !process.env.BLUESMINDS_API_KEY) {
+  if (!hasAnyAiProviderConfigured()) {
+    const missing = getMissingAiProviderKeys();
     console.error(
-      "🚨 CRITICAL: No AI API Key found in environment variables! " +
+      `[ai-provider] No usable AI provider key in the server environment. ` +
+        `Missing/placeholder keys: ${missing.join(", ") || "(none declared)"}. ` +
         "Set OPENROUTER_API_KEY, GROQ_API_KEY, or BLUESMINDS_API_KEY in .env.local and restart the dev server.",
     );
     return new Response(
       JSON.stringify({ error: "API Key Configuration Error" }),
-      { status: 500, headers: { "Content-Type": "application/json" } },
+      { status: 503, headers: { "Content-Type": "application/json" } },
     );
   }
 
@@ -281,21 +287,11 @@ ${isCommander ? "" : "\nNOTE: You do NOT have evacuation tool access. Explain co
     ...resourceInventoryTools,
   } satisfies Record<string, Tool>;
 
-  // Phase 11 · resilient provider chain: probe OpenRouter (primary + backup
-  // keys) → Groq → Bluesminds and use the first provider that answers. A
-  // dead vendor key or a deprecated model id can no longer take the chat
-  // down (see lib/ai/openrouter.ts). If no provider is configured at all,
-  // fail fast with a clear 503 instead of a hanging stream.
-  if (!hasAnyAiProviderConfigured()) {
-    return NextResponse.json(
-      {
-        error:
-          "AI provider is not configured. Set OPENROUTER_API_KEY, GROQ_API_KEY, or BLUESMINDS_API_KEY in the server environment.",
-      },
-      { status: 503 },
-    );
-  }
-
+  // Phase 11 · resilient provider chain: probe Groq (primary + backup keys)
+  // → OpenRouter (primary + backup) → Bluesminds and use the first provider
+  // that answers. A dead vendor key or a deprecated model id can no longer
+  // take the chat down (see lib/ai/openrouter.ts). Configuration presence
+  // was already verified by the hard guardrail at the top of this handler.
   let model: LanguageModel;
   try {
     model = await resolveEmergencyPlannerModel(providerPreference);
@@ -333,11 +329,12 @@ ${isCommander ? "" : "\nNOTE: You do NOT have evacuation tool access. Explain co
     });
 
     return result.toUIMessageStreamResponse();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[chat] LLM API call failed (401/403 or CORS error):", error);
-    
+
     // Return a graceful error message as a mock stream/response so the UI doesn't crash
-    const mockMessage = `⚠️ LLM Provider Error: ${error.message || "Unauthorized or connection failed"}.\n\n**MOCK EVACUATION PLAN:**\n- **Evacuees:** 150 from current sector.\n- **Destination:** Central Community Hall.\n- **Status:** Routes are open, move immediately.`;
+    const detail = error instanceof Error ? error.message : String(error);
+    const mockMessage = `⚠️ LLM Provider Error: ${detail || "Unauthorized or connection failed"}.\n\n**MOCK EVACUATION PLAN:**\n- **Evacuees:** 150 from current sector.\n- **Destination:** Central Community Hall.\n- **Status:** Routes are open, move immediately.`;
     
     return NextResponse.json(
       { error: mockMessage },

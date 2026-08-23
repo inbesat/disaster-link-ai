@@ -60,7 +60,7 @@ export default function DisasterTimeline() {
                 {event.time}
               </span>
               <span
-                className={`text-eoc-tiny font-bold uppercase tracking-wider ${
+                className={`text-[10px] font-bold uppercase tracking-wider ${
                   event.type === "alert" ? "text-severity-red-400" : "text-sky-400"
                 }`}
               >
