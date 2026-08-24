@@ -32,6 +32,21 @@ const QUAKES_TIMEOUT_MS = 8_000;
 let cache: { payload: PulsePayload; at: number } | null = null;
 
 async function fetchNews(apiKey: string): Promise<{ status: "live" | "unavailable"; items: PulseNewsItem[] }> {
+  const viaNewsData = await fetchNewsViaNewsData(apiKey);
+  if (viaNewsData.items.length > 0) return viaNewsData;
+
+  // NewsData key missing/invalid — fall back to SerpApi Google News so the
+  // widget stays live on the same plan the team already has.
+  const serpKey = process.env.SERPAPI_API_KEY;
+  if (serpKey && serpKey.length > 20) {
+    const viaSerp = await fetchNewsViaSerp(serpKey);
+    if (viaSerp.items.length > 0) return viaSerp;
+  }
+  return { status: "unavailable", items: [] };
+}
+
+/** Primary feed — NewsData.io Indian disaster headlines. */
+async function fetchNewsViaNewsData(apiKey: string): Promise<{ status: "live" | "unavailable"; items: PulseNewsItem[] }> {
   if (!apiKey || apiKey.length < 20) {
     return { status: "unavailable", items: [] };
   }
@@ -56,7 +71,40 @@ async function fetchNews(apiKey: string): Promise<{ status: "live" | "unavailabl
       }));
     return items.length > 0 ? { status: "live", items } : { status: "unavailable", items: [] };
   } catch (error: unknown) {
-    safeLog("warn", `[pulse] news feed failed: ${String(error)}`);
+    safeLog("warn", `[pulse] newsdata feed failed: ${String(error)}`);
+    return { status: "unavailable", items: [] };
+  }
+}
+
+/** Fallback feed — SerpApi Google News (same disaster query, India scope). */
+async function fetchNewsViaSerp(apiKey: string): Promise<{ status: "live" | "unavailable"; items: PulseNewsItem[] }> {
+  try {
+    const url =
+      "https://serpapi.com/search.json?engine=google_news" +
+      "&q=flood+OR+cyclone+OR+earthquake+India&gl=in&hl=en" +
+      "&api_key=" + encodeURIComponent(apiKey);
+    const res = await fetch(url, { signal: AbortSignal.timeout(NEWS_TIMEOUT_MS) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = (await res.json()) as {
+      error?: string;
+      news_results?: Array<{ title?: string; source?: { name?: string } | string; date?: string; link?: string }>;
+    };
+    if (data.error) throw new Error(data.error);
+    const items: PulseNewsItem[] = (data.news_results ?? [])
+      .filter((r): r is typeof r & { title: string } => Boolean(r.title))
+      .slice(0, 6)
+      .map((r) => ({
+        title: r.title.slice(0, 160),
+        source:
+          (typeof r.source === "object" ? r.source?.name : r.source) ?? "google_news",
+        pubDate: r.date ?? "",
+        link: r.link ?? "",
+      }));
+    return items.length > 0
+      ? { status: "live", items }
+      : { status: "unavailable", items: [] };
+  } catch (error: unknown) {
+    safeLog("warn", `[pulse] serpapi news fallback failed: ${String(error)}`);
     return { status: "unavailable", items: [] };
   }
 }
