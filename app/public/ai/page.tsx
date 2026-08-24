@@ -56,7 +56,7 @@ export default function PublicAiPage({
         )}
 
         {/* Dual-mode chat */}
-        <section className="mt-4 flex h-[calc(100vh-200px)] flex-col rounded-2xl border border-white/10 bg-white/5 p-2 backdrop-blur">
+        <section className="mt-4 flex h-[calc(100vh-200px)] supports-[height:100dvh]:h-[calc(100dvh-200px)] flex-col rounded-2xl border border-white/10 bg-white/5 p-2 backdrop-blur">
           <ChatInterface district="Patna" />
         </section>
       </div>

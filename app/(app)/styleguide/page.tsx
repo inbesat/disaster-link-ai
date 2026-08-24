@@ -264,7 +264,7 @@ function SidebarAccordionDemo() {
             <SidebarNavItem
               icon={ShieldCheck}
               label="Admin"
-              href="/admin"
+              href="/admin-dashboard"
               badgeCount={3}
               subRoutes={[
                 { label: "Users", href: "/users", badgeCount: 3 },

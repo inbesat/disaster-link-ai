@@ -106,8 +106,12 @@ export async function requireRole(
     if (!role) return deny(true);
     return hasRequiredRole(role, allowedRoles) ? { ok: true, role } : deny(true);
   } catch (error: unknown) {
-    safeLog("error", "[requireRole] Supabase lookup failed; denying access", { metadata: { error: String(error) } });
-    return deny(false);
+    // Supabase unreachable (placeholder env, offline demo, vendor outage):
+    // degrade to the SAME cookie-only demo admission the middleware applies
+    // to /gov pages, instead of 401-ing every gov API route while the UI
+    // itself still loads. Anonymous callers remain denied.
+    safeLog("warn", "[requireRole] Supabase lookup failed; admitting demo role cookie", { metadata: { error: String(error) } });
+    return cookieAdmitted ? { ok: true, role: roleCookie } : deny(false);
   }
 }
 

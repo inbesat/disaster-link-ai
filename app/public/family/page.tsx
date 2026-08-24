@@ -1,7 +1,7 @@
 import PublicBackButton from "@/components/public/PublicBackButton";
 import FamilyStrip from "@/components/public/FamilyStrip";
 import Link from "next/link";
-import { Users, UserPlus, ShieldCheck, AlertTriangle, Circle } from "lucide-react";
+import { Users, UserPlus, ShieldCheck, AlertTriangle, Circle, UserRoundSearch } from "lucide-react";
 
 export default function PublicFamilyPage() {
   return (
@@ -27,20 +27,27 @@ export default function PublicFamilyPage() {
                   Family Safety Circle
                 </h1>
                 <p className="mt-2 max-w-xl text-base leading-relaxed text-slate-300 md:text-lg">
-                  Keep tabs on every member's status — one tap to nudge for an update or broadcast "I'm Safe" to the whole circle.
+                  Keep tabs on every member&apos;s status — one tap to nudge for an update or broadcast &quot;I&apos;m Safe&quot; to the whole circle.
                 </p>
               </div>
             </div>
           </div>
 
           {/* CTA to setup wizard */}
-          <div className="mt-6">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/public/setup/family"
-              className="inline-flex items-center gap-2 rounded-[var(--dl-radius-lg)] border-2 border-[var(--dl-emerald)] bg-[var(--dl-emerald)]/10 px-6 py-4 text-base font-semibold text-[var(--dl-emerald)] transition hover:bg-[var(--dl-emerald)]/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-emerald)]"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-[var(--dl-radius-lg)] border-2 border-[var(--dl-emerald)] bg-[var(--dl-emerald)]/10 px-6 py-4 text-base font-semibold text-[var(--dl-emerald)] transition hover:bg-[var(--dl-emerald)]/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--dl-emerald)]"
             >
               <UserPlus className="h-5 w-5" aria-hidden />
-              Manage Family Circle — Add / Remove Members
+              Manage Family Circle
+            </Link>
+            <Link
+              href="/public/missing-report"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-[var(--dl-radius-lg)] border-2 border-red-500 bg-red-500/10 px-6 py-4 text-base font-semibold text-red-300 transition hover:bg-red-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+            >
+              <UserRoundSearch className="h-5 w-5" aria-hidden />
+              Report Missing Person
             </Link>
           </div>
         </header>

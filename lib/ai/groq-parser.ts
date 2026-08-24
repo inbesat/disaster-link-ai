@@ -100,6 +100,8 @@ export async function parseCitizenReport(rawText: string): Promise<ParsedCitizen
         "Infer from context. Return ONLY the structured JSON.",
       prompt: text,
       temperature: 0.2,
+      // Cap the wait — webhook/ingest handlers must never hang on a stalled Groq.
+      abortSignal: AbortSignal.timeout(10_000),
     });
     return object;
   } catch (error: unknown) {

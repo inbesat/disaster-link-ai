@@ -7,7 +7,8 @@ import {
   type UIMessage,
   type UIDataTypes,
 } from "ai";
-import { Database, FileText, Mic, Send, Sparkles, ShieldCheck } from "lucide-react";
+import { Database, FileText, Send, Sparkles, ShieldCheck } from "lucide-react";
+import VoiceInput from "@/components/public/ai/VoiceInput";
 import RAGSourcesPanel, {
   DEFAULT_SOURCES,
   type RAGSource,
@@ -212,7 +213,7 @@ export function PlannerChat() {
               <div className="max-w-[85%] rounded-xl rounded-br-md bg-blue-600 px-3.5 py-2.5 text-sm leading-relaxed text-white shadow-[0_0_12px_rgba(37,99,235,0.2)]">
                 {content}
               </div>
-              <span className="text-[0.625rem] text-slate-500">{formatTime(new Date(msg.createdAt ?? Date.now()))}</span>
+              <span className="text-[0.625rem] text-slate-400">{formatTime(new Date(msg.createdAt ?? Date.now()))}</span>
             </div>
           ) : (
             <div key={msg.id} className="flex flex-col items-start gap-1">
@@ -248,7 +249,7 @@ export function PlannerChat() {
                   </>
                 )}
               </div>
-              <span className="text-[0.625rem] text-slate-500">{formatTime(new Date(msg.createdAt ?? Date.now()))}</span>
+              <span className="text-[0.625rem] text-slate-400">{formatTime(new Date(msg.createdAt ?? Date.now()))}</span>
               {!isTypingMsg && sources && <RAGSourcesPanel sources={sources} />}
             </div>
           );
@@ -287,17 +288,17 @@ export function PlannerChat() {
               onKeyDown={handleKeyDown}
               placeholder="Ask the AI commander…"
               disabled={status === "submitted" || status === "streaming"}
-              className="max-h-[108px] flex-1 resize-none bg-transparent text-sm text-white outline-none placeholder:text-slate-500 disabled:opacity-50"
+              className="max-h-[108px] flex-1 resize-none bg-transparent text-sm text-white outline-none placeholder:text-slate-400 disabled:opacity-50"
             />
-            <button
-              type="button"
-              aria-label="Voice input"
-              title="Voice input"
+            {/* Commander Voice Mode — speak a command; the transcript is
+                sent straight through the same chat pipeline. Works outside
+                LanguageProvider (i18n-free labels) and simulates a phrase
+                when Web Speech API is unavailable so demos never stall. */}
+            <VoiceInput
+              onResult={(text) => handleSubmit(text)}
+              tone="violet"
               disabled={status === "submitted" || status === "streaming"}
-              className="rounded-md p-1.5 text-slate-500 transition hover:bg-white/5 hover:text-purple-400 disabled:opacity-40"
-            >
-              <Mic className="h-4 w-4" aria-hidden />
-            </button>
+            />
           </div>
 
           <button

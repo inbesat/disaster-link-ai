@@ -173,7 +173,7 @@ export default function PublicDashboardPage() {
 
         {/* Module grid — stacks on phones, two-up on desktop */}
         <section className="mt-8 flex-1">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {MODULES.map((module) => (
               <Link
                 key={module.href}

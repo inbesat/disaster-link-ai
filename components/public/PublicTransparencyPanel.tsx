@@ -22,6 +22,7 @@ import WhatIfSimulator from "@/components/dashboard/WhatIfSimulator";
 import ShelterCapacityWidget from "@/components/dashboard/ShelterCapacityWidget";
 import LowStockWidget from "@/components/dashboard/LowStockWidget";
 import DisasterTimeline from "@/components/dashboard/DisasterTimeline";
+import DisasterPulse from "@/components/public/DisasterPulse";
 import PublicFloodChartLazy from "./transparency/PublicFloodChartLazy";
 import PublicLayerControl from "./transparency/PublicLayerControl";
 import PublicTransparencyFrame from "./transparency/PublicTransparencyFrame";
@@ -66,6 +67,9 @@ export default function PublicTransparencyPanel() {
 
         {/* Flood Forecast Trend */}
         <PublicFloodChartLazy />
+
+        {/* Live Disaster Pulse — India disaster headlines + USGS quakes */}
+        <DisasterPulse />
 
         {/* What-If Simulator */}
         <WhatIfSimulator />

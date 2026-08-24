@@ -1013,6 +1013,37 @@ html.high-contrast [class*="border-white/"] {
    SAFESPHERE AI LANDING PAGE TOKENS
    Phase 1 — Design System & Global Setup
    ===================================================================== */
+
+/* Legacy --dl-* navy tokens, promoted from the .landing-page scope to
+   :root so EVERY surface that references them (citizen portal, gov AI
+   planner, transparency panel…) resolves real values instead of falling
+   back to inherited full-strength text. Names cannot collide with the
+   roadmap set (--text-muted/--radius-sm are unprefixed). .landing-page
+   below keeps identical overrides (harmless), and the high-contrast
+   block above still wins via specificity. */
+:root {
+  --dl-navy: #0b1f3a;
+  --dl-navy-2: #0f2a4f;
+  --dl-navy-3: #132f57;
+  --dl-blue: #2563eb;
+  --dl-blue-light: #5b8df6;
+  --dl-orange: #f97316;
+  --dl-orange-light: #fdba74;
+  --dl-white: #ffffff;
+  --dl-gray: #f8fafc;
+  --dl-gray-2: #e7ecf3;
+  --dl-text-dark: #0f1b2d;
+  --dl-text-muted: #5b6b84;
+  --dl-text-on-navy: #c9d6ec;
+  --dl-radius: 18px;
+  --dl-radius-sm: 12px;
+  --dl-shadow-soft: 0 10px 40px -12px rgba(11, 31, 58, 0.18);
+  --dl-shadow-glow-blue:
+    0 0 0 1px rgba(37, 99, 235, 0.25), 0 20px 60px -20px rgba(37, 99, 235, 0.45);
+  --dl-shadow-glow-orange:
+    0 0 0 1px rgba(249, 115, 22, 0.25), 0 20px 60px -20px rgba(249, 115, 22, 0.45);
+}
+
 .landing-page {
   --dl-navy: #0b1f3a;
   --dl-navy-2: #0f2a4f;

@@ -32,6 +32,9 @@ function openRouterModel(apiKey: string | undefined): ChatOpenAI | null {
     apiKey,
     configuration: { baseURL: OPENROUTER_BASE },
     temperature: 0.4,
+    // Cap the advisory generation so a stalled vendor can never outlive the
+    // orchestrate route's budget (route maxDuration = 60s).
+    timeout: 20_000,
   });
 }
 
@@ -46,6 +49,7 @@ function backendModel(
     apiKey,
     configuration: { baseURL },
     temperature: 0.4,
+    timeout: 20_000,
   });
 }
 

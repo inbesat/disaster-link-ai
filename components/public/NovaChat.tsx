@@ -37,6 +37,7 @@
 // ---------------------------------------------------------------------
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import {
   AnimatePresence,
   animate,
@@ -69,8 +70,7 @@ const SNAP_EXPANDED = 1.0;
 const CLOSED_MARGIN = 0.1;
 /** How long the panel takes to fly off-screen before unmounting. */
 const CLOSE_ANIM_MS = 420;
-/** Canned reply delay — lets the typing dots breathe like a real chat. */
-const TYPING_MS = 1600;
+
 
 const spring = { type: "spring", stiffness: 320, damping: 34, mass: 0.9 } as const;
 const none = { duration: 0 } as const;
@@ -101,6 +101,10 @@ type ChatEntry = {
 export function NovaChat() {
   const { t, language } = useTranslation();
   const reduceMotion = useReducedMotion();
+  // The map page has its own right-edge stack (Locate-Me + Report FAB);
+  // Nova's FAB would sit exactly on top of Locate-Me, so it yields there.
+  const pathname = usePathname();
+  const showFab = !pathname?.startsWith("/public/map");
   // Global SOS controls — Nova sits under the public layout's SOSProvider,
   // so it can activate Emergency Mode + location sharing programmatically.
   const { activateEmergency, startSharingLocation } = useSOS();
@@ -116,6 +120,15 @@ export function NovaChat() {
   // Guards the SOS side-effects so repeated emergency messages in one open
   // session fire the toast / banner / location share exactly once.
   const sosTriggeredRef = useRef(false);
+  // Typewriter intervals — cleared on unmount so reveals never tick on.
+  const streamTimersRef = useRef<number[]>([]);
+
+  useEffect(
+    () => () => {
+      streamTimersRef.current.forEach((timer) => window.clearInterval(timer));
+    },
+    [],
+  );
 
   const fabRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -306,30 +319,38 @@ export function NovaChat() {
       .map((m) => ({ role: m.role as "user" | "ai", content: m.content }));
 
     // Resolve reply via cloud-first chain: /api/chat → 61-rule fallback → static
-    resolveNovaReply(trimmed, history, undefined).then((result) => {
+    // Reveals the answer chunk-by-chunk (typewriter) so Nova feels like it's
+    // streaming, while the network layer stays one simple request.
+    const streamReveal = (full: string) => {
       setTyping(false);
-      const replyText = result.source === "static" ? t("nova_reply") : result.text;
+      const id = `a-${Date.now()}`;
       setMessages((prev) => [
         ...prev,
-        {
-          id: `a-${Date.now()}`,
-          role: "ai",
-          content: replyText,
-          timestamp: nowTime(),
-        },
+        { id, role: "ai", content: "", timestamp: nowTime() },
       ]);
-    }).catch(() => {
-      setTyping(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `a-${Date.now()}`,
-          role: "ai",
-          content: t("nova_reply"),
-          timestamp: nowTime(),
-        },
-      ]);
-    });
+      let i = 0;
+      const step = Math.max(2, Math.round(full.length / 140)); // ~140 ticks max
+      const timer = window.setInterval(() => {
+        i = Math.min(full.length, i + step);
+        const slice = full.slice(0, i);
+        setMessages((prev) =>
+          prev.map((m) => (m.id === id ? { ...m, content: slice } : m)),
+        );
+        if (i >= full.length) {
+          window.clearInterval(timer);
+        }
+      }, 16);
+      streamTimersRef.current.push(timer);
+      if (!full) window.clearInterval(timer);
+    };
+
+    resolveNovaReply(trimmed, history, undefined)
+      .then((result) => {
+        streamReveal(result.source === "static" ? t("nova_reply") : result.text);
+      })
+      .catch(() => {
+        streamReveal(t("nova_reply"));
+      });
   };
 
   const handleSend = () => sendPrompt(draft);
@@ -374,7 +395,7 @@ export function NovaChat() {
           and the desktop EmergencyContactCard (bottom-4 right-4) by lifting
           to bottom-24 on md+. */}
       <AnimatePresence>
-        {!open && (
+        {!open && showFab && (
           <motion.button
             ref={fabRef}
             type="button"
@@ -386,7 +407,7 @@ export function NovaChat() {
             transition={{ type: "spring", stiffness: 380, damping: 26 }}
             whileHover={{ scale: 1.07 }}
             whileTap={{ scale: 0.92 }}
-            className="fixed bottom-[90px] right-4 z-[50] flex h-14 w-14 items-center justify-center rounded-full bg-[#8b5cf6] bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] text-white shadow-[0_10px_28px_rgba(139,92,246,0.5)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4b5fd]"
+            className="fixed bottom-[calc(96px+env(safe-area-inset-bottom))] right-4 z-[50] flex h-14 w-14 items-center justify-center rounded-full bg-[#8b5cf6] bg-gradient-to-br from-[#a78bfa] to-[#7c3aed] text-white shadow-[0_10px_28px_rgba(139,92,246,0.5)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c4b5fd]"
             >
             {/* Continuous pulse ring to draw attention */}
             <span

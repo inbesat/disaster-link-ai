@@ -34,6 +34,10 @@ import { readCitizenLocation } from "@/hooks/useSafetyStatus";
 import { resolveCitizenMapView } from "@/lib/map/citizen-view";
 import type { CitizenMapView } from "@/lib/map/citizen-view";
 import { generateCitizenFloodZones } from "@/lib/map/citizen-flood-zones";
+import {
+  DEFAULT_LAYER_VISIBILITY,
+  type LayerVisibility,
+} from "@/components/map/LayerToggle";
 import { classifyCitizenRoute, type RouteSafetyClassification } from "@/lib/map/route-safety";
 import { CITIZEN_ROAD_CLOSURES } from "@/lib/map/citizen-road-closures";
 import {
@@ -61,8 +65,11 @@ export type PublicMapRouteIntent = { lat: number; lng: number };
 
 export default function PublicMap({
   routeIntent = null,
+  layerVisibility = DEFAULT_LAYER_VISIBILITY,
 }: {
   routeIntent?: PublicMapRouteIntent | null;
+  /** Citizen-safe layer toggles (PublicMapSidebar). Read-only display filter. */
+  layerVisibility?: LayerVisibility;
 }) {
   const view = useMemo<CitizenMapView>(
     () => resolveCitizenMapView(readCitizenLocation()),
@@ -86,6 +93,15 @@ export default function PublicMap({
     setNavigating(false);
     setSelectedShelterId(id);
   }, []);
+
+  // Hiding the shelters layer also closes any open sheet / active guidance —
+  // a route to an invisible marker would be confusing.
+  useEffect(() => {
+    if (!layerVisibility.shelters) {
+      setNavigating(false);
+      setSelectedShelterId(null);
+    }
+  }, [layerVisibility.shelters]);
 
   // "Navigate Here" on the sheet — keep the route, close the sheet, start.
   const startNavigation = useCallback((shelter: CitizenShelter) => {
@@ -198,14 +214,16 @@ export default function PublicMap({
           style={{ color: "rgba(255,255,255,0.5)", fontSize: 10 }}
         />
         <UserLocationDot />
-        <FloodZones zones={zones} />
-        <ShelterMarkers
-          origin={origin}
-          selectedShelterId={selectedShelterId}
-          onSelect={handleSelectShelter}
-          navigating={navigating}
-          onNavigate={startNavigation}
-        />
+        {layerVisibility.floodZones && <FloodZones zones={zones} />}
+        {layerVisibility.shelters && (
+          <ShelterMarkers
+            origin={origin}
+            selectedShelterId={selectedShelterId}
+            onSelect={handleSelectShelter}
+            navigating={navigating}
+            onNavigate={startNavigation}
+          />
+        )}
         <EvacuationRoutes classification={routeSafety} />
         {/* Phase 1 · Step 9 — safety-score badge over the route. */}
         <RouteSafetyOverlay

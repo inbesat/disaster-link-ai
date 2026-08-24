@@ -31,7 +31,12 @@ const DEMO_DISTRICTS = [
 ] as const;
 
 async function fetchJson(url: string): Promise<unknown> {
-  const response = await fetch(url, { next: { revalidate: 0 } });
+  const response = await fetch(url, {
+    next: { revalidate: 0 },
+    // Cap the upstream wait — a stalled Open-Meteo/OWM must never hang
+    // /api/live-conditions (the map fires it on every pan).
+    signal: AbortSignal.timeout(8000),
+  });
   if (!response.ok) {
     throw new Error(`Request to ${url} failed with status ${response.status}`);
   }
