@@ -7,9 +7,9 @@
 // Each is a plain HTML <a href="tel:…"> so taps open the
 // phone's native dialer on any device (server-safe — no JS required).
 //
-// Contrast is deliberately inverted against the dark dl-navy surface:
-// white squares with dark text (hard to miss mid-panic), the control
-// room square full red as the primary affordance. Replaces the old
+// Cards are dark slate tiles with crisp white text and per-service
+// accent icons, matching the dark dl-navy surface; the control room
+// square stays full rose/red as the primary affordance. Replaces the old
 // standalone "Call 1070" strip — the dial IS that CTA now (the control
 // room square inherits its job, so the page has one 1070 action, not two).
 // ---------------------------------------------------------------------
@@ -29,6 +29,7 @@ type EmergencyLine = {
   href: string;
   icon: LucideIcon;
   primary?: boolean;
+  accentClass?: string;
 };
 
 const LINES: EmergencyLine[] = [
@@ -46,6 +47,7 @@ const LINES: EmergencyLine[] = [
     number: "100",
     href: "tel:100",
     icon: Shield,
+    accentClass: "text-blue-400",
   },
   {
     label: "Ambulance",
@@ -53,8 +55,16 @@ const LINES: EmergencyLine[] = [
     number: "108",
     href: "tel:108",
     icon: Ambulance,
+    accentClass: "text-emerald-400",
   },
-  { label: "Fire", fullLabel: "Fire", number: "101", href: "tel:101", icon: Flame },
+  {
+    label: "Fire",
+    fullLabel: "Fire",
+    number: "101",
+    href: "tel:101",
+    icon: Flame,
+    accentClass: "text-amber-400",
+  },
 ];
 
 export function EmergencyDial() {
@@ -69,35 +79,29 @@ export function EmergencyDial() {
               key={line.href}
               href={line.href}
               aria-label={`${line.fullLabel} — ${line.number}`}
-              className={`group flex min-h-[80px] flex-col items-center justify-center gap-1 rounded-xl transition active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              className={`group flex min-h-[80px] flex-col items-center justify-center gap-1 rounded-xl p-4 transition-all duration-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 ${
                 line.primary
-                  ? "bg-severity-red-600 text-white shadow-[0_0_24px_rgba(239,68,68,0.35)] hover:bg-severity-red-500 focus-visible:outline-severity-red-400"
-                  : "bg-white text-[var(--dl-navy)] shadow-[var(--dl-shadow-soft)] hover:bg-gray-100 focus-visible:outline-[var(--dl-orange)]"
+                  ? "bg-rose-600 text-white shadow-[0_0_24px_rgba(244,63,94,0.35)] hover:bg-rose-700 focus-visible:outline-rose-400"
+                  : "border border-slate-700/60 bg-slate-800/80 text-white hover:border-slate-600/60 hover:bg-slate-700/80 focus-visible:outline-slate-400"
               }`}
             >
               <Icon
                 aria-hidden="true"
-                className={`h-5 w-5 ${
-                  line.primary
-                    ? "text-white transition group-hover:scale-110"
-                    : "text-[var(--dl-blue)] transition group-hover:scale-110"
+                className={`h-5 w-5 transition group-hover:scale-110 ${
+                  line.primary ? "text-white" : line.accentClass
                 }`}
               />
-              <span className="text-[0.625rem] font-bold uppercase leading-none tracking-wide">
+              <span className="text-[0.625rem] font-bold uppercase leading-none tracking-wide text-white">
                 {line.label}
               </span>
-              <span
-                className={`font-mono text-sm font-bold leading-none ${
-                  line.primary ? "text-white" : "text-[var(--dl-navy)]"
-                }`}
-              >
+              <span className="font-mono text-sm font-bold leading-none text-white">
                 {line.number}
               </span>
             </a>
           );
         })}
       </div>
-      <p className="mt-2 text-[0.6875rem] text-[var(--dl-text-muted)]">
+      <p className="mt-2 text-xs text-slate-400">
         Taps open your phone&apos;s dialer with the number pre-filled.
       </p>
     </section>

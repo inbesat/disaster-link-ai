@@ -14,11 +14,16 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { ArrowLeft, Map as MapIcon, WifiOff } from "lucide-react";
 import BottomNav from "@/components/public/BottomNav";
 import LowBandwidthShelterList from "@/components/public/lowbandwidth/LowBandwidthShelterList";
 import OfflineMapBadge from "@/components/public/map/OfflineMapBadge";
+import PublicMapSidebar from "@/components/public/map/PublicMapSidebar";
+import {
+  DEFAULT_LAYER_VISIBILITY,
+  type LayerVisibility,
+} from "@/components/map/LayerToggle";
 import type { PublicMapRouteIntent } from "@/components/public/map/PublicMap";
 import { useBandwidth } from "@/lib/contexts/BandwidthContext";
 
@@ -42,7 +47,7 @@ const PublicMap = dynamic(() => import("@/components/public/map/PublicMap"), {
  * routes from the citizen's live GPS location. Wrapped in <Suspense>
  * per Next.js requirements for useSearchParams.
  */
-function MapWithRouteIntent() {
+function MapWithRouteIntent({ layerVisibility }: { layerVisibility: LayerVisibility }) {
   const searchParams = useSearchParams();
   const action = searchParams.get("action");
   const lat = searchParams.get("lat");
@@ -58,13 +63,17 @@ function MapWithRouteIntent() {
       ? { lat: Number(lat), lng: Number(lng) }
       : null;
 
-  return <PublicMap routeIntent={routeIntent} />;
+  return <PublicMap routeIntent={routeIntent} layerVisibility={layerVisibility} />;
 }
 
 export default function PublicMapPage() {
   // Phase 13 · Step 2 — in extreme low-bandwidth mode the heavy MapLibre
   // map is swapped for a ~0.5KB text list of the nearest shelters.
   const { isLowBandwidthMode } = useBandwidth();
+
+  // Citizen layer toggles — single source of truth shared by the sidebar
+  // panel and the map canvas (display filter only, no data writes).
+  const [layers, setLayers] = useState<LayerVisibility>(DEFAULT_LAYER_VISIBILITY);
 
   return (
     <main className="relative h-[100dvh] w-full overflow-hidden bg-[var(--dl-navy)] text-[var(--dl-text-on-navy)]">
@@ -100,9 +109,16 @@ export default function PublicMapPage() {
               </div>
             }
           >
-            <MapWithRouteIntent />
+            <MapWithRouteIntent layerVisibility={layers} />
           </Suspense>
         </div>
+      )}
+
+      {/* Citizen-safe info panel — layer toggles (wired to the canvas),
+          severity legend, flood forecast chart. Hidden in low-bandwidth
+          mode alongside the map itself. */}
+      {!isLowBandwidthMode && (
+        <PublicMapSidebar layers={layers} onLayersChange={setLayers} />
       )}
 
       {/* Floating gradient header over the map */}

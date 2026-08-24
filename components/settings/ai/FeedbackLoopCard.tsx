@@ -89,7 +89,7 @@ export default function FeedbackLoopCard() {
           Read how feedback data is collected, used and protected.
         </p>
         <a
-          href="/legal/ai-privacy"
+          href="/settings/privacy/policy"
           className="inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold text-emerald-300 transition hover:text-emerald-200"
         >
           AI Privacy Policy

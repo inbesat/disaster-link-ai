@@ -43,7 +43,10 @@ export const SEVERITY_META: Record<SeverityLevel, SeverityMeta> = {
   safe: {
     label: "Safe",
     icon: CheckCircle2,
-    chip: "bg-severity-safe text-accent-success border-accent-success/40",
+    // Tinted chips (low-opacity bg + light text) instead of solid severity
+    // tokens — in dark theme --severity-* is byte-identical to the accent
+    // color, which rendered labels invisible (1.0:1 contrast).
+    chip: "bg-emerald-500/15 text-emerald-300 border-emerald-500/40",
     dot: "bg-accent-success",
     pulse: false,
     a11y: "safe",
@@ -51,7 +54,7 @@ export const SEVERITY_META: Record<SeverityLevel, SeverityMeta> = {
   watch: {
     label: "Watch",
     icon: Eye,
-    chip: "bg-severity-watch text-accent-warning border-accent-warning/40",
+    chip: "bg-amber-400/15 text-amber-200 border-amber-400/40",
     dot: "bg-accent-warning",
     pulse: false,
     a11y: "watch",
@@ -59,7 +62,7 @@ export const SEVERITY_META: Record<SeverityLevel, SeverityMeta> = {
   warning: {
     label: "Warning",
     icon: TriangleAlert,
-    chip: "bg-severity-warning text-accent-danger border-accent-danger/40",
+    chip: "bg-orange-500/15 text-orange-300 border-orange-500/40",
     dot: "bg-accent-danger",
     pulse: true,
     a11y: "warning",
@@ -68,7 +71,7 @@ export const SEVERITY_META: Record<SeverityLevel, SeverityMeta> = {
     label: "Evacuate",
     icon: OctagonAlert,
     // glow-red-soft = the roadmap --glow-red; pulses attention via animate-pulse.
-    chip: "bg-severity-critical text-accent-danger border-accent-danger/60 glow-red-soft",
+    chip: "bg-red-500/15 text-red-300 border-red-500/60 glow-red-soft",
     dot: "bg-accent-danger",
     pulse: true,
     a11y: "critical / evacuate",

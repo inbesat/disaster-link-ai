@@ -130,6 +130,7 @@
   "nav_map": "Map",
   "nav_donate": "Donate",
   "nav_settings": "Settings",
+  "nav_help": "मदत",
   "nav_sos": "SOS",
   "module_sos_report": "SOS Report",
   "module_sos_report_desc": "Report flooding, fire, or ground truth from your phone.",

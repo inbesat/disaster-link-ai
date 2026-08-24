@@ -125,8 +125,8 @@ export default function PublicAlertsPage() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_80%_-10%,rgba(37,99,235,0.22),transparent),radial-gradient(ellipse_45%_40%_at_0%_110%,rgba(249,115,22,0.14),transparent)]"
       />
 
-      {/* Phone-frame column — single column at every breakpoint */}
-      <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-[calc(88px+env(safe-area-inset-bottom))]">
+      {/* Responsive container — expands on desktop, stays phone-frame on mobile */}
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-6 md:px-6 md:py-8 pb-[calc(88px+env(safe-area-inset-bottom))] md:pb-8">
         {/* Sticky header (offline banner rides inside it, so it sticks too) */}
         <header className="sticky top-0 z-20 -mx-4 border-b border-white/10 bg-[var(--dl-navy)]/85 px-4 pb-3 pt-5 backdrop-blur-lg">
           {/* Offline banner (Phase 3 · Step 7) — amber, always visible while
@@ -213,19 +213,17 @@ export default function PublicAlertsPage() {
           </div>
         </header>
 
-        {/* Feed */}
+        {/* Feed — single column on mobile, 2-col grid on tablet+ */}
         {alerts.length > 0 ? (
           <>
-            <p className="mt-4 text-center text-[0.6875rem] text-[var(--dl-text-muted)]">
+            <p className="mt-4 text-center text-[0.6875rem] text-[var(--dl-text-muted)] md:hidden">
               Swipe right on an alert to mark it read
             </p>
-            <ul className="mt-3 space-y-3">
+            <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
               {alerts.map((alert) => (
-                <li key={alert.id}>
-                  <AlertCard alert={alert} onOpen={() => setSelected(alert)} />
-                </li>
+                <AlertCard key={alert.id} alert={alert} onOpen={() => setSelected(alert)} />
               ))}
-            </ul>
+            </div>
           </>
         ) : (
           <div className="mt-16 flex flex-col items-center gap-3 text-center">
@@ -241,8 +239,8 @@ export default function PublicAlertsPage() {
         )}
       </div>
 
-      {/* Citizen bottom nav — Alerts tab lights up via route matching */}
-      <BottomNav />
+      {/* Citizen bottom nav — mobile only, hidden on desktop where sidebar exists */}
+      <BottomNav className="md:hidden" />
 
       {/* "I Am Safe" floating action (Step 9) */}
       <SafeStatusToggle />

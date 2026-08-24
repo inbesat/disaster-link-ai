@@ -73,6 +73,8 @@ export async function translateAlertForSMS(
       system: SYSTEM_PROMPT.replace("{targetLanguage}", language),
       prompt: text,
       temperature: 0.2,
+      // Cap the wait — SMS/push fan-out must never hang on a stalled Groq.
+      abortSignal: AbortSignal.timeout(10_000),
     });
 
     let cleaned = (translated ?? "").trim();

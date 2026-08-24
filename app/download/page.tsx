@@ -59,8 +59,8 @@ const APK_EDITIONS: ApkEdition[] = [
     size: "~1.6 GB",
     tooltip:
       "Includes a bundled 1.5GB On-Device AI (LLM) and high-res offline map tiles. Works with zero internet connectivity.",
-    href: "/safesphere-field.apk",
-    downloadName: "safesphere-field.apk",
+    href: "/safesphere.apk",
+    downloadName: "safesphere.apk",
     icon: Satellite,
     iconTile: "bg-amber-500/10 text-amber-300 ring-amber-500/30",
     buttonClass:

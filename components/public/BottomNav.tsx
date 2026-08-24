@@ -29,6 +29,7 @@ import {
   BellRing,
   HeartHandshake,
   Home,
+  LifeBuoy,
   Map,
   Settings,
   Siren,
@@ -72,6 +73,7 @@ const NAV_ITEMS: NavItem[] = [
     icon: Settings,
     hideDuringEmergency: true,
   },
+  { label: "nav_help", href: "/help", icon: LifeBuoy, hideDuringEmergency: true },
   { label: "nav_sos", href: "/public/sos", icon: Siren, emergency: true },
 ];
 

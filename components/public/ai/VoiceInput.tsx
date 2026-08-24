@@ -27,7 +27,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Mic, MicOff } from "lucide-react";
 import { triggerLightHaptic } from "@/hooks/useHaptics";
-import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 /* ---------------------------------------------------------------------
    Minimal Web Speech API typings (kept in sync with VoiceInputButton
@@ -95,13 +94,24 @@ const SUPPORTED = (): boolean =>
       (window as SRWindow).webkitSpeechRecognition,
   );
 
+// ---------------------------------------------------------------------
+// i18n-free labels — VoiceInput must mount OUTSIDE <LanguageProvider>
+// (e.g. the gov AI planner). Values mirror locales/en.json exactly.
+// ---------------------------------------------------------------------
+const LABELS = {
+  voice_start: "Start voice input",
+  voice_stop: "Stop voice input",
+  voice_listen: "Listening.",
+  voice_unsupported: "Voice input unavailable - trying a demo capture",
+  voice_hint: "Speak now - your words will appear here.",
+} as const;
+
 export function VoiceInput({
   onResult,
   lang = "en-IN",
   disabled = false,
   tone = "green",
 }: VoiceInputProps) {
-  const { t } = useTranslation();
   const [listening, setListening] = useState(false);
   const [interim, setInterim] = useState("");
   const [simulated, setSimulated] = useState(false);
@@ -234,9 +244,9 @@ export function VoiceInput({
         type="button"
         onClick={listening ? stopListening : startListening}
         disabled={disabled}
-        aria-label={listening ? t("voice_stop") : t("voice_start")}
+        aria-label={listening ? LABELS.voice_stop : LABELS.voice_start}
         aria-pressed={listening}
-        title={listening ? t("voice_stop") : t("voice_start")}
+        title={listening ? LABELS.voice_stop : LABELS.voice_start}
         whileTap={{ scale: 0.9 }}
         whileHover={disabled ? undefined : { scale: 1.06 }}
         className={`relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-40 ${
@@ -290,13 +300,13 @@ export function VoiceInput({
                     aria-hidden
                     className="h-2 w-2 animate-pulse rounded-full bg-severity-red-400"
                   />
-                  {simulated ? t("voice_unsupported") : t("voice_listen")}
+                  {simulated ? LABELS.voice_unsupported : LABELS.voice_listen}
                 </p>
                 <p
                   className="mt-0.5 truncate text-sm text-white"
                   aria-live="polite"
                 >
-                  {interim || t("voice_hint")}
+                  {interim || LABELS.voice_hint}
                 </p>
               </div>
             </div>

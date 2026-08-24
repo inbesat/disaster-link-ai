@@ -78,9 +78,9 @@ export default function CookieConsent() {
             </div>
             <p className="mt-2 text-xs text-slate-500">
               By accepting, you agree to our{" "}
-              <a href="/privacy" className="underline hover:text-accent">Privacy Policy</a>
+              <a href="/settings/privacy/policy" className="underline hover:text-accent">Privacy Policy</a>
               {" "}and{" "}
-              <a href="/terms" className="underline hover:text-accent">Terms of Service</a>
+              <a href="/settings/privacy/policy" className="underline hover:text-accent">Terms of Service</a>
               .
             </p>
           </div>

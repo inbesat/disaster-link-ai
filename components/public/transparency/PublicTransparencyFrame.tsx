@@ -95,7 +95,7 @@ export default function PublicTransparencyFrame({
           </button>
 
           {/* ── Pinned header with close button ── */}
-          <div className="flex items-start justify-between gap-3 border-b border-white/10 px-4 pt-4 pb-3">
+          <div className="flex items-start justify-between gap-3 border-b border-white/10 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3">
             {header}
             <button
               type="button"
