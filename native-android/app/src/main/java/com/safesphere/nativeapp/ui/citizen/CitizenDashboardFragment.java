@@ -15,12 +15,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
 import com.safesphere.nativeapp.R;
 import com.safesphere.nativeapp.data.entity.ShelterEntity;
+import com.safesphere.nativeapp.ui.citizen.NovaChatFragment;
 import com.safesphere.nativeapp.data.repository.ShelterRepository;
 import com.safesphere.nativeapp.ui.base.BaseFragment;
+import com.safesphere.nativeapp.ui.settings.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,7 @@ public class CitizenDashboardFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        shelterRepository = new ShelterRepository(requireActivity());
+        shelterRepository = new ShelterRepository(requireActivity().getApplication());
 
         safetyStatusValue = view.findViewById(R.id.safetyStatusValue);
         safetyStatusSubtitle = view.findViewById(R.id.safetyStatusSubtitle);
@@ -194,7 +195,7 @@ public class CitizenDashboardFragment extends BaseFragment {
 
     private void navigateToAI() {
         requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment, new MitronChatFragment())
+                .replace(R.id.nav_host_fragment, new NovaChatFragment())
                 .addToBackStack(null)
                 .commit();
     }
@@ -208,7 +209,7 @@ public class CitizenDashboardFragment extends BaseFragment {
 
     private void setupSafetyStatus() {
         safetyStatusValue.setText("SAFE");
-        safetyStatusValue.setTextColor(getColor(R.color.colorSuccess));
+        safetyStatusValue.setTextColor(requireContext().getColor(R.color.colorSuccess));
         safetyStatusSubtitle.setText("Your area is currently safe. Stay prepared.");
         safetyActionButton.setOnClickListener(v -> navigateToAlerts());
     }

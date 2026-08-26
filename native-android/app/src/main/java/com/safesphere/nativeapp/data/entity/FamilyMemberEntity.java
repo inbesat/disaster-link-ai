@@ -1,12 +1,13 @@
 package com.safesphere.nativeapp.data.entity;
 
 import androidx.room.Entity;
+import androidx.annotation.NonNull;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "family_members")
 public class FamilyMemberEntity {
     @PrimaryKey
-    public String id;
+        @NonNull public String id;
     public String userId; // owner
     public String name;
     public String phone;

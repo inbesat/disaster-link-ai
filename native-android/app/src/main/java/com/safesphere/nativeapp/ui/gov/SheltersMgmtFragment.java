@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import androidx.annotation.NonNull
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +20,9 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.TextView;
+import com.google.android.material.chip.Chip;
+import android.widget.ImageView;
 
 public class SheltersMgmtFragment extends BaseFragment {
 
@@ -35,7 +38,7 @@ public class SheltersMgmtFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        shelterRepository = new ShelterRepository(requireActivity());
+        shelterRepository = new ShelterRepository(requireActivity().getApplication());
         sheltersRecyclerView = view.findViewById(R.id.sheltersMgmtRecyclerView);
         searchView = view.findViewById(R.id.shelterSearchView);
         fabAdd = view.findViewById(R.id.fabAddShelter);

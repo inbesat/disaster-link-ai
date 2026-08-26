@@ -16,6 +16,10 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 
 import java.util.Arrays;
 import java.util.List;
+import android.widget.TextView;
+import androidx.fragment.app.Fragment;
+import com.google.android.material.chip.Chip;
+import android.widget.ImageView;
 
 public class AdminDashboardFragment extends BaseFragment {
 
@@ -68,7 +72,8 @@ public class AdminDashboardFragment extends BaseFragment {
                 new ActionItem("Analytics", R.drawable.ic_analytics, R.color.colorInfo, v -> nav(R.id.analyticsFragment)),
                 new ActionItem("Audit Logs", R.drawable.ic_audit, R.color.colorPrimary, v -> nav(R.id.auditLogsFragment)),
                 new ActionItem("System Health", R.drawable.ic_health, R.color.colorSuccess, v -> nav(R.id.systemHealthFragment)),
-                new ActionItem("District Config", R.drawable.ic_config, R.color.accentAdmin, v -> nav(R.id.districtConfigFragment))
+                new ActionItem("District Config", R.drawable.ic_config, R.color.accentAdmin, v -> nav(R.id.districtConfigFragment)),
+                new ActionItem("Report Triage", R.drawable.ic_health, R.color.colorCritical, v -> nav(R.id.triageDashboardFragment))
         );
         actionsRecyclerView.setAdapter(new ActionAdapter(actions));
     }
@@ -81,21 +86,19 @@ public class AdminDashboardFragment extends BaseFragment {
     }
 
     private Fragment createFragment(int dest) {
-        switch (dest) {
-            case R.id.userManagementFragment: return new UserManagementFragment();
-            case R.id.bulkOperationsFragment: return new BulkOperationsFragment();
-            case R.id.analyticsFragment: return new AnalyticsFragment();
-            case R.id.auditLogsFragment: return new AuditLogsFragment();
-            case R.id.systemHealthFragment: return new SystemHealthFragment();
-            case R.id.districtConfigFragment: return new DistrictConfigFragment();
-            default: return new AdminDashboardFragment();
-        }
+        if (dest == R.id.userManagementFragment) return new UserManagementFragment();
+        if (dest == R.id.bulkOperationsFragment) return new BulkOperationsFragment();
+        if (dest == R.id.analyticsFragment) return new AnalyticsFragment();
+        if (dest == R.id.auditLogsFragment) return new AuditLogsFragment();
+        if (dest == R.id.systemHealthFragment) return new SystemHealthFragment();
+        if (dest == R.id.districtConfigFragment) return new DistrictConfigFragment();
+        return new AdminDashboardFragment();
     }
 
     // Data classes & Adapters
     static class KPIItem { String title, value, icon; int colorRes; KPIItem(String t, String v, String i, int c) { title=t; value=v; icon=i; colorRes=c; } }
     static class OpItem { String id, plan, district, priority, status, assets, owner, updated; OpItem(String i, String p, String d, String pr, String s, String a, String o, String u) { id=i; plan=p; district=d; priority=pr; status=s; assets=a; owner=o; updated=u; } }
-    static class ActionItem { String title; int iconRes, colorRes; java.util.function.Consumer<View> onClick; ActionItem(String t, int i, int c, java.util.function.Consumer<View> cl) { title=t; iconRes=i; colorRes=c; onClick=cl; } }
+    static class ActionItem { String title; int iconRes, colorRes; View.OnClickListener onClick; ActionItem(String t, int i, int c, View.OnClickListener cl) { title=t; iconRes=i; colorRes=c; onClick=cl; } }
 
     static class KPIAdapter extends RecyclerView.Adapter<KPIAdapter.VH> {
         List<KPIItem> items; KPIAdapter(List<KPIItem> items) { this.items = items; }

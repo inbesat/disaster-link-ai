@@ -38,4 +38,5 @@
     <color name="chartGreen">#34D399</color>
     <color name="chartRed">#F87171</color>
     <color name="chartPurple">#A78BFA</color>
+    <color name="ic_launcher_background">#0A0F1A</color>
 </resources>

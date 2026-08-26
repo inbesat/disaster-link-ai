@@ -25,6 +25,9 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import androidx.fragment.app.Fragment;
+import com.google.android.material.chip.Chip;
+import android.widget.ImageView;
 
 public class GovDashboardFragment extends BaseFragment {
 
@@ -40,9 +43,9 @@ public class GovDashboardFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        alertRepository = new AlertRepository(requireActivity());
-        shelterRepository = new ShelterRepository(requireActivity());
-        resourceRepository = new ResourceRepository(requireActivity());
+        alertRepository = new AlertRepository(requireActivity().getApplication());
+        shelterRepository = new ShelterRepository(requireActivity().getApplication());
+        resourceRepository = new ResourceRepository(requireActivity().getApplication());
         kpiRecyclerView = view.findViewById(R.id.kpiRecyclerView);
         quickActionsRecyclerView = view.findViewById(R.id.quickActionsRecyclerView);
         recentAlertsRecyclerView = view.findViewById(R.id.recentAlertsRecyclerView);
@@ -107,22 +110,20 @@ public class GovDashboardFragment extends BaseFragment {
     }
 
     private Fragment createFragment(int dest) {
-        switch (dest) {
-            case R.id.alertsFragment: return new AlertsFragment();
-            case R.id.agentOrchestrationFragment: return new AgentOrchestrationFragment();
-            case R.id.aiPlannerFragment: return new AiPlannerFragment();
-            case R.id.evacuationsFragment: return new EvacuationsFragment();
-            case R.id.inventoryFragment: return new InventoryFragment();
-            case R.id.sheltersMgmtFragment: return new SheltersMgmtFragment();
-            case R.id.triageFragment: return new TriageFragment();
-            case R.id.commandCenterFragment: return new CommandCenterFragment();
-            default: return new GovDashboardFragment();
-        }
+        if (dest == R.id.alertsFragment) return new AlertsFragment();
+        if (dest == R.id.agentOrchestrationFragment) return new AgentOrchestrationFragment();
+        if (dest == R.id.aiPlannerFragment) return new AiPlannerFragment();
+        if (dest == R.id.evacuationsFragment) return new EvacuationsFragment();
+        if (dest == R.id.inventoryFragment) return new InventoryFragment();
+        if (dest == R.id.sheltersMgmtFragment) return new SheltersMgmtFragment();
+        if (dest == R.id.triageFragment) return new TriageFragment();
+        if (dest == R.id.commandCenterFragment) return new CommandCenterFragment();
+        return new GovDashboardFragment();
     }
 
     // Data classes
     static class KPIItem { String title, value, icon; int colorRes; KPIItem(String t, String v, String i, int c) { title=t; value=v; icon=i; colorRes=c; } }
-    static class ActionItem { String title; int iconRes, colorRes; java.util.function.Consumer<View> onClick; ActionItem(String t, int i, int c, java.util.function.Consumer<View> cl) { title=t; iconRes=i; colorRes=c; onClick=cl; } }
+    static class ActionItem { String title; int iconRes, colorRes; View.OnClickListener onClick; ActionItem(String t, int i, int c, View.OnClickListener cl) { title=t; iconRes=i; colorRes=c; onClick=cl; } }
 
     // Adapters
     static class KPIAdapter extends RecyclerView.Adapter<KPIAdapter.VH> {

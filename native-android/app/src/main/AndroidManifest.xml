@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.safesphere.nativeapp">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -38,12 +37,6 @@
         android:usesCleartextTraffic="false"
         tools:targetApi="31">
 
-        <!-- MapLibre requires this -->
-        <meta-data
-            android:name="org.maplibre.gl.android.API_KEY"
-            android:value="" />
-
-        <!-- Main entry point -->
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
@@ -56,156 +49,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Auth flows -->
-        <activity
-            android:name=".ui.auth.LoginActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.auth.GovLoginActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.auth.PublicOtpActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-
-        <!-- Citizen flows -->
-        <activity
-            android:name=".ui.citizen.CitizenDashboardActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.citizen.PublicAlertsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.citizen.PublicMapActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.citizen.SosActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.citizen.MitronChatActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.citizen.PublicSheltersActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.citizen.FamilyCircleActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.citizen.ReportActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-
-        <!-- Gov/Admin flows -->
-        <activity
-            android:name=".ui.gov.GovDashboardActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.gov.CommandCenterActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.gov.AlertsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.gov.AiPlannerActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.gov.AgentOrchestrationActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.gov.EvacuationsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.gov.InventoryActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.gov.SheltersActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.gov.TriageActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.admin.AdminDashboardActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.admin.UserManagementActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.admin.BulkOperationsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.admin.AnalyticsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.admin.AuditLogsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.admin.SystemHealthActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.admin.DistrictConfigActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-
-        <!-- Field responder -->
-        <activity
-            android:name=".ui.field.FieldHomeActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.field.ShelterUpdateActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.field.RequestResourcesActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-        <activity
-            android:name=".ui.field.FieldMapActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-
-        <!-- Settings -->
-        <activity
-            android:name=".ui.settings.SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-
-        <!-- Knowledge Base -->
-        <activity
-            android:name=".ui.gov.KnowledgeBaseActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-
-        <!-- Landing / Demo -->
-        <activity
-            android:name=".ui.main.LandingActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeSphere.NoActionBar" />
-
         <!-- WorkManager sync worker -->
         <provider
             android:name="androidx.startup.InitializationProvider"
@@ -216,6 +59,20 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup" />
         </provider>
+
+        <!-- FCM Push Service -->
+        <service
+            android:name=".push.SafeSphereMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Default FCM channel metadata -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="general_alerts" />
 
     </application>
 

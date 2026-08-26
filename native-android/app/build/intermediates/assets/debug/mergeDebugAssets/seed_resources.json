@@ -1,0 +1,67 @@
+[
+  {
+    "id": "res-1",
+    "name": "NDRF Rescue Boats",
+    "category": "boat",
+    "quantity": 120,
+    "unit": "units",
+    "depotName": "Patna Central Depot",
+    "lat": 25.5941,
+    "lng": 85.1376,
+    "status": "available",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "res-2",
+    "name": "Medical First-Aid Kits",
+    "category": "medical",
+    "quantity": 500,
+    "unit": "kits",
+    "depotName": "Patna Medical Warehouse",
+    "lat": 25.6012,
+    "lng": 85.1204,
+    "status": "available",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "res-3",
+    "name": "Bottled Water Pallets",
+    "category": "water",
+    "quantity": 300,
+    "unit": "pallets",
+    "depotName": "Patna Relief Depot",
+    "lat": 25.6123,
+    "lng": 85.1456,
+    "status": "available",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "res-4",
+    "name": "Transport Buses",
+    "category": "vehicle",
+    "quantity": 40,
+    "unit": "buses",
+    "depotName": "Patna Bus Depot",
+    "lat": 25.5987,
+    "lng": 85.1321,
+    "status": "deployed",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "res-5",
+    "name": "Solar Power Units",
+    "category": "power",
+    "quantity": 25,
+    "unit": "units",
+    "depotName": "Patna Power Hub",
+    "lat": 25.6055,
+    "lng": 85.1402,
+    "status": "available",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  }
+]

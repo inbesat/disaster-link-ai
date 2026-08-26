@@ -18,6 +18,8 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class PublicSheltersFragment extends BaseFragment {
 
@@ -31,7 +33,7 @@ public class PublicSheltersFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        shelterRepository = new ShelterRepository(requireActivity());
+        shelterRepository = new ShelterRepository(requireActivity().getApplication());
         sheltersRecyclerView = view.findViewById(R.id.sheltersRecyclerView);
         sheltersRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 

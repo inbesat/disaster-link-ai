@@ -1,12 +1,13 @@
 package com.safesphere.nativeapp.data.entity;
 
 import androidx.room.Entity;
+import androidx.annotation.NonNull;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "sos_events")
 public class SosEventEntity {
     @PrimaryKey
-    public String id;
+        @NonNull public String id;
     public String userId;
     public String type; // rescue, medical, location_share, helpline, safe
     public double lat;

@@ -14,6 +14,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.safesphere.nativeapp.R;
+import com.safesphere.nativeapp.ui.map.OfflineMapManager;
 import com.safesphere.nativeapp.util.ConnectivityMonitor;
 import com.safesphere.nativeapp.util.RoleManager;
 
@@ -73,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 || destinationId == R.id.govDashboardFragment
                 || destinationId == R.id.commandCenterFragment
                 || destinationId == R.id.adminDashboardFragment
-                || destinationId == R.id.fieldHomeFragment;
+                || destinationId == R.id.fieldHomeFragment
+                || destinationId == R.id.settingsFragment;
 
         bottomNav.setVisibility(showBottomNav ? android.view.View.VISIBLE : android.view.View.GONE);
     }
@@ -183,6 +185,18 @@ public class MainActivity extends AppCompatActivity {
                     .show();
             isOfflineSnackbarShowing = false;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        OfflineMapManager.getInstance().onForeground(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        OfflineMapManager.getInstance().onBackground();
     }
 
     @Override

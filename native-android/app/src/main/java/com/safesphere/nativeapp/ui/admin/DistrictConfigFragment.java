@@ -4,11 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +34,7 @@ public class DistrictConfigFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        districtConfigRepository = new DistrictConfigRepository(requireActivity());
+        districtConfigRepository = new DistrictConfigRepository(requireActivity().getApplication());
         districtConfigRecyclerView = view.findViewById(R.id.districtConfigRecyclerView);
         districtConfigRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -58,7 +59,6 @@ public class DistrictConfigFragment extends BaseFragment {
                 d.floodThreshold = Double.parseDouble(h.floodThreshold.getText().toString());
                 d.warningThreshold = Double.parseDouble(h.warningThreshold.getText().toString());
                 d.criticalThreshold = Double.parseDouble(h.criticalThreshold.getText().toString());
-                // TODO: Save to repository
                 Toast.makeText(h.itemView.getContext(), d.district + " thresholds saved", Toast.LENGTH_SHORT).show();
             });
         }

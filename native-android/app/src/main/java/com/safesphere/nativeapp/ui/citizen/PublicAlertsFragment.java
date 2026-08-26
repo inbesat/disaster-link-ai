@@ -34,7 +34,7 @@ public class PublicAlertsFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        alertRepository = new AlertRepository(requireActivity());
+        alertRepository = new AlertRepository(requireActivity().getApplication());
         alertsRecyclerView = view.findViewById(R.id.alertsRecyclerView);
         filterAll = view.findViewById(R.id.filterAll);
         filterCritical = view.findViewById(R.id.filterCritical);

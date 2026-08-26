@@ -19,6 +19,8 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class TriageFragment extends BaseFragment {
 
@@ -33,7 +35,7 @@ public class TriageFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        reportRepository = new ReportRepository(requireActivity());
+        reportRepository = new ReportRepository(requireActivity().getApplication());
         triageRecyclerView = view.findViewById(R.id.triageRecyclerView);
         filterAll = view.findViewById(R.id.filterAll);
         filterCritical = view.findViewById(R.id.filterCritical);
@@ -107,6 +109,6 @@ public class TriageFragment extends BaseFragment {
             });
         }
         @Override public int getItemCount() { return items.size(); }
-        static class VH extends RecyclerView.ViewHolder { com.google.android.material.chip.Chip type, severity; TextView location, text, source; View pwdBadge, pwdDetails; Button verify, reject, drone; VH(View v) { super(v); type = v.findViewById(R.id.reportType); severity = v.findViewById(R.id.reportSeverity); location = v.findViewById(R.id.reportLocation); text = v.findViewById(R.id.reportText); source = v.findViewById(R.id.reportSource); pwdBadge = v.findViewById(R.id.reportPwdBadge); pwdDetails = v.findViewById(R.id.reportPwdDetails); verify = v.findViewById(R.id.reportVerify); reject = v.findViewById(R.id.reportReject); drone = v.findViewById(R.id.reportDrone); } }
+        static class VH extends RecyclerView.ViewHolder { com.google.android.material.chip.Chip type, severity; TextView location, text, source; View pwdBadge; TextView pwdDetails; Button verify, reject, drone; VH(View v) { super(v); type = v.findViewById(R.id.reportType); severity = v.findViewById(R.id.reportSeverity); location = v.findViewById(R.id.reportLocation); text = v.findViewById(R.id.reportText); source = v.findViewById(R.id.reportSource); pwdBadge = v.findViewById(R.id.reportPwdBadge); pwdDetails = v.findViewById(R.id.reportPwdDetails); verify = v.findViewById(R.id.reportVerify); reject = v.findViewById(R.id.reportReject); drone = v.findViewById(R.id.reportDrone); } }
     }
 }

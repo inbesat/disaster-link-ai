@@ -20,6 +20,7 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.TextView;
 
 public class KnowledgeBaseFragment extends BaseFragment {
 
@@ -34,7 +35,7 @@ public class KnowledgeBaseFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        kbRepository = new KnowledgeDocRepository(requireActivity());
+        kbRepository = new KnowledgeDocRepository(requireActivity().getApplication());
         kbRecyclerView = view.findViewById(R.id.kbRecyclerView);
         districtSpinner = view.findViewById(R.id.kbDistrictSpinner);
         typeSpinner = view.findViewById(R.id.kbTypeSpinner);

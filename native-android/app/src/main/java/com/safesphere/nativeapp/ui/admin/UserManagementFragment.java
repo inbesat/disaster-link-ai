@@ -22,6 +22,8 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.TextView;
+import com.google.android.material.chip.Chip;
 
 public class UserManagementFragment extends BaseFragment {
 
@@ -36,7 +38,7 @@ public class UserManagementFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        userRepository = new UserRepository(requireActivity());
+        userRepository = new UserRepository(requireActivity().getApplication());
         usersRecyclerView = view.findViewById(R.id.usersRecyclerView);
         searchView = view.findViewById(R.id.umSearchView);
 

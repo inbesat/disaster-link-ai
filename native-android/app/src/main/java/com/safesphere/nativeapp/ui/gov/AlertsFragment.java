@@ -21,6 +21,7 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.TextView;
 
 public class AlertsFragment extends BaseFragment {
 
@@ -37,7 +38,7 @@ public class AlertsFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        alertRepository = new AlertRepository(requireActivity());
+        alertRepository = new AlertRepository(requireActivity().getApplication());
         alertsRecyclerView = view.findViewById(R.id.alertsRecyclerView);
         searchView = view.findViewById(R.id.alertSearchView);
         filterAll = view.findViewById(R.id.filterAll);

@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.safesphere.nativeapp.R;
 import com.safesphere.nativeapp.ui.base.BaseFragment;
 
@@ -38,13 +41,15 @@ public class BulkOperationsFragment extends BaseFragment {
                 new BulkActionItem("Bulk Shelter Status Update", "Flip shelter open/close status across a district in one shot.", R.drawable.ic_home, R.color.colorSuccess, "shelter"),
                 new BulkActionItem("Fleet Reallocation", "Reassign boats and vehicles between depots and disaster sites.", R.drawable.ic_map, R.color.colorInfo, "fleet")
         );
-        bulkActionsRecyclerView.setAdapter(new BulkActionAdapter(actions));
+        bulkActionsRecyclerView.setAdapter(new BulkActionAdapter(actions, this));
     }
 
-    static class BulkActionItem { String title, description; int iconRes, colorRes, type; BulkActionItem(String t, String d, int i, int c, String ty) { title=t; description=d; iconRes=i; colorRes=c; type=ty; } }
+    static class BulkActionItem { String title, description, type; int iconRes, colorRes; BulkActionItem(String t, String d, int i, int c, String ty) { title=t; description=d; iconRes=i; colorRes=c; type=ty; } }
 
     static class BulkActionAdapter extends RecyclerView.Adapter<BulkActionAdapter.VH> {
-        List<BulkActionItem> items; BulkActionAdapter(List<BulkActionItem> items) { this.items = items; }
+        List<BulkActionItem> items;
+        BulkOperationsFragment fragment;
+        BulkActionAdapter(List<BulkActionItem> items, BulkOperationsFragment fragment) { this.items = items; this.fragment = fragment; }
         @NonNull @Override public VH onCreateViewHolder(@NonNull ViewGroup p, int v) { View view = LayoutInflater.from(p.getContext()).inflate(R.layout.item_bulk_action, p, false); return new VH(view); }
         @Override public void onBindViewHolder(@NonNull VH h, int pos) {
             BulkActionItem a = items.get(pos);
@@ -54,17 +59,17 @@ public class BulkOperationsFragment extends BaseFragment {
         }
         @Override public int getItemCount() { return items.size(); }
         private void showConfigureDialog(BulkActionItem action) {
-            android.view.View dialogView = LayoutInflater.from(h.card.getContext()).inflate(R.layout.dialog_bulk_action, null);
+            View dialogView = LayoutInflater.from(fragment.requireContext()).inflate(R.layout.dialog_bulk_action, null);
             EditText messageInput = dialogView.findViewById(R.id.bulkMessageInput);
-            new com.google.android.material.dialog.MaterialAlertDialogBuilder(h.card.getContext())
+            new com.google.android.material.dialog.MaterialAlertDialogBuilder(fragment.requireContext())
                     .setTitle("Configure " + action.title)
                     .setView(dialogView)
                     .setPositiveButton("EXECUTE", (d, w) -> {
-                        Toast.makeText(h.card.getContext(), action.title + " executed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.requireContext(), action.title + " executed", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton("Cancel", null)
                     .show();
         }
-        static class VH extends RecyclerView.ViewHolder { TextView title, description; ImageView icon; com.google.android.material.card.MaterialCardView card; VH(View v) { super(v); title = v.findViewById(R.id.bulkTitle); description = v.findViewById(R.id.bulkDescription); icon = v.findViewById(R.id.bulkIcon); card = v.findViewById(R.id.bulkCard); } }
+        static class VH extends RecyclerView.ViewHolder { TextView title, description; ImageView icon; MaterialCardView card; VH(View v) { super(v); title = v.findViewById(R.id.bulkTitle); description = v.findViewById(R.id.bulkDescription); icon = v.findViewById(R.id.bulkIcon); card = v.findViewById(R.id.bulkCard); } }
     }
 }

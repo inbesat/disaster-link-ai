@@ -41,9 +41,9 @@ android {
     }
     buildFeatures {
         viewBinding = true
-        dataBinding = true
+        dataBinding = false
     }
-    packagingOptions {
+    packaging {
         resources.excludes += "/META-INF/*.kotlin_module"
     }
 }
@@ -57,6 +57,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+    implementation("androidx.lifecycle:lifecycle-process:2.8.4")
     implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.fragment:fragment-ktx:1.8.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
@@ -65,10 +66,10 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // Room Database
-    def room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
@@ -101,15 +102,18 @@ dependencies {
     implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
 
     // CameraX (for damage reports, photos)
-    def camerax_version = "1.4.0-beta01"
-    implementation("androidx.camera:camera-core:$camerax_version")
-    implementation("androidx.camera:camera-camera2:$camerax_version")
-    implementation("androidx.camera:camera-view:$camerax_version")
-    implementation("androidx.camera:camera-video:$camerax_version")
-    implementation("androidx.camera:camera-extensions:$camerax_version")
+    val cameraxVersion = "1.4.0-beta01"
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+    implementation("androidx.camera:camera-video:$cameraxVersion")
+    implementation("androidx.camera:camera-extensions:$cameraxVersion")
 
     // Location
     implementation("com.google.android.gms:play-services-location:21.2.0")
+
+    // FCM Push
+    implementation("com.google.firebase:firebase-messaging:23.4.0")
 
     // Biometric / Crypto
     implementation("androidx.biometric:biometric:1.2.0-alpha05")

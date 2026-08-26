@@ -4,11 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,7 +33,7 @@ public class AuditLogsFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        auditRepository = new AuditLogRepository(requireActivity());
+        auditRepository = new AuditLogRepository(requireActivity().getApplication());
         auditRecyclerView = view.findViewById(R.id.auditRecyclerView);
         filterAll = view.findViewById(R.id.filterAll);
         filterInfo = view.findViewById(R.id.filterInfo);
@@ -43,7 +42,6 @@ public class AuditLogsFragment extends BaseFragment {
 
         auditRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         loadAuditLogs();
-
         setupFilters();
     }
 
@@ -86,7 +84,18 @@ public class AuditLogsFragment extends BaseFragment {
             );
         }
         @Override public int getItemCount() { return items.size(); }
-        private String formatTime(String iso) { try { java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.getDefault()); java.util.Date date = sdf.parse(iso); java.text.SimpleDateFormat out = new java.text.SimpleDateFormat("MMM dd, HH:mm", java.util.Locale.getDefault()); return out.format(date); } catch (Exception e) { return iso; } }
-        static class VH extends RecyclerView.ViewHolder { TextView action, actor, resource, ip, time; com.google.android.material.chip.Chip severity; VH(View v) { super(v); action = v.findViewById(R.id.auditAction); actor = v.findViewById(R.id.auditActor); resource = v.findViewById(R.id.auditResource); ip = v.findViewById(R.id.auditIp); time = v.findViewById(R.id.auditTime); severity = v.findViewById(R.id.auditSeverity); } }
+        private String formatTime(String iso) {
+            try {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.getDefault());
+                java.util.Date date = sdf.parse(iso);
+                java.text.SimpleDateFormat out = new java.text.SimpleDateFormat("MMM dd, HH:mm", java.util.Locale.getDefault());
+                return out.format(date);
+            } catch (Exception e) { return iso; }
+        }
+        static class VH extends RecyclerView.ViewHolder {
+            TextView action, actor, resource, ip, time;
+            Chip severity;
+            VH(View v) { super(v); action = v.findViewById(R.id.auditAction); actor = v.findViewById(R.id.auditActor); resource = v.findViewById(R.id.auditResource); ip = v.findViewById(R.id.auditIp); time = v.findViewById(R.id.auditTime); severity = v.findViewById(R.id.auditSeverity); }
+        }
     }
 }

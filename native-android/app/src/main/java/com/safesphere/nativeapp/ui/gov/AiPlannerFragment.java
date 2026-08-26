@@ -110,7 +110,7 @@ public class AiPlannerFragment extends BaseFragment {
         @NonNull @Override public VH onCreateViewHolder(@NonNull ViewGroup p, int v) { View view = LayoutInflater.from(p.getContext()).inflate(R.layout.item_chat_message, p, false); return new VH(view); }
         @Override public void onBindViewHolder(@NonNull VH h, int pos) { ChatMessage m = items.get(pos); h.role.setText(m.role.equals("user") ? "You" : "AI"); h.content.setText(m.content); h.itemView.setBackgroundColor(h.itemView.getContext().getColor(m.role.equals("user") ? R.color.bgSurface : R.color.bgSecondary)); }
         @Override public int getItemCount() { return items.size(); }
-        static class VH extends RecyclerView.ViewHolder { TextView role, content; VH(View v) { super(v); role = v.findViewById(R.id.chatRole); content = v.findViewById(R.id.chatContent); } }
+        static class VH extends RecyclerView.ViewHolder { TextView role, content; VH(View v) { super(v); role = v.findViewById(R.id.chatTime); content = v.findViewById(R.id.chatMessage); } }
     }
 
     static class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.VH> {

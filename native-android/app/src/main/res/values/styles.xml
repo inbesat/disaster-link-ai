@@ -43,8 +43,25 @@
         <item name="cornerRadius">8dp</item>
     </style>
 
+    <style name="Widget.SafeSphere.Button.Success" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/colorSuccess</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
     <style name="Widget.SafeSphere.Button.Ghost" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
+    <style name="Widget.SafeSphere.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <!-- Extended FAB -->
+    <style name="Widget.SafeSphere.ExtendedFAB" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+        <item name="iconTint">@color/textOnPrimary</item>
     </style>
 
     <!-- Card style -->

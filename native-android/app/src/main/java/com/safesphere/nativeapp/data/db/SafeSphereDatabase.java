@@ -14,6 +14,7 @@ import com.safesphere.nativeapp.data.dao.EvacuationDao;
 import com.safesphere.nativeapp.data.dao.FamilyMemberDao;
 import com.safesphere.nativeapp.data.dao.InventoryMovementDao;
 import com.safesphere.nativeapp.data.dao.KnowledgeDocDao;
+import com.safesphere.nativeapp.data.dao.ReportDao;
 import com.safesphere.nativeapp.data.dao.ResourceDao;
 import com.safesphere.nativeapp.data.dao.RoadClosureDao;
 import com.safesphere.nativeapp.data.dao.ShelterDao;
@@ -26,6 +27,7 @@ import com.safesphere.nativeapp.data.entity.EvacuationEntity;
 import com.safesphere.nativeapp.data.entity.FamilyMemberEntity;
 import com.safesphere.nativeapp.data.entity.InventoryMovementEntity;
 import com.safesphere.nativeapp.data.entity.KnowledgeDocEntity;
+import com.safesphere.nativeapp.data.entity.ReportEntity;
 import com.safesphere.nativeapp.data.entity.ResourceEntity;
 import com.safesphere.nativeapp.data.entity.RoadClosureEntity;
 import com.safesphere.nativeapp.data.entity.ShelterEntity;
@@ -53,6 +55,9 @@ import com.safesphere.nativeapp.data.entity.UserEntity;
 )
 @TypeConverters({Converters.class})
 public abstract class SafeSphereDatabase extends RoomDatabase {
+
+    public static final java.util.concurrent.ExecutorService databaseWriteExecutor =
+            java.util.concurrent.Executors.newFixedThreadPool(4);
 
     private static volatile SafeSphereDatabase INSTANCE;
 
