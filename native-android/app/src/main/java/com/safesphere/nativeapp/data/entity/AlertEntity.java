@@ -1,12 +1,13 @@
 package com.safesphere.nativeapp.data.entity;
 
 import androidx.room.Entity;
+import androidx.annotation.NonNull;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "alerts")
 public class AlertEntity {
     @PrimaryKey
-    public String id;
+        @NonNull public String id;
     public String district;
     public String severity; // critical, warning, info
     public String message;

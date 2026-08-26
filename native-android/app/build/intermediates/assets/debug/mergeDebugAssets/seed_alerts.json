@@ -1,0 +1,53 @@
+[
+  {
+    "id": "alert-1",
+    "district": "Patna",
+    "severity": "critical",
+    "message": "CRITICAL: Ganga river level rising rapidly. Immediate evacuation of low-lying areas.",
+    "channel": "sms",
+    "status": "sent",
+    "acknowledgedBy": null,
+    "acknowledgedAt": null,
+    "createdAt": "2024-01-15T14:30:00Z",
+    "expiresAt": "2024-01-16T14:30:00Z",
+    "isDuplicate": false,
+    "originalAlertId": "",
+    "language": "en",
+    "translatedMessage": "",
+    "unacknowledgedCount": 2
+  },
+  {
+    "id": "alert-2",
+    "district": "Patna",
+    "severity": "warning",
+    "message": "WARNING: Heavy rainfall expected in next 6 hours. Stay alert.",
+    "channel": "push",
+    "status": "sent",
+    "acknowledgedBy": null,
+    "acknowledgedAt": null,
+    "createdAt": "2024-01-15T12:00:00Z",
+    "expiresAt": "2024-01-15T18:00:00Z",
+    "isDuplicate": false,
+    "originalAlertId": "",
+    "language": "en",
+    "translatedMessage": "",
+    "unacknowledgedCount": 5
+  },
+  {
+    "id": "alert-3",
+    "district": "Ernakulam",
+    "severity": "info",
+    "message": "INFO: Water levels stable. No immediate threat.",
+    "channel": "whatsapp",
+    "status": "sent",
+    "acknowledgedBy": "user-2",
+    "acknowledgedAt": "2024-01-15T11:00:00Z",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "expiresAt": "2024-01-16T10:00:00Z",
+    "isDuplicate": false,
+    "originalAlertId": "",
+    "language": "en",
+    "translatedMessage": "",
+    "unacknowledgedCount": 0
+  }
+]

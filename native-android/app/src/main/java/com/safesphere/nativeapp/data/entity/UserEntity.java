@@ -1,12 +1,13 @@
 package com.safesphere.nativeapp.data.entity;
 
 import androidx.room.Entity;
+import androidx.annotation.NonNull;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "users")
 public class UserEntity {
     @PrimaryKey
-    public String id;
+        @NonNull public String id;
     public String email;
     public String name;
     public String phone;

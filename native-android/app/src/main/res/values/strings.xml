@@ -13,7 +13,7 @@
     <string name="phone_hint">Phone Number</string>
     <string name="otp_hint">6-digit OTP</string>
     <string name="send_otp">Send OTP</string>
-    <string name="verify_otp">Verify & Login</string>
+    <string name="verify_otp">Verify &amp; Login</string>
     <string name="demo_notice">Demo mode: any code works</string>
 
     <!-- Roles -->
@@ -111,4 +111,5 @@
     <string name="no_data">No data available</string>
     <string name="error_generic">Something went wrong</string>
     <string name="retry">Retry</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw</string>
 </resources>

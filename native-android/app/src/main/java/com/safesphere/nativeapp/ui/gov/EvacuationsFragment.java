@@ -25,6 +25,7 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.google.android.material.chip.Chip;
 
 public class EvacuationsFragment extends BaseFragment {
 
@@ -55,7 +56,7 @@ public class EvacuationsFragment extends BaseFragment {
                 case 0: return new EvacKanbanFragment("pending");
                 case 1: return new EvacKanbanFragment("in_transit");
                 case 2: return new EvacKanbanFragment("completed");
-                case 3: return new EvacMapFragment();
+                case 3: return new com.safesphere.nativeapp.ui.gov.EvacMapTabFragment();
                 default: return new EvacKanbanFragment("pending");
             }
         }
@@ -73,19 +74,13 @@ public class EvacuationsFragment extends BaseFragment {
             View view = inf.inflate(R.layout.fragment_evac_kanban, c, false);
             recyclerView = view.findViewById(R.id.evacKanbanRecyclerView);
             recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-            evacRepository = new EvacuationRepository(requireActivity());
+            evacRepository = new EvacuationRepository(requireActivity().getApplication());
             evacRepository.getEvacuationsByStatus(status).observe(getViewLifecycleOwner(), items -> {
                 if (items != null) {
                     recyclerView.setAdapter(new EvacAdapter(new ArrayList<>(items)));
                 }
             });
             return view;
-        }
-    }
-
-    static class EvacMapFragment extends Fragment {
-        @Nullable @Override public View onCreateView(@NonNull LayoutInflater inf, @Nullable ViewGroup c, @Nullable Bundle b) {
-            return inf.inflate(R.layout.fragment_evac_map, c, false);
         }
     }
 

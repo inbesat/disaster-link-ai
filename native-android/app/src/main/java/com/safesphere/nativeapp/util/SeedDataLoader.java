@@ -5,11 +5,13 @@ import android.util.Log;
 
 import com.safesphere.nativeapp.data.db.SafeSphereDatabase;
 import com.safesphere.nativeapp.data.entity.AlertEntity;
+import com.safesphere.nativeapp.data.entity.AuditLogEntity;
 import com.safesphere.nativeapp.data.entity.DistrictConfigEntity;
 import com.safesphere.nativeapp.data.entity.EvacuationEntity;
 import com.safesphere.nativeapp.data.entity.FamilyMemberEntity;
 import com.safesphere.nativeapp.data.entity.InventoryMovementEntity;
 import com.safesphere.nativeapp.data.entity.KnowledgeDocEntity;
+import com.safesphere.nativeapp.data.entity.ReportEntity;
 import com.safesphere.nativeapp.data.entity.ResourceEntity;
 import com.safesphere.nativeapp.data.entity.RoadClosureEntity;
 import com.safesphere.nativeapp.data.entity.ShelterEntity;

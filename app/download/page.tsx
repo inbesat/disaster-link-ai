@@ -56,17 +56,17 @@ const APK_EDITIONS: ApkEdition[] = [
   {
     title: "Field Ops Edition",
     target: "First responders & extreme offline survival",
-    size: "~1.6 GB",
+    size: "~73.6 MB",
     tooltip:
-      "Includes a bundled 1.5GB On-Device AI (LLM) and high-res offline map tiles. Works with zero internet connectivity.",
-    href: "/safesphere.apk",
-    downloadName: "safesphere.apk",
+      "Full offline operation: 61-rule AI (Nova), TFLite triage classifier, offline MapLibre maps, GPS SOS with countdown, family distances, report triage — zero internet required.",
+    href: "/safesphere-field-ops.apk",
+    downloadName: "safesphere-field-ops.apk",
     icon: Satellite,
     iconTile: "bg-amber-500/10 text-amber-300 ring-amber-500/30",
     buttonClass:
       "bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-[0_4px_20px_rgba(249,115,22,0.35)] hover:from-amber-400 hover:to-orange-400 hover:shadow-[0_6px_28px_rgba(249,115,22,0.5)] focus-visible:outline-amber-400",
     glowClass: "hover:shadow-[0_0_0_1px_rgba(249,115,22,0.25),0_12px_40px_-12px_rgba(249,115,22,0.4)]",
-    features: ["1.5 GB on-device LLM", "High-res offline map tiles", "Zero-internet operation"],
+    features: ["61-rule offline AI (Nova)", "TFLite triage classifier", "Offline MapLibre maps", "GPS SOS with 3-2-1 countdown", "Zero-internet operation"],
   },
 ];
 

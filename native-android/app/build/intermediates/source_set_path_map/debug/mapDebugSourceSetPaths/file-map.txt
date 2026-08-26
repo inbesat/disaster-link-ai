@@ -1,0 +1,77 @@
+com.safesphere.nativeapp-navigation-common-2.7.7-0 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\02487c182ac098a31921500624344be4\transformed\navigation-common-2.7.7\res
+com.safesphere.nativeapp-constraintlayout-2.1.4-1 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\09e8496ba4bbf1af543b70fe946fee41\transformed\constraintlayout-2.1.4\res
+com.safesphere.nativeapp-jetified-savedstate-1.2.1-2 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\10d046e5ff02b0deaa8f9d4b66047632\transformed\jetified-savedstate-1.2.1\res
+com.safesphere.nativeapp-jetified-emoji2-1.3.0-3 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\1118c5c072aec7bf6e1de98ebe245c36\transformed\jetified-emoji2-1.3.0\res
+com.safesphere.nativeapp-sqlite-2.4.0-4 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\14d9e5f1e9af638ca9043c8a25d7de0b\transformed\sqlite-2.4.0\res
+com.safesphere.nativeapp-jetified-customview-poolingcontainer-1.0.0-5 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\151c6f69bbdf53c2a4b2cdf8b28728dc\transformed\jetified-customview-poolingcontainer-1.0.0\res
+com.safesphere.nativeapp-jetified-activity-1.9.0-6 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\1a0251f648412c17ea42ad06920e6c6b\transformed\jetified-activity-1.9.0\res
+com.safesphere.nativeapp-jetified-appcompat-resources-1.7.0-7 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\1d6280e8ddb5249e104b24a23f7421c8\transformed\jetified-appcompat-resources-1.7.0\res
+com.safesphere.nativeapp-jetified-emoji2-views-helper-1.3.0-8 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\1e0fc2643d7382d1d0f60cc0e8a16875\transformed\jetified-emoji2-views-helper-1.3.0\res
+com.safesphere.nativeapp-jetified-savedstate-ktx-1.2.1-9 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\2283f74df4b63b804acfa16d82b4a2f5\transformed\jetified-savedstate-ktx-1.2.1\res
+com.safesphere.nativeapp-jetified-lifecycle-runtime-ktx-release-10 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\241ee97241a9640e80a86e000aa64f83\transformed\jetified-lifecycle-runtime-ktx-release\res
+com.safesphere.nativeapp-jetified-lifecycle-livedata-ktx-2.8.4-11 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\2767292f747203cb34dde7f85ed7ddb7\transformed\jetified-lifecycle-livedata-ktx-2.8.4\res
+com.safesphere.nativeapp-jetified-lifecycle-service-2.8.4-12 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\293aeff149454a9fd875a858526312de\transformed\jetified-lifecycle-service-2.8.4\res
+com.safesphere.nativeapp-jetified-startup-runtime-1.1.1-13 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\31f6697d6534e6233d812331b47fa3f0\transformed\jetified-startup-runtime-1.1.1\res
+com.safesphere.nativeapp-jetified-coil-base-2.6.0-14 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\32fb1e6d049c1ceb25bbea309b982c39\transformed\jetified-coil-base-2.6.0\res
+com.safesphere.nativeapp-jetified-fragment-ktx-1.8.2-15 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\348dcd6b74954013bbdf00d44e70375a\transformed\jetified-fragment-ktx-1.8.2\res
+com.safesphere.nativeapp-jetified-camera-camera2-1.4.0-beta01-16 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\370dacc06ee6839f311b11b22e1f3148\transformed\jetified-camera-camera2-1.4.0-beta01\res
+com.safesphere.nativeapp-material-1.12.0-17 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\3896c9d03ca26527dd42c98895250639\transformed\material-1.12.0\res
+com.safesphere.nativeapp-jetified-firebase-messaging-23.4.0-18 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\3951ac2bd9f8dcc6f3725c0d44a996b5\transformed\jetified-firebase-messaging-23.4.0\res
+com.safesphere.nativeapp-jetified-activity-ktx-1.9.0-19 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\39522160704c3bbd501e9321e9a0b42f\transformed\jetified-activity-ktx-1.9.0\res
+com.safesphere.nativeapp-jetified-annotation-experimental-1.4.0-20 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\3af999f9bac7dc34c1fb59461884d086\transformed\jetified-annotation-experimental-1.4.0\res
+com.safesphere.nativeapp-navigation-runtime-2.7.7-21 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\41e163e45f7d6ce21f6f123b38a8428e\transformed\navigation-runtime-2.7.7\res
+com.safesphere.nativeapp-jetified-lifecycle-runtime-release-22 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\48184e7b702a6732cc037a55d297ec9b\transformed\jetified-lifecycle-runtime-release\res
+com.safesphere.nativeapp-jetified-maplibre-android-gestures-0.0.3-23 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\4d8e346df54dafde848d9cdc8f509410\transformed\jetified-maplibre-android-gestures-0.0.3\res
+com.safesphere.nativeapp-jetified-datastore-release-24 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\50d327331cfd69b5823de0c58c62b8b5\transformed\jetified-datastore-release\res
+com.safesphere.nativeapp-jetified-android-sdk-11.5.0-25 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\546cb34c9adfd8b5ded0ce4d3d6ceea8\transformed\jetified-android-sdk-11.5.0\res
+com.safesphere.nativeapp-jetified-profileinstaller-1.3.1-26 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\5887e51cd37650fb4cd42331be8435a2\transformed\jetified-profileinstaller-1.3.1\res
+com.safesphere.nativeapp-swiperefreshlayout-1.1.0-27 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\5a836187583190ad9d03a2e35bf9f8c0\transformed\swiperefreshlayout-1.1.0\res
+com.safesphere.nativeapp-jetified-lifecycle-process-2.8.4-28 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\5bd0b9f335beffa7ef964ea2a975a2f7\transformed\jetified-lifecycle-process-2.8.4\res
+com.safesphere.nativeapp-navigation-ui-2.7.7-29 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\634553701e4543b4d10839c7a5b3d1c2\transformed\navigation-ui-2.7.7\res
+com.safesphere.nativeapp-jetified-room-ktx-2.6.1-30 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\7a24b5fb829c8240df5834077ce6b7e7\transformed\jetified-room-ktx-2.6.1\res
+com.safesphere.nativeapp-jetified-datastore-preferences-release-31 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\8002575a1a0adfd464b777a296dbfa54\transformed\jetified-datastore-preferences-release\res
+com.safesphere.nativeapp-fragment-1.8.2-32 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\8b281dbc15485efa87c4d0af63d157aa\transformed\fragment-1.8.2\res
+com.safesphere.nativeapp-room-runtime-2.6.1-33 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\8cc37060f8a1db796da2da00ab415582\transformed\room-runtime-2.6.1\res
+com.safesphere.nativeapp-jetified-lifecycle-viewmodel-ktx-2.8.4-34 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\92ee2e70f648fcbe2d3f0468d05f93ef\transformed\jetified-lifecycle-viewmodel-ktx-2.8.4\res
+com.safesphere.nativeapp-navigation-common-ktx-2.7.7-35 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\965edea4e321cb4898de43e6b7edcaae\transformed\navigation-common-ktx-2.7.7\res
+com.safesphere.nativeapp-navigation-fragment-2.7.7-36 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\a2c0c9309d2d0ae3b428a29302795a56\transformed\navigation-fragment-2.7.7\res
+com.safesphere.nativeapp-transition-1.5.0-37 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\a6927b7e4941d031e23311e3784c6c1c\transformed\transition-1.5.0\res
+com.safesphere.nativeapp-navigation-runtime-ktx-2.7.7-38 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\a6d7bace600d0d52af902054e9c45ce2\transformed\navigation-runtime-ktx-2.7.7\res
+com.safesphere.nativeapp-drawerlayout-1.1.1-39 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\ab7bb3992b78060e5e63f070b0f72cb4\transformed\drawerlayout-1.1.1\res
+com.safesphere.nativeapp-work-runtime-2.9.0-40 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\accaf99ba0833135dcdfc4ce484d44bb\transformed\work-runtime-2.9.0\res
+com.safesphere.nativeapp-core-1.13.1-41 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\afdb895d727e3cd9d7423be0610b384c\transformed\core-1.13.1\res
+com.safesphere.nativeapp-jetified-lifecycle-viewmodel-savedstate-2.8.4-42 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\b4448e5c305c826ce18cd4ff6a42b6d4\transformed\jetified-lifecycle-viewmodel-savedstate-2.8.4\res
+com.safesphere.nativeapp-biometric-1.2.0-alpha05-43 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\b504e4051d2f44111ecb3c72e2baac09\transformed\biometric-1.2.0-alpha05\res
+com.safesphere.nativeapp-sqlite-framework-2.4.0-44 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\b679609f9653ea4cb2de5ec88675adcd\transformed\sqlite-framework-2.4.0\res
+com.safesphere.nativeapp-jetified-camera-view-1.4.0-beta01-45 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\b8c0788ccf92d3d05f66eeed9c1d54ea\transformed\jetified-camera-view-1.4.0-beta01\res
+com.safesphere.nativeapp-jetified-lifecycle-viewmodel-release-46 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\b9cba04c40b8b5a941162114f6c7f199\transformed\jetified-lifecycle-viewmodel-release\res
+com.safesphere.nativeapp-jetified-viewpager2-1.1.0-beta02-47 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\b9f652c2b0738dbdbdb64af93994fe07\transformed\jetified-viewpager2-1.1.0-beta02\res
+com.safesphere.nativeapp-jetified-firebase-common-20.4.2-48 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\c034c993b5ee37beef375d88c2154920\transformed\jetified-firebase-common-20.4.2\res
+com.safesphere.nativeapp-navigation-fragment-ktx-2.7.7-49 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\c056f629842897608256f0ee947f8b80\transformed\navigation-fragment-ktx-2.7.7\res
+com.safesphere.nativeapp-jetified-core-ktx-1.13.1-50 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\c3d99e2e2fbc98ae38db763a5080f298\transformed\jetified-core-ktx-1.13.1\res
+com.safesphere.nativeapp-jetified-play-services-base-18.3.0-51 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\c428c110a719e1279c79f763106b0500\transformed\jetified-play-services-base-18.3.0\res
+com.safesphere.nativeapp-jetified-security-crypto-1.1.0-alpha06-52 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\c5dbd53df86c44f4b06dde1e512fea48\transformed\jetified-security-crypto-1.1.0-alpha06\res
+com.safesphere.nativeapp-jetified-datastore-core-release-53 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\cb30a3b4eb83106f4d31ad8f92d50541\transformed\jetified-datastore-core-release\res
+com.safesphere.nativeapp-slidingpanelayout-1.2.0-54 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\cc072799e434c363324069e16129d376\transformed\slidingpanelayout-1.2.0\res
+com.safesphere.nativeapp-jetified-camera-lifecycle-1.4.0-beta01-55 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\cfb3581464393d91eea899b6b3caccbe\transformed\jetified-camera-lifecycle-1.4.0-beta01\res
+com.safesphere.nativeapp-jetified-lifecycle-livedata-core-ktx-2.8.4-56 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\d26f29bcac5df26e545f6c30cbf003c7\transformed\jetified-lifecycle-livedata-core-ktx-2.8.4\res
+com.safesphere.nativeapp-core-runtime-2.2.0-57 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\d6381578594eb7af805fbe1264a6dd7b\transformed\core-runtime-2.2.0\res
+com.safesphere.nativeapp-jetified-window-1.0.0-58 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\d8fe8406e1d305ab06c79654eb70641a\transformed\jetified-window-1.0.0\res
+com.safesphere.nativeapp-lifecycle-livedata-core-2.8.4-59 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\dde27e7c4cf4c42ee87c7e7b5cb23e65\transformed\lifecycle-livedata-core-2.8.4\res
+com.safesphere.nativeapp-coordinatorlayout-1.1.0-60 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\e141e31238b7aaa701a2e4d2f92eb8da\transformed\coordinatorlayout-1.1.0\res
+com.safesphere.nativeapp-jetified-camera-video-1.4.0-beta01-61 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\e14247c6602c8f5384094ded6b10db2d\transformed\jetified-camera-video-1.4.0-beta01\res
+com.safesphere.nativeapp-jetified-play-services-basement-18.3.0-62 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\ed823b6a4cdc02e9a5506deebac49f39\transformed\jetified-play-services-basement-18.3.0\res
+com.safesphere.nativeapp-lifecycle-livedata-2.8.4-63 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\f00b9529f8bf5b9038514259439c24d2\transformed\lifecycle-livedata-2.8.4\res
+com.safesphere.nativeapp-appcompat-1.7.0-64 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\f22a3c2290d24ec987039ac25fce088e\transformed\appcompat-1.7.0\res
+com.safesphere.nativeapp-work-runtime-ktx-2.9.0-65 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\f366296ae33bede56194ccbca70b9f02\transformed\work-runtime-ktx-2.9.0\res
+com.safesphere.nativeapp-jetified-camera-extensions-1.4.0-beta01-66 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\f7cf7b706c9b64d55601f41d2d03f81f\transformed\jetified-camera-extensions-1.4.0-beta01\res
+com.safesphere.nativeapp-navigation-ui-ktx-2.7.7-67 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\f8faed24deaa5d4fd0868700b97f7c7f\transformed\navigation-ui-ktx-2.7.7\res
+com.safesphere.nativeapp-cardview-1.0.0-68 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\fb74038ee5957daf912f16a4e0c129dd\transformed\cardview-1.0.0\res
+com.safesphere.nativeapp-recyclerview-1.3.2-69 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\fe732e3df60dde128b47fd4a0cf8e6ed\transformed\recyclerview-1.3.2\res
+com.safesphere.nativeapp-jetified-camera-core-1.4.0-beta01-70 C:\Users\Lenovo\.gradle\caches\8.14.3\transforms\ff7763a05a2d5b987c771b517dfdb815\transformed\jetified-camera-core-1.4.0-beta01\res
+com.safesphere.nativeapp-resValues-71 E:\Hackathons\disaster management\disaster-response-platform\native-android\app\build\generated\res\resValues\debug
+com.safesphere.nativeapp-packageDebugResources-72 E:\Hackathons\disaster management\disaster-response-platform\native-android\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.safesphere.nativeapp-packageDebugResources-73 E:\Hackathons\disaster management\disaster-response-platform\native-android\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.safesphere.nativeapp-debug-74 E:\Hackathons\disaster management\disaster-response-platform\native-android\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.safesphere.nativeapp-debug-75 E:\Hackathons\disaster management\disaster-response-platform\native-android\app\src\debug\res
+com.safesphere.nativeapp-main-76 E:\Hackathons\disaster management\disaster-response-platform\native-android\app\src\main\res

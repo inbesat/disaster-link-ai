@@ -1,0 +1,26 @@
+[
+  {
+    "id": "sos-1",
+    "userId": "user-3",
+    "type": "rescue",
+    "lat": 25.5941,
+    "lng": 85.1376,
+    "message": "Trapped in flood water, need immediate rescue",
+    "status": "completed",
+    "resolution": "Rescued by NDRF boat team",
+    "createdAt": "2024-01-14T10:00:00Z",
+    "resolvedAt": "2024-01-14T10:45:00Z"
+  },
+  {
+    "id": "sos-2",
+    "userId": "user-3",
+    "type": "medical",
+    "lat": 25.6012,
+    "lng": 85.1204,
+    "message": "Elderly person needs medical attention",
+    "status": "sent",
+    "resolution": "",
+    "createdAt": "2024-01-15T09:00:00Z",
+    "resolvedAt": ""
+  }
+]

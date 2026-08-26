@@ -17,6 +17,30 @@ public abstract class BaseFragment extends Fragment {
 
     protected RoleManager roleManager;
 
+    private Runnable pendingPermissionAction;
+
+    private final androidx.activity.result.ActivityResultLauncher<String> permissionLauncher =
+            registerForActivityResult(new androidx.activity.result.contract.ActivityResultContracts.RequestPermission(),
+                    granted -> {
+                        if (granted && pendingPermissionAction != null) {
+                            Runnable action = pendingPermissionAction;
+                            pendingPermissionAction = null;
+                            action.run();
+                        }
+                    });
+
+    /** Runs the action immediately if granted, otherwise asks once then runs it. */
+    protected void withPermission(@androidx.annotation.NonNull String permission,
+                                  @androidx.annotation.NonNull Runnable action) {
+        if (androidx.core.content.ContextCompat.checkSelfPermission(requireContext(), permission)
+                == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            action.run();
+        } else {
+            pendingPermissionAction = action;
+            permissionLauncher.launch(permission);
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

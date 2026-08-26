@@ -1,0 +1,32 @@
+[
+  {
+    "id": "rc-1",
+    "lat": 25.605,
+    "lng": 85.140,
+    "roadName": "NH-31 (Patna-Mokama)",
+    "description": "Bridge submerged near Mokama",
+    "active": true,
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "rc-2",
+    "lat": 25.615,
+    "lng": 85.150,
+    "roadName": "Bailey Road",
+    "description": "Waterlogging near Patna Airport",
+    "active": true,
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "rc-3",
+    "lat": 9.990,
+    "lng": 76.310,
+    "roadName": "NH-66 (Kochi-Alappuzha)",
+    "description": "Landslide near Ernakulam",
+    "active": false,
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  }
+]

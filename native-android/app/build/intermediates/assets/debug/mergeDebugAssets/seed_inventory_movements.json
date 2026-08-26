@@ -1,0 +1,20 @@
+[
+  {
+    "id": "mov-1",
+    "resourceId": "res-1",
+    "fromDepot": "Patna Central Depot",
+    "toDepot": "Ganga Floodplain Village",
+    "quantity": 10,
+    "timestamp": "2024-01-15T10:30:00Z",
+    "status": "completed"
+  },
+  {
+    "id": "mov-2",
+    "resourceId": "res-2",
+    "fromDepot": "Patna Medical Warehouse",
+    "toDepot": "Central Community Hall",
+    "quantity": 50,
+    "timestamp": "2024-01-15T11:00:00Z",
+    "status": "completed"
+  }
+]

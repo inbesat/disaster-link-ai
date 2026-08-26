@@ -23,6 +23,8 @@ import com.safesphere.nativeapp.ui.base.BaseFragment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import android.widget.TextView;
+import com.google.android.material.chip.Chip;
 
 public class InventoryFragment extends BaseFragment {
 
@@ -39,7 +41,7 @@ public class InventoryFragment extends BaseFragment {
 
     @Override
     protected void initViews(View view) {
-        resourceRepository = new ResourceRepository(requireActivity());
+        resourceRepository = new ResourceRepository(requireActivity().getApplication());
         inventoryRecyclerView = view.findViewById(R.id.inventoryRecyclerView);
         searchView = view.findViewById(R.id.invSearchView);
         categorySpinner = view.findViewById(R.id.invCategorySpinner);

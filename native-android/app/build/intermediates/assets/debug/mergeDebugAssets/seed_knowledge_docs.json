@@ -1,0 +1,32 @@
+[
+  {
+    "id": "doc-1",
+    "title": "Bihar Flood Evacuation Protocol 2024",
+    "district": "Patna",
+    "documentType": "Evacuation Protocol",
+    "content": "Standard operating procedure for flood evacuation in Bihar districts. Phase 1: Alert dissemination. Phase 2: Resource mobilization. Phase 3: Evacuation execution. Phase 4: Shelter management.",
+    "embedding": "",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "doc-2",
+    "title": "Patna District Disaster Management Plan",
+    "district": "Patna",
+    "documentType": "DDMP",
+    "content": "Comprehensive disaster management plan for Patna district covering floods, earthquakes, and industrial hazards. Includes resource inventory, shelter locations, and communication protocols.",
+    "embedding": "",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "doc-3",
+    "title": "Medical Triaging Guidelines for Disasters",
+    "district": "Patna",
+    "documentType": "Medical Triaging",
+    "content": "Triage protocols for mass casualty incidents during disasters. RED: Immediate. YELLOW: Delayed. GREEN: Minor. BLACK: Deceased/Expectant.",
+    "embedding": "",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  }
+]

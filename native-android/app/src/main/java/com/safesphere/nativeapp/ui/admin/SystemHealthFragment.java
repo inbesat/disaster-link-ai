@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -52,8 +52,10 @@ public class SystemHealthFragment extends Fragment {
         services.add(new ServiceItem("Groq NLP Endpoint", "api.groq.com/openai/v1", "green", "166 ms", "Tool-calling + classification healthy"));
         services.add(new ServiceItem("XGBoost ML Microservice", "localhost:8000/predict", "red", "timeout", "Model node unreachable on :8000"));
 
-        healthSummary.setText(services.stream().filter(s -> s.status.equals("green")).count() + "/" + services.size() + " SERVICES HEALTHY");
-        healthSummary.setTextColor(requireContext().getColor(services.stream().filter(s -> s.status.equals("green")).count() == services.size() ? R.color.colorSuccess : R.color.colorWarning));
+        long healthy = 0;
+        for (ServiceItem s : services) { if (s.status.equals("green")) healthy++; }
+        healthSummary.setText(healthy + "/" + services.size() + " SERVICES HEALTHY");
+        healthSummary.setTextColor(requireContext().getColor(healthy == services.size() ? R.color.colorSuccess : R.color.colorWarning));
 
         servicesRecyclerView.setAdapter(new ServiceAdapter(services));
     }
